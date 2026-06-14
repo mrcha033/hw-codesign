@@ -115,6 +115,127 @@ def test_tscircuit_release_gate_blocked_on_pcb_gates(service, project):
     assert by_gate.get("tscircuit_layout_completeness", {}).get("status") == "blocked"
 
 
+def test_prepare_release_blocked_on_unresolved_critical_assumption(service, project):
+    """prepare_release must be blocked before writing any files when a critical assumption is unresolved,
+    even when all gate reports pass and native checks are confirmed."""
+    from hw_codesign.io import read_yaml, write_yaml
+    project_path = service.workspace.require_project(project)
+    system_path = project_path / "spec" / "system.yaml"
+    system = read_yaml(system_path)
+    system["electronics"]["backend"] = "tscircuit"
+    write_yaml(system_path, system)
+    # Verify template has at least one unresolved critical assumption
+    spec = service.read_spec(project)
+    unresolved = [n for n, a in spec.get("assumptions", {}).items() if a.get("critical") and a.get("requires_user_review")]
+    assert unresolved, "Template must have unresolved critical assumptions for this test to be meaningful"
+    # Feed all-pass reports to bypass gate checks — assumption preflight must still block
+    all_pass_checks = {"reports": [{"gate": "mock", "status": "pass", "failures": [], "metrics": {}}]}
+    result = service.prepare_release(project, all_pass_checks, native_checks_confirmed=True)
+    assert result["status"] == "blocked"
+    assert result["code"] == "unresolved_critical_assumptions"
+    assert not (project_path / "exports" / "releases").exists()
+    assert not (project_path / "exports" / ".staging").exists()
+
+
+def test_footprint_parity_fails_on_missing_compiled_footprint_id():
+    """Footprint parity gate must FAIL (not pass) when expected_fp exists but compiled circuit.json
+    has no footprint_id for that component."""
+    import json
+    from hw_codesign.backends.tscircuit import TSCircuitBackend
+    from hw_codesign.models import Status
+
+    graph = {
+        "components": [{"ref": "U1", "footprint": "Package_SO:SOIC-8", "pins": []}],
+        "nets": [],
+    }
+    # pcb_component entry present but missing footprint_id
+    compiled: list[dict] = [
+        {"type": "source_component", "source_component_id": "U1", "name": "U1"},
+        {"type": "pcb_component", "source_component_id": "U1"},  # no footprint_id
+    ]
+    backend = TSCircuitBackend.__new__(TSCircuitBackend)
+    source_components = {
+        item.get("source_component_id"): item
+        for item in compiled
+        if item.get("source_component_id") and item.get("name")
+    }
+    footprint_failures = []
+    for component in graph["components"]:
+        expected_fp = component.get("footprint_metadata", {}).get("library_id") or component.get("footprint") or ""
+        sc = source_components.get(component["ref"])
+        compiled_fp = sc.get("footprint_id", "") if sc else ""
+        if expected_fp and not compiled_fp:
+            from hw_codesign.models import Failure, FailureCategory
+            footprint_failures.append(Failure(
+                FailureCategory.EDA_ERROR, "compiled_footprint_missing",
+                f"{component['ref']}: expected footprint {expected_fp!r} but compiled circuit.json has no footprint_id",
+                details={"ref": component["ref"], "expected": expected_fp, "compiled": ""},
+            ))
+        elif expected_fp and compiled_fp and expected_fp != compiled_fp:
+            from hw_codesign.models import Failure, FailureCategory
+            footprint_failures.append(Failure(
+                FailureCategory.EDA_ERROR, "footprint_parity_mismatch",
+                f"{component['ref']}: expected footprint {expected_fp!r}, compiled {compiled_fp!r}",
+                details={"ref": component["ref"], "expected": expected_fp, "compiled": compiled_fp},
+            ))
+    assert footprint_failures, "Expected a footprint failure but got none"
+    assert footprint_failures[0].code == "compiled_footprint_missing"
+
+
+def test_manifest_must_cover_all_required_release_artifacts(tmp_path):
+    """_artifact_integrity_report must fail with required_artifact_uncovered_by_manifest
+    when a required artifact exists on disk but is absent from the manifest."""
+    import json
+    from hw_codesign.service import HardwareService
+    from hw_codesign.artifacts import write_manifest
+
+    release = tmp_path / "release"
+    release.mkdir()
+    present = release / "fabrication" / "gerbers.zip"
+    present.parent.mkdir(parents=True)
+    present.write_bytes(b"fake gerbers")
+    absent_from_manifest = release / "firmware" / "source.zip"
+    absent_from_manifest.parent.mkdir(parents=True)
+    absent_from_manifest.write_bytes(b"fake firmware")
+    # Manifest covers only the gerbers, not firmware/source.zip
+    write_manifest(release, release / "manifest.json", provenance={}, candidate_only=False)
+    # Remove firmware entry from manifest to simulate partial manifest
+    manifest = json.loads((release / "manifest.json").read_text())
+    manifest["artifacts"] = [e for e in manifest["artifacts"] if "firmware" not in e["path"]]
+    (release / "manifest.json").write_text(json.dumps(manifest))
+
+    required = [present, absent_from_manifest]
+    report = HardwareService._artifact_integrity_report(release, required=required)
+    codes = {f.code for f in report.failures}
+    assert "required_artifact_uncovered_by_manifest" in codes
+
+
+def test_source_manifest_marks_pcb_disabled_source_non_release_eligible(tmp_path):
+    """generate_source must write source_release_eligible=False and pcb_disabled=True
+    in source_manifest.json when pcbDisabled/routingDisabled are active."""
+    import json
+    import yaml
+    from pathlib import Path
+    from hw_codesign.backends.tscircuit import TSCircuitBackend
+    from hw_codesign.electronics_design import build_controller_graph
+
+    root = Path(__file__).parents[1]
+    spec = yaml.safe_load((root / "src/hw_codesign/templates/robotics_controller_full.yaml").read_text())
+    spec["electronics"]["backend"] = "tscircuit"
+    graph = build_controller_graph(spec)
+    backend = TSCircuitBackend(root)
+    project = tmp_path / "project"
+    (project / "electronics" / "generated").mkdir(parents=True)
+    backend.generate_source(project, spec, graph)
+    manifest = json.loads((project / "electronics" / "source" / "tscircuit" / "source_manifest.json").read_text())
+    assert manifest["source_release_eligible"] is False
+    assert manifest["pcb_disabled"] is True
+    assert manifest["routing_disabled"] is True
+    assert manifest["provenance"]["release_eligible"] is False
+    assert "tscircuit_footprint_parity" in manifest["release_blocking_gates"]
+    assert "tscircuit_layout_completeness" in manifest["release_blocking_gates"]
+
+
 def test_missing_tscircuit_netlist_extract_injected_as_gate_not_run(service, project):
     """If tscircuit_netlist_extract is not present in the report set passed to
     check_release_gate, it must be auto-injected as a BLOCKED gate_not_run failure."""

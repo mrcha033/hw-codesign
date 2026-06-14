@@ -69,7 +69,12 @@ class TSCircuitBackend:
         write_json(target / "source_manifest.json", {
             "backend": "tscircuit",
             "compiler_version": self.VERSION,
-            "provenance": artifact_provenance(spec, self.platform_root / "parts", "tscircuit", compiler_version=self.VERSION, command=self.command(entry), release_eligible=True),
+            "backend_release_capable": True,
+            "source_release_eligible": False,
+            "pcb_disabled": True,
+            "routing_disabled": True,
+            "release_blocking_gates": ["tscircuit_footprint_parity", "tscircuit_layout_completeness"],
+            "provenance": artifact_provenance(spec, self.platform_root / "parts", "tscircuit", compiler_version=self.VERSION, command=self.command(entry), release_eligible=False),
         })
         return [str(entry), str(compiler_entry), str(target / "source_manifest.json")]
 
@@ -171,7 +176,13 @@ class TSCircuitBackend:
                 expected_fp = component.get("footprint_metadata", {}).get("library_id") or component.get("footprint") or ""
                 sc = source_components.get(component["ref"])
                 compiled_fp = sc.get("footprint_id", "") if sc else ""
-                if expected_fp and compiled_fp and expected_fp != compiled_fp:
+                if expected_fp and not compiled_fp:
+                    footprint_failures.append(Failure(
+                        FailureCategory.EDA_ERROR, "compiled_footprint_missing",
+                        f"{component['ref']}: expected footprint {expected_fp!r} but compiled circuit.json has no footprint_id",
+                        details={"ref": component["ref"], "expected": expected_fp, "compiled": ""},
+                    ))
+                elif expected_fp and compiled_fp and expected_fp != compiled_fp:
                     footprint_failures.append(Failure(
                         FailureCategory.EDA_ERROR, "footprint_parity_mismatch",
                         f"{component['ref']}: expected footprint {expected_fp!r}, compiled {compiled_fp!r}",

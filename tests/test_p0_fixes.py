@@ -9,7 +9,7 @@ from hw_codesign.io import read_yaml, write_yaml
 def test_reference_prepare_release_is_blocked_before_native_promotion(service, project):
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
-    result = service.prepare_release(project, checks, require_native=True)
+    result = service.prepare_release(project, checks, native_checks_confirmed=True)
     assert result["status"] == "blocked"
     assert result["code"] == "compiled_electronics_backend_required"
 
@@ -25,7 +25,7 @@ def test_reference_release_gate_is_blocked(service, project):
 def test_reference_mode_never_creates_release_directory(service, project):
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
-    result = service.prepare_release(project, checks, require_native=False)
+    result = service.prepare_release(project, checks, native_checks_confirmed=False)
     assert result["status"] == "blocked"
     assert not (service.workspace.require_project(project) / "exports" / "releases").exists()
 
@@ -37,8 +37,13 @@ def test_failed_native_export_never_leaves_partial_release(service, project, mon
     system = read_yaml(system_path)
     system["electronics"]["backend"] = "tscircuit"
     write_yaml(system_path, system)
+    # Resolve all critical assumptions so the assumption preflight doesn't block before mechanical.generate
+    spec = service.read_spec(project)
+    for name, assumption in spec.get("assumptions", {}).items():
+        if assumption.get("requires_user_review"):
+            service.resolve_assumption(project, name, assumption.get("value") or "approved", approved=True)
     monkeypatch.setattr(service.mechanical, "generate", lambda spec, target: GateReport("mechanical_export", Status.BLOCKED, [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "CAD unavailable")]))
-    result = service.prepare_release(project, {"reports": [{"status": "pass"}]}, require_native=True)
+    result = service.prepare_release(project, {"reports": [{"status": "pass"}]}, native_checks_confirmed=True)
     assert result["status"] == "blocked"
     assert not (project_path / "exports" / "releases" / "r1").exists()
     assert not (project_path / "exports" / ".staging" / "r1").exists()

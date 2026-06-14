@@ -85,7 +85,16 @@ class HardwareService:
             unresolved.append("motor driver topology retained from documented assumption")
         if not re.search(r"(?:forced|passive|팬|자연 냉각)", requirements_text, re.IGNORECASE):
             unresolved.append("cooling condition retained from documented assumption")
-        return {"status": "generated", "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path)], "unresolved_requirements": unresolved}
+        unsupported_patterns = [
+            (r"\bIP\s*6[0-9]\b", "IP ingress protection rating (e.g. IP67) — not lowered into spec"),
+            (r"\bCAN-?FD\b", "CAN-FD bus variant — not lowered into spec"),
+            (r"\bASIL\b", "ASIL functional-safety level — not lowered into spec"),
+            (r"\b\d+(?:\.\d+)?\s*A\s+continuous\b", "continuous current rating — not lowered into spec"),
+            (r"\bJLCPCB\b", "JLCPCB assembly service — not lowered into spec"),
+            (r"\bimpedance[\s-]controlled\b", "impedance-controlled PCB stackup — not lowered into spec"),
+        ]
+        unsupported_constraints = [label for pattern, label in unsupported_patterns if re.search(pattern, requirements_text, re.IGNORECASE)]
+        return {"status": "generated", "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path)], "unresolved_requirements": unresolved, "unsupported_constraints": unsupported_constraints}
 
     def validate_spec(self, project: str) -> dict[str, Any]:
         path = self.workspace.require_project(project)
@@ -209,14 +218,19 @@ class HardwareService:
             persist_report(path, report)
         return self._report_set(reports)
 
-    def prepare_release(self, project: str, checks: dict[str, Any], require_native: bool = False) -> dict[str, Any]:
+    def prepare_release(self, project: str, checks: dict[str, Any], native_checks_confirmed: bool = False) -> dict[str, Any]:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         backend = spec.get("electronics", {}).get("backend", "reference")
         if backend != "tscircuit":
             return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "reference_backend_candidate_only", "Only compiled tscircuit designs are release eligible")]).to_dict()]}
-        if not require_native or any(item["status"] != "pass" for item in checks["reports"]):
+        if not native_checks_confirmed:
+            return {"status": "blocked", "code": "native_release_checks_required", "reports": checks["reports"]}
+        if any(item["status"] != "pass" for item in checks["reports"]):
             return {"status": "blocked", "code": "release_gates_not_passed", "reports": checks["reports"]}
+        unresolved_assumptions = [name for name, a in spec.get("assumptions", {}).items() if a.get("critical") and a.get("requires_user_review")]
+        if unresolved_assumptions:
+            return {"status": "blocked", "code": "unresolved_critical_assumptions", "unresolved": unresolved_assumptions, "reports": checks["reports"]}
         graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
         release = path / "exports" / "releases" / spec["project"]["revision"]
         if release.exists():
@@ -299,7 +313,7 @@ class HardwareService:
             present_gates = {r.gate for r in reports}
             for gate_name in sorted(required_tsc_gates - present_gates):
                 reports = [*reports, GateReport(gate_name, Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "gate_not_run", f"Required gate was not executed: {gate_name}")])]
-        reports = [*reports, self._artifact_integrity_report(release)]
+        reports = [*reports, self._artifact_integrity_report(release, required=required)]
         report = self.validator.release_gate(reports, spec.get("assumptions", {}), required)
         persist_report(path, report)
         return report.to_dict()
@@ -392,7 +406,7 @@ class HardwareService:
             iterations.append({"iteration_id": result["iteration_id"], "status": result["status"], "failed_gates": result["failed_gates"]})
             if result["release_gate"]["status"] == "pass":
                 checks = self.run_all_checks(project, include_external=include_external)
-                prepared = self.prepare_release(project, checks, require_native=include_external)
+                prepared = self.prepare_release(project, checks, native_checks_confirmed=include_external)
                 if prepared.get("status") != "released":
                     return {"status": "blocked", "iterations": iterations, "release": prepared}
                 frozen_reports = [self._report_from_dict(item) for item in checks["reports"]]
@@ -432,7 +446,7 @@ class HardwareService:
         return GateReport("geometry", Status.FAIL if failures else Status.PASS, failures, metrics={"enclosure_dimensions_mm": spec["mechanical"]["enclosure_internal_mm"]}, backend={"name": "reference-geometry", "deterministic": True})
 
     @staticmethod
-    def _artifact_integrity_report(release: Path) -> GateReport:
+    def _artifact_integrity_report(release: Path, required: list[Path] | None = None) -> GateReport:
         manifest_path = release / "manifest.json"
         failures = []
         checked = 0
@@ -447,6 +461,12 @@ class HardwareService:
                     failures.append(Failure(FailureCategory.RELEASE_ERROR, "manifest_file_missing", f"Manifest artifact is missing: {entry['path']}"))
                 elif artifact.stat().st_size != entry["bytes"] or sha256(artifact) != entry["sha256"]:
                     failures.append(Failure(FailureCategory.RELEASE_ERROR, "checksum_mismatch", f"Artifact checksum mismatch: {entry['path']}"))
+            if required:
+                covered = {e["path"] for e in manifest.get("artifacts", [])}
+                for artifact in required:
+                    rel = artifact.relative_to(release).as_posix()
+                    if rel not in covered:
+                        failures.append(Failure(FailureCategory.RELEASE_ERROR, "required_artifact_uncovered_by_manifest", f"Required release artifact is not covered by manifest: {rel}"))
         return GateReport("artifact_integrity", Status.FAIL if failures else Status.PASS, failures, metrics={"checked_artifacts": checked}, artifacts=[str(manifest_path)] if manifest_path.exists() else [])
 
     def generate_design_report(self, project: str) -> dict[str, Any]:
