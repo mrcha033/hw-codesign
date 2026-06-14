@@ -72,6 +72,11 @@ def test_safety_spec_changes_require_explicit_approval(service, project):
 
 
 def test_design_until_release_closes_reference_pipeline(service, project):
+    # Critical assumptions require explicit user approval; resolve them before the loop.
+    spec = service.read_spec(project)
+    for name, assumption in spec.get("assumptions", {}).items():
+        if assumption.get("requires_user_review"):
+            service.resolve_assumption(project, name, assumption.get("value") or "approved", approved=True)
     result = service.design_until_release(project, max_iterations=4, include_external=False)
     assert result["status"] == "released"
     bundle = Path(result["release"]["bundle"])

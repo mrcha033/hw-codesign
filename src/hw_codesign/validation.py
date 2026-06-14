@@ -34,7 +34,7 @@ class Validator:
             failures.append(_failure(FailureCategory.SPEC_ERROR, "contradictory_requirement", "Battery nominal voltage exceeds maximum voltage", "system.supply.battery"))
         assumptions = spec.get("assumptions", {})
         for name, assumption in assumptions.items():
-            if assumption.get("critical") and not assumption.get("requires_user_review"):
+            if assumption.get("critical") and not assumption.get("requires_user_review") and "resolved_value" not in assumption:
                 failures.append(_failure(FailureCategory.SPEC_ERROR, "unsafe_assumption", f"Critical assumption {name} is not marked for review", f"assumptions.{name}"))
         return self._report("spec_schema", failures)
 

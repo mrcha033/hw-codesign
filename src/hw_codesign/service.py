@@ -96,6 +96,24 @@ class HardwareService:
         files["bom"] = [generate_bom(path)]
         return {"status": "generated", "files": files}
 
+    def generate_electronics_only(self, project: str) -> dict[str, Any]:
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        files = generate_electronics(path, spec)
+        return {"status": "generated", "files": files}
+
+    def generate_mechanical_only(self, project: str) -> dict[str, Any]:
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        files = generate_mechanical(path, spec)
+        return {"status": "generated", "files": files}
+
+    def generate_firmware_only(self, project: str) -> dict[str, Any]:
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        files = generate_firmware(path, spec)
+        return {"status": "generated", "files": files}
+
     def run_all_checks(self, project: str, include_external: bool = True) -> dict[str, Any]:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
@@ -135,18 +153,20 @@ class HardwareService:
         graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
         release = path / "exports" / spec["project"]["revision"]
         files = export_fabrication(path, spec, graph, release)
-        files.extend(export_mechanical(path, spec, release))
-        mechanical_report = self.mechanical.generate(spec, release)
-        if mechanical_report.status == Status.BLOCKED:
-            mechanical_report = GateReport("mechanical_export", Status.PASS, metrics={"mode": "reference"}, artifacts=[str(release / "mechanical" / name) for name in ("enclosure.step", "enclosure.stl", "assembly.step")], backend={"name": "reference-faceted", "native_tool_unavailable": True})
-        elif mechanical_report.status == Status.PASS:
-            files.extend(mechanical_report.artifacts)
+        ref_mech = export_mechanical(path, spec, release)
+        if require_native:
+            mechanical_report = self.mechanical.generate(spec, release)
+            if mechanical_report.status == Status.PASS:
+                files.extend(mechanical_report.artifacts)
+            # BLOCKED or FAIL: keep status as-is; reference files above are still on disk
+        else:
+            files.extend(ref_mech)
+            mechanical_report = GateReport("mechanical_export", Status.PASS, metrics={"mode": "reference"}, artifacts=ref_mech, backend={"name": "reference-faceted"})
         persist_report(path, mechanical_report)
         fabrication_report = self.kicad.export_manufacturing(path, release) if require_native else GateReport("fabrication_export", Status.PASS, metrics={"mode": "reference"}, artifacts=files, backend={"name": "reference-fabrication"})
         if fabrication_report.status == Status.PASS:
             files.extend(fabrication_report.artifacts)
-        elif fabrication_report.status == Status.BLOCKED:
-            fabrication_report = GateReport("fabrication_export", Status.PASS, metrics={"mode": "reference"}, artifacts=files, backend={"name": "reference-fabrication", "native_tool_unavailable": True})
+        # BLOCKED: keep status as-is; do not promote to PASS
         persist_report(path, fabrication_report)
         firmware = release / "firmware"; firmware.mkdir(parents=True, exist_ok=True)
         firmware_sources = [(item, item.relative_to(path / "firmware").as_posix()) for item in sorted((path / "firmware").rglob("*")) if item.is_file() and "build" not in item.parts]
@@ -249,19 +269,18 @@ class HardwareService:
         generated = self.generate_all(project)
         checks = self.run_all_checks(project, include_external=include_external)
         repair_plan = self.generate_repair_plan(project, checks)
-        release_artifacts = self.prepare_release(project, checks, require_native=include_external)
-        checks["reports"].extend(release_artifacts["reports"])
-        release = self.check_release_gate(project, [self._report_from_dict(item) for item in checks["reports"]])
+        # Release artifacts are written only when all checks pass (in design_until_release),
+        # not speculatively on every iteration.
+        all_pass = all(item["status"] == "pass" for item in checks["reports"])
         iteration_id = self.workspace.snapshot(project, {"goal": "make all release gates pass"})
         result = {
-            "status": "passed" if release["status"] == "pass" else ("blocked" if repair_plan["requires_user_decision"] else "failed"),
+            "status": "passed" if all_pass else ("blocked" if repair_plan["requires_user_decision"] else "failed"),
             "iteration_id": iteration_id,
             "generated": generated,
             "passed_gates": [item["gate"] for item in checks["reports"] if item["status"] == "pass"],
             "failed_gates": [item["gate"] for item in checks["reports"] if item["status"] != "pass"],
             "repair_plan": repair_plan,
-            "release_artifacts": release_artifacts,
-            "release_gate": release,
+            "release_gate": {"status": "pass" if all_pass else "failed"},
         }
         write_json(self.workspace.require_project(project) / "history" / "iterations" / iteration_id / "result.json", result)
         self._append_failures(project, iteration_id, checks)
@@ -279,13 +298,6 @@ class HardwareService:
             limit = max(1, int(battery // current))
             system_file["actuation"]["max_simultaneous_peak_channels"] = limit
             changes.append({"path": "actuation.max_simultaneous_peak_channels", "value": limit, "reason": "Keep concurrent peak demand within the unchanged battery safety limit"})
-        assumptions = system_file.get("assumptions", {})
-        design_resolutions = {"motor_type": "external_driver_modules", "cooling": "forced_air_recommended", "connector_current_rating": "signal_and_low_current_io_only"}
-        for name, value in design_resolutions.items():
-            assumption = assumptions.get(name)
-            if assumption and assumption.get("requires_user_review"):
-                assumption.update({"resolved_value": value, "requires_user_review": False, "critical": False, "resolution_basis": "Reference backend conservative design basis; retained in known risks"})
-                changes.append({"path": f"assumptions.{name}", "value": value})
         if changes:
             write_yaml(path, system_file)
         return {"status": "applied" if changes else "no_changes", "changes": changes}
@@ -296,9 +308,13 @@ class HardwareService:
             result = self.run_design_iteration(project, include_external=include_external)
             iterations.append({"iteration_id": result["iteration_id"], "status": result["status"], "failed_gates": result["failed_gates"]})
             if result["release_gate"]["status"] == "pass":
+                checks = self.run_all_checks(project, include_external=include_external)
+                self.prepare_release(project, checks, require_native=include_external)
                 bundle = self.export_release_bundle(project)
-                return {"status": "released", "iterations": iterations, "release": bundle}
-            applied = self.apply_repair_plan(project, {"reports": [item for item in self.run_all_checks(project, include_external=False)["reports"]]})
+                if bundle.get("status") == "exported":
+                    return {"status": "released", "iterations": iterations, "release": bundle}
+                return {"status": "blocked", "iterations": iterations, "release_gate": self.check_release_gate(project)}
+            applied = self.apply_repair_plan(project, self.run_all_checks(project, include_external=False))
             if applied["status"] == "no_changes":
                 return {"status": "blocked", "iterations": iterations, "repair": applied, "release_gate": result["release_gate"]}
         return {"status": "max_iterations_exceeded", "iterations": iterations}

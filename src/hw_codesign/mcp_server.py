@@ -64,18 +64,18 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name="hw_generate_electronics")
     def generate_electronics_tool(project: str, backend: str = "atopile", target: str = "kicad", mode: str = "full_regeneration") -> dict[str, Any]:
-        result = service.generate_all(project)
-        return {"status": result["status"], "backend": backend, "target": target, "mode": mode, "files": result["files"]["electronics"]}
+        result = service.generate_electronics_only(project)
+        return {"status": result["status"], "backend": backend, "target": target, "mode": mode, "files": result["files"]}
 
     @server.tool(name="hw_generate_mechanical")
     def generate_mechanical_tool(project: str, backend: str = "build123d") -> dict[str, Any]:
-        result = service.generate_all(project)
-        return {"status": result["status"], "backend": backend, "files": result["files"]["mechanical"]}
+        result = service.generate_mechanical_only(project)
+        return {"status": result["status"], "backend": backend, "files": result["files"]}
 
     @server.tool(name="hw_generate_firmware")
     def generate_firmware_tool(project: str, framework: str = "zephyr") -> dict[str, Any]:
-        result = service.generate_all(project)
-        return {"status": result["status"], "framework": framework, "files": result["files"]["firmware"]}
+        result = service.generate_firmware_only(project)
+        return {"status": result["status"], "framework": framework, "files": result["files"]}
 
     @server.tool(name="hw_run_erc")
     def run_erc(project: str) -> dict[str, Any]:
@@ -126,7 +126,7 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name="hw_generate_bringup_tests")
     def generate_bringup_tests(project: str) -> dict[str, Any]:
-        files = service.generate_all(project)["files"]["firmware"]
+        files = service.generate_firmware_only(project)["files"]
         return {"status": "generated", "files": [item for item in files if "test" in item]}
 
     @server.tool(name="hw_run_all_checks")

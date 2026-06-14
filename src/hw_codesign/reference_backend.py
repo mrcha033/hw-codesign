@@ -217,4 +217,4 @@ def build_firmware_reference(project: Path) -> GateReport:
     if completed.returncode == 0:
         completed = subprocess.run(["cmake", "--build", str(build)], capture_output=True, text=True, check=False)
     failures = [] if completed.returncode == 0 else [Failure(FailureCategory.FIRMWARE_ERROR, "build_failure", completed.stderr[-4000:])]
-    return GateReport("firmware_build", Status.PASS if not failures else Status.FAIL, failures, artifacts=[str(build / "bringup_tests")], backend={"name": "reference-host-bsp", "returncode": completed.returncode, "stderr": completed.stderr[-4000:]})
+    return GateReport("host_firmware_build", Status.PASS if not failures else Status.FAIL, failures, artifacts=[str(build / "bringup_tests")], backend={"name": "reference-host-bsp", "returncode": completed.returncode, "stderr": completed.stderr[-4000:]})
