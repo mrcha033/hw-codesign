@@ -295,7 +295,7 @@ class HardwareService:
             reports = [*reports, GateReport("backend_release_policy", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", f"Backend {backend} is not release eligible")])]
         else:
             # Require PCB-level tscircuit gates in addition to netlist gates
-            required_tsc_gates = {"tscircuit_compile", "tscircuit_graph_parity", "tscircuit_footprint_parity", "tscircuit_layout_completeness"}
+            required_tsc_gates = {"tscircuit_compile", "tscircuit_netlist_extract", "tscircuit_graph_parity", "tscircuit_footprint_parity", "tscircuit_layout_completeness"}
             present_gates = {r.gate for r in reports}
             for gate_name in sorted(required_tsc_gates - present_gates):
                 reports = [*reports, GateReport(gate_name, Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "gate_not_run", f"Required gate was not executed: {gate_name}")])]

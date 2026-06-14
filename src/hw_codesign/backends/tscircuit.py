@@ -75,9 +75,10 @@ class TSCircuitBackend:
 
     def command(self, entry: Path) -> list[str]:
         compiler_entry = entry.with_name("board.compiler.mjs")
-        # --disable-pcb and --routing-disabled are retained until offline PCB layout is confirmed
-        # viable from the installed tscircuit CLI.  The generated .tsx source omits those props so
-        # the intent is honest; the compiler flags are the runtime constraint.
+        # pcbDisabled/routingDisabled appear in both the generated source and the compiler flags
+        # because the tscircuit core resolves sel.net.* selectors at render time regardless of
+        # CLI flags, and without them compilation fails with "Could not find net for selector".
+        # Both must be removed together once the CLI gains offline sel.net.* resolution.
         return [
             str(self.platform_root / "node_modules" / ".bin" / "tsx"),
             str(self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"),
