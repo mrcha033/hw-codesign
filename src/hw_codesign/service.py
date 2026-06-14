@@ -106,18 +106,18 @@ class HardwareService:
         unsupported_constraints = [label for _, label in matched]
         req_file = read_yaml(req_path)
         if "requirements" not in req_file:
-            req_file["requirements"] = {"raw_inputs": [], "lowered": [], "unresolved": []}
+            req_file["requirements"] = {"raw_inputs": [], "active_lowered": [], "active_unresolved": []}
         existing_inputs = req_file["requirements"].get("raw_inputs", [])
         input_id = f"req_input_{len(existing_inputs) + 1:04d}"
         req_file["requirements"]["raw_inputs"] = [*existing_inputs, {"id": input_id, "text": requirements_text, "created_by": "user"}]
-        req_file["requirements"]["lowered"] = [{"id": f"req_{i:04d}", "source": sp, "spec_path": sp, "status": "lowered"} for i, sp in enumerate(sorted(set(changed)), start=1)]
-        req_file["requirements"]["unresolved"] = [
+        req_file["requirements"]["active_lowered"] = [{"id": f"req_{i:04d}", "source": sp, "spec_path": sp, "status": "lowered"} for i, sp in enumerate(sorted(set(changed)), start=1)]
+        req_file["requirements"]["active_unresolved"] = [
             {"id": f"req_unresolved_{i:04d}", "source": label, "category": cat, "status": "unresolved", "release_blocking": True, "reason": _reasons[cat]}
             for i, (cat, label) in enumerate(matched, start=1)
         ]
         write_yaml(req_path, req_file)
         status = "generated_with_unresolved_constraints" if unsupported_constraints else "generated"
-        return {"status": status, "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)], "unresolved_requirements": unresolved_ambiguous, "unsupported_constraints": unsupported_constraints}
+        return {"status": status, "mode": "replace_active_requirements", "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)], "unresolved_requirements": unresolved_ambiguous, "unsupported_constraints": unsupported_constraints}
 
     def validate_spec(self, project: str) -> dict[str, Any]:
         path = self.workspace.require_project(project)
@@ -194,9 +194,9 @@ class HardwareService:
             (reports_dir / name).unlink(missing_ok=True)
         reports = [
             self.validator.validate_spec(spec),
+            self.validator.check_requirements_lowering(spec),
             self.validator.check_electrical_semantics(spec),
             self.validator.check_mechanical(spec),
-            self.validator.check_requirements_lowering(spec),
         ]
         pinmap_path = path / "firmware" / "generated" / "pinmap.json"
         pinmap = json.loads(pinmap_path.read_text(encoding="utf-8")) if pinmap_path.exists() else []
@@ -368,7 +368,8 @@ class HardwareService:
                 patches: list[dict[str, Any]] = []
                 if code == "current_budget_exceeded" and per_channel > 0 and battery_peak > 0:
                     safe_channels = math.floor(battery_peak / per_channel)
-                    patches.append({"section": "system", "spec_path": "actuation.max_simultaneous_peak_channels", "value": safe_channels, "requires_approval": True})
+                    if safe_channels >= 1:
+                        patches.append({"section": "system", "spec_path": "actuation.max_simultaneous_peak_channels", "value": safe_channels, "requires_approval": True})
                 elif code == "insufficient_clearance":
                     axis = details.get("axis")
                     minimum = details.get("minimum_mm")
@@ -379,7 +380,7 @@ class HardwareService:
                         new_enclosure[idx] = math.ceil(minimum)
                         patches.append({"section": "mechanical", "spec_path": "mechanical.enclosure_internal_mm", "value": new_enclosure, "requires_approval": False})
                 elif code == "unlowered_requirement":
-                    patches.append({"section": "requirements", "spec_path": f"requirements.unresolved.{details.get('requirement_id', 'unknown')}.status", "value": "waived", "requires_approval": True})
+                    patches.append({"section": "requirements", "spec_path": f"requirements.active_unresolved.{details.get('requirement_id', 'unknown')}.status", "value": "waived", "requires_approval": True})
                 actions.append({"gate": report["gate"], "failure_code": code, "action": action, "patches": patches, "requires_user_decision": requires})
         return {"status": "generated", "project": project, "requires_user_decision": requires_user_decision, "actions": actions}
 

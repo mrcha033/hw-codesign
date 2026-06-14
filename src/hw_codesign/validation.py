@@ -177,7 +177,7 @@ class Validator:
 
     def check_requirements_lowering(self, spec: dict[str, Any]) -> GateReport:
         failures: list[Failure] = []
-        for item in spec.get("requirements", {}).get("unresolved", []):
+        for item in spec.get("requirements", {}).get("active_unresolved", []):
             if item.get("release_blocking", True) and item.get("status") != "waived":
                 failures.append(_failure(
                     FailureCategory.SPEC_ERROR,

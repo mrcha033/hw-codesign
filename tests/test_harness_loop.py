@@ -1,12 +1,31 @@
 from __future__ import annotations
 
 
+def test_new_project_has_requirements_spec(service, project):
+    assert (service.workspace.require_project(project) / "spec" / "requirements.yaml").is_file()
+
+
+def test_update_requirements_does_not_crash_on_new_project(service, project):
+    result = service.update_requirements(project, "CAN-FD IP67 JLCPCB")
+    assert result["status"] == "generated_with_unresolved_constraints"
+
+
+def test_unlowered_requirement_waiver_patch_updates_item_by_id(service, project):
+    service.update_requirements(project, "CAN-FD")
+    checks = service.run_all_checks(project, include_external=False)
+    result = service.apply_repair_plan(project, checks, approved=True)
+    assert result.get("applied"), f"Waiver patch must be applied with approved=True; got: {result}"
+    spec = service.read_spec(project)
+    statuses = {item["status"] for item in spec["requirements"]["active_unresolved"]}
+    assert statuses == {"waived"}, f"All unresolved items must be waived; got statuses: {statuses}"
+
+
 def test_update_requirements_persists_unlowered_constraints(service, project):
     result = service.update_requirements(project, "16 channel 24V battery, IP67, CAN-FD")
     assert result["status"] == "generated_with_unresolved_constraints"
     assert result["unsupported_constraints"]
     spec = service.read_spec(project)
-    unresolved = spec.get("requirements", {}).get("unresolved", [])
+    unresolved = spec.get("requirements", {}).get("active_unresolved", [])
     assert unresolved, "Unresolved constraints must be persisted to spec/requirements.yaml"
     assert all(item["release_blocking"] for item in unresolved)
     assert all(item["status"] == "unresolved" for item in unresolved)
