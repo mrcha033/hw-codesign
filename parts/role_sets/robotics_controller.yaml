@@ -1,0 +1,26 @@
+name: robotics_controller
+critical_roles: [power_input, fuse, reverse_polarity, tvs, efuse, regulator_5v, regulator_3v3, mcu, imu, can, estop, safety_gate, motor_io]
+roles:
+  power_input: {component_id: molex_42820_2212, resolution: curated}
+  fuse: {component_id: littelfuse_0498080, resolution: curated}
+  reverse_polarity: {component_id: lm74700qdbvrq1, resolution: curated}
+  tvs: {component_id: smcj33a, resolution: curated}
+  efuse: {component_id: tps26630rget, resolution: curated}
+  regulator_5v: {component_id: lm76005rnpr, resolution: curated}
+  regulator_3v3: {component_id: tps62133rgtr, resolution: curated}
+  mcu: {component_id: stm32h743vit6, resolution: curated}
+  imu: {component_id: icm_42688_p, resolution: curated}
+  can: {component_id: tcan1042hgvdrq1, resolution: curated}
+  estop: {component_id: phoenix_1935161, resolution: curated}
+  safety_gate: {component_id: sn74lvc1g97dbvr, resolution: curated}
+  can_connector: {component_id: molex_43650_0300, resolution: curated}
+  resistor_120r: {component_id: rc0603_120r, resolution: curated}
+  debug: {component_id: samtec_ftsh_105, resolution: curated}
+  usb: {component_id: usb4105_gf_a, resolution: curated}
+  usb_esd: {component_id: usblc6_2sc6, resolution: curated}
+  resistor_100k: {component_id: rc0603_100k, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  motor_io: {component_id: molex_43045_0800, resolution: curated}
+  capacitor_100n: {component_id: grm188_100n, resolution: curated}
+  capacitor_22u: {component_id: grm31_22u, resolution: curated}
+  capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}

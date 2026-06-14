@@ -1,27 +1,18 @@
 {
-  "artifacts": [
-    "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/validation/reports/kicad_erc.json"
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "external_gate_not_run",
+      "details": {},
+      "message": "KiCad ERC was not requested",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
   ],
-  "backend": {
-    "available": true,
-    "command": [
-      "kicad-cli",
-      "sch",
-      "erc",
-      "--format",
-      "json",
-      "--output",
-      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/validation/reports/kicad_erc.json",
-      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.kicad_sch"
-    ],
-    "returncode": 0,
-    "stderr": "",
-    "stdout": "Found 0 violations\nSaved ERC Report to /Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/validation/reports/kicad_erc.json\n"
-  },
-  "failures": [],
   "gate": "native_erc",
-  "metrics": {
-    "violations": 0
-  },
-  "status": "pass"
+  "metrics": {},
+  "status": "blocked"
 }

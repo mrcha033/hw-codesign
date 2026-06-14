@@ -9,4 +9,6 @@ build/
 *.egg-info/
 projects/*/firmware/*/build/
 .toolchains/
+node_modules/
+projects/*/exports/
 .DS_Store

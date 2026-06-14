@@ -2675,7 +2675,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 26.6699 0)
 			(effects
 				(font
@@ -2754,7 +2754,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 44.4499 0)
 			(effects
 				(font
@@ -2833,7 +2833,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 63.4999 0)
 			(effects
 				(font
@@ -2912,7 +2912,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 81.2799 0)
 			(effects
 				(font
@@ -2991,7 +2991,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 99.0599 0)
 			(effects
 				(font
@@ -3070,7 +3070,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 116.8399 0)
 			(effects
 				(font
@@ -3149,7 +3149,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 134.6199 0)
 			(effects
 				(font
@@ -3228,7 +3228,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C0603"
+		(property "PCB_Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 38.1 153.6699 0)
 			(effects
 				(font
@@ -3307,7 +3307,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C1206"
+		(property "PCB_Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 38.1 171.4499 0)
 			(effects
 				(font
@@ -3386,7 +3386,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "C1210"
+		(property "PCB_Footprint" "Capacitor_SMD:C_1210_3225Metric"
 			(at 38.1 189.2299 0)
 			(effects
 				(font
@@ -3465,7 +3465,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "SMCJ"
+		(property "PCB_Footprint" "Diode_SMD:D_SMC"
 			(at 90.17 26.6699 0)
 			(effects
 				(font
@@ -3544,7 +3544,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "SOT23-6"
+		(property "PCB_Footprint" "Package_TO_SOT_SMD:SOT-23-6"
 			(at 90.17 44.4499 0)
 			(effects
 				(font
@@ -3632,7 +3632,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MIDI_Fuse"
+		(property "PCB_Footprint" "HW_Curated:MIDI_Fuse"
 			(at 90.17 63.4999 0)
 			(effects
 				(font
@@ -3711,7 +3711,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_2Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_2Pin"
 			(at 90.17 81.2799 0)
 			(effects
 				(font
@@ -3790,7 +3790,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "Terminal_3Pin"
+		(property "PCB_Footprint" "TerminalBlock:Phoenix_3Pin"
 			(at 90.17 99.0599 0)
 			(effects
 				(font
@@ -3872,7 +3872,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_3Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_3Pin"
 			(at 90.17 116.8399 0)
 			(effects
 				(font
@@ -3954,7 +3954,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "Cortex_Debug_10Pin"
+		(property "PCB_Footprint" "Connector_Samtec:FTSH-105"
 			(at 90.17 134.6199 0)
 			(effects
 				(font
@@ -4042,7 +4042,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "USB_C_16Pin"
+		(property "PCB_Footprint" "Connector_USB:USB_C_GCT_USB4105"
 			(at 90.17 153.6699 0)
 			(effects
 				(font
@@ -4127,7 +4127,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 90.17 171.4499 0)
 			(effects
 				(font
@@ -4218,7 +4218,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 90.17 189.2299 0)
 			(effects
 				(font
@@ -4309,7 +4309,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 26.6699 0)
 			(effects
 				(font
@@ -4400,7 +4400,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 44.4499 0)
 			(effects
 				(font
@@ -4491,7 +4491,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 63.4999 0)
 			(effects
 				(font
@@ -4582,7 +4582,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 81.2799 0)
 			(effects
 				(font
@@ -4673,7 +4673,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 99.0599 0)
 			(effects
 				(font
@@ -4764,7 +4764,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 116.8399 0)
 			(effects
 				(font
@@ -4855,7 +4855,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 134.6199 0)
 			(effects
 				(font
@@ -4946,7 +4946,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 153.6699 0)
 			(effects
 				(font
@@ -5037,7 +5037,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 171.4499 0)
 			(effects
 				(font
@@ -5128,7 +5128,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "MicroFit_8Pin"
+		(property "PCB_Footprint" "HW_Curated:MicroFit_8Pin"
 			(at 140.97 189.2299 0)
 			(effects
 				(font
@@ -5219,7 +5219,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "SOT23-6"
+		(property "PCB_Footprint" "Package_TO_SOT_SMD:SOT-23-6"
 			(at 193.04 26.6699 0)
 			(effects
 				(font
@@ -5301,7 +5301,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "SOT23-6"
+		(property "PCB_Footprint" "Package_TO_SOT_SMD:SOT-23-6"
 			(at 193.04 44.4499 0)
 			(effects
 				(font
@@ -5386,7 +5386,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "R0603"
+		(property "PCB_Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 193.04 63.4999 0)
 			(effects
 				(font
@@ -5465,7 +5465,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "R0603"
+		(property "PCB_Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 193.04 81.2799 0)
 			(effects
 				(font
@@ -5544,7 +5544,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "R0603"
+		(property "PCB_Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 193.04 99.0599 0)
 			(effects
 				(font
@@ -5623,7 +5623,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "R0603"
+		(property "PCB_Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 193.04 116.8399 0)
 			(effects
 				(font
@@ -5702,7 +5702,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "LQFP100"
+		(property "PCB_Footprint" "Package_QFP:LQFP-100_14x14mm_P0.5mm"
 			(at 284.48 110.4899 0)
 			(effects
 				(font
@@ -5922,7 +5922,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "LGA14"
+		(property "PCB_Footprint" "Package_LGA:LGA-14"
 			(at 193.04 134.6199 0)
 			(effects
 				(font
@@ -6010,7 +6010,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "VQFN24"
+		(property "PCB_Footprint" "Package_DFN_QFN:VQFN-24-1EP"
 			(at 193.04 153.6699 0)
 			(effects
 				(font
@@ -6095,7 +6095,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "WQFN30"
+		(property "PCB_Footprint" "Package_DFN_QFN:WQFN-30"
 			(at 193.04 171.4499 0)
 			(effects
 				(font
@@ -6177,7 +6177,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "VQFN16"
+		(property "PCB_Footprint" "Package_DFN_QFN:VQFN-16"
 			(at 193.04 189.2299 0)
 			(effects
 				(font
@@ -6259,7 +6259,7 @@
 				(justify left)
 			)
 		)
-		(property "PCB_Footprint" "SOIC8"
+		(property "PCB_Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 245.11 26.6699 0)
 			(effects
 				(font

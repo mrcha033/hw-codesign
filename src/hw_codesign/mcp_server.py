@@ -24,11 +24,11 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name="hw_open_project")
     def open_project(project: str) -> dict[str, Any]:
-        return {"project": project, "project_path": str(service.workspace.require_project(project)), "spec": service.read_spec(project)}
+        return {"status": "pass", "project": project, "project_path": str(service.workspace.require_project(project)), "spec": service.read_spec(project)}
 
     @server.tool(name="hw_snapshot_project")
     def snapshot_project(project: str) -> dict[str, Any]:
-        return {"project": project, "iteration_id": service.workspace.snapshot(project), "status": "created"}
+        return {"project": project, "iteration_id": service.workspace.snapshot(project), "status": "generated"}
 
     @server.tool(name="hw_compare_iterations")
     def compare_iterations(project: str, before: str, after: str) -> dict[str, Any]:
@@ -36,11 +36,11 @@ def create_server(root: Path | str | None = None):
         before_files = {item.relative_to(base / before).as_posix(): item.read_text(encoding="utf-8", errors="replace") for item in (base / before).rglob("*") if item.is_file()}
         after_files = {item.relative_to(base / after).as_posix(): item.read_text(encoding="utf-8", errors="replace") for item in (base / after).rglob("*") if item.is_file()}
         names = sorted(set(before_files) | set(after_files))
-        return {"project": project, "before": before, "after": after, "added": [name for name in names if name not in before_files], "removed": [name for name in names if name not in after_files], "changed": [name for name in names if name in before_files and name in after_files and before_files[name] != after_files[name]]}
+        return {"status": "pass", "project": project, "before": before, "after": after, "added": [name for name in names if name not in before_files], "removed": [name for name in names if name not in after_files], "changed": [name for name in names if name in before_files and name in after_files and before_files[name] != after_files[name]]}
 
     @server.tool(name="hw_read_spec")
     def read_spec(project: str) -> dict[str, Any]:
-        return service.read_spec(project)
+        return {"status": "pass", "spec": service.read_spec(project)}
 
     @server.tool(name="hw_validate_spec")
     def validate_spec(project: str) -> dict[str, Any]:
@@ -56,25 +56,32 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name="hw_list_assumptions")
     def list_assumptions(project: str) -> dict[str, Any]:
-        return {"project": project, "assumptions": service.read_spec(project).get("assumptions", {})}
+        return {"status": "pass", "project": project, "assumptions": service.read_spec(project).get("assumptions", {})}
 
     @server.tool(name="hw_resolve_assumption")
     def resolve_assumption(project: str, name: str, resolution: str, approved: bool = False) -> dict[str, Any]:
         return service.resolve_assumption(project, name, resolution, approved)
 
-    @server.tool(name="hw_generate_electronics")
-    def generate_electronics_tool(project: str, backend: str = "atopile", target: str = "kicad", mode: str = "full_regeneration") -> dict[str, Any]:
-        result = service.generate_electronics_only(project)
-        return {"status": result["status"], "backend": backend, "target": target, "mode": mode, "files": result["files"]}
+    @server.tool(name="hw_generate_all")
+    def generate_all(project: str) -> dict[str, Any]:
+        return service.generate_all(project)
+
+    @server.tool(name="hw_generate_reference_intent")
+    def generate_reference_intent(project: str) -> dict[str, Any]:
+        return service.generate_reference_intent(project)
+
+    @server.tool(name="hw_generate_electronics_source")
+    def generate_electronics_tool(project: str) -> dict[str, Any]:
+        return service.generate_electronics_source(project)
 
     @server.tool(name="hw_generate_mechanical")
     def generate_mechanical_tool(project: str, backend: str = "build123d") -> dict[str, Any]:
-        result = service.generate_mechanical_only(project)
+        result = service.generate_mechanical_source(project)
         return {"status": result["status"], "backend": backend, "files": result["files"]}
 
     @server.tool(name="hw_generate_firmware")
     def generate_firmware_tool(project: str, framework: str = "zephyr") -> dict[str, Any]:
-        result = service.generate_firmware_only(project)
+        result = service.generate_firmware_source(project)
         return {"status": result["status"], "framework": framework, "files": result["files"]}
 
     @server.tool(name="hw_run_erc")
@@ -97,7 +104,7 @@ def create_server(root: Path | str | None = None):
     def extract_electrical_graph(project: str) -> dict[str, Any]:
         import json
         path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
-        return {"status": "generated" if path.exists() else "missing", "graph": json.loads(path.read_text(encoding="utf-8")) if path.exists() else None}
+        return {"status": "generated" if path.exists() else "blocked", "graph": json.loads(path.read_text(encoding="utf-8")) if path.exists() else None}
 
     @server.tool(name="hw_export_pcb_fabrication")
     def export_pcb_fabrication(project: str) -> dict[str, Any]:
@@ -142,7 +149,7 @@ def create_server(root: Path | str | None = None):
         import json
         directory = service.workspace.require_project(project) / "validation" / "reports"
         reports = [json.loads(item.read_text(encoding="utf-8")) for item in sorted(directory.glob("*.json")) if gate is None or item.stem == gate]
-        return {"project": project, "reports": reports}
+        return {"status": "pass", "project": project, "reports": reports}
 
     @server.tool(name="hw_apply_repair_plan")
     def apply_repair_plan(project: str) -> dict[str, Any]:
@@ -173,7 +180,7 @@ def create_server(root: Path | str | None = None):
     @server.tool(name="hw_verify_release")
     def verify_release(project: str) -> dict[str, Any]:
         spec = service.read_spec(project)
-        release = service.workspace.require_project(project) / "exports" / spec["project"]["revision"]
+        release = service.workspace.require_project(project) / "exports" / "releases" / spec["project"]["revision"]
         return service._artifact_integrity_report(release).to_dict()
 
     return server

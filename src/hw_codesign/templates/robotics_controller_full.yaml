@@ -2,6 +2,10 @@ project:
   target_use: rideable_or_mobile_robot
   revision: r1
   template: robotics_controller_full
+electronics:
+  backend: reference
+  role_set: robotics_controller
+  compiled_backend_required: true
 system:
   supply:
     battery:
@@ -83,4 +87,3 @@ assumptions:
     reason: Conservative per-channel default pending connector selection.
     critical: true
     requires_user_review: true
-

@@ -1,1 +1,1 @@
-# Connector exposure and insertion-clearance geometry.
+# Connector cutout rectangles and insertion clearance live in enclosure.py.

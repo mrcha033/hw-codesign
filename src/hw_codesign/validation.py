@@ -119,6 +119,47 @@ class Validator:
                 failures.append(_failure(FailureCategory.BOM_ERROR, "missing_pin_mapping", f"{ref} has no symbol-to-footprint pin mapping", "electronics.components"))
         return self._report("sourcing", failures)
 
+    def check_component_metadata(self, components: Iterable[dict[str, Any]]) -> GateReport:
+        failures: list[Failure] = []
+        components = list(components)
+        for component in components:
+            ref = component.get("ref", "?")
+            if component.get("resolution") != "curated":
+                failures.append(_failure(FailureCategory.BOM_ERROR, "component_not_curated", f"{ref} is not curated", ref))
+            if component.get("review_status") != "approved":
+                failures.append(_failure(FailureCategory.BOM_ERROR, "component_not_approved", f"{ref} review is not approved", ref))
+            symbol = component.get("symbol", {})
+            footprint = component.get("footprint_metadata", {})
+            if not symbol.get("verified") or not footprint.get("verified"):
+                failures.append(_failure(FailureCategory.BOM_ERROR, "unverified_library_metadata", f"{ref} symbol/footprint metadata is not verified", ref))
+            pins = component.get("pins", [])
+            if not pins:
+                failures.append(_failure(FailureCategory.BOM_ERROR, "empty_pin_map", f"{ref} has no pins", ref))
+                continue
+            numbers = [str(pin.get("number")) for pin in pins]
+            if len(numbers) != len(set(numbers)):
+                failures.append(_failure(FailureCategory.BOM_ERROR, "duplicate_pin_number", f"{ref} has duplicate pin numbers", ref))
+            symbol_pins = set(map(str, symbol.get("expected_pins", [])))
+            pads = set(map(str, footprint.get("expected_pads", [])))
+            for pin in pins:
+                number = str(pin.get("number"))
+                if number not in symbol_pins:
+                    failures.append(_failure(FailureCategory.BOM_ERROR, "symbol_pin_missing", f"{ref}.{number} is absent from curated symbol contract", ref))
+                if number not in pads:
+                    failures.append(_failure(FailureCategory.BOM_ERROR, "footprint_pad_missing", f"{ref}.{number} is absent from curated footprint contract", ref))
+                if pin.get("role") in {"power_in", "power_out", "ground"} and not pin.get("voltage_domain"):
+                    failures.append(_failure(FailureCategory.ELECTRICAL_SEMANTIC_ERROR, "power_pin_domain_missing", f"{ref}.{number} lacks a voltage domain", ref))
+            if component.get("sourcing", {}).get("status") not in {"resolved", "waived"}:
+                failures.append(_failure(FailureCategory.BOM_ERROR, "sourcing_unresolved", f"{ref} sourcing is unresolved", ref))
+        report = self._report("component_provenance", failures)
+        report.metrics = {"components_checked": len(components)}
+        return report
+
+    def check_graph_pin_resolution(self, graph: dict[str, Any]) -> GateReport:
+        known = {f"{component['ref']}.{pin['number']}" for component in graph.get("components", []) for pin in component.get("pins", [])}
+        failures = [_failure(FailureCategory.ELECTRICAL_SEMANTIC_ERROR, "graph_pin_unresolved", f"Net {net.get('name')} references unknown pin {endpoint}") for net in graph.get("nets", []) for endpoint in net.get("connected_pins", []) if endpoint not in known]
+        return self._report("pin_symbol_footprint", failures)
+
     def check_hw_sw_parity(self, graph: dict[str, Any], assignments: Iterable[dict[str, Any]]) -> GateReport:
         hardware_nets = {item["name"] for item in graph.get("nets", [])}
         assignments = list(assignments)
@@ -136,16 +177,23 @@ class Validator:
     @staticmethod
     def release_gate(reports: list[GateReport], assumptions: dict[str, Any], required_artifacts: list[Path]) -> GateReport:
         failures: list[Failure] = []
+        blocked = False
         for report in reports:
             if report.status != Status.PASS:
-                failures.append(_failure(FailureCategory.RELEASE_ERROR, "failed_gate", f"Required gate did not pass: {report.gate}", details={"status": report.status.value}))
+                blocked |= report.status == Status.BLOCKED
+                code = report.failures[0].code if report.gate == "backend_release_policy" and report.failures else "failed_gate"
+                failures.append(_failure(FailureCategory.RELEASE_ERROR, code, f"Required gate did not pass: {report.gate}", details={"status": report.status.value, "failure_codes": [failure.code for failure in report.failures]}))
         for name, assumption in assumptions.items():
             if assumption.get("critical") and assumption.get("requires_user_review"):
+                blocked = True
                 failures.append(Failure(FailureCategory.RELEASE_ERROR, "unresolved_critical_assumption", f"Critical assumption requires review: {name}", path=f"assumptions.{name}", requires_user_decision=True))
         for artifact in required_artifacts:
             if not artifact.is_file():
                 failures.append(_failure(FailureCategory.RELEASE_ERROR, "missing_export", f"Required release artifact is missing: {artifact.name}", str(artifact)))
-        return Validator._report("release", failures)
+        report = Validator._report("release", failures)
+        if blocked:
+            report.status = Status.BLOCKED
+        return report
 
     @staticmethod
     def _report(gate: str, failures: list[Failure]) -> GateReport:

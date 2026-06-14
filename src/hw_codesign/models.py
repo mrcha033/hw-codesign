@@ -10,6 +10,8 @@ class Status(StrEnum):
     FAIL = "fail"
     BLOCKED = "blocked"
     GENERATED = "generated"
+    CANDIDATE = "candidate"
+    RELEASED = "released"
 
 
 class FailureCategory(StrEnum):
@@ -69,6 +71,16 @@ class Component:
     constraints: list[str] = field(default_factory=list)
 
 
+@dataclass(frozen=True)
+class ResolvedComponent:
+    ref: str
+    role: str
+    component_id: str
+    resolution: Literal["curated", "registry_candidate", "unresolved"]
+    data: dict[str, Any]
+    provenance: dict[str, Any]
+
+
 @dataclass
 class Net:
     name: str
@@ -99,4 +111,3 @@ class PinAssignment:
     mcu_pin: str
     net_name: str
     constraints: list[str] = field(default_factory=list)
-

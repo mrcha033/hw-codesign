@@ -7,11 +7,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/hw-platform
-COPY pyproject.toml README.md ./
+COPY pyproject.toml README.md package.json package-lock.json ./
 COPY src ./src
 COPY schemas ./schemas
+COPY parts ./parts
 RUN python3 -m pip install --break-system-packages --no-cache-dir '.[mcp,cad]' \
-    && npm install -g @tscircuit/cli
+    && npm ci --ignore-scripts
 
 ENV HW_PLATFORM_ROOT=/workspace
 WORKDIR /workspace

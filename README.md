@@ -11,19 +11,22 @@ The platform treats structured specifications as the source of truth. It never r
 - JSON Schema validation and structured failure taxonomy
 - Built-in electrical budget/safety, mechanical envelope, and firmware pin-map checks
 - Deterministic typed electrical graph, editable KiCad schematic/PCB, mechanical source, Zephyr source, and BOM generation
+- Curated in-repository component database, role-set resolver, pin/symbol/footprint contracts, and immutable resolution provenance
+- Offline pinned tscircuit 0.1.1491 compile, Circuit JSON netlist extraction, and graph parity gates
 - Plane-preseeded Freerouting 2.2.4 autoroute with DSN/SES round-trip through KiCad's native Python API
 - KiCad CLI and Zephyr `west` adapters with honest blocked reports when unavailable
 - Release gate requiring all gates, resolved critical assumptions, and actual release artifacts
 - Shared CLI/MCP service layer and JSON-only operation results
 - Docker toolchain definition and pytest coverage
 
-The included reference robotics backend now emits a native KiCad 4-layer project with typed pin/net connectivity, deterministic power-plane trees, externally autorouted signal layers, KiCad-validated Gerber/drill/board STEP outputs, parametric enclosure STEP/STL, Zephyr BSP/application sources, a cross-compiled STM32H743 ELF, and a checksum-verified release archive. Physical qualification risks remain explicit and cannot be closed by software.
+The reference robotics backend emits design-intent and candidate artifacts only. It is never release eligible. Release requires the offline compiled tscircuit backend plus curated component, KiCad, mechanical, Zephyr, parity, assumption, and integrity gates. Physical qualification risks remain explicit and cannot be closed by software.
 
 ## Quick start
 
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install '.[dev,mcp]'
+npm ci --ignore-scripts
 .venv/bin/hw --root . create-project quadruped_robot_controller
 .venv/bin/hw --root . iterate quadruped_robot_controller --no-external
 ```
@@ -51,6 +54,8 @@ HW_PLATFORM_ROOT="$PWD" .venv/bin/hw-mcp
 
 Core tools include `hw_create_project`, `hw_read_spec`, `hw_validate_spec`, generation tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`, `hw_generate_repair_plan`, `hw_run_design_iteration`, `hw_check_release_gate`, and `hw_generate_design_report`.
 
+Domain generation is explicit: `hw_generate_reference_intent`, `hw_generate_electronics_source`, `hw_generate_mechanical_source`, and `hw_generate_firmware_source`. Only `hw_generate_all` invokes all domains.
+
 ## Gate semantics
 
 - `pass`: the check ran and found no blocking finding.
@@ -62,3 +67,5 @@ Digital release evidence cannot certify load thermals, EMI/EMC, abuse safety, vi
 ## Repository layout
 
 Generated projects follow the requested `projects/<name>/{spec,electronics,mechanical,firmware,validation,exports,history}` structure. Product code lives in `src/hw_codesign`; schemas are in `schemas`; adapters are isolated under `src/hw_codesign/backends`.
+
+Candidate bundles live under `exports/candidates/<iteration_id>`. Release artifacts and bundles live under `exports/releases/<revision>` and are created only after every release gate passes.

@@ -1,0 +1,21 @@
+{
+  "artifacts": [],
+  "backend": {
+    "name": "reference",
+    "release_eligible": false
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "reference_backend_candidate_only",
+      "details": {},
+      "message": "Reference electronics backend produces candidate artifacts only",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "compiled_electronics_backend",
+  "metrics": {},
+  "status": "blocked"
+}

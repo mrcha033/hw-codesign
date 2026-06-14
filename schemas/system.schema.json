@@ -33,7 +33,7 @@
     "firmware": {"type": "object", "required": ["framework", "target"]},
     "manufacturing": {"type": "object", "required": ["pcb", "exports"]},
     "safety": {"type": "object", "required": ["emergency_stop", "required_protections"]},
-    "assumptions": {"type": "object"}
+    "assumptions": {"type": "object"},
+    "electronics": {"type": "object", "properties": {"backend": {"enum": ["reference", "tscircuit", "atopile"]}, "role_set": {"type": "string"}}}
   }
 }
-

@@ -13,9 +13,12 @@ if [[ ! -x /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli ]]; then
 fi
 command -v arm-none-eabi-gcc >/dev/null || brew install arm-none-eabi-gcc
 command -v curl >/dev/null || { echo "curl is required" >&2; exit 1; }
+command -v node >/dev/null || brew install node@22
+command -v npm >/dev/null || { echo "npm is required" >&2; exit 1; }
 
 python3 -m venv "$ROOT/.venv"
 "$ROOT/.venv/bin/pip" install '.[dev,mcp,cad]' west
+npm --prefix "$ROOT" ci --ignore-scripts
 
 mkdir -p "$TOOLS"
 if [[ "$(uname -m)" != "arm64" ]]; then
@@ -52,4 +55,4 @@ mkdir -p "$ZEPHYR/modules/hal"
 clone_at https://github.com/zephyrproject-rtos/hal_stm32.git "$ZEPHYR/modules/hal/stm32" 1e753266ddfb4b07a8a0b1ec566e9637ea45d5ef
 clone_at https://github.com/zephyrproject-rtos/CMSIS_6.git "$ZEPHYR/modules/hal/cmsis_6" 06d952b6713a2ca41c9224a62075e4059402a151
 
-echo "Pinned KiCad, Freerouting, OpenJDK, and Zephyr toolchains are ready."
+echo "Pinned tscircuit, KiCad, Freerouting, OpenJDK, and Zephyr toolchains are ready."

@@ -1,1 +1,1 @@
-# Cooling features remain conditional on resolved thermal assumptions.
+# Cooling features require an explicitly resolved thermal assumption.

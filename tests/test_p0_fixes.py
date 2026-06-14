@@ -1,57 +1,47 @@
 from __future__ import annotations
 
 from hw_codesign.models import Failure, FailureCategory, GateReport, Status
+from hw_codesign.io import read_yaml, write_yaml
 
 
 # ── Fix 1: BLOCKED → PASS masquerade ─────────────────────────────────────────
 
-def test_blocked_native_mechanical_stays_blocked_in_prepare_release(service, project, monkeypatch):
-    """When native mechanical backend returns BLOCKED and require_native=True, that status must
-    not be promoted to PASS."""
+def test_reference_prepare_release_is_blocked_before_native_promotion(service, project):
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
-    monkeypatch.setattr(
-        service.mechanical,
-        "generate",
-        lambda spec, release: GateReport(
-            "mechanical_export",
-            Status.BLOCKED,
-            [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "cadquery-ocp not installed")],
-        ),
-    )
     result = service.prepare_release(project, checks, require_native=True)
-    reports_by_gate = {r["gate"]: r for r in result["reports"]}
-    assert reports_by_gate["mechanical_export"]["status"] == "blocked"
+    assert result["status"] == "blocked"
+    assert result["code"] == "compiled_electronics_backend_required"
 
 
-def test_blocked_native_fabrication_stays_blocked_in_prepare_release(service, project, monkeypatch):
-    """When KiCad export_manufacturing is BLOCKED and require_native=True, fabrication must
-    not be promoted to PASS."""
+def test_reference_release_gate_is_blocked(service, project):
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
-    monkeypatch.setattr(
-        service.kicad,
-        "export_manufacturing",
-        lambda path, release: GateReport(
-            "fabrication_export",
-            Status.BLOCKED,
-            [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "KiCad not installed")],
-        ),
-    )
-    result = service.prepare_release(project, checks, require_native=True)
-    reports_by_gate = {r["gate"]: r for r in result["reports"]}
-    assert reports_by_gate["fabrication_export"]["status"] == "blocked"
+    result = service.check_release_gate(project, [service._report_from_dict(item) for item in checks["reports"]])
+    assert result["status"] == "blocked"
+    assert "compiled_electronics_backend_required" in {item["code"] for item in result["failures"]}
 
 
-def test_reference_mode_prepare_release_passes_without_native_tools(service, project):
-    """When require_native=False (reference mode), prepare_release must return PASS for both
-    mechanical and fabrication even when no native tools are installed."""
+def test_reference_mode_never_creates_release_directory(service, project):
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
     result = service.prepare_release(project, checks, require_native=False)
-    reports_by_gate = {r["gate"]: r for r in result["reports"]}
-    assert reports_by_gate["mechanical_export"]["status"] == "pass"
-    assert reports_by_gate["fabrication_export"]["status"] == "pass"
+    assert result["status"] == "blocked"
+    assert not (service.workspace.require_project(project) / "exports" / "releases").exists()
+
+
+def test_failed_native_export_never_leaves_partial_release(service, project, monkeypatch):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    system_path = project_path / "spec" / "system.yaml"
+    system = read_yaml(system_path)
+    system["electronics"]["backend"] = "tscircuit"
+    write_yaml(system_path, system)
+    monkeypatch.setattr(service.mechanical, "generate", lambda spec, target: GateReport("mechanical_export", Status.BLOCKED, [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "CAD unavailable")]))
+    result = service.prepare_release(project, {"reports": [{"status": "pass"}]}, require_native=True)
+    assert result["status"] == "blocked"
+    assert not (project_path / "exports" / "releases" / "r1").exists()
+    assert not (project_path / "exports" / ".staging" / "r1").exists()
 
 
 # ── Fix 2: Critical assumption auto-resolve ───────────────────────────────────
@@ -83,7 +73,7 @@ def test_failed_design_iteration_does_not_write_to_release_directory(service, pr
     """A design iteration that does not pass all gates must not write to exports/<revision>/."""
     spec = service.read_spec(project)
     revision = spec["project"]["revision"]
-    release_path = service.workspace.require_project(project) / "exports" / revision
+    release_path = service.workspace.require_project(project) / "exports" / "releases" / revision
 
     result = service.run_design_iteration(project, include_external=False)
 
@@ -96,13 +86,12 @@ def test_failed_design_iteration_does_not_write_to_release_directory(service, pr
 # ── Fix 4: Gate name disambiguation ──────────────────────────────────────────
 
 def test_reference_host_firmware_build_has_distinct_gate_name(service, project):
-    """Reference host CMake firmware build must be named 'host_firmware_build', not
-    the ambiguous 'firmware_build' shared with the Zephyr native gate."""
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
     gate_names = {r["gate"] for r in checks["reports"]}
 
-    assert "host_firmware_build" in gate_names
+    assert "reference_firmware_build" in gate_names
+    assert "host_firmware_build" not in gate_names
     assert "firmware_build" not in gate_names
 
 

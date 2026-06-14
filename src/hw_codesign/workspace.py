@@ -45,7 +45,7 @@ class Workspace:
         for section in SPEC_FILES:
             value = {section: spec.get(section, {})}
             if section == "system":
-                value.update({key: spec[key] for key in ("compute", "actuation", "sensing", "assumptions")})
+                value.update({key: spec[key] for key in ("compute", "actuation", "sensing", "assumptions", "electronics")})
             write_yaml(path / "spec" / f"{section}.yaml", value)
         write_json(path / "history" / "failure_log.jsonl", [])
         (path / "history" / "decisions.md").write_text("# Engineering Decisions\n\n", encoding="utf-8")
@@ -54,7 +54,7 @@ class Workspace:
     @staticmethod
     def _create_tree(path: Path) -> None:
         directories = (
-            "spec", "electronics/source", "electronics/generated/kicad", "electronics/libraries/symbols",
+            "spec", "electronics/intent", "electronics/source", "electronics/source/tscircuit", "electronics/generated/kicad", "electronics/libraries/symbols",
             "electronics/libraries/footprints", "electronics/libraries/3dmodels", "mechanical/source",
             "mechanical/generated/drawings", "firmware/zephyr/boards", "firmware/zephyr/dts",
             "firmware/zephyr/drivers", "firmware/zephyr/app/src", "firmware/zephyr/tests", "firmware/generated",

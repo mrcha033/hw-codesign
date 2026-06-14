@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["name", "roles", "critical_roles"],
+  "properties": {
+    "name": {"type": "string"},
+    "roles": {"type": "object", "additionalProperties": {"type": "object", "required": ["component_id", "resolution"]}},
+    "critical_roles": {"type": "array", "items": {"type": "string"}}
+  }
+}

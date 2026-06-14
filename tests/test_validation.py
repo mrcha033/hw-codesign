@@ -29,7 +29,7 @@ def test_release_rejects_unresolved_assumptions_and_missing_exports(service, pro
     checks = service.run_all_checks(project, include_external=False)
     release = service.check_release_gate(project, [service._report_from_dict(item) for item in checks["reports"]])
     codes = {item["code"] for item in release["failures"]}
-    assert release["status"] == "fail"
+    assert release["status"] == "blocked"
     assert "unresolved_critical_assumption" in codes
     assert "missing_export" in codes
 

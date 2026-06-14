@@ -6,7 +6,7 @@ import math
 import struct
 import zipfile
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 from .io import atomic_write_text, write_json
 
@@ -29,12 +29,12 @@ def deterministic_zip(output: Path, files: Iterable[tuple[Path, str]]) -> None:
             archive.writestr(info, source.read_bytes())
 
 
-def write_manifest(root: Path, output: Path) -> str:
+def write_manifest(root: Path, output: Path, provenance: dict[str, Any] | None = None, candidate_only: bool = False) -> str:
     entries = []
     for path in sorted(root.rglob("*")):
         if path.is_file() and path != output:
-            entries.append({"path": path.relative_to(root).as_posix(), "bytes": path.stat().st_size, "sha256": sha256(path)})
-    write_json(output, {"algorithm": "sha256", "artifacts": entries})
+            entries.append({"path": path.relative_to(root).as_posix(), "bytes": path.stat().st_size, "sha256": sha256(path), "provenance": provenance or {}})
+    write_json(output, {"algorithm": "sha256", "candidate_only": candidate_only, "release_eligible": not candidate_only, "provenance": provenance or {}, "artifacts": entries})
     return str(output)
 
 

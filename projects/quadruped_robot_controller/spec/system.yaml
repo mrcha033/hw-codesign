@@ -16,6 +16,10 @@ system:
     - name: V3V3
       voltage: 3.3
       current_peak_a: 2.0
+electronics:
+  backend: reference
+  role_set: robotics_controller
+  compiled_backend_required: true
 compute:
   mcu:
     family: STM32H7

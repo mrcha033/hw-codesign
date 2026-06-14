@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-06-14T21:27:15",
+    "date": "2026-06-15T01:48:20",
     "ignored_checks": [
         {
             "description": "Footprint has no courtyard defined",
@@ -32,5 +32,636 @@
     "schematic_parity": [],
     "source": "quadruped_robot_controller.kicad_pcb",
     "unconnected_items": [],
-    "violations": []
+    "violations": [
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J14",
+                    "pos": {
+                        "x": 3.0,
+                        "y": 52.0
+                    },
+                    "uuid": "1007d7e4-0f8c-4f90-9398-d97ba66bfc85"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'D_SMC' does not match copy in library 'Diode_SMD'",
+            "items": [
+                {
+                    "description": "Footprint D1",
+                    "pos": {
+                        "x": 74.0,
+                        "y": 5.0
+                    },
+                    "uuid": "15770888-9cf9-4ac6-962c-2351b8c2bd93"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SOT-23-6' does not match copy in library 'Package_TO_SOT_SMD'",
+            "items": [
+                {
+                    "description": "Footprint Q1",
+                    "pos": {
+                        "x": 56.0,
+                        "y": 5.0
+                    },
+                    "uuid": "1850febf-ac7f-4ca3-90ef-a6bb5d1092fd"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J16",
+                    "pos": {
+                        "x": 3.0,
+                        "y": 82.0
+                    },
+                    "uuid": "1df3e540-dde3-44e5-a059-9448816183ec"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J19",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 37.0
+                    },
+                    "uuid": "21dd065b-fbf9-4f0d-8714-40ef4a638033"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J20",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 52.0
+                    },
+                    "uuid": "32e426fe-6b57-453d-8fc1-e017ef13817c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'R_0603_1608Metric' does not match copy in library 'Resistor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint R2",
+                    "pos": {
+                        "x": 42.0,
+                        "y": 48.0
+                    },
+                    "uuid": "37d176fd-4cf9-4070-9141-76099d6846bd"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J17",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 7.0
+                    },
+                    "uuid": "3d0eeae8-0748-44f9-aa98-2a4f576eb012"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SOIC-8_3.9x4.9mm_P1.27mm' does not match copy in library 'Package_SO'",
+            "items": [
+                {
+                    "description": "Footprint U6",
+                    "pos": {
+                        "x": 90.0,
+                        "y": 27.0
+                    },
+                    "uuid": "443f8b8f-4160-4825-9b75-fbb820af6b6b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'WQFN-30' not found in library 'Package_DFN_QFN'",
+            "items": [
+                {
+                    "description": "Footprint U4",
+                    "pos": {
+                        "x": 112.0,
+                        "y": 5.0
+                    },
+                    "uuid": "4678aa0e-6ddc-4e94-bb17-f6fc156bc868"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J12",
+                    "pos": {
+                        "x": 3.0,
+                        "y": 22.0
+                    },
+                    "uuid": "4740b749-a39c-4c60-91d9-74fffa313fe1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'R_0603_1608Metric' does not match copy in library 'Resistor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint R1",
+                    "pos": {
+                        "x": 136.0,
+                        "y": 27.0
+                    },
+                    "uuid": "47684bc7-3462-42e2-9af6-b3d814d053f5"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J18",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 22.0
+                    },
+                    "uuid": "4abab315-b748-4bb0-b496-66940e8942e2"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C8",
+                    "pos": {
+                        "x": 68.0,
+                        "y": 89.0
+                    },
+                    "uuid": "4b503d9c-1bc1-4eb0-a638-4d66893d07d1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C2",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 76.0
+                    },
+                    "uuid": "4cb7c63d-ede8-4654-97b2-359ea1e6aa1a"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C1",
+                    "pos": {
+                        "x": 24.0,
+                        "y": 76.0
+                    },
+                    "uuid": "4d896c63-ca13-4eb8-b58e-2689f200f7a7"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'C_1206_3216Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C9",
+                    "pos": {
+                        "x": 90.0,
+                        "y": 89.0
+                    },
+                    "uuid": "4fc83d21-0df3-4fe2-8cc4-67060127b008"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J3",
+                    "pos": {
+                        "x": 118.0,
+                        "y": 27.0
+                    },
+                    "uuid": "500432cc-ea45-41df-900b-43d1f084f57c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J11",
+                    "pos": {
+                        "x": 3.0,
+                        "y": 7.0
+                    },
+                    "uuid": "502c20f1-966d-4f1f-a77c-181f39bed9d4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J22",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 82.0
+                    },
+                    "uuid": "52ea06ee-3e8c-4296-b66e-cd2d4c897de0"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C4",
+                    "pos": {
+                        "x": 90.0,
+                        "y": 76.0
+                    },
+                    "uuid": "59ff171f-6ccf-4170-8504-75e60ef736ce"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C6",
+                    "pos": {
+                        "x": 24.0,
+                        "y": 89.0
+                    },
+                    "uuid": "6218ed05-36c5-4054-a9a3-c8d2148daf0a"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_0603_1608Metric' does not match copy in library 'Resistor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint R4",
+                    "pos": {
+                        "x": 60.0,
+                        "y": 27.0
+                    },
+                    "uuid": "6f2d0c83-4bc1-477e-bb4f-b25e3617d790"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'LGA-14' not found in library 'Package_LGA'",
+            "items": [
+                {
+                    "description": "Footprint U2",
+                    "pos": {
+                        "x": 22.0,
+                        "y": 48.0
+                    },
+                    "uuid": "766c44ee-94ce-4210-9c76-6d2c54b0258d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C3",
+                    "pos": {
+                        "x": 68.0,
+                        "y": 76.0
+                    },
+                    "uuid": "9a815e01-1804-48b0-a526-8d370b3bbffa"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'USB_C_GCT_USB4105' not found in library 'Connector_USB'",
+            "items": [
+                {
+                    "description": "Footprint J5",
+                    "pos": {
+                        "x": 22.0,
+                        "y": 27.0
+                    },
+                    "uuid": "9e3e8cae-7aac-4f0c-98de-14e9c9c2c708"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C7",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 89.0
+                    },
+                    "uuid": "9e9c37de-26be-43c3-89e8-1b5a1f106454"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'Phoenix_3Pin' not found in library 'TerminalBlock'",
+            "items": [
+                {
+                    "description": "Footprint J2",
+                    "pos": {
+                        "x": 104.0,
+                        "y": 48.0
+                    },
+                    "uuid": "a99563d6-9852-40bf-aca7-a2c15d66ef58"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J13",
+                    "pos": {
+                        "x": 3.0,
+                        "y": 37.0
+                    },
+                    "uuid": "b6cfc215-e5fa-4a43-a0d9-eb37d4f1f15c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint F1",
+                    "pos": {
+                        "x": 38.0,
+                        "y": 5.0
+                    },
+                    "uuid": "b7db01e9-c7c9-4622-bbb8-fbc5645802f6"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SOT-23-6' does not match copy in library 'Package_TO_SOT_SMD'",
+            "items": [
+                {
+                    "description": "Footprint D2",
+                    "pos": {
+                        "x": 42.0,
+                        "y": 27.0
+                    },
+                    "uuid": "bce9498a-f0f8-4abb-bb98-c2c6d459fd4b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J1",
+                    "pos": {
+                        "x": 20.0,
+                        "y": 5.0
+                    },
+                    "uuid": "beee2ca0-d965-487a-af2e-145a654edb38"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'R_0603_1608Metric' does not match copy in library 'Resistor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint R3",
+                    "pos": {
+                        "x": 58.0,
+                        "y": 48.0
+                    },
+                    "uuid": "bff60f70-1c0a-48b2-8982-b0126a714323"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'VQFN-24-1EP' not found in library 'Package_DFN_QFN'",
+            "items": [
+                {
+                    "description": "Footprint U3",
+                    "pos": {
+                        "x": 92.0,
+                        "y": 5.0
+                    },
+                    "uuid": "c0512ded-8f46-4526-89b5-50f380ac2f44"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'C_1210_3225Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C10",
+                    "pos": {
+                        "x": 112.0,
+                        "y": 89.0
+                    },
+                    "uuid": "c19397e0-3206-46ee-9cb3-75f923bfd77f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'LQFP-100_14x14mm_P0.5mm' does not match copy in library 'Package_QFP'",
+            "items": [
+                {
+                    "description": "Footprint U1",
+                    "pos": {
+                        "x": 70.0,
+                        "y": 37.0
+                    },
+                    "uuid": "cfa7760d-2eaf-468e-b123-2529ef898043"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'FTSH-105' not found in library 'Connector_Samtec'",
+            "items": [
+                {
+                    "description": "Footprint J4",
+                    "pos": {
+                        "x": 104.0,
+                        "y": 69.0
+                    },
+                    "uuid": "df84e246-87f5-4149-8a42-0884bf962781"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'VQFN-16' not found in library 'Package_DFN_QFN'",
+            "items": [
+                {
+                    "description": "Footprint U5",
+                    "pos": {
+                        "x": 132.0,
+                        "y": 5.0
+                    },
+                    "uuid": "e0f7714b-23fc-4af2-ad6c-4b46d68bb41c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J21",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 67.0
+                    },
+                    "uuid": "e3f92502-47e9-44a1-9f66-824c99696a9e"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SOT-23-6' does not match copy in library 'Package_TO_SOT_SMD'",
+            "items": [
+                {
+                    "description": "Footprint Q2",
+                    "pos": {
+                        "x": 124.0,
+                        "y": 48.0
+                    },
+                    "uuid": "e5c8f028-7fef-4cb8-bbd6-9ee75da3036d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'C_0603_1608Metric' does not match copy in library 'Capacitor_SMD'",
+            "items": [
+                {
+                    "description": "Footprint C5",
+                    "pos": {
+                        "x": 112.0,
+                        "y": 76.0
+                    },
+                    "uuid": "f7fa3f41-11fa-40c6-9efd-0d3deef3aeea"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'HW_Curated'",
+            "items": [
+                {
+                    "description": "Footprint J15",
+                    "pos": {
+                        "x": 3.0,
+                        "y": 67.0
+                    },
+                    "uuid": "ff63f06a-064a-4fb4-bd28-244808b2bef5"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        }
+    ]
 }

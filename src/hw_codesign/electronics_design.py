@@ -5,7 +5,7 @@ from typing import Any
 
 
 def pin(number: str | int, name: str, net: str, role: str) -> dict[str, Any]:
-    return {"number": str(number), "name": name, "net": net, "role": role}
+    return {"number": str(number), "name": name, "net": net, "role": role, "voltage_domain": _domain(net) if role in {"power_in", "power_out", "ground"} else None}
 
 
 def component(ref: str, category: str, value: str, mpn: str, footprint: str, pins: list[dict[str, Any]], **metadata: Any) -> dict[str, Any]:

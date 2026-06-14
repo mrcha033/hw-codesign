@@ -28,9 +28,9 @@ class ZephyrBackend:
                 env = {"ZEPHYR_BASE": str(zephyr_base), "ZEPHYR_TOOLCHAIN_VARIANT": "gnuarmemb", "GNUARMEMB_TOOLCHAIN_PATH": str(Path(arm_gcc).parents[1])}
                 configure = run_tool("cmake", arguments, project, timeout=600, env=env)
                 if not configure.available or configure.returncode != 0:
-                    return tool_report("firmware_build", configure)
+                    return tool_report("native_zephyr_build", configure)
                 result = run_tool("cmake", ["--build", str(build)], project, timeout=1200, env=env)
                 elf = build / "zephyr" / "zephyr.elf"
-                return tool_report("firmware_build", result, [str(elf)] if elf.exists() else [])
+                return tool_report("native_zephyr_build", result, [str(elf)] if elf.exists() else [])
         result = run_tool("west", ["build", "-b", board, str(app), "-d", str(build)], project, timeout=1200)
-        return tool_report("firmware_build", result, [str(build / "zephyr" / "zephyr.elf")] if (build / "zephyr" / "zephyr.elf").exists() else [])
+        return tool_report("native_zephyr_build", result, [str(build / "zephyr" / "zephyr.elf")] if (build / "zephyr" / "zephyr.elf").exists() else [])

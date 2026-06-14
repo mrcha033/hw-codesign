@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from .errors import UnsafeChangeError
 
 
-PROTECTED_PREFIXES = ("safety.", "manufacturing.limits.", "system.supply.battery.chemistry")
+PROTECTED_PREFIXES = ("safety.", "manufacturing.", "system.supply.", "actuation.motor_channel_peak_current_a", "mechanical.cooling", "mechanical.connectors", "release.")
 
 
 @dataclass(frozen=True)

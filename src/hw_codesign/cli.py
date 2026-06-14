@@ -30,6 +30,9 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("project")
     generate = commands.add_parser("generate")
     generate.add_argument("project")
+    for name in ("generate-reference-intent", "generate-electronics-source", "generate-mechanical-source", "generate-firmware-source"):
+        command = commands.add_parser(name)
+        command.add_argument("project")
     check = commands.add_parser("check")
     check.add_argument("project")
     check.add_argument("--no-external", action="store_true")
@@ -54,13 +57,21 @@ def main() -> int:
         if args.command == "create-project":
             result = service.create_project(args.name, args.template)
         elif args.command == "read-spec":
-            result = service.read_spec(args.project)
+            result = {"status": "pass", "spec": service.read_spec(args.project)}
         elif args.command == "update-requirements":
             result = service.update_requirements(args.project, args.requirements_text)
         elif args.command == "validate-spec":
             result = service.validate_spec(args.project)
         elif args.command == "generate":
             result = service.generate_all(args.project)
+        elif args.command == "generate-reference-intent":
+            result = service.generate_reference_intent(args.project)
+        elif args.command == "generate-electronics-source":
+            result = service.generate_electronics_source(args.project)
+        elif args.command == "generate-mechanical-source":
+            result = service.generate_mechanical_source(args.project)
+        elif args.command == "generate-firmware-source":
+            result = service.generate_firmware_source(args.project)
         elif args.command == "check":
             result = service.run_all_checks(args.project, include_external=not args.no_external)
         elif args.command == "iterate":
@@ -76,7 +87,7 @@ def main() -> int:
         _emit(result)
         return 0
     except (HardwarePlatformError, FileExistsError, ValueError) as exc:
-        _emit({"status": "error", "error": type(exc).__name__, "message": str(exc)})
+        _emit({"status": "fail", "error": type(exc).__name__, "message": str(exc)})
         return 2
 
 
