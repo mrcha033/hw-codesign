@@ -1,0 +1,59 @@
+system:
+  supply:
+    battery:
+      type: li_ion_or_lipo
+      pack_voltage_nominal: 24.0
+      pack_voltage_max: 29.4
+      pack_current_peak_a: 80.0
+    rails:
+    - name: VBAT
+      voltage_min: 18.0
+      voltage_max: 29.4
+      current_peak_a: 80.0
+    - name: V5
+      voltage: 5.0
+      current_peak_a: 5.0
+    - name: V3V3
+      voltage: 3.3
+      current_peak_a: 2.0
+compute:
+  mcu:
+    family: STM32H7
+    hard_realtime_required: true
+  companion:
+    optional: true
+    candidates:
+    - RaspberryPi_CM4
+    - Jetson_Orin_Nano
+actuation:
+  motor_channels: 12
+  motor_type: unspecified
+  motor_channel_peak_current_a: 8.0
+  feedback:
+    encoder: required
+    current_sense: required
+sensing:
+  imu: required
+  battery_monitor: required
+  current_monitor: required
+  temperature_monitor: required
+  e_stop: required
+assumptions:
+  motor_type:
+    value: external_driver_modules
+    confidence: low
+    reason: Exact motor topology was not specified.
+    critical: true
+    requires_user_review: true
+  cooling:
+    value: forced_air_recommended
+    confidence: low
+    reason: Thermal behavior requires load testing and enclosure airflow data.
+    critical: true
+    requires_user_review: true
+  connector_current_rating:
+    value_a: 10.0
+    confidence: medium
+    reason: Conservative per-channel default pending connector selection.
+    critical: true
+    requires_user_review: true

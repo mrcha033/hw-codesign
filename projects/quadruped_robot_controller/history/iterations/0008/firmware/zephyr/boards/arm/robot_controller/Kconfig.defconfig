@@ -1,0 +1,4 @@
+if BOARD_ROBOT_CONTROLLER
+config BOARD
+  default "robot_controller"
+endif

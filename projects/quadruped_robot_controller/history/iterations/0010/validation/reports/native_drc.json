@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/validation/reports/kicad_drc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "pcb",
+      "drc",
+      "--format",
+      "json",
+      "--refill-zones",
+      "--save-board",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/validation/reports/kicad_drc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.kicad_pcb"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 0 violations\nFound 0 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/validation/reports/kicad_drc.json\nSaved board\n"
+  },
+  "failures": [],
+  "gate": "native_drc",
+  "metrics": {
+    "violations": 0
+  },
+  "status": "pass"
+}

@@ -1,0 +1,7 @@
+# Generated high-level hardware intent. Edit spec, then regenerate.
+module RobotController:
+  mcu = new STM32H7
+  power_input = new ProtectedPowerInput
+  imu = new IMU
+  motor_channels = new MotorChannel[12]
+  emergency_stop = new FailSafeEmergencyStop

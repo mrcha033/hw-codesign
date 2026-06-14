@@ -1,0 +1,87 @@
+[
+  {
+    "mcu_pin": "PB8",
+    "net_name": "I2C_IMU_SCL",
+    "signal": "I2C_IMU_SCL"
+  },
+  {
+    "mcu_pin": "PB9",
+    "net_name": "I2C_IMU_SDA",
+    "signal": "I2C_IMU_SDA"
+  },
+  {
+    "mcu_pin": "PD0",
+    "net_name": "CAN_RX",
+    "signal": "CAN_RX"
+  },
+  {
+    "mcu_pin": "PD1",
+    "net_name": "CAN_TX",
+    "signal": "CAN_TX"
+  },
+  {
+    "mcu_pin": "PC13",
+    "net_name": "ESTOP_IN",
+    "signal": "ESTOP_IN"
+  },
+  {
+    "mcu_pin": "PWM1",
+    "net_name": "MOTOR1_PWM",
+    "signal": "MOTOR1_PWM"
+  },
+  {
+    "mcu_pin": "PWM2",
+    "net_name": "MOTOR2_PWM",
+    "signal": "MOTOR2_PWM"
+  },
+  {
+    "mcu_pin": "PWM3",
+    "net_name": "MOTOR3_PWM",
+    "signal": "MOTOR3_PWM"
+  },
+  {
+    "mcu_pin": "PWM4",
+    "net_name": "MOTOR4_PWM",
+    "signal": "MOTOR4_PWM"
+  },
+  {
+    "mcu_pin": "PWM5",
+    "net_name": "MOTOR5_PWM",
+    "signal": "MOTOR5_PWM"
+  },
+  {
+    "mcu_pin": "PWM6",
+    "net_name": "MOTOR6_PWM",
+    "signal": "MOTOR6_PWM"
+  },
+  {
+    "mcu_pin": "PWM7",
+    "net_name": "MOTOR7_PWM",
+    "signal": "MOTOR7_PWM"
+  },
+  {
+    "mcu_pin": "PWM8",
+    "net_name": "MOTOR8_PWM",
+    "signal": "MOTOR8_PWM"
+  },
+  {
+    "mcu_pin": "PWM9",
+    "net_name": "MOTOR9_PWM",
+    "signal": "MOTOR9_PWM"
+  },
+  {
+    "mcu_pin": "PWM10",
+    "net_name": "MOTOR10_PWM",
+    "signal": "MOTOR10_PWM"
+  },
+  {
+    "mcu_pin": "PWM11",
+    "net_name": "MOTOR11_PWM",
+    "signal": "MOTOR11_PWM"
+  },
+  {
+    "mcu_pin": "PWM12",
+    "net_name": "MOTOR12_PWM",
+    "signal": "MOTOR12_PWM"
+  }
+]

@@ -1,0 +1,9 @@
+firmware:
+  framework: zephyr
+  target: stm32h7
+  outputs:
+  - devicetree_overlay
+  - pinmap
+  - board_definition
+  - driver_stubs
+  - bringup_tests

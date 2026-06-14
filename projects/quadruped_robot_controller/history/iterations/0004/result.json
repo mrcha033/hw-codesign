@@ -1,0 +1,88 @@
+{
+  "failed_gates": [],
+  "generated": {
+    "files": {
+      "bom": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/working/fabrication/bom.csv"
+      ],
+      "electronics": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/board.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/power_tree.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/motor_channels.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/sensor_bus.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/connectors.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/electrical_graph.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.kicad_pcb",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.kicad_pro",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.kicad_sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.sch"
+      ],
+      "firmware": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/board.cmake",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/devicetree.overlay",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/kconfig.defconfig",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/pinmap.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/pinmap.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/app/src/main.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/tests/test_i2c_imu.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/tests/test_motor_pwm.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/boards/arm/robot_controller/robot_controller.dts",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/reference/CMakeLists.txt"
+      ],
+      "mechanical": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/connector_cutouts.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/enclosure.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/mounting_plate.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/thermal_features.py"
+      ]
+    },
+    "status": "generated"
+  },
+  "iteration_id": "0004",
+  "passed_gates": [
+    "spec_schema",
+    "semantic_electrical",
+    "mechanical_fit",
+    "firmware_pinmap",
+    "bom",
+    "erc",
+    "drc",
+    "geometry",
+    "firmware_build"
+  ],
+  "release_artifacts": {
+    "files": [
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/assembly_drawing.svg",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/bom.csv",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/drill.zip",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/gerbers.zip",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/pick_and_place.csv",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/quadruped_robot_controller-Edge_Cuts.gm1",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/quadruped_robot_controller.drl",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/mechanical/assembly.step",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/mechanical/enclosure.step",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/mechanical/enclosure.stl",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/firmware/source.zip",
+      "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/manifest.json"
+    ],
+    "release_path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1",
+    "status": "generated"
+  },
+  "release_gate": {
+    "artifacts": [],
+    "backend": {},
+    "failures": [],
+    "gate": "release",
+    "metrics": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "status": "pass"
+  },
+  "repair_plan": {
+    "actions": [],
+    "project": "quadruped_robot_controller",
+    "requires_user_decision": false
+  },
+  "status": "passed"
+}

@@ -1,0 +1,369 @@
+{
+  "components": [
+    {
+      "category": "mcu",
+      "footprint": "LQFP-100_14x14mm_P0.5mm",
+      "mpn": "STM32H743VIT6",
+      "ref": "U1",
+      "value": "STM32H743"
+    },
+    {
+      "category": "imu",
+      "footprint": "LGA-14_2.5x3mm_P0.5mm",
+      "mpn": "ICM-42688-P",
+      "ref": "U2",
+      "value": "ICM-42688-P"
+    },
+    {
+      "category": "protection",
+      "footprint": "VQFN-24-1EP_4x4mm_P0.5mm",
+      "mpn": "TPS26630RGET",
+      "ref": "U3",
+      "value": "eFuse"
+    },
+    {
+      "category": "regulator",
+      "footprint": "WQFN-30-1EP_6x4mm_P0.5mm",
+      "mpn": "LM76005RNPR",
+      "ref": "U4",
+      "value": "5V Buck"
+    },
+    {
+      "category": "regulator",
+      "footprint": "VQFN-16-1EP_3x3mm_P0.5mm",
+      "mpn": "TPS62133RGTR",
+      "ref": "U5",
+      "value": "3V3 Buck"
+    },
+    {
+      "category": "can",
+      "footprint": "SOIC-8_3.9x4.9mm_P1.27mm",
+      "mpn": "TCAN1042HGVDRQ1",
+      "ref": "U6",
+      "value": "CAN PHY"
+    },
+    {
+      "category": "protection",
+      "footprint": "SOT-23-6",
+      "mpn": "USBLC6-2SC6",
+      "ref": "D1",
+      "value": "USB ESD"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J11",
+      "value": "MOTOR_IO_1"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J12",
+      "value": "MOTOR_IO_2"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J13",
+      "value": "MOTOR_IO_3"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J14",
+      "value": "MOTOR_IO_4"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J15",
+      "value": "MOTOR_IO_5"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J16",
+      "value": "MOTOR_IO_6"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J17",
+      "value": "MOTOR_IO_7"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J18",
+      "value": "MOTOR_IO_8"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J19",
+      "value": "MOTOR_IO_9"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J20",
+      "value": "MOTOR_IO_10"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J21",
+      "value": "MOTOR_IO_11"
+    },
+    {
+      "category": "motor_io",
+      "footprint": "Micro-Fit_3.0_1x08",
+      "mpn": "Molex-43045-0800",
+      "ref": "J22",
+      "value": "MOTOR_IO_12"
+    }
+  ],
+  "design_basis": {
+    "board_carries_motor_power": false,
+    "max_simultaneous_peak_channels": 10,
+    "motor_topology": "external_driver_modules"
+  },
+  "nets": [
+    {
+      "name": "GND",
+      "signal_class": "ground",
+      "voltage_domain": "GND"
+    },
+    {
+      "name": "VBAT",
+      "signal_class": "power",
+      "voltage_domain": "VBAT"
+    },
+    {
+      "name": "V5",
+      "signal_class": "power",
+      "voltage_domain": "V5"
+    },
+    {
+      "name": "V3V3",
+      "signal_class": "power",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "ESTOP_IN",
+      "signal_class": "gpio",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "CAN_RX",
+      "signal_class": "can",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "CAN_TX",
+      "signal_class": "can",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "I2C_IMU_SCL",
+      "signal_class": "i2c",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "I2C_IMU_SDA",
+      "signal_class": "i2c",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR1_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR1_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR1_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR2_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR2_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR2_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR3_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR3_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR3_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR4_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR4_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR4_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR5_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR5_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR5_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR6_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR6_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR6_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR7_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR7_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR7_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR8_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR8_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR8_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR9_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR9_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR9_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR10_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR10_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR10_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR11_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR11_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR11_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR12_PWM",
+      "signal_class": "pwm",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR12_CURRENT",
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR12_ENC",
+      "signal_class": "encoder",
+      "voltage_domain": "V3V3"
+    }
+  ]
+}

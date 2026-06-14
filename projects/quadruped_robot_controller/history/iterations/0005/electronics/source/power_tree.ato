@@ -1,0 +1,3 @@
+# VBAT protection and rail intent
+VBAT -> fuse_or_efuse -> reverse_polarity -> tvs -> motor_power
+VBAT -> buck_5v -> regulator_3v3

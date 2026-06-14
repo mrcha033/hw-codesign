@@ -1,0 +1,10 @@
+safety:
+  emergency_stop:
+    required: true
+    fail_safe_hardware_path: true
+  required_protections:
+  - reverse_polarity
+  - fuse_or_efuse
+  - tvs
+  - watchdog
+  - motor_enable_gate

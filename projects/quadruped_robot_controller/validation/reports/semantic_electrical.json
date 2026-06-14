@@ -1,0 +1,11 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "semantic_electrical",
+  "metrics": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "status": "pass"
+}

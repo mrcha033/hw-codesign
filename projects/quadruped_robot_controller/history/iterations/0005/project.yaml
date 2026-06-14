@@ -1,0 +1,4 @@
+target_use: rideable_or_mobile_robot
+revision: r1
+template: robotics_controller_full
+name: quadruped_robot_controller

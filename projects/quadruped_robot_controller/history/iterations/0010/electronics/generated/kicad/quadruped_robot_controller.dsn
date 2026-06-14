@@ -1,0 +1,538 @@
+(pcb "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.3")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer In1.Cu
+      (type power)
+      (property
+        (index 1)
+      )
+    )
+    (layer In2.Cu
+      (type power)
+      (property
+        (index 2)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  160000 -100000  0 -100000  0 0  160000 0  160000 -100000)
+    )
+    (plane GND (polygon In1.Cu 0  1000 -1000  159000 -1000  159000 -99000  1000 -99000
+            1000 -1000))
+    (plane V5 (polygon In2.Cu 0  1000 -1000  159000 -1000  159000 -99000  1000 -99000
+            1000 -1000))
+    (plane V3V3 (polygon B.Cu 0  1000 -1000  159000 -1000  159000 -99000  1000 -99000  1000 -1000))
+    (via "Via[0-3]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component MicroFit_2Pin
+      (place J1 20000 -5000 front 0 (PN "24V INPUT"))
+      (place F1 38000 -5000 front 0 (PN "80A SERVICE FUSE"))
+      (place D1 74000 -5000 front 0 (PN "33V TVS"))
+      (place C10 112000 -89000 front 0 (PN "10uF 50V"))
+    )
+    (component "SOT23-6"
+      (place Q1 56000 -5000 front 0 (PN "IDEAL DIODE"))
+      (place U4 112000 -5000 front 0 (PN "5V Buck"))
+    )
+    (component VQFN24
+      (place U3 92000 -5000 front 0 (PN eFuse))
+    )
+    (component VQFN16
+      (place U5 132000 -5000 front 0 (PN "3V3 Buck"))
+      (place J2 104000 -48000 front 0 (PN "E-STOP"))
+      (place J3 118000 -27000 front 0 (PN CAN))
+    )
+    (component LQFP100
+      (place U1 70000 -37000 front 0 (PN STM32H743))
+    )
+    (component LGA14
+      (place U2 22000 -48000 front 0 (PN "ICM-42688-P"))
+      (place J4 104000 -69000 front 0 (PN SWD))
+      (place D2 42000 -27000 front 0 (PN "USB ESD"))
+    )
+    (component SOIC8
+      (place U6 90000 -27000 front 0 (PN "CAN PHY"))
+      (place J11 3000 -7000 front 0 (PN MOTOR_IO_1))
+      (place J12 3000 -22000 front 0 (PN MOTOR_IO_2))
+      (place J13 3000 -37000 front 0 (PN MOTOR_IO_3))
+      (place J14 3000 -52000 front 0 (PN MOTOR_IO_4))
+      (place J15 3000 -67000 front 0 (PN MOTOR_IO_5))
+      (place J16 3000 -82000 front 0 (PN MOTOR_IO_6))
+    )
+    (component "SOT23-6::1"
+      (place Q2 124000 -48000 front 0 (PN "E-STOP GATE"))
+      (place J5 22000 -27000 front 0 (PN "USB-C"))
+    )
+    (component R0603
+      (place R1 136000 -27000 front 0 (PN 120R))
+      (place R4 60000 -27000 front 0 (PN 100K))
+      (place R2 42000 -48000 front 0 (PN 4K7))
+      (place R3 58000 -48000 front 0 (PN 4K7))
+      (place C1 24000 -76000 front 0 (PN 100nF))
+      (place C2 46000 -76000 front 0 (PN 100nF))
+      (place C3 68000 -76000 front 0 (PN 100nF))
+      (place C4 90000 -76000 front 0 (PN 100nF))
+      (place C5 112000 -76000 front 0 (PN 100nF))
+      (place C6 24000 -89000 front 0 (PN 100nF))
+      (place C7 46000 -89000 front 0 (PN 100nF))
+      (place C8 68000 -89000 front 0 (PN 100nF))
+      (place C9 90000 -89000 front 0 (PN 22uF))
+    )
+    (component MicroFit_8Pin
+      (place J17 155000 -7000 front 0 (PN MOTOR_IO_7))
+      (place J18 155000 -22000 front 0 (PN MOTOR_IO_8))
+      (place J19 155000 -37000 front 0 (PN MOTOR_IO_9))
+      (place J20 155000 -52000 front 0 (PN MOTOR_IO_10))
+      (place J21 155000 -67000 front 0 (PN MOTOR_IO_11))
+      (place J22 155000 -82000 front 0 (PN MOTOR_IO_12))
+    )
+  )
+  (library
+    (image MicroFit_2Pin
+      (outline (path signal 200  -1000 1000  4000 1000  4000 -5000  -1000 -5000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 0 -3000)
+    )
+    (image "SOT23-6"
+      (outline (path signal 200  -1000 1000  4000 1000  4000 -8000  -1000 -8000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 0 -3000)
+      (pin Round[A]Pad_750.000000_um 3 0 -6000)
+    )
+    (image VQFN24
+      (outline (path signal 200  -1000 1000  4000 1000  4000 -11000  -1000 -11000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 0 -3000)
+      (pin Round[A]Pad_750.000000_um 3 0 -6000)
+      (pin Round[A]Pad_750.000000_um 4 0 -9000)
+    )
+    (image VQFN16
+      (outline (path signal 200  -1000 1000  6000 1000  6000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+    )
+    (image LQFP100
+      (outline (path signal 200  -1000 1000  14000 1000  14000 -14000  -1000 -14000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+      (pin Round[A]Pad_750.000000_um 6 10000 0)
+      (pin Round[A]Pad_750.000000_um 7 12000 0)
+      (pin Round[A]Pad_750.000000_um 8 0 -2000)
+      (pin Round[A]Pad_750.000000_um 9 2000 -2000)
+      (pin Round[A]Pad_750.000000_um 10 4000 -2000)
+      (pin Round[A]Pad_750.000000_um 11 6000 -2000)
+      (pin Round[A]Pad_750.000000_um 12 8000 -2000)
+      (pin Round[A]Pad_750.000000_um 13 10000 -2000)
+      (pin Round[A]Pad_750.000000_um 14 12000 -2000)
+      (pin Round[A]Pad_750.000000_um 15 0 -4000)
+      (pin Round[A]Pad_750.000000_um 16 2000 -4000)
+      (pin Round[A]Pad_750.000000_um 17 4000 -4000)
+      (pin Round[A]Pad_750.000000_um 18 6000 -4000)
+      (pin Round[A]Pad_750.000000_um 19 8000 -4000)
+      (pin Round[A]Pad_750.000000_um 20 10000 -4000)
+      (pin Round[A]Pad_750.000000_um 21 12000 -4000)
+      (pin Round[A]Pad_750.000000_um 22 0 -6000)
+      (pin Round[A]Pad_750.000000_um 23 2000 -6000)
+      (pin Round[A]Pad_750.000000_um 24 4000 -6000)
+      (pin Round[A]Pad_750.000000_um 25 6000 -6000)
+      (pin Round[A]Pad_750.000000_um 26 8000 -6000)
+      (pin Round[A]Pad_750.000000_um 27 10000 -6000)
+      (pin Round[A]Pad_750.000000_um 28 12000 -6000)
+      (pin Round[A]Pad_750.000000_um 29 0 -8000)
+      (pin Round[A]Pad_750.000000_um 30 2000 -8000)
+      (pin Round[A]Pad_750.000000_um 31 4000 -8000)
+      (pin Round[A]Pad_750.000000_um 32 6000 -8000)
+      (pin Round[A]Pad_750.000000_um 33 8000 -8000)
+      (pin Round[A]Pad_750.000000_um 34 10000 -8000)
+      (pin Round[A]Pad_750.000000_um 35 12000 -8000)
+      (pin Round[A]Pad_750.000000_um 36 0 -10000)
+      (pin Round[A]Pad_750.000000_um 37 2000 -10000)
+      (pin Round[A]Pad_750.000000_um 38 4000 -10000)
+      (pin Round[A]Pad_750.000000_um 39 6000 -10000)
+      (pin Round[A]Pad_750.000000_um 40 8000 -10000)
+      (pin Round[A]Pad_750.000000_um 41 10000 -10000)
+      (pin Round[A]Pad_750.000000_um 42 12000 -10000)
+      (pin Round[A]Pad_750.000000_um 43 0 -12000)
+      (pin Round[A]Pad_750.000000_um 44 2000 -12000)
+      (pin Round[A]Pad_750.000000_um 45 4000 -12000)
+      (pin Round[A]Pad_750.000000_um 46 6000 -12000)
+      (pin Round[A]Pad_750.000000_um 47 8000 -12000)
+      (pin Round[A]Pad_750.000000_um 48 10000 -12000)
+      (pin Round[A]Pad_750.000000_um 49 12000 -12000)
+    )
+    (image LGA14
+      (outline (path signal 200  -1000 1000  10000 1000  10000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+    )
+    (image SOIC8
+      (outline (path signal 200  -1000 1000  12000 1000  12000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+      (pin Round[A]Pad_750.000000_um 6 10000 0)
+    )
+    (image "SOT23-6::1"
+      (outline (path signal 200  -1000 1000  8000 1000  8000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+    )
+    (image R0603
+      (outline (path signal 200  -1000 1000  4000 1000  4000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+    )
+    (image MicroFit_8Pin
+      (outline (path signal 200  -11000 1000  1000 1000  1000 -3000  -11000 -3000  -11000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 -2000 0)
+      (pin Round[A]Pad_750.000000_um 3 -4000 0)
+      (pin Round[A]Pad_750.000000_um 4 -6000 0)
+      (pin Round[A]Pad_750.000000_um 5 -8000 0)
+      (pin Round[A]Pad_750.000000_um 6 -10000 0)
+    )
+    (padstack Round[A]Pad_750.000000_um
+      (shape (circle F.Cu 750))
+      (shape (circle In1.Cu 750))
+      (shape (circle In2.Cu 750))
+      (shape (circle B.Cu 750))
+      (attach off)
+    )
+    (padstack "Via[0-3]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle In1.Cu 600))
+      (shape (circle In2.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net CANH
+      (pins U6-5 J3-1 R1-1)
+    )
+    (net CANL
+      (pins U6-6 J3-2 R1-2)
+    )
+    (net CAN_RX
+      (pins U1-4 U6-3)
+    )
+    (net CAN_TX
+      (pins U1-5 U6-4)
+    )
+    (net ESTOP_GATE
+      (pins U3-4 Q2-3 J11-6 J12-6 J13-6 J14-6 J15-6 J16-6 J17-6 J18-6 J19-6 J20-6
+        J21-6 J22-6)
+    )
+    (net ESTOP_IN
+      (pins U1-3 J2-2 Q2-2)
+    )
+    (net GND
+      (pins J1-2 Q1-3 D1-2 U3-3 U4-3 U5-3 U1-2 U2-2 U6-2 J2-3 Q2-4 J3-3 J4-3 J5-2
+        D2-5 R4-2 J11-2 J12-2 J13-2 J14-2 J15-2 J16-2 J17-2 J18-2 J19-2 J20-2 J21-2
+        J22-2 C1-2 C2-2 C3-2 C4-2 C5-2 C6-2 C7-2 C8-2 C9-2 C10-2)
+    )
+    (net I2C_IMU_SCL
+      (pins U1-6 U2-3 R2-2)
+    )
+    (net I2C_IMU_SDA
+      (pins U1-7 U2-4 R3-2)
+    )
+    (net IMU_INT
+      (pins U1-8 U2-5)
+    )
+    (net MOTOR10_CURRENT
+      (pins U1-42 J20-4)
+    )
+    (net MOTOR10_ENC
+      (pins U1-43 J20-5)
+    )
+    (net MOTOR10_PWM
+      (pins U1-41 J20-3)
+    )
+    (net MOTOR11_CURRENT
+      (pins U1-45 J21-4)
+    )
+    (net MOTOR11_ENC
+      (pins U1-46 J21-5)
+    )
+    (net MOTOR11_PWM
+      (pins U1-44 J21-3)
+    )
+    (net MOTOR12_CURRENT
+      (pins U1-48 J22-4)
+    )
+    (net MOTOR12_ENC
+      (pins U1-49 J22-5)
+    )
+    (net MOTOR12_PWM
+      (pins U1-47 J22-3)
+    )
+    (net MOTOR1_CURRENT
+      (pins U1-15 J11-4)
+    )
+    (net MOTOR1_ENC
+      (pins U1-16 J11-5)
+    )
+    (net MOTOR1_PWM
+      (pins U1-14 J11-3)
+    )
+    (net MOTOR2_CURRENT
+      (pins U1-18 J12-4)
+    )
+    (net MOTOR2_ENC
+      (pins U1-19 J12-5)
+    )
+    (net MOTOR2_PWM
+      (pins U1-17 J12-3)
+    )
+    (net MOTOR3_CURRENT
+      (pins U1-21 J13-4)
+    )
+    (net MOTOR3_ENC
+      (pins U1-22 J13-5)
+    )
+    (net MOTOR3_PWM
+      (pins U1-20 J13-3)
+    )
+    (net MOTOR4_CURRENT
+      (pins U1-24 J14-4)
+    )
+    (net MOTOR4_ENC
+      (pins U1-25 J14-5)
+    )
+    (net MOTOR4_PWM
+      (pins U1-23 J14-3)
+    )
+    (net MOTOR5_CURRENT
+      (pins U1-27 J15-4)
+    )
+    (net MOTOR5_ENC
+      (pins U1-28 J15-5)
+    )
+    (net MOTOR5_PWM
+      (pins U1-26 J15-3)
+    )
+    (net MOTOR6_CURRENT
+      (pins U1-30 J16-4)
+    )
+    (net MOTOR6_ENC
+      (pins U1-31 J16-5)
+    )
+    (net MOTOR6_PWM
+      (pins U1-29 J16-3)
+    )
+    (net MOTOR7_CURRENT
+      (pins U1-33 J17-4)
+    )
+    (net MOTOR7_ENC
+      (pins U1-34 J17-5)
+    )
+    (net MOTOR7_PWM
+      (pins U1-32 J17-3)
+    )
+    (net MOTOR8_CURRENT
+      (pins U1-36 J18-4)
+    )
+    (net MOTOR8_ENC
+      (pins U1-37 J18-5)
+    )
+    (net MOTOR8_PWM
+      (pins U1-35 J18-3)
+    )
+    (net MOTOR9_CURRENT
+      (pins U1-39 J19-4)
+    )
+    (net MOTOR9_ENC
+      (pins U1-40 J19-5)
+    )
+    (net MOTOR9_PWM
+      (pins U1-38 J19-3)
+    )
+    (net NRST
+      (pins U1-11 J4-5)
+    )
+    (net SWCLK
+      (pins U1-10 J4-4)
+    )
+    (net SWDIO
+      (pins U1-9 J4-2)
+    )
+    (net USB_DM
+      (pins U1-13 D2-4)
+    )
+    (net USB_DM_RAW
+      (pins J5-4 D2-3)
+    )
+    (net USB_DP
+      (pins U1-12 D2-2)
+    )
+    (net USB_DP_RAW
+      (pins J5-3 D2-1)
+    )
+    (net USB_VBUS
+      (pins J5-1 R4-1)
+    )
+    (net V3V3
+      (pins U5-2 U1-1 U2-1 J2-1 Q2-1 J4-1 R2-1 R3-1 C1-1 C2-1 C3-1 C4-1 C5-1 C6-1
+        C7-1 C8-1)
+    )
+    (net V5
+      (pins U4-2 U5-1 U6-1 J11-1 J12-1 J13-1 J14-1 J15-1 J16-1 J17-1 J18-1 J19-1 J20-1
+        J21-1 J22-1 C9-1)
+    )
+    (net VBAT
+      (pins Q1-2 D1-1 U3-1)
+    )
+    (net VBAT_FUSED
+      (pins F1-2 Q1-1)
+    )
+    (net VBAT_RAW
+      (pins J1-1 F1-1)
+    )
+    (net VSYS
+      (pins U3-2 U4-1 C10-1)
+    )
+    (class kicad_default CANH CANL CAN_RX CAN_TX ESTOP_GATE ESTOP_IN GND I2C_IMU_SCL
+      I2C_IMU_SDA IMU_INT MOTOR10_CURRENT MOTOR10_ENC MOTOR10_PWM MOTOR11_CURRENT
+      MOTOR11_ENC MOTOR11_PWM MOTOR12_CURRENT MOTOR12_ENC MOTOR12_PWM MOTOR1_CURRENT
+      MOTOR1_ENC MOTOR1_PWM MOTOR2_CURRENT MOTOR2_ENC MOTOR2_PWM MOTOR3_CURRENT
+      MOTOR3_ENC MOTOR3_PWM MOTOR4_CURRENT MOTOR4_ENC MOTOR4_PWM MOTOR5_CURRENT
+      MOTOR5_ENC MOTOR5_PWM MOTOR6_CURRENT MOTOR6_ENC MOTOR6_PWM MOTOR7_CURRENT
+      MOTOR7_ENC MOTOR7_PWM MOTOR8_CURRENT MOTOR8_ENC MOTOR8_PWM MOTOR9_CURRENT
+      MOTOR9_ENC MOTOR9_PWM NRST SWCLK SWDIO USB_DM USB_DM_RAW USB_DP USB_DP_RAW
+      USB_VBUS V3V3 V5 VBAT VBAT_FUSED VBAT_RAW VSYS
+      (circuit
+        (use_via "Via[0-3]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path In2.Cu 500  132000 -5000  113250 -5000  113250 -6250  112000 -6250
+            112000 -8000)(net V5)(type route))
+    (wire (path In2.Cu 500  155000 -7000  154250 -7000  154250 -5750  137250 -5750
+            137250 -6250  132000 -6250  132000 -5000)(net V5)(type route))
+    (wire (path In2.Cu 500  155000 -22000  155000 -7000)(net V5)(type route))
+    (wire (path In2.Cu 500  155000 -37000  155000 -22000)(net V5)(type route))
+    (wire (path In2.Cu 500  155000 -52000  155000 -37000)(net V5)(type route))
+    (wire (path In2.Cu 500  155000 -67000  155000 -52000)(net V5)(type route))
+    (wire (path In2.Cu 500  155000 -82000  155000 -67000)(net V5)(type route))
+    (wire (path In2.Cu 500  90000 -27000  90750 -27000  90750 -25750  110750 -25750
+            110750 -9750  112000 -9750  112000 -8000)(net V5)(type route))
+    (wire (path In2.Cu 500  90000 -89000  90000 -77250  88750 -77250  88750 -74750
+            90000 -74750  90000 -27000)(net V5)(type route))
+    (wire (path In2.Cu 500  3000 -37000  3750 -37000  3750 -35750  90000 -35750  90000 -37000)(net V5)(type route))
+    (wire (path In2.Cu 500  3000 -22000  3750 -22000  3750 -35750)(net V5)(type route))
+    (wire (path In2.Cu 500  3000 -7000  3000 -22000)(net V5)(type route))
+    (wire (path In2.Cu 500  3000 -52000  3000 -37000)(net V5)(type route))
+    (wire (path In2.Cu 500  3000 -67000  3000 -52000)(net V5)(type route))
+    (wire (path In2.Cu 500  3000 -82000  3000 -67000)(net V5)(type route))
+    (wire (path B.Cu 500  124000 -48000  124750 -48000  124750 -46750  134000 -46750
+            134000 -5000)(net V3V3)(type route))
+    (wire (path B.Cu 500  104000 -48000  104750 -48000  104750 -49250  124000 -49250
+            124000 -48000)(net V3V3)(type route))
+    (wire (path B.Cu 500  104000 -69000  104750 -69000  104750 -49250)(net V3V3)(type route))
+    (wire (path B.Cu 500  112000 -76000  104750 -76000  104750 -69000)(net V3V3)(type route))
+    (wire (path B.Cu 500  90000 -76000  90750 -76000  90750 -77250  104750 -77250
+            104750 -76000)(net V3V3)(type route))
+    (wire (path B.Cu 500  68000 -76000  68750 -76000  68750 -77250  90000 -77250  90000 -76000)(net V3V3)(type route))
+    (wire (path B.Cu 500  68000 -89000  68750 -89000  68750 -77250)(net V3V3)(type route))
+    (wire (path B.Cu 500  46000 -89000  46750 -89000  46750 -90250  68000 -90250  68000 -89000)(net V3V3)(type route))
+    (wire (path B.Cu 500  46000 -76000  46000 -89000)(net V3V3)(type route))
+    (wire (path B.Cu 500  24000 -89000  24750 -89000  24750 -90250  46000 -90250  46000 -89000)(net V3V3)(type route))
+    (wire (path B.Cu 500  24000 -76000  24000 -89000)(net V3V3)(type route))
+    (wire (path B.Cu 500  22000 -48000  22750 -48000  22750 -49250  24000 -49250  24000 -76000)(net V3V3)(type route))
+    (wire (path B.Cu 500  42000 -48000  31250 -48000  31250 -49250  24000 -49250)(net V3V3)(type route))
+    (wire (path B.Cu 500  58000 -48000  45250 -48000  45250 -49250  42000 -49250  42000 -48000)(net V3V3)(type route))
+    (wire (path B.Cu 500  70000 -37000  58000 -37000  58000 -48000)(net V3V3)(type route))
+    (wire (path In1.Cu 200  5000 -7000  6000 -7000  6000 -8000  20000 -8000)(net GND)(type route))
+    (wire (path In1.Cu 200  5000 -22000  6000 -22000  6000 -8000)(net GND)(type route))
+    (wire (path In1.Cu 200  5000 -37000  5000 -22000)(net GND)(type route))
+    (wire (path In1.Cu 200  5000 -52000  5000 -37000)(net GND)(type route))
+    (wire (path In1.Cu 200  5000 -67000  5000 -52000)(net GND)(type route))
+    (wire (path In1.Cu 200  5000 -82000  5000 -67000)(net GND)(type route))
+    (wire (path In1.Cu 200  24000 -48000  23000 -48000  23000 -49000  5000 -49000
+            5000 -48000)(net GND)(type route))
+    (wire (path In1.Cu 200  24000 -27000  23000 -27000  23000 -28000  5000 -28000
+            5000 -27000)(net GND)(type route))
+    (wire (path In1.Cu 200  26000 -76000  25000 -76000  25000 -77000  5000 -77000
+            5000 -76000)(net GND)(type route))
+    (wire (path In1.Cu 200  26000 -89000  25000 -89000  25000 -77000)(net GND)(type route))
+    (wire (path In1.Cu 200  48000 -89000  47000 -89000  47000 -90000  26000 -90000
+            26000 -89000)(net GND)(type route))
+    (wire (path In1.Cu 200  48000 -76000  48000 -89000)(net GND)(type route))
+    (wire (path In1.Cu 200  70000 -89000  69000 -89000  69000 -90000  48000 -90000
+            48000 -89000)(net GND)(type route))
+    (wire (path In1.Cu 200  70000 -76000  70000 -89000)(net GND)(type route))
+    (wire (path In1.Cu 200  92000 -89000  91000 -89000  91000 -90000  70000 -90000
+            70000 -89000)(net GND)(type route))
+    (wire (path In1.Cu 200  92000 -76000  92000 -89000)(net GND)(type route))
+    (wire (path In1.Cu 200  114000 -76000  113000 -76000  113000 -77000  92000 -77000
+            92000 -76000)(net GND)(type route))
+    (wire (path In1.Cu 200  108000 -69000  108000 -77000)(net GND)(type route))
+    (wire (path In1.Cu 200  112000 -92000  112000 -90000  113000 -90000  113000 -88000
+            112000 -88000  112000 -77000)(net GND)(type route))
+    (wire (path In1.Cu 200  108000 -48000  108000 -69000)(net GND)(type route))
+    (wire (path In1.Cu 200  130000 -48000  129000 -48000  129000 -49000  108000 -49000
+            108000 -48000)(net GND)(type route))
+    (wire (path In1.Cu 200  122000 -27000  122000 -49000)(net GND)(type route))
+    (wire (path In1.Cu 200  50000 -27000  49000 -27000  49000 -28000  24000 -28000
+            24000 -27000)(net GND)(type route))
+    (wire (path In1.Cu 200  62000 -27000  61000 -27000  61000 -28000  50000 -28000
+            50000 -27000)(net GND)(type route))
+    (wire (path In1.Cu 200  56000 -11000  56000 -28000)(net GND)(type route))
+    (wire (path In1.Cu 200  72000 -37000  71000 -37000  71000 -36000  61000 -36000
+            61000 -28000)(net GND)(type route))
+    (wire (path In1.Cu 200  74000 -8000  57000 -8000  57000 -9000  56000 -9000  56000 -11000)(net GND)(type route))
+    (wire (path In1.Cu 200  92000 -11000  74000 -11000  74000 -8000)(net GND)(type route))
+    (wire (path In1.Cu 200  92000 -27000  92000 -15000  93000 -15000  93000 -13000
+            92000 -13000  92000 -11000)(net GND)(type route))
+    (wire (path In1.Cu 200  112000 -11000  92000 -11000)(net GND)(type route))
+    (wire (path In1.Cu 200  153000 -52000  152000 -52000  152000 -51000  129000 -51000
+            129000 -49000)(net GND)(type route))
+    (wire (path In1.Cu 200  153000 -37000  152000 -37000  152000 -51000)(net GND)(type route))
+    (wire (path In1.Cu 200  153000 -22000  153000 -37000)(net GND)(type route))
+    (wire (path In1.Cu 200  153000 -7000  153000 -22000)(net GND)(type route))
+    (wire (path In1.Cu 200  153000 -67000  153000 -52000)(net GND)(type route))
+    (wire (path In1.Cu 200  153000 -82000  153000 -67000)(net GND)(type route))
+    (wire (path In1.Cu 200  136000 -5000  153000 -5000  153000 -7000)(net GND)(type route))
+  )
+)

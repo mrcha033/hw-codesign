@@ -1,0 +1,290 @@
+{
+  "failed_gates": [
+    "semantic_electrical",
+    "bom",
+    "erc",
+    "drc",
+    "firmware_build"
+  ],
+  "generated": {
+    "files": {
+      "bom": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/working/fabrication/bom.csv"
+      ],
+      "electronics": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/board.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/power_tree.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/motor_channels.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/sensor_bus.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/source/connectors.ato",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/electronics/generated/electrical_graph.json"
+      ],
+      "firmware": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/board.cmake",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/devicetree.overlay",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/kconfig.defconfig",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/pinmap.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/generated/pinmap.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/app/src/main.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/tests/test_i2c_imu.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/firmware/zephyr/tests/test_motor_pwm.c"
+      ],
+      "mechanical": [
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/connector_cutouts.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/enclosure.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/mounting_plate.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/mechanical/source/thermal_features.py"
+      ]
+    },
+    "status": "generated"
+  },
+  "iteration_id": "0001",
+  "passed_gates": [
+    "spec_schema",
+    "mechanical_fit",
+    "firmware_pinmap"
+  ],
+  "release_gate": {
+    "artifacts": [],
+    "backend": {},
+    "failures": [
+      {
+        "category": "RELEASE_ERROR",
+        "code": "failed_gate",
+        "details": {
+          "details": {
+            "status": "fail"
+          }
+        },
+        "message": "Required gate did not pass: semantic_electrical",
+        "path": null,
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "failed_gate",
+        "details": {
+          "details": {
+            "status": "fail"
+          }
+        },
+        "message": "Required gate did not pass: bom",
+        "path": null,
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "failed_gate",
+        "details": {
+          "details": {
+            "status": "fail"
+          }
+        },
+        "message": "Required gate did not pass: erc",
+        "path": null,
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "failed_gate",
+        "details": {
+          "details": {
+            "status": "fail"
+          }
+        },
+        "message": "Required gate did not pass: drc",
+        "path": null,
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "failed_gate",
+        "details": {
+          "details": {
+            "status": "blocked"
+          }
+        },
+        "message": "Required gate did not pass: firmware_build",
+        "path": null,
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "unresolved_critical_assumption",
+        "details": {},
+        "message": "Critical assumption requires review: motor_type",
+        "path": "assumptions.motor_type",
+        "requires_user_decision": true,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "unresolved_critical_assumption",
+        "details": {},
+        "message": "Critical assumption requires review: cooling",
+        "path": "assumptions.cooling",
+        "requires_user_decision": true,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "unresolved_critical_assumption",
+        "details": {},
+        "message": "Critical assumption requires review: connector_current_rating",
+        "path": "assumptions.connector_current_rating",
+        "requires_user_decision": true,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: gerbers.zip",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/gerbers.zip",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: drill.zip",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/drill.zip",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: bom.csv",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/bom.csv",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: pick_and_place.csv",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/fabrication/pick_and_place.csv",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: enclosure.step",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/mechanical/enclosure.step",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: enclosure.stl",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/mechanical/enclosure.stl",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: source.zip",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/firmware/source.zip",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: design_report.md",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/docs/design_report.md",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: validation_report.json",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/docs/validation_report.json",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "missing_export",
+        "details": {},
+        "message": "Required release artifact is missing: bringup_guide.md",
+        "path": "/Users/mrcha033/Documents/hw-cli/projects/quadruped_robot_controller/exports/r1/docs/bringup_guide.md",
+        "requires_user_decision": false,
+        "severity": "error"
+      }
+    ],
+    "gate": "release",
+    "metrics": {
+      "errors": 18,
+      "warnings": 0
+    },
+    "status": "fail"
+  },
+  "repair_plan": {
+    "actions": [
+      {
+        "action": "Add power-domain concurrency limits or increase an explicitly approved battery/current-path rating.",
+        "failure_code": "current_budget_exceeded",
+        "gate": "semantic_electrical",
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve an approved MPN and substitute before release.",
+        "failure_code": "missing_mpn",
+        "gate": "bom",
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve an approved MPN and substitute before release.",
+        "failure_code": "missing_mpn",
+        "gate": "bom",
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve an approved MPN and substitute before release.",
+        "failure_code": "missing_mpn",
+        "gate": "bom",
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_design_source: No generated KiCad schematic exists",
+        "failure_code": "missing_design_source",
+        "gate": "erc",
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_design_source: No generated KiCad PCB exists",
+        "failure_code": "missing_design_source",
+        "gate": "drc",
+        "requires_user_decision": false
+      },
+      {
+        "action": "Run the deterministic toolchain in the pinned Docker image or install the missing backend.",
+        "failure_code": "tool_unavailable",
+        "gate": "firmware_build",
+        "requires_user_decision": false
+      }
+    ],
+    "project": "quadruped_robot_controller",
+    "requires_user_decision": true
+  },
+  "status": "blocked"
+}
