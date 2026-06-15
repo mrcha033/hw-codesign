@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review_bundle.schema.json",
+  "title": "hw-codesign Review Bundle",
+  "description": "Normalized snapshot of all gate reports and project metadata produced by hw export-review.",
+  "type": "object",
+  "required": ["bundle_version", "generated_at", "bundle_hash", "project", "gate_reports"],
+  "additionalProperties": false,
+  "properties": {
+    "bundle_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version; increment on breaking changes."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of export; excluded from bundle_hash."
+    },
+    "bundle_hash": {
+      "type": "string",
+      "description": "SHA-256 hex digest of the canonical (generated_at-excluded) bundle content."
+    },
+    "project": {
+      "type": "object",
+      "required": ["name", "revision", "target_use", "backend"],
+      "additionalProperties": false,
+      "properties": {
+        "name":       { "type": "string" },
+        "revision":   { "type": "string" },
+        "target_use": { "type": "string" },
+        "backend":    { "type": "string" }
+      }
+    },
+    "gate_reports": {
+      "type": "array",
+      "description": "All gate reports from the most recent run_all_checks pass, in stable sort order.",
+      "items": {
+        "type": "object",
+        "required": ["gate", "status", "failures", "metrics", "artifacts", "backend"],
+        "additionalProperties": false,
+        "properties": {
+          "gate":      { "type": "string" },
+          "status":    { "type": "string", "enum": ["pass", "fail", "blocked", "candidate", "released"] },
+          "failures":  {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["category", "code", "message", "severity"],
+              "additionalProperties": true,
+              "properties": {
+                "category":             { "type": "string" },
+                "code":                 { "type": "string" },
+                "message":              { "type": "string" },
+                "severity":             { "type": "string", "enum": ["error", "warning", "info"] },
+                "path":                 { "type": ["string", "null"] },
+                "details":              { "type": "object" },
+                "requires_user_decision": { "type": "boolean" }
+              }
+            }
+          },
+          "metrics":   { "type": "object" },
+          "artifacts": { "type": "array", "items": { "type": "string" } },
+          "backend":   { "type": "object" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Aggregated pass/fail/blocked/total counts across all gate_reports.",
+      "additionalProperties": false,
+      "properties": {
+        "total":   { "type": "integer" },
+        "pass":    { "type": "integer" },
+        "fail":    { "type": "integer" },
+        "blocked": { "type": "integer" },
+        "other":   { "type": "integer" }
+      }
+    },
+    "placement": {
+      "type": ["object", "null"],
+      "description": "Placement proposal metadata; null when no components exist.",
+      "additionalProperties": false,
+      "properties": {
+        "board_width_mm":    { "type": "number" },
+        "board_height_mm":   { "type": "number" },
+        "placement_count":   { "type": "integer" },
+        "constraint_count":  { "type": "integer" },
+        "source_counts":     { "type": "object", "additionalProperties": { "type": "integer" } },
+        "unenforced_constraint_kinds": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "component_resolution": {
+      "type": ["object", "null"],
+      "description": "Component resolution summary; null when graph is absent.",
+      "additionalProperties": false,
+      "properties": {
+        "resolved":          { "type": "integer" },
+        "requested":         { "type": "integer" },
+        "supplier_provider": { "type": "string" },
+        "status":            { "type": "string" }
+      }
+    },
+    "requirements": {
+      "type": ["object", "null"],
+      "description": "Requirements lowering summary; null when requirements.yaml is absent.",
+      "additionalProperties": false,
+      "properties": {
+        "active_lowered_count":    { "type": "integer" },
+        "active_unresolved_count": { "type": "integer" },
+        "active_unresolved": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id":               { "type": "string" },
+              "source":           { "type": "string" },
+              "category":         { "type": "string" },
+              "status":           { "type": "string" },
+              "release_blocking": { "type": "boolean" },
+              "reason":           { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": ["object", "null"],
+      "description": "Assumptions summary extracted from spec; null when absent.",
+      "additionalProperties": false,
+      "properties": {
+        "total":                   { "type": "integer" },
+        "unresolved_critical":     { "type": "integer" },
+        "unresolved_critical_names": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "comments": {
+      "type": "array",
+      "description": "Decisions/comments appended post-export via the comments sidecar; empty in the initial bundle.",
+      "items": {
+        "type": "object",
+        "required": ["id", "timestamp", "gate", "text"],
+        "additionalProperties": true,
+        "properties": {
+          "id":        { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "gate":      { "type": ["string", "null"] },
+          "text":      { "type": "string" },
+          "author":    { "type": "string" }
+        }
+      }
+    }
+  }
+}
