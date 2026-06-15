@@ -1,0 +1,31 @@
+components:
+  - id: esp32s3_wroom_1
+    mpn: ESP32-S3-WROOM-1-N8
+    manufacturer: Espressif Systems
+    package: LCC-52
+    symbol:
+      library_id: HW_Curated:ESP32S3_WROOM1
+      verified: false
+      expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52']
+    footprint:
+      library_id: RF_Module:ESP32-S3-WROOM-1
+      verified: false
+      expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52']
+    pins:
+      - {number: '1', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '2', name: V3V3, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '3', name: EN, electrical_type: input}
+      - {number: '10', name: GPIO0, electrical_type: bidirectional}
+      - {number: '11', name: GPIO1, electrical_type: bidirectional}
+      - {number: '40', name: GPIO19, electrical_type: bidirectional}
+      - {number: '41', name: GPIO20, electrical_type: bidirectional}
+      - {number: '52', name: GND, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [ESP32-S3-WROOM-1-N8]
+    constraints: [wifi_bt_mcu, integral_antenna_keepout_required]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: pending
+    review_status: pending
