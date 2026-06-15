@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "hw-contracts JobSubmit",
+  "type": "object",
+  "required": [
+    "tool",
+    "arguments",
+    "compatibility"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "tool": {
+      "type": "string",
+      "description": "Registered tool name (hw_*)"
+    },
+    "arguments": {
+      "type": "object",
+      "description": "Tool input arguments"
+    },
+    "compatibility": {
+      "type": "object",
+      "required": [
+        "protocol_version",
+        "engine_version",
+        "toolchain_profile",
+        "toolchain_digest"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "type": "string"
+        },
+        "engine_version": {
+          "type": "string"
+        },
+        "toolchain_profile": {
+          "type": "string"
+        },
+        "toolchain_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

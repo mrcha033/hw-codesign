@@ -61,6 +61,33 @@ def test_export_review_html_is_written(service, project):
     assert result["bundle_hash"][:12] in html
 
 
+def test_export_review_ignores_auxiliary_json_reports(service, project):
+    service.generate_all(project)
+    service.run_all_checks(project, include_external=False)
+    reports = service.workspace.require_project(project) / "validation" / "reports"
+    (reports / "native_tool_output.json").write_text('{"violations": []}\n', encoding="utf-8")
+
+    result = service.export_review(project)
+    bundle = json.loads(Path(result["file"]).read_text(encoding="utf-8"))
+
+    assert bundle["gate_reports"]
+    assert all("gate" in report and "status" in report for report in bundle["gate_reports"])
+
+
+def test_export_review_normalizes_legacy_resolution_metadata(service, project):
+    service.generate_all(project)
+    graph_path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    graph["component_resolution_report"]["metrics"].pop("supplier_provider", None)
+    graph_path.write_text(json.dumps(graph), encoding="utf-8")
+
+    result = service.export_review(project)
+    bundle = json.loads(Path(result["file"]).read_text(encoding="utf-8"))
+
+    assert bundle["component_resolution"]["supplier_provider"] == "unknown"
+    Draft202012Validator(_schema()).validate(bundle)
+
+
 def test_export_review_without_prior_checks_produces_empty_gate_list(service, project):
     result = service.export_review(project)
     assert result["status"] == "generated"

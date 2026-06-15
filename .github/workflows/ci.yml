@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+      - run: uv sync --locked --extra dev --extra mcp
+      - run: uv run pytest
+
+  package-smoke:
+    name: Wheel smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - run: uv build
+      - name: Test installed wheel outside the checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          smoke_dir="$(mktemp -d)"
+          uv venv "$smoke_dir/.venv" --python 3.11
+          wheel="$(find "$GITHUB_WORKSPACE/dist" -name '*.whl' -print -quit)"
+          uv pip install --python "$smoke_dir/.venv/bin/python" "${wheel}[mcp]"
+          cd "$smoke_dir"
+          .venv/bin/hw create-project smoke_project
+          .venv/bin/hw validate-spec smoke_project
+          timeout 5s .venv/bin/hw-mcp || test "$?" -eq 124

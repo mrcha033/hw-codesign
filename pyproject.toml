@@ -33,6 +33,14 @@ where = ["src"]
 [tool.setuptools.package-data]
 hw_codesign = ["templates/*.yaml"]
 
+[tool.setuptools.data-files]
+"share/hw-codesign/schemas" = ["schemas/*.json"]
+"share/hw-codesign/parts/components" = ["parts/components/*.yaml"]
+"share/hw-codesign/parts/evidence" = ["parts/evidence/*.yaml"]
+"share/hw-codesign/parts/role_sets" = ["parts/role_sets/*.yaml"]
+"share/hw-codesign/parts/schemas" = ["parts/schemas/*.json"]
+"share/hw-codesign/parts/suppliers" = ["parts/suppliers/*.yaml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"

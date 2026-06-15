@@ -3,6 +3,31 @@
 An AI co-design system for electronics, mechanical, firmware, and BOM that
 cannot produce a passing release unless every check actually ran and passed.
 
+## Run it
+
+Start the MCP server without cloning or installing the repository:
+
+```bash
+HW_PLATFORM_ROOT="$PWD" uvx --from 'hw-codesign-platform[mcp]' hw-mcp
+```
+
+Run the CLI the same way:
+
+```bash
+uvx --from hw-codesign-platform hw --root . create-project quadruped_robot_controller
+```
+
+For KiCad, OpenCASCADE, Freerouting, tscircuit, and Zephyr in one environment,
+use the full-toolchain container:
+
+```bash
+docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest \
+  export-review quadruped_robot_controller
+```
+
+The Python package is the lightweight CLI and MCP distribution. Native release
+gates require the container or locally installed toolchains.
+
 Missing `kicad-cli` returns `blocked`. Missing OpenCASCADE returns `blocked`.
 A compiled error element in tscircuit returns `fail`. An unresolved critical
 assumption blocks release. Decoupling proximity not yet modelled is reported as
@@ -119,8 +144,27 @@ make toolchains
 ## MCP server
 
 ```bash
-HW_PLATFORM_ROOT="$PWD" .venv/bin/hw-mcp
+HW_PLATFORM_ROOT="$PWD" uvx --from 'hw-codesign-platform[mcp]' hw-mcp
 ```
+
+Claude Desktop configuration:
+
+```json
+{
+  "mcpServers": {
+    "hw-codesign": {
+      "command": "uvx",
+      "args": ["--from", "hw-codesign-platform[mcp]", "hw-mcp"],
+      "env": {
+        "HW_PLATFORM_ROOT": "/absolute/path/to/hardware-workspace"
+      }
+    }
+  }
+}
+```
+
+The configured workspace must be writable because projects, validation reports,
+review bundles, and release artifacts are created beneath it.
 
 Tools: `hw_create_project`, `hw_read_spec`, `hw_validate_spec`, generation
 tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`,
@@ -128,6 +172,21 @@ tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`,
 `hw_generate_design_report`. Generation is domain-explicit:
 `hw_generate_reference_intent`, `hw_generate_electronics_source`,
 `hw_generate_mechanical_source`, `hw_generate_firmware_source`.
+
+## Distribution
+
+- PyPI publishes `hw-codesign-platform` from semantic-version tags using Trusted
+  Publishing.
+- GHCR publishes `ghcr.io/mrcha033/hw-cli` with the full native toolchain for
+  `linux/amd64`.
+- Each GitHub release attaches a canonical `bundle.json` and its
+  `review_bundle.schema.json` contract.
+- Homebrew is deferred because native system dependencies make the container a
+  more reliable installation path.
+- conda-forge should be reconsidered when mixed Python/system dependency support
+  becomes important to broader electronics-engineering adoption.
+- MCP registry publication is deferred until the public tool interface and
+  versioning policy are stable.
 
 ## Gate semantics
 

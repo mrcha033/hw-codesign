@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import re
 import shutil
 import zipfile
@@ -24,6 +25,7 @@ from .io import atomic_write_text, read_yaml, write_json, write_yaml
 from .models import Failure, FailureCategory, GateReport, RepairPatch, Status
 from .policy import ChangePolicy
 from .provenance import artifact_provenance
+from .resources import resource_root
 from .placement import check_placement, propose_placement
 from .reference_backend import build_firmware_reference, export_fabrication, export_mechanical, internal_drc, internal_erc
 from .validation import Validator, persist_report
@@ -33,17 +35,18 @@ from .workspace import Workspace
 class HardwareService:
     def __init__(self, root: Path | str):
         self.root = Path(root).resolve()
-        packaged_parts = Path(__file__).resolve().parents[2] / "parts"
-        self.parts_root = self.root / "parts" if (self.root / "parts").is_dir() else packaged_parts
+        resources = resource_root(self.root)
+        toolchain_root = Path(os.environ.get("HW_TOOLCHAIN_ROOT", self.root)).resolve()
+        self.parts_root = resources / "parts"
         self.workspace = Workspace(self.root)
-        self.validator = Validator(self.root / "schemas")
-        self.kicad = KiCadBackend(self.root)
-        self.freerouting = FreeroutingBackend(self.root)
+        self.validator = Validator(resources / "schemas")
+        self.kicad = KiCadBackend(resources)
+        self.freerouting = FreeroutingBackend(toolchain_root)
         self.mechanical = OpenCascadeMechanicalBackend()
         self.zephyr = ZephyrBackend()
-        self.tscircuit = TSCircuitBackend(self.root)
-        self.python_netlist = PythonNetlistBackend(self.root)
-        self.atopile = AtopileBackend(self.root)
+        self.tscircuit = TSCircuitBackend(toolchain_root, parts_root=self.parts_root)
+        self.python_netlist = PythonNetlistBackend(resources)
+        self.atopile = AtopileBackend(resources)
 
     def create_project(self, name: str, template: str = "robotics_controller_full") -> dict[str, Any]:
         result = self.workspace.create_project(name, template)
@@ -649,7 +652,13 @@ class HardwareService:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         reports_dir = path / "validation" / "reports"
-        reports = [json.loads(item.read_text(encoding="utf-8")) for item in sorted(reports_dir.glob("*.json"))]
+        reports = [
+            report
+            for item in sorted(reports_dir.glob("*.json"))
+            if isinstance(report := json.loads(item.read_text(encoding="utf-8")), dict)
+            and "gate" in report
+            and "status" in report
+        ]
         lines = [f"# Design Report: {project}", "", f"Generated: {datetime.now(UTC).isoformat()}", "", "## Scope", "", f"Target: {spec['project']['target_use']}; revision: {spec['project']['revision']}.", "", "## Validation", ""]
         lines.extend(f"- {item['gate']}: {item['status']} ({len(item.get('failures', []))} findings)" for item in reports)
         lines.extend(["", "## Known Physical Validation Gaps", "", "- Load current and thermal behavior require instrumented hardware testing.", "- EMI/EMC, vibration, abuse safety, transients, ingress, and connector fatigue are not certified by digital checks.", ""])
@@ -663,7 +672,13 @@ class HardwareService:
         spec = self.read_spec(project)
         reports_dir = path / "validation" / "reports"
         gate_reports = sorted(
-            [json.loads(item.read_text(encoding="utf-8")) for item in sorted(reports_dir.glob("*.json"))],
+            [
+                report
+                for item in sorted(reports_dir.glob("*.json"))
+                if isinstance(report := json.loads(item.read_text(encoding="utf-8")), dict)
+                and "gate" in report
+                and "status" in report
+            ],
             key=lambda r: r["gate"],
         )
 
@@ -692,10 +707,10 @@ class HardwareService:
             if res_report:
                 metrics = res_report.get("metrics", {})
                 component_resolution_summary = {
-                    "resolved": metrics.get("resolved"),
-                    "requested": metrics.get("requested"),
-                    "supplier_provider": metrics.get("supplier_provider"),
-                    "status": res_report.get("status"),
+                    "resolved": metrics.get("resolved") or 0,
+                    "requested": metrics.get("requested") or 0,
+                    "supplier_provider": metrics.get("supplier_provider") or "unknown",
+                    "status": res_report.get("status") or "unknown",
                 }
 
         # Requirements summary.

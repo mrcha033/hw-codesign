@@ -17,8 +17,9 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
     name = "tscircuit"
     VERSION = "0.1.1491"
 
-    def __init__(self, platform_root: Path):
+    def __init__(self, platform_root: Path, parts_root: Path | None = None):
         self.platform_root = platform_root
+        self.parts_root = parts_root or platform_root / "parts"
 
     def generate_source(self, project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> list[str]:
         target = project / "electronics" / "source" / "tscircuit"
@@ -83,7 +84,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             "sources": self.source_entries(target, [entry, compiler_entry]),
             "contract_gates": list(self.gate_names),
             "release_blocking_gates": list(self.gate_names),
-            "provenance": artifact_provenance(spec, self.platform_root / "parts", "tscircuit", compiler_version=self.VERSION, command=self.command(entry), release_eligible=not unsupported_footprints),
+            "provenance": artifact_provenance(spec, self.parts_root, "tscircuit", compiler_version=self.VERSION, command=self.command(entry), release_eligible=not unsupported_footprints),
         })
         return [str(entry), str(compiler_entry), str(target / "source_manifest.json")]
 

@@ -1,0 +1,338 @@
+"""Shared reusable output schemas for hw-codesign tool results.
+
+Each schema is a JSON Schema draft-2020-12 document with a stable $id.
+Tool output schemas reference these via $ref; validators register the full
+SHARED_SCHEMAS map before resolving.
+
+URN scheme: urn:hw-codesign:contracts:{name}
+"""
+from __future__ import annotations
+
+from typing import Any
+
+_BASE = "urn:hw-codesign:contracts:"
+
+
+def _id(name: str) -> str:
+    return _BASE + name
+
+
+# ---------------------------------------------------------------------------
+# Sub-object definitions (reused inline; not top-level schemas)
+# ---------------------------------------------------------------------------
+
+_FAILURE_ITEM: dict[str, Any] = {
+    "type": "object",
+    "required": ["category", "code", "message", "severity"],
+    "additionalProperties": True,
+    "properties": {
+        "category":               {"type": "string"},
+        "code":                   {"type": "string"},
+        "message":                {"type": "string"},
+        "severity":               {"type": "string", "enum": ["error", "warning", "info"]},
+        "path":                   {"type": ["string", "null"]},
+        "details":                {"type": "object"},
+        "requires_user_decision": {"type": "boolean"},
+    },
+}
+
+_STATUS_ENUM: dict[str, Any] = {
+    "type": "string",
+    "enum": ["pass", "fail", "blocked", "candidate", "released", "generated", "created"],
+}
+
+_REPAIR_PATCH: dict[str, Any] = {
+    "type": "object",
+    "required": ["section", "spec_path", "value", "operation"],
+    "additionalProperties": True,
+    "properties": {
+        "section":           {"type": "string"},
+        "spec_path":         {"type": "string"},
+        "value":             {},
+        "operation":         {"type": "string", "enum": ["replace"]},
+        "requires_approval": {"type": "boolean"},
+        "safety_class":      {"type": "string"},
+        "source_gate":       {"type": "string"},
+        "source_failure":    {"type": "string"},
+    },
+}
+
+_REPAIR_ACTION: dict[str, Any] = {
+    "type": "object",
+    "required": ["gate", "failure_code", "action", "patches", "requires_user_decision"],
+    "additionalProperties": True,
+    "properties": {
+        "gate":                  {"type": "string"},
+        "failure_code":          {"type": "string"},
+        "action":                {"type": "string"},
+        "patches":               {"type": "array", "items": _REPAIR_PATCH},
+        "requires_user_decision": {"type": "boolean"},
+    },
+}
+
+_ITERATION_SUMMARY: dict[str, Any] = {
+    "type": "object",
+    "required": ["iteration_id", "status", "failed_gates"],
+    "additionalProperties": True,
+    "properties": {
+        "iteration_id": {"type": "string"},
+        "status":       _STATUS_ENUM,
+        "failed_gates": {"type": "array", "items": {"type": "string"}},
+    },
+}
+
+# ---------------------------------------------------------------------------
+# Top-level shared schemas (each has a stable $id)
+# ---------------------------------------------------------------------------
+
+SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
+
+    # -------------------------------------------------------------------
+    # gate_report — single gate check result (GateReport.to_dict())
+    # -------------------------------------------------------------------
+    "gate_report": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("gate_report"),
+        "title": "GateReport",
+        "description": "Result of a single gate check. Returned by most check/build/validate tools.",
+        "type": "object",
+        "required": ["gate", "status", "failures", "metrics", "artifacts", "backend"],
+        "additionalProperties": True,
+        "properties": {
+            "gate":      {"type": "string"},
+            "status":    {"type": "string", "enum": ["pass", "fail", "blocked", "candidate", "released"]},
+            "failures":  {"type": "array", "items": _FAILURE_ITEM},
+            "metrics":   {"type": "object"},
+            "artifacts": {"type": "array", "items": {"type": "string"}},
+            "backend":   {"type": "object"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # gate_report_collection — result of run_all_checks / get_failure_report
+    # -------------------------------------------------------------------
+    "gate_report_collection": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("gate_report_collection"),
+        "title": "GateReportCollection",
+        "description": "Aggregated gate check results.",
+        "type": "object",
+        "required": ["status", "reports"],
+        "additionalProperties": True,
+        "properties": {
+            "status":  {"type": "string", "enum": ["pass", "fail", "blocked"]},
+            "reports": {
+                "type": "array",
+                "items": {"$ref": _id("gate_report")},
+            },
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # generated_files_flat — {status, files: string[]}
+    # Used by mechanical, firmware, bringup_tests generators.
+    # -------------------------------------------------------------------
+    "generated_files_flat": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("generated_files_flat"),
+        "title": "GeneratedFilesFlat",
+        "description": "Generation result where output is a flat list of file paths.",
+        "type": "object",
+        "required": ["status", "files"],
+        "additionalProperties": True,
+        "properties": {
+            "status": _STATUS_ENUM,
+            "files":  {"type": "array", "items": {"type": "string"}},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # electronics_source_result — generate_electronics_only output
+    # -------------------------------------------------------------------
+    "electronics_source_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("electronics_source_result"),
+        "title": "ElectronicsSourceResult",
+        "description": "Result of generating electronics source files (schematic, netlist, Circuit JSON).",
+        "type": "object",
+        "required": ["status", "files"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                      _STATUS_ENUM,
+            "files":                       {"type": "array", "items": {"type": "string"}},
+            "component_resolution":        {"type": ["object", "null"]},
+            "resolution_report":           {"type": ["object", "null"]},
+            "supplier_availability_report": {"type": ["object", "null"]},
+            "datasheet_evidence_report":   {"type": ["object", "null"]},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # generate_all_result — generate_all output (files as nested dict)
+    # -------------------------------------------------------------------
+    "generate_all_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("generate_all_result"),
+        "title": "GenerateAllResult",
+        "description": "Result of running all source generators in one step.",
+        "type": "object",
+        "required": ["status", "backend", "files"],
+        "additionalProperties": True,
+        "properties": {
+            "status":  _STATUS_ENUM,
+            "backend": {"type": "string"},
+            "files": {
+                "type": "object",
+                "properties": {
+                    "electronics": {"type": "array", "items": {"type": "string"}},
+                    "mechanical":  {"type": "array", "items": {"type": "string"}},
+                    "firmware":    {"type": "array", "items": {"type": "string"}},
+                    "bom":         {"type": "array", "items": {"type": "string"}},
+                },
+                "additionalProperties": True,
+            },
+            "component_resolution": {"type": ["object", "null"]},
+            "resolution_report":    {"type": ["object", "null"]},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # repair_plan — generate_repair_plan output
+    # -------------------------------------------------------------------
+    "repair_plan": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("repair_plan"),
+        "title": "RepairPlan",
+        "description": "Structured list of actions and spec patches to resolve failing gates.",
+        "type": "object",
+        "required": ["status", "project", "requires_user_decision", "actions"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                 {"type": "string"},
+            "project":                {"type": "string"},
+            "requires_user_decision": {"type": "boolean"},
+            "actions":                {"type": "array", "items": _REPAIR_ACTION},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # apply_repair_result — apply_repair_plan output
+    # -------------------------------------------------------------------
+    "apply_repair_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("apply_repair_result"),
+        "title": "ApplyRepairResult",
+        "description": "Result of applying spec patches from the repair plan.",
+        "type": "object",
+        "required": ["status", "applied", "proposals"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                 {"type": "string", "enum": ["pass", "blocked", "generated"]},
+            "applied":                {"type": "array", "items": _REPAIR_PATCH},
+            "proposals":              {"type": "array", "items": {"type": "object"}},
+            "iteration_id":           {"type": "string"},
+            "requires_user_decision": {"type": "boolean"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # iteration_result — run_design_iteration output
+    # -------------------------------------------------------------------
+    "iteration_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("iteration_result"),
+        "title": "IterationResult",
+        "description": "Result of one full generate→check→repair design iteration.",
+        "type": "object",
+        "required": ["status", "iteration_id", "passed_gates", "failed_gates"],
+        "additionalProperties": True,
+        "properties": {
+            "status":       {"type": "string", "enum": ["pass", "fail", "blocked"]},
+            "iteration_id": {"type": "string"},
+            "passed_gates": {"type": "array", "items": {"type": "string"}},
+            "failed_gates": {"type": "array", "items": {"type": "string"}},
+            "repair_plan":  {"$ref": _id("repair_plan")},
+            "release_gate": {
+                "type": "object",
+                "properties": {"status": {"type": "string"}},
+            },
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # multi_iteration_result — design_until_release output
+    # -------------------------------------------------------------------
+    "multi_iteration_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("multi_iteration_result"),
+        "title": "MultiIterationResult",
+        "description": "Result of running design iterations until release or exhaustion.",
+        "type": "object",
+        "required": ["status", "iterations"],
+        "additionalProperties": True,
+        "properties": {
+            "status":     {"type": "string", "enum": ["released", "fail", "blocked"]},
+            "iterations": {"type": "array", "items": _ITERATION_SUMMARY},
+            "release":    {"type": "object"},
+            "code":       {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # release_bundle_result — export_release_bundle output
+    # -------------------------------------------------------------------
+    "release_bundle_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("release_bundle_result"),
+        "title": "ReleaseBundleResult",
+        "description": "Result of packaging a release bundle ZIP.",
+        "type": "object",
+        "required": ["status"],
+        "additionalProperties": True,
+        "properties": {
+            "status": {"type": "string", "enum": ["released", "blocked", "fail"]},
+            "bundle": {"type": "string", "description": "Absolute path to the ZIP file"},
+            "sha256": {"type": "string"},
+            "bytes":  {"type": "integer"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # blocked_result — any permanently-blocked tool response
+    # -------------------------------------------------------------------
+    "blocked_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("blocked_result"),
+        "title": "BlockedResult",
+        "description": "Returned by tools that are blocked pending toolchain or user action.",
+        "type": "object",
+        "required": ["status", "code"],
+        "additionalProperties": True,
+        "properties": {
+            "status":  {"type": "string", "const": "blocked"},
+            "code":    {"type": "string"},
+            "message": {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # opaque_result — explicit fallback for not-yet-modeled outputs
+    # -------------------------------------------------------------------
+    "opaque_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("opaque_result"),
+        "title": "OpaqueResult",
+        "description": "Output not yet formally modeled; shape is implementation-defined. "
+                       "Presence of this schema in a tool's output_schema field marks it as "
+                       "a known gap, not an oversight.",
+        "type": "object",
+        "additionalProperties": True,
+    },
+}
+
+
+def ref(name: str) -> dict[str, Any]:
+    """Return a $ref to a named shared schema."""
+    if name not in SHARED_SCHEMAS:
+        raise KeyError(f"Unknown shared schema: {name!r}. Available: {sorted(SHARED_SCHEMAS)}")
+    return {"$ref": _id(name)}

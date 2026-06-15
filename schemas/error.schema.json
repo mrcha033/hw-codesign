@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "hw-contracts ErrorEnvelope",
+  "type": "object",
+  "required": [
+    "error",
+    "code"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "error": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string"
+    },
+    "compatibility_required": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "protocol_version",
+            "engine_version",
+            "toolchain_profile",
+            "toolchain_digest"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "protocol_version": {
+              "type": "string"
+            },
+            "engine_version": {
+              "type": "string"
+            },
+            "toolchain_profile": {
+              "type": "string"
+            },
+            "toolchain_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

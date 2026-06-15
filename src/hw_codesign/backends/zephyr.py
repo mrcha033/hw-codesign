@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import shutil
 import sys
 
@@ -12,7 +13,7 @@ class ZephyrBackend:
     def build(self, project: Path, board: str) -> GateReport:
         app = project / "firmware" / "zephyr" / "app"
         build = project / "firmware" / "zephyr" / "build"
-        platform_root = project.parents[1]
+        platform_root = Path(os.environ.get("HW_TOOLCHAIN_ROOT", project.parents[1]))
         zephyr_base = platform_root / ".toolchains" / "zephyr"
         arm_gcc = shutil.which("arm-none-eabi-gcc")
         if zephyr_base.is_dir() and arm_gcc:

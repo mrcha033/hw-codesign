@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "hw-contracts GateEvent",
+  "type": "object",
+  "required": [
+    "event_type",
+    "gate",
+    "status",
+    "timestamp",
+    "metrics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "gate_started",
+        "gate_complete",
+        "gate_blocked",
+        "gate_failed"
+      ]
+    },
+    "gate": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "blocked",
+        "candidate",
+        "released"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metrics": {
+      "type": "object"
+    }
+  }
+}
