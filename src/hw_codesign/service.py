@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -655,6 +656,146 @@ class HardwareService:
         output = path / "exports" / "working" / "documentation" / "design_report.md"
         atomic_write_text(output, "\n".join(lines))
         return {"status": "generated", "file": str(output)}
+
+    def export_review(self, project: str) -> dict[str, Any]:
+        """Write a normalized review bundle aggregating all gate reports and project metadata."""
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        reports_dir = path / "validation" / "reports"
+        gate_reports = sorted(
+            [json.loads(item.read_text(encoding="utf-8")) for item in sorted(reports_dir.glob("*.json"))],
+            key=lambda r: r["gate"],
+        )
+
+        # Placement summary from graph if available.
+        graph_path = path / "electronics" / "generated" / "electrical_graph.json"
+        placement_summary = None
+        component_resolution_summary = None
+        if graph_path.is_file():
+            graph = json.loads(graph_path.read_text(encoding="utf-8"))
+            placement_data = graph.get("placement")
+            if placement_data:
+                placements = placement_data.get("placements", {})
+                source_counts: dict[str, int] = {}
+                for p in placements.values():
+                    source_counts[p.get("source", "unknown")] = source_counts.get(p.get("source", "unknown"), 0) + 1
+                unenforced = [c["kind"] for c in placement_data.get("constraints", []) if not c.get("enforced", True)]
+                placement_summary = {
+                    "board_width_mm": placement_data.get("board_width_mm"),
+                    "board_height_mm": placement_data.get("board_height_mm"),
+                    "placement_count": len(placements),
+                    "constraint_count": len(placement_data.get("constraints", [])),
+                    "source_counts": source_counts,
+                    "unenforced_constraint_kinds": sorted(set(unenforced)),
+                }
+            res_report = graph.get("component_resolution_report")
+            if res_report:
+                metrics = res_report.get("metrics", {})
+                component_resolution_summary = {
+                    "resolved": metrics.get("resolved"),
+                    "requested": metrics.get("requested"),
+                    "supplier_provider": metrics.get("supplier_provider"),
+                    "status": res_report.get("status"),
+                }
+
+        # Requirements summary.
+        req_path = path / "spec" / "requirements.yaml"
+        requirements_summary = None
+        if req_path.is_file():
+            from .io import read_yaml
+            req_data = read_yaml(req_path).get("requirements", {})
+            unresolved = req_data.get("active_unresolved", [])
+            requirements_summary = {
+                "active_lowered_count": len(req_data.get("active_lowered", [])),
+                "active_unresolved_count": len(unresolved),
+                "active_unresolved": unresolved,
+            }
+
+        # Assumptions summary.
+        raw_assumptions = spec.get("assumptions", {})
+        unresolved_critical = [name for name, a in raw_assumptions.items() if a.get("critical") and a.get("requires_user_review")]
+        assumptions_summary = {
+            "total": len(raw_assumptions),
+            "unresolved_critical": len(unresolved_critical),
+            "unresolved_critical_names": sorted(unresolved_critical),
+        } if raw_assumptions else None
+
+        # Gate summary counts.
+        status_counts: dict[str, int] = {"pass": 0, "fail": 0, "blocked": 0, "other": 0}
+        for r in gate_reports:
+            s = r.get("status", "")
+            if s in status_counts:
+                status_counts[s] += 1
+            else:
+                status_counts["other"] += 1
+        summary = {"total": len(gate_reports), **status_counts}
+
+        # Canonical content (generated_at excluded from hash for determinism).
+        canonical: dict[str, Any] = {
+            "bundle_version": "1.0",
+            "project": {
+                "name": project,
+                "revision": spec["project"]["revision"],
+                "target_use": spec["project"]["target_use"],
+                "backend": spec.get("electronics", {}).get("backend", "reference"),
+            },
+            "gate_reports": gate_reports,
+            "summary": summary,
+            "placement": placement_summary,
+            "component_resolution": component_resolution_summary,
+            "requirements": requirements_summary,
+            "assumptions": assumptions_summary,
+            "comments": [],
+        }
+        canonical_bytes = json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
+        bundle_hash = hashlib.sha256(canonical_bytes).hexdigest()
+
+        bundle: dict[str, Any] = {
+            **canonical,
+            "bundle_hash": bundle_hash,
+            "generated_at": datetime.now(UTC).isoformat(),
+        }
+
+        output_dir = path / "exports" / "working" / "review"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        bundle_path = output_dir / "bundle.json"
+        write_json(bundle_path, bundle)
+
+        from .review_report import generate_html_report
+        html_path = generate_html_report(bundle_path)
+        return {"status": "generated", "file": str(bundle_path), "html": str(html_path), "bundle_hash": bundle_hash, "gate_count": len(gate_reports)}
+
+    def upload_review(self, project: str, destination: str | None = None) -> dict[str, Any]:
+        """Upload the review bundle to a hosted viewer.
+
+        DEFERRED: This method builds and validates the local bundle but does not
+        execute a real network upload without an explicit destination URL confirmed
+        by the user.  Cloud execution (step 7) is intentionally out of scope for
+        this implementation phase.
+        """
+        export_result = self.export_review(project)
+        bundle_path = Path(export_result["file"])
+        if not destination:
+            return {
+                "status": "blocked",
+                "code": "destination_required",
+                "message": (
+                    "Hosted upload requires an explicit destination URL. "
+                    "Re-run with --destination <url> once you have configured a viewer endpoint. "
+                    "Cloud execution is deferred to a future implementation phase."
+                ),
+                "bundle": str(bundle_path),
+                "bundle_hash": export_result["bundle_hash"],
+            }
+        # Mechanism stub: an actual HTTP PUT would go here once a destination is confirmed.
+        return {
+            "status": "blocked",
+            "code": "hosted_upload_not_implemented",
+            "message": "Hosted upload mechanism is defined but not yet wired to a live endpoint.",
+            "bundle": str(bundle_path),
+            "bundle_hash": export_result["bundle_hash"],
+            "destination": destination,
+        }
 
     @staticmethod
     def _report_set(reports: list[GateReport]) -> dict[str, Any]:

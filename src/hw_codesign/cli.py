@@ -4,7 +4,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from .errors import HardwarePlatformError
 from .service import HardwareService
@@ -47,6 +47,12 @@ def build_parser() -> argparse.ArgumentParser:
     release.add_argument("project")
     report = commands.add_parser("design-report")
     report.add_argument("project")
+    export_review = commands.add_parser("export-review")
+    export_review.add_argument("project")
+    serve = commands.add_parser("serve-review")
+    serve.add_argument("project")
+    serve.add_argument("--port", type=int, default=7474)
+    serve.add_argument("--no-open", action="store_true", help="Do not open a browser tab automatically")
     return parser
 
 
@@ -82,6 +88,12 @@ def main() -> int:
             result = service.check_release_gate(args.project)
         elif args.command == "design-report":
             result = service.generate_design_report(args.project)
+        elif args.command == "export-review":
+            result = service.export_review(args.project)
+        elif args.command == "serve-review":
+            from .review_viewer import serve_review
+            serve_review(service, args.project, port=args.port, open_browser=not args.no_open)
+            return 0
         else:
             raise AssertionError(args.command)
         _emit(result)
