@@ -1,33 +1,100 @@
-# Verifiable Agentic Hardware Co-Design Platform
+# hw-codesign: agentic hardware design with hard release gates
 
-An agent-first, repository-backed platform for jointly generating and validating electronics intent, mechanical source, firmware board support, and manufacturing release evidence.
+An AI co-design system for electronics, mechanical, firmware, and BOM that
+cannot produce a passing release unless every check actually ran and passed.
 
-The platform treats structured specifications as the source of truth. It never reports native EDA, CAD, firmware, sourcing, or physical validation as passed unless the corresponding check actually ran and passed.
+Missing `kicad-cli` returns `blocked`. Missing OpenCASCADE returns `blocked`.
+A compiled error element in tscircuit returns `fail`. An unresolved critical
+assumption blocks release. Decoupling proximity not yet modelled is reported as
+explicitly deferred, not silently green. **Nothing is assumed to have worked.**
 
-## Current implementation
+```json
+{
+  "gate": "tscircuit_compile",
+  "status": "blocked",
+  "failures": [{"code": "tool_unavailable", "message": "tscircuit compiler not found"}]
+}
+```
 
-- Persistent project workspaces and numbered iteration snapshots
-- Full robotics controller template with explicit critical assumptions
-- JSON Schema validation and structured failure taxonomy
-- Built-in electrical budget/safety, mechanical envelope, and firmware pin-map checks
-- Deterministic typed electrical graph, editable KiCad schematic/PCB, mechanical source, Zephyr source, and BOM generation
-- Curated in-repository component database, role-set resolver, pin/symbol/footprint contracts, and immutable resolution provenance
-- Normalized curated, LCSC/JLCPCB, Digi-Key, Mouser, and Octopart-style supplier adapters with datasheet evidence and availability gates
-- Shared electronics backend contract covering source, compile, netlist extraction, graph parity, footprint parity, layout evidence, and manufacturing export
-- Offline pinned tscircuit 0.1.1491 PCB compile with Circuit JSON netlist, pad, placement, routing, and error-element validation
-- KiCad-native source adapter with native XML netlist extraction and Gerber/drill/position/BOM/STEP export evidence
-- Executable Python-netlist adapter that is intentionally blocked from release because it has no PCB layout or manufacturing output
-- Atopile adapter placeholder that emits only marked intent and returns `backend_not_implemented` for every contract gate
-- Constraint-driven placement proposal: structured, provenance-tagged component placements with derived keepout, mounting-hole, connector-edge, decoupling-proximity, and thermal-spacing constraints, checked by a non-authoritative `placement_constraints` gate (blocks on off-board/coincident/wrong-side-connector; advisory courtyard/thermal warnings; decoupling proximity represented but deferred because cap-to-IC association is not modelled). It proposes and checks placement only; native ERC/DRC and the mechanical interference gate remain authoritative
-- Plane-preseeded Freerouting 2.2.4 autoroute with DSN/SES round-trip through KiCad's native Python API
-- KiCad CLI and Zephyr `west` adapters with honest blocked reports when unavailable
-- Spec-parameterized OpenCASCADE enclosure variants, mounting plates, frame brackets, connector cutouts, and board STEP assembly import/export
-- Mechanical gates for valid solids, manifold STL, tolerance-aware board/component clearance, electrical connector alignment, mounting-hole alignment, and measured BRep interference volumes
-- Release gate requiring all gates, resolved critical assumptions, and actual release artifacts
-- Shared CLI/MCP service layer and JSON-only operation results
-- Docker toolchain definition and pytest coverage
+vs.
 
-The reference robotics backend emits design-intent and candidate artifacts only. It is never release eligible. Release requires a complete tscircuit or KiCad-native backend contract plus curated component, KiCad, mechanical, Zephyr, parity, assumption, and integrity gates. Python-netlist and Atopile projects remain candidate-only. Physical qualification risks remain explicit and cannot be closed by software.
+```json
+{
+  "gate": "tscircuit_compile",
+  "status": "pass",
+  "metrics": {"error_elements": 0, "pad_count": 183, "route_count": 217}
+}
+```
+
+The difference is observable in JSON and enforced by the release gate.
+
+## What this is
+
+A command-line and MCP-server platform that takes a structured YAML spec and
+produces a release bundle — Gerbers, STEP, BOM, firmware source, Zephyr
+devicetree — only after every configured gate reaches `pass`. Reference
+designs produce `candidate` artifacts and are explicitly blocked from release.
+Physical qualification risks (load thermals, EMI/EMC, vibration, abuse) are
+stated as explicit gaps in every generated report and cannot be closed by
+software.
+
+The current reference design is a robotics motor controller (4-layer PCB,
+STM32H7, 12 motor channels, CAN, 24 V VBAT).
+
+## Capabilities
+
+### Electronics
+- Deterministic typed electrical graph with role-set resolver and curated
+  component database; every resolved component has immutable provenance
+- Shared six-gate backend contract (source → compile → netlist → graph parity →
+  footprint parity → layout → manufacturing export) enforced across all adapters
+- Offline pinned **tscircuit 0.1.1491** PCB compile: Circuit JSON netlist, pad,
+  placement, routing, and error-element validation
+- **KiCad-native** adapter: native XML netlist extraction, ERC/DRC, Freerouting
+  2.2.4 autoroute (DSN/SES round-trip), and Gerber/drill/position/BOM/STEP export
+- **Python-netlist** adapter: intentionally candidate-only; blocked from release
+  because it has no PCB layout or manufacturing output — the block is explicit
+- **Atopile** adapter: placeholder emitting marked intent only, blocked on every
+  contract gate
+- KiCad CLI and Zephyr `west` adapters with structured `tool_unavailable` reports
+  when the tool is absent — they do not silently skip
+
+### Placement
+- Constraint-driven placement proposal: structured, provenance-tagged placements
+  with keepout, mounting-hole, connector-edge, decoupling-proximity, and
+  thermal-spacing constraints
+- Hard-blocks on off-board components, coincident centers, and connectors placed
+  on the wrong board half; advisory warnings on coarse courtyard overlap and
+  thermal spacing
+- Decoupling proximity is represented as explicitly unenforced — cap-to-IC
+  association is not in the netlist; the gate says so rather than claiming it
+  checked something it did not
+- Not authoritative: native ERC/DRC and the mechanical interference gate remain
+  the release-blocking arbiters
+
+### Mechanical
+- Spec-parameterized OpenCASCADE enclosure variants, mounting plates, frame
+  brackets, connector cutouts, and board STEP assembly import/export
+- Gates: valid solid, manifold STL, tolerance-aware board/component clearance,
+  connector alignment, mounting-hole alignment, and measured BRep interference
+  volume — nonzero interference returns `fail`
+- Mechanical release requires the board STEP exported by the electronics backend;
+  missing evidence returns `blocked`, not a fabricated pass
+
+### Suppliers and BOM
+- Normalized curated, LCSC/JLCPCB, Digi-Key, Mouser, and Octopart-style
+  supplier adapters with datasheet evidence and availability gates
+- Release checks consume only in-repository snapshots under `parts/suppliers`;
+  no implicit network lookup at release time
+- Known out-of-stock or discontinued parts fail; missing or stale evidence blocks
+- Manufacturer datasheet review evidence hashed into resolved component provenance
+
+### Release
+- Release gate requires every configured gate at `pass`, all critical assumptions
+  resolved by a human, and every declared artifact present on disk with a matching
+  hash
+- Only `tscircuit` and `kicad` backends are release-eligible; `reference`,
+  `python_netlist`, and `atopile` are permanently candidate-only
 
 ## Quick start
 
@@ -39,6 +106,9 @@ npm ci --ignore-scripts
 .venv/bin/hw --root . iterate quadruped_robot_controller --no-external
 ```
 
+Without native toolchains all external gates return `blocked`. That is the
+expected and correct output when the tools are not installed.
+
 Install the pinned native macOS backends and run the complete flow:
 
 ```bash
@@ -46,40 +116,39 @@ make toolchains
 .venv/bin/hw --root . design-until-release quadruped_robot_controller --external
 ```
 
-Run with native backends enabled:
-
-```bash
-.venv/bin/hw --root . iterate quadruped_robot_controller
-```
-
-Missing `kicad-cli`, KiCad Python, the pinned Freerouting JAR/JRE, or `west` produces a structured `tool_unavailable` result. It does not silently skip the gate.
-
-Mechanical release requires the native board STEP exported by the electronics backend. Missing OpenCASCADE or board STEP evidence returns `blocked`; malformed solids, non-manifold STL, connector drift, insufficient tolerance/clearance, or nonzero assembly intersection volumes return `fail`. All configured enclosure variants and enabled fixtures are required release artifacts and are covered by both the mechanical manifest and release manifest integrity gates.
-
-Electronics backends are selected with `electronics.backend`: `reference`, `tscircuit`, `kicad`, `python_netlist`, or `atopile`. Every non-reference adapter emits `electronics/source/<backend>/source_manifest.json` with the same six contract gates. A missing compiler blocks the contract; a nonzero compiler or compiled error element fails it. No backend can pass release policy without manufacturing artifacts.
-
-Supplier selection is configured with `sourcing.provider`. Release checks consume only in-repository supplier snapshots under `parts/suppliers`; they do not perform an implicit network lookup. An `available` record requires a supplier identifier and observation timestamp, known out-of-stock or discontinued parts fail, and missing or stale evidence blocks. Manufacturer datasheet review evidence is maintained under `parts/evidence` and is hashed into each resolved component's provenance.
-
 ## MCP server
 
 ```bash
 HW_PLATFORM_ROOT="$PWD" .venv/bin/hw-mcp
 ```
 
-Core tools include `hw_create_project`, `hw_read_spec`, `hw_validate_spec`, generation tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`, `hw_generate_repair_plan`, `hw_run_design_iteration`, `hw_check_release_gate`, and `hw_generate_design_report`.
-
-Domain generation is explicit: `hw_generate_reference_intent`, `hw_generate_electronics_source`, `hw_generate_mechanical_source`, and `hw_generate_firmware_source`. Only `hw_generate_all` invokes all domains.
+Tools: `hw_create_project`, `hw_read_spec`, `hw_validate_spec`, generation
+tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`,
+`hw_generate_repair_plan`, `hw_run_design_iteration`, `hw_check_release_gate`,
+`hw_generate_design_report`. Generation is domain-explicit:
+`hw_generate_reference_intent`, `hw_generate_electronics_source`,
+`hw_generate_mechanical_source`, `hw_generate_firmware_source`.
 
 ## Gate semantics
 
-- `pass`: the check ran and found no blocking finding.
-- `fail`: the check ran or had sufficient local evidence and found a violation.
-- `blocked`: required tooling or decision input was unavailable.
-
-Digital release evidence cannot certify load thermals, EMI/EMC, abuse safety, vibration life, motor transients, ingress protection, or connector fatigue. These remain explicit physical validation gaps in generated reports.
+| Status | Meaning |
+|--------|---------|
+| `pass` | check ran and found no blocking finding |
+| `fail` | check ran and found a violation |
+| `blocked` | required tooling or prior decision was absent |
+| `candidate` | artifact was generated but is not release-eligible |
 
 ## Repository layout
 
-Generated projects follow the requested `projects/<name>/{spec,electronics,mechanical,firmware,validation,exports,history}` structure. Product code lives in `src/hw_codesign`; schemas are in `schemas`; adapters are isolated under `src/hw_codesign/backends`.
+```
+src/hw_codesign/          # core platform and service layer
+  backends/               # per-backend adapters (tscircuit, kicad, ...)
+schemas/                  # JSON Schema for spec validation
+parts/                    # curated component database and supplier snapshots
+projects/<name>/          # generated project workspaces
+  {spec,electronics,mechanical,firmware,validation,exports,history}/
+```
 
-Candidate bundles live under `exports/candidates/<iteration_id>`. Release artifacts and bundles live under `exports/releases/<revision>` and are created only after every release gate passes.
+Digital release evidence cannot certify load thermals, EMI/EMC, abuse safety,
+vibration life, motor transients, ingress protection, or connector fatigue.
+These remain explicit physical validation gaps in every generated report.
