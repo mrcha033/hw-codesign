@@ -146,14 +146,73 @@
       "description": "Decisions/comments appended post-export via the comments sidecar; empty in the initial bundle.",
       "items": {
         "type": "object",
-        "required": ["id", "timestamp", "gate", "text"],
+        "required": ["id", "timestamp", "text"],
         "additionalProperties": true,
         "properties": {
-          "id":        { "type": "string" },
-          "timestamp": { "type": "string", "format": "date-time" },
-          "gate":      { "type": ["string", "null"] },
-          "text":      { "type": "string" },
-          "author":    { "type": "string" }
+          "id":          { "type": "string" },
+          "timestamp":   { "type": "string", "format": "date-time" },
+          "text":        { "type": "string" },
+          "author":      { "type": ["string", "null"] },
+          "target_type": {
+            "type": "string",
+            "enum": ["general", "gate_failure", "requirement", "component"],
+            "description": "Stable target type for this comment."
+          },
+          "target_id":   {
+            "type": ["string", "null"],
+            "description": "Stable target key, e.g. 'gate:footprint_check' or 'req_001'."
+          },
+          "bundle_hash": {
+            "type": "string",
+            "description": "bundle_hash of the snapshot this comment was made against."
+          }
+        }
+      }
+    },
+    "iterations": {
+      "type": "array",
+      "description": "Lean summaries of design iterations from history/iterations/.",
+      "items": {
+        "type": "object",
+        "required": ["iteration_id"],
+        "additionalProperties": true,
+        "properties": {
+          "iteration_id": { "type": "string" },
+          "created_at":   { "type": "string" },
+          "goal":         { "type": "string" },
+          "status":       { "type": "string" },
+          "passed_gates": { "type": "array", "items": { "type": "string" } },
+          "failed_gates": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "description": "Lean summaries of candidate snapshots from exports/candidates/.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "release": {
+      "type": ["object", "null"],
+      "description": "Most recent release manifest summary; null when no release exists.",
+      "additionalProperties": true,
+      "properties": {
+        "release_id":    { "type": "string" },
+        "artifact_count": { "type": "integer" }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "description": "Release artifact list (path + sha256) from the most recent release manifest.",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "additionalProperties": true,
+        "properties": {
+          "path":   { "type": "string" },
+          "sha256": { "type": "string" }
         }
       }
     }

@@ -53,6 +53,9 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("project")
     serve.add_argument("--port", type=int, default=7474)
     serve.add_argument("--no-open", action="store_true", help="Do not open a browser tab automatically")
+    upload = commands.add_parser("upload-review")
+    upload.add_argument("project")
+    upload.add_argument("--destination", default=None, help="Hosted viewer endpoint URL")
     return parser
 
 
@@ -94,6 +97,8 @@ def main() -> int:
             from .review_viewer import serve_review
             serve_review(service, args.project, port=args.port, open_browser=not args.no_open)
             return 0
+        elif args.command == "upload-review":
+            result = service.upload_review(args.project, destination=args.destination)
         else:
             raise AssertionError(args.command)
         _emit(result)

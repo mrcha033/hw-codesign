@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from html import escape
 from pathlib import Path
 from typing import Any
 
@@ -55,7 +56,6 @@ pre{{margin:0;padding:.5rem .75rem;font-size:.75rem;white-space:pre-wrap;color:#
 {gate_table}
 </section>
 {failures_html}
-<script>BUNDLE={bundle_json};</script>
 </body>
 </html>
 """
@@ -63,7 +63,7 @@ pre{{margin:0;padding:.5rem .75rem;font-size:.75rem;white-space:pre-wrap;color:#
 
 def _badge(status: str) -> str:
     color = _STATUS_COLOR.get(status, "#64748b")
-    return f'<span class="badge" style="background:{color}">{status}</span>'
+    return f'<span class="badge" style="background:{color}">{escape(status)}</span>'
 
 
 def _assumptions_html(assumptions: dict[str, Any] | None) -> str:
@@ -73,7 +73,10 @@ def _assumptions_html(assumptions: dict[str, Any] | None) -> str:
     names = assumptions.get("unresolved_critical_names", [])
     if not crit:
         return ""
-    items = "".join(f'<div class="unresolved">&#9888; Critical assumption unresolved: <strong>{n}</strong></div>' for n in names)
+    items = "".join(
+        f'<div class="unresolved">&#9888; Critical assumption unresolved: <strong>{escape(n)}</strong></div>'
+        for n in names
+    )
     return f"<section><h2>Critical Assumptions ({crit} unresolved)</h2>{items}</section>"
 
 
@@ -82,7 +85,8 @@ def _requirements_html(requirements: dict[str, Any] | None) -> str:
         return ""
     unresolved = requirements.get("active_unresolved", [])
     rows = "".join(
-        f"<tr><td>{r.get('id','')}</td><td>{r.get('source','')}</td><td>{r.get('category','')}</td>"
+        f"<tr><td>{escape(str(r.get('id', '')))}</td><td>{escape(str(r.get('source', '')))}</td>"
+        f"<td>{escape(str(r.get('category', '')))}</td>"
         f"<td>{'&#9888; release-blocking' if r.get('release_blocking') else ''}</td></tr>"
         for r in unresolved
     )
@@ -94,8 +98,10 @@ def _requirements_html(requirements: dict[str, Any] | None) -> str:
 def _placement_html(placement: dict[str, Any] | None) -> str:
     if not placement:
         return ""
-    unenforced = ", ".join(placement.get("unenforced_constraint_kinds", [])) or "none"
-    sources = ", ".join(f"{k}: {v}" for k, v in sorted(placement.get("source_counts", {}).items()))
+    unenforced = ", ".join(escape(k) for k in placement.get("unenforced_constraint_kinds", [])) or "none"
+    sources = ", ".join(
+        f"{escape(str(k))}: {v}" for k, v in sorted(placement.get("source_counts", {}).items())
+    )
     return f"""<section><h2>Placement Proposal</h2>
 <table><tbody>
 <tr><th>Board</th><td>{placement.get('board_width_mm')} &times; {placement.get('board_height_mm')} mm</td></tr>
@@ -108,9 +114,9 @@ def _placement_html(placement: dict[str, Any] | None) -> str:
 
 def _gate_table(gate_reports: list[dict[str, Any]]) -> str:
     rows = "".join(
-        f"<tr><td>{r['gate']}</td><td>{_badge(r['status'])}</td>"
+        f"<tr><td>{escape(r['gate'])}</td><td>{_badge(r['status'])}</td>"
         f"<td>{len(r.get('failures', []))}</td>"
-        f"<td>{', '.join(str(v) for v in list(r.get('metrics', {}).values())[:3])}</td></tr>"
+        f"<td>{escape(', '.join(str(v) for v in list(r.get('metrics', {}).values())[:3]))}</td></tr>"
         for r in gate_reports
     )
     return f"""<table><thead><tr><th>Gate</th><th>Status</th><th>Findings</th><th>Key metrics</th></tr></thead>
@@ -124,13 +130,15 @@ def _failures_html(gate_reports: list[dict[str, Any]]) -> str:
     parts = []
     for r in failing:
         inner = "".join(
-            f"<pre>[{f.get('severity','error')}] {f.get('code','')} — {f.get('message','')}"
-            + (f"\n  path: {f['path']}" if f.get("path") else "")
-            + (f"\n  details: {json.dumps(f.get('details', {}))}" if f.get("details") else "")
+            f"<pre>[{escape(f.get('severity', 'error'))}] {escape(f.get('code', ''))} — {escape(f.get('message', ''))}"
+            + (f"\n  path: {escape(f['path'])}" if f.get("path") else "")
+            + (f"\n  details: {escape(json.dumps(f.get('details', {})))}" if f.get("details") else "")
             + "</pre>"
             for f in r["failures"]
         )
-        parts.append(f"<details><summary>{_badge(r['status'])} {r['gate']} ({len(r['failures'])} findings)</summary>{inner}</details>")
+        parts.append(
+            f"<details><summary>{_badge(r['status'])} {escape(r['gate'])} ({len(r['failures'])} findings)</summary>{inner}</details>"
+        )
     return f"<section><h2>Findings Detail</h2>{''.join(parts)}</section>"
 
 
@@ -139,12 +147,12 @@ def render_html(bundle: dict[str, Any]) -> str:
     summary = bundle.get("summary", {})
     gate_reports = bundle.get("gate_reports", [])
     html = _HTML_TEMPLATE.format(
-        project_name=project.get("name", ""),
-        revision=project.get("revision", ""),
-        backend=project.get("backend", ""),
-        target_use=project.get("target_use", ""),
-        generated_at=bundle.get("generated_at", ""),
-        bundle_hash=bundle.get("bundle_hash", ""),
+        project_name=escape(str(project.get("name", ""))),
+        revision=escape(str(project.get("revision", ""))),
+        backend=escape(str(project.get("backend", ""))),
+        target_use=escape(str(project.get("target_use", ""))),
+        generated_at=escape(str(bundle.get("generated_at", ""))),
+        bundle_hash=escape(str(bundle.get("bundle_hash", ""))),
         pass_count=summary.get("pass", 0),
         blocked_count=summary.get("blocked", 0),
         fail_count=summary.get("fail", 0),
@@ -154,7 +162,6 @@ def render_html(bundle: dict[str, Any]) -> str:
         placement_html=_placement_html(bundle.get("placement")),
         gate_table=_gate_table(gate_reports),
         failures_html=_failures_html(gate_reports),
-        bundle_json=json.dumps(bundle, sort_keys=True),
     )
     return html
 

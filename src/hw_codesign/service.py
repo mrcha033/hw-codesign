@@ -730,6 +730,47 @@ class HardwareService:
                 status_counts["other"] += 1
         summary = {"total": len(gate_reports), **status_counts}
 
+        # Iteration history — lean summaries only (stable fields, no mtime-derived data).
+        iterations_dir = path / "history" / "iterations"
+        iterations: list[dict[str, Any]] = []
+        if iterations_dir.is_dir():
+            for it_dir in sorted(iterations_dir.iterdir()):
+                it_file = it_dir / "iteration.json"
+                result_file = it_dir / "result.json"
+                if not it_file.is_file():
+                    continue
+                it_data = json.loads(it_file.read_text(encoding="utf-8"))
+                entry: dict[str, Any] = {
+                    "iteration_id": it_data.get("iteration_id", it_dir.name),
+                    "created_at": it_data.get("created_at", ""),
+                    "goal": it_data.get("goal", ""),
+                }
+                if result_file.is_file():
+                    result = json.loads(result_file.read_text(encoding="utf-8"))
+                    entry["status"] = result.get("status", "")
+                    entry["passed_gates"] = sorted(result.get("passed_gates", []))
+                    entry["failed_gates"] = sorted(result.get("failed_gates", []))
+                iterations.append(entry)
+
+        # Release summary — read most recent exports/r*/manifest.json.
+        release_summary = None
+        artifacts: list[dict[str, Any]] = []
+        exports_dir = path / "exports"
+        if exports_dir.is_dir():
+            release_dirs = sorted(d for d in exports_dir.iterdir() if d.is_dir() and d.name.startswith("r"))
+            if release_dirs:
+                latest = release_dirs[-1]
+                manifest_path = latest / "manifest.json"
+                if manifest_path.is_file():
+                    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    artifact_list = manifest.get("artifacts", [])
+                    release_summary = {
+                        "release_id": latest.name,
+                        "artifact_count": len(artifact_list),
+                    }
+                    # Keep only stable (path, sha256) pairs — no bytes/mtime.
+                    artifacts = [{"path": a["path"], "sha256": a["sha256"]} for a in artifact_list if "path" in a and "sha256" in a]
+
         # Canonical content (generated_at excluded from hash for determinism).
         canonical: dict[str, Any] = {
             "bundle_version": "1.0",
@@ -745,6 +786,10 @@ class HardwareService:
             "component_resolution": component_resolution_summary,
             "requirements": requirements_summary,
             "assumptions": assumptions_summary,
+            "iterations": iterations,
+            "candidates": [],
+            "release": release_summary,
+            "artifacts": artifacts,
             "comments": [],
         }
         canonical_bytes = json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
