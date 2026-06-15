@@ -1,7 +1,38 @@
-# hw-codesign: agentic hardware design with hard release gates
+# hw-codesign: verifiable hardware co-design release pipeline
 
-An AI co-design system for electronics, mechanical, firmware, and BOM that
-cannot produce a passing release unless every check actually ran and passed.
+An agent-facing CLI and MCP server for generating hardware design candidates and
+proving which release checks actually ran. It is currently strongest for
+**tscircuit/KiCad-backed robotics-controller flows**, not arbitrary board
+topologies.
+
+The reusable part today is the gated pipeline: typed specs, deterministic
+artifacts, structured failures, provenance, and release policy. The included
+component catalog, role set, and end-to-end example are centered on one STM32H7
+robotics controller. Supporting a materially different board family currently
+requires extending those inputs and, potentially, the generators.
+
+> **Evidence status:** the repository includes generated Gerbers, STEP files,
+> BOM, firmware, reports, and a downloadable candidate bundle. It does not yet
+> claim a fabricated, electrically brought-up, thermally qualified, or EMC-tested
+> board.
+
+## Known limits
+
+- The repository has one maintained board family: the STM32H7 robotics motor
+  controller. A second real reference design is still required to demonstrate
+  that the schema and generators generalize across topologies.
+- The Atopile adapter is a placeholder. The `reference` and `python_netlist`
+  backends are candidate-only. Only `tscircuit` and `kicad` are release-eligible,
+  and only when every configured native gate passes.
+- The complete cross-domain flow depends on native KiCad, OpenCASCADE,
+  Freerouting, tscircuit, and Zephyr tooling. The supported reproducible path is
+  the Linux container; bootstrap scripts also support macOS. Windows has not
+  been validated.
+- Digital gates cannot certify fabrication quality, load thermals, EMI/EMC,
+  vibration, abuse safety, ingress protection, transients, or connector life.
+- The tracked `r1` export is historical digital evidence. The current checked-in
+  `reference` configuration is candidate-only and its current release gate is
+  expected to remain blocked.
 
 ## Run it
 
@@ -28,6 +59,11 @@ docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest \
 The Python package is the lightweight CLI and MCP distribution. Native release
 gates require the container or locally installed toolchains.
 
+New here? Follow [Zero to first candidate report](docs/first-run.md). Before
+interpreting a green or blocked result, read the
+[validation contract](docs/validation-contract.md). To change the included
+design safely, read [Adapting the specification](docs/adapting-a-spec.md).
+
 Missing `kicad-cli` returns `blocked`. Missing OpenCASCADE returns `blocked`.
 A compiled error element in tscircuit returns `fail`. An unresolved critical
 assumption blocks release. Decoupling proximity not yet modelled is reported as
@@ -53,7 +89,7 @@ vs.
 
 The difference is observable in JSON and enforced by the release gate.
 
-## What this is
+## Current scope
 
 A command-line and MCP-server platform that takes a structured YAML spec and
 produces a release bundle — Gerbers, STEP, BOM, firmware source, Zephyr
@@ -63,16 +99,91 @@ Physical qualification risks (load thermals, EMI/EMC, vibration, abuse) are
 stated as explicit gaps in every generated report and cannot be closed by
 software.
 
-The current reference design is a robotics motor controller (4-layer PCB,
-STM32H7, 12 motor channels, CAN, 24 V VBAT).
+The current reference design is a robotics motor controller: 4-layer PCB,
+STM32H7, 12 motor channels, CAN, and 24 V VBAT.
+
+### Backend maturity
+
+| Backend | What works | Release position |
+|---|---|---|
+| KiCad | Native netlist, ERC/DRC, Freerouting round trip, and manufacturing export | Release-eligible when every native gate passes |
+| tscircuit | Pinned offline compile, Circuit JSON, graph/footprint parity, placement and routing checks | Release-eligible with the KiCad manufacturing bridge and native gates |
+| reference | Generates the included design intent and candidate artifacts | Candidate-only; used for tutorials and pipeline inspection |
+| Python netlist | Executes deterministic netlist and parity checks | Candidate-only; no PCB layout or manufacturing output |
+| Atopile | Emits explicitly marked intent | Placeholder; all contract gates remain blocked |
+
+This is not yet universal hardware design automation. Within the included
+robotics-controller family, users can change supported electrical, mechanical,
+firmware, sourcing, and manufacturing parameters. A new topology requires a new
+role set/component catalog and may require generator changes; see the adaptation
+guide.
+
+## First workflow
+
+The shortest useful workflow intentionally ends in a `blocked` result while
+still producing a reviewable candidate:
+
+```bash
+uvx --from hw-codesign-platform hw --root . create-project first_board
+uvx --from hw-codesign-platform hw --root . iterate first_board --no-external
+uvx --from hw-codesign-platform hw --root . export-review first_board
+```
+
+Expected result:
+
+```json
+{
+  "status": "blocked",
+  "iteration_id": "0001",
+  "candidate": {
+    "status": "candidate",
+    "candidate_only": true
+  }
+}
+```
+
+`blocked` means the system preserved the candidate but refused to call it a
+release. The command writes specs, generated intent and source, gate reports,
+an iteration snapshot, and a candidate ZIP under `projects/first_board/`. The
+full file map and interpretation are in the first-run guide.
+
+## Generated example
+
+The tracked robotics-controller example provides inspectable output without
+requiring a local toolchain run:
+
+- [Example and proof index](examples/robotics-motor-controller/README.md)
+- [Complete generated bundle](projects/quadruped_robot_controller/exports/quadruped_robot_controller-r1.zip)
+- [Gerbers](projects/quadruped_robot_controller/exports/r1/fabrication/gerbers.zip)
+- [BOM](projects/quadruped_robot_controller/exports/r1/fabrication/bom.csv)
+- [Assembly STEP](projects/quadruped_robot_controller/exports/r1/mechanical/assembly.step)
+- [Validation report](projects/quadruped_robot_controller/exports/r1/docs/validation_report.json)
+- [Known physical risks](projects/quadruped_robot_controller/exports/r1/docs/known_risks.md)
+
+These are generated design artifacts and digital evidence, not proof of
+fabrication or physical qualification. The current checked-in project spec uses
+the candidate-only `reference` backend, so rerunning its current release gate is
+expected to block until a compiled backend and all native gates are selected and
+passed.
+
+### Adoption milestones still open
+
+- Add a second maintained board family to prove the schema and generators are not
+  specific to one robotics controller.
+- Publish a report screenshot or demo recording from a stable release workflow.
+- Fabricate and bring up a generated board, then publish photographs, measured
+  results, deviations, and the exact artifact bundle sent to manufacturing.
+- Record thermal, transient, EMI/EMC, vibration, and connector qualification as
+  physical evidence rather than software gate output.
 
 ## Capabilities
 
 ### Electronics
 - Deterministic typed electrical graph with role-set resolver and curated
   component database; every resolved component has immutable provenance
-- Shared six-gate backend contract (source → compile → netlist → graph parity →
-  footprint parity → layout → manufacturing export) enforced across all adapters
+- Shared source-generation step plus six-gate backend contract (compile →
+  netlist → graph parity → footprint parity → layout → manufacturing export)
+  enforced across all adapters
 - Offline pinned **tscircuit 0.1.1491** PCB compile: Circuit JSON netlist, pad,
   placement, routing, and error-element validation
 - **KiCad-native** adapter: native XML netlist extraction, ERC/DRC, Freerouting
@@ -121,7 +232,7 @@ STM32H7, 12 motor channels, CAN, 24 V VBAT).
 - Only `tscircuit` and `kicad` backends are release-eligible; `reference`,
   `python_netlist`, and `atopile` are permanently candidate-only
 
-## Quick start
+## Development setup
 
 ```bash
 python3 -m venv .venv
@@ -196,6 +307,9 @@ tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`,
 | `fail` | check ran and found a violation |
 | `blocked` | required tooling or prior decision was absent |
 | `candidate` | artifact was generated but is not release-eligible |
+
+The complete release, adapter, hash, and physical-evidence rules are defined in
+[Validation contract](docs/validation-contract.md).
 
 ## Repository layout
 
