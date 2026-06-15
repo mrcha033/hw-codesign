@@ -12,14 +12,22 @@ The platform treats structured specifications as the source of truth. It never r
 - Built-in electrical budget/safety, mechanical envelope, and firmware pin-map checks
 - Deterministic typed electrical graph, editable KiCad schematic/PCB, mechanical source, Zephyr source, and BOM generation
 - Curated in-repository component database, role-set resolver, pin/symbol/footprint contracts, and immutable resolution provenance
-- Offline pinned tscircuit 0.1.1491 compile, Circuit JSON netlist extraction, and graph parity gates
+- Normalized curated, LCSC/JLCPCB, Digi-Key, Mouser, and Octopart-style supplier adapters with datasheet evidence and availability gates
+- Shared electronics backend contract covering source, compile, netlist extraction, graph parity, footprint parity, layout evidence, and manufacturing export
+- Offline pinned tscircuit 0.1.1491 PCB compile with Circuit JSON netlist, pad, placement, routing, and error-element validation
+- KiCad-native source adapter with native XML netlist extraction and Gerber/drill/position/BOM/STEP export evidence
+- Executable Python-netlist adapter that is intentionally blocked from release because it has no PCB layout or manufacturing output
+- Atopile adapter placeholder that emits only marked intent and returns `backend_not_implemented` for every contract gate
+- Constraint-driven placement proposal: structured, provenance-tagged component placements with derived keepout, mounting-hole, connector-edge, decoupling-proximity, and thermal-spacing constraints, checked by a non-authoritative `placement_constraints` gate (blocks on off-board/coincident/wrong-side-connector; advisory courtyard/thermal warnings; decoupling proximity represented but deferred because cap-to-IC association is not modelled). It proposes and checks placement only; native ERC/DRC and the mechanical interference gate remain authoritative
 - Plane-preseeded Freerouting 2.2.4 autoroute with DSN/SES round-trip through KiCad's native Python API
 - KiCad CLI and Zephyr `west` adapters with honest blocked reports when unavailable
+- Spec-parameterized OpenCASCADE enclosure variants, mounting plates, frame brackets, connector cutouts, and board STEP assembly import/export
+- Mechanical gates for valid solids, manifold STL, tolerance-aware board/component clearance, electrical connector alignment, mounting-hole alignment, and measured BRep interference volumes
 - Release gate requiring all gates, resolved critical assumptions, and actual release artifacts
 - Shared CLI/MCP service layer and JSON-only operation results
 - Docker toolchain definition and pytest coverage
 
-The reference robotics backend emits design-intent and candidate artifacts only. It is never release eligible. Release requires the offline compiled tscircuit backend plus curated component, KiCad, mechanical, Zephyr, parity, assumption, and integrity gates. Physical qualification risks remain explicit and cannot be closed by software.
+The reference robotics backend emits design-intent and candidate artifacts only. It is never release eligible. Release requires a complete tscircuit or KiCad-native backend contract plus curated component, KiCad, mechanical, Zephyr, parity, assumption, and integrity gates. Python-netlist and Atopile projects remain candidate-only. Physical qualification risks remain explicit and cannot be closed by software.
 
 ## Quick start
 
@@ -45,6 +53,12 @@ Run with native backends enabled:
 ```
 
 Missing `kicad-cli`, KiCad Python, the pinned Freerouting JAR/JRE, or `west` produces a structured `tool_unavailable` result. It does not silently skip the gate.
+
+Mechanical release requires the native board STEP exported by the electronics backend. Missing OpenCASCADE or board STEP evidence returns `blocked`; malformed solids, non-manifold STL, connector drift, insufficient tolerance/clearance, or nonzero assembly intersection volumes return `fail`. All configured enclosure variants and enabled fixtures are required release artifacts and are covered by both the mechanical manifest and release manifest integrity gates.
+
+Electronics backends are selected with `electronics.backend`: `reference`, `tscircuit`, `kicad`, `python_netlist`, or `atopile`. Every non-reference adapter emits `electronics/source/<backend>/source_manifest.json` with the same six contract gates. A missing compiler blocks the contract; a nonzero compiler or compiled error element fails it. No backend can pass release policy without manufacturing artifacts.
+
+Supplier selection is configured with `sourcing.provider`. Release checks consume only in-repository supplier snapshots under `parts/suppliers`; they do not perform an implicit network lookup. An `available` record requires a supplier identifier and observation timestamp, known out-of-stock or discontinued parts fail, and missing or stale evidence blocks. Manufacturer datasheet review evidence is maintained under `parts/evidence` and is hashed into each resolved component's provenance.
 
 ## MCP server
 

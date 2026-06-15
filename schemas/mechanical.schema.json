@@ -1,1 +1,18 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["envelope","enclosure_internal_mm"]}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["envelope", "enclosure_internal_mm", "selected_variant", "variants", "mounting_holes", "connector_interfaces", "insertion_clearance_mm", "assembly_clearance_mm", "tolerance_mm"],
+  "properties": {
+    "selected_variant": {"type": "string", "minLength": 1},
+    "variants": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["name", "lid_style", "ventilation", "gasket"]}},
+    "envelope": {"type": "object", "required": ["board_width_mm", "board_height_mm", "board_thickness_mm", "max_component_height_top_mm", "max_component_height_bottom_mm"]},
+    "enclosure_internal_mm": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "minItems": 3, "maxItems": 3},
+    "board_origin_mm": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "minItems": 3, "maxItems": 3},
+    "insertion_clearance_mm": {"type": "number", "minimum": 0},
+    "assembly_clearance_mm": {"type": "number", "minimum": 0},
+    "tolerance_mm": {"type": "number", "minimum": 0},
+    "mounting_holes": {"type": "array", "minItems": 3, "items": {"type": "object", "required": ["x_mm", "y_mm", "diameter_mm"]}},
+    "connector_interfaces": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["ref", "side", "opening_mm", "center_z_mm", "position_tolerance_mm"], "properties": {"side": {"enum": ["front", "rear", "left", "right"]}}}},
+    "fixtures": {"type": "object"}
+  }
+}

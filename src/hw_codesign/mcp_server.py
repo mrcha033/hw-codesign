@@ -152,8 +152,8 @@ def create_server(root: Path | str | None = None):
         return {"status": "pass", "project": project, "reports": reports}
 
     @server.tool(name="hw_apply_repair_plan")
-    def apply_repair_plan(project: str) -> dict[str, Any]:
-        return service.apply_repair_plan(project)
+    def apply_repair_plan(project: str, approved: bool = False) -> dict[str, Any]:
+        return service.apply_repair_plan(project, approved=approved)
 
     @server.tool(name="hw_run_design_iteration")
     def run_design_iteration(project: str, goal: str = "make all release gates pass", include_external: bool = True) -> dict[str, Any]:

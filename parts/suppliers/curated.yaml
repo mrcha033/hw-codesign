@@ -1,0 +1,25 @@
+provider: curated
+records:
+  - {component_id: molex_42820_2212, supplier_sku: Molex-42820-2212, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: littelfuse_0498080, supplier_sku: 0498080.M, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: lm74700qdbvrq1, supplier_sku: LM74700QDBVRQ1, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: smcj33a, supplier_sku: SMCJ33A, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: tps26630rget, supplier_sku: TPS26630RGET, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: lm76005rnpr, supplier_sku: LM76005RNPR, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: tps62133rgtr, supplier_sku: TPS62133RGTR, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: stm32h743vit6, supplier_sku: STM32H743VIT6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: icm_42688_p, supplier_sku: ICM-42688-P, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: tcan1042hgvdrq1, supplier_sku: TCAN1042HGVDRQ1, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: phoenix_1935161, supplier_sku: '1935161', availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: sn74lvc1g97dbvr, supplier_sku: SN74LVC1G97DBVR, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: molex_43650_0300, supplier_sku: Molex-43650-0300, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: rc0603_120r, supplier_sku: RC0603FR-07120RL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: samtec_ftsh_105, supplier_sku: FTSH-105-01-L-DV-K, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: usb4105_gf_a, supplier_sku: USB4105-GF-A, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: usblc6_2sc6, supplier_sku: USBLC6-2SC6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: rc0603_100k, supplier_sku: RC0603FR-07100KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: rc0603_4k7, supplier_sku: RC0603FR-074K7L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: molex_43045_0800, supplier_sku: Molex-43045-0800, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: grm188_100n, supplier_sku: GRM188R71C104KA01D, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: grm31_22u, supplier_sku: GRM31CR61E226ME15L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: grm32_10u_50v, supplier_sku: GRM32ER71H106KA12L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}

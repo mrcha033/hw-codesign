@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["evidence"],
+  "properties": {
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "component_id", "kind", "source", "locator", "review_status", "reviewed_at", "supports"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "component_id": {"type": "string", "minLength": 1},
+          "kind": {"const": "datasheet"},
+          "source": {"const": "manufacturer"},
+          "locator": {"type": "string", "minLength": 1},
+          "uri": {"type": ["string", "null"]},
+          "content_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+          "review_status": {"enum": ["approved", "pending", "rejected"]},
+          "reviewed_at": {"type": "string", "format": "date"},
+          "supports": {"type": "array", "minItems": 1, "items": {"enum": ["identity", "pins", "symbol", "package", "footprint"]}}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

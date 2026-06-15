@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["provider", "records"],
+  "properties": {
+    "provider": {"enum": ["curated", "lcsc_jlcpcb", "digikey", "mouser", "octopart"]},
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["component_id", "availability"],
+        "properties": {
+          "component_id": {"type": "string", "minLength": 1},
+          "supplier_sku": {"type": ["string", "null"]},
+          "lcsc_part_number": {"type": ["string", "null"]},
+          "jlcpcb_part_class": {"enum": ["basic", "extended", "not_listed", "unknown"]},
+          "jlcpcb_stock": {"type": ["integer", "null"], "minimum": 0},
+          "sku": {"type": ["string", "null"]},
+          "availability": {"enum": ["available", "out_of_stock", "discontinued", "unknown"]},
+          "stock": {"type": ["integer", "null"], "minimum": 0},
+          "observed_at": {"type": ["string", "null"], "format": "date-time"},
+          "provenance": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

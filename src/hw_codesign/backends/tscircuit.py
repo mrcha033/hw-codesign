@@ -10,9 +10,11 @@ from typing import Any
 from ..io import atomic_write_text, write_json
 from ..models import Failure, FailureCategory, GateReport, Status
 from ..provenance import artifact_provenance
+from .electronics import ElectronicsBackendAdapter
 
 
-class TSCircuitBackend:
+class TSCircuitBackend(ElectronicsBackendAdapter):
+    name = "tscircuit"
     VERSION = "0.1.1491"
 
     def __init__(self, platform_root: Path):
@@ -23,33 +25,37 @@ class TSCircuitBackend:
         target.mkdir(parents=True, exist_ok=True)
         components = []
         esm_components = []
-        for item in graph.get("components", []):
+        unsupported_footprints: list[dict[str, str]] = []
+        envelope = spec["mechanical"]["envelope"]
+        board_width = envelope["board_width_mm"]
+        board_height = envelope["board_height_mm"]
+        for index, item in enumerate(graph.get("components", [])):
             footprint_id = item.get("footprint_metadata", {}).get("library_id") or item.get("footprint") or ""
+            tscircuit_footprint = item.get("footprint_metadata", {}).get("backend_footprints", {}).get("tscircuit") or self._footprint(footprint_id)
+            if footprint_id and not tscircuit_footprint:
+                unsupported_footprints.append({"ref": item["ref"], "footprint": footprint_id})
             labels = {f"pin{pin['number']}": f"{self._identifier(pin['name'])}_{pin['number']}" for pin in item.get("pins", [])}
             connections = {f"pin{pin['number']}": f"sel.net.{self._identifier(pin['net'])}" for pin in item.get("pins", [])}
             labels_js = json.dumps(labels, sort_keys=True)
             conn_js = "{" + ", ".join(f"{json.dumps(key)}: {value}" for key, value in connections.items()) + "}"
-            footprint_prop = f" footprint={json.dumps(footprint_id)}" if footprint_id else ""
+            footprint_prop = f" footprint={json.dumps(tscircuit_footprint)}" if tscircuit_footprint else ""
+            x = -board_width / 2 + 8 + (index % 7) * max(8, (board_width - 16) / 6)
+            y = -board_height / 2 + 8 + (index // 7) * max(8, (board_height - 16) / 6)
+            placement_prop = f" pcbX={{{x:.3f}}} pcbY={{{y:.3f}}}"
             mpn_prop = f" supplierPartNumbers={{{{lcsc: []}}}}"
             components.append(
-                f'      <chip name={json.dumps(item["ref"])}{footprint_prop}{mpn_prop} pinLabels={{{labels_js}}} connections={{{conn_js}}} />'
+                f'      <chip name={json.dumps(item["ref"])}{footprint_prop}{placement_prop}{mpn_prop} pinLabels={{{labels_js}}} connections={{{conn_js}}} />'
             )
             # connections must remain unquoted JS expressions (sel.net.*), not JSON strings
-            esm_extra = f", footprint: {json.dumps(footprint_id)}" if footprint_id else ""
+            esm_extra = f", footprint: {json.dumps(tscircuit_footprint)}" if tscircuit_footprint else ""
             esm_components.append(
-                f"    React.createElement(\"chip\", {{ name: {json.dumps(item['ref'])}{esm_extra}, pinLabels: {labels_js}, connections: {conn_js} }})"
+                f"    React.createElement(\"chip\", {{ name: {json.dumps(item['ref'])}{esm_extra}, pcbX: {x:.3f}, pcbY: {y:.3f}, pinLabels: {labels_js}, connections: {conn_js} }})"
             )
-        envelope = spec["mechanical"]["envelope"]
-        board_width = envelope["board_width_mm"]
-        board_height = envelope["board_height_mm"]
-        # pcbDisabled and routingDisabled suppress sel.net.* selector resolution in the tscircuit
-        # core, which is required for offline compilation.  They are retained in the source until
-        # the installed CLI can resolve nets and produce PCB layout without network access.
         source = (
             "import React from \"react\"\n"
             "import { sel } from \"tscircuit\"\n\n"
             "export default () => (\n"
-            f'  <board name="RobotController" width="{board_width}mm" height="{board_height}mm" pcbDisabled routingDisabled>\n'
+            f'  <board name="RobotController" width="{board_width}mm" height="{board_height}mm">\n'
             + "\n".join(components)
             + "\n  </board>\n)\n"
         )
@@ -61,7 +67,7 @@ class TSCircuitBackend:
             "import { sel } from \"tscircuit\"\n\n"
             "export default () => React.createElement(\n"
             "  \"board\",\n"
-            f"  {{ name: \"RobotController\", width: \"{board_width}mm\", height: \"{board_height}mm\", pcbDisabled: true, routingDisabled: true }},\n"
+            f"  {{ name: \"RobotController\", width: \"{board_width}mm\", height: \"{board_height}mm\" }},\n"
             + ",\n".join(esm_components)
             + "\n)\n"
         )
@@ -70,26 +76,28 @@ class TSCircuitBackend:
             "backend": "tscircuit",
             "compiler_version": self.VERSION,
             "backend_release_capable": True,
-            "source_release_eligible": False,
-            "pcb_disabled": True,
-            "routing_disabled": True,
-            "release_blocking_gates": ["tscircuit_footprint_parity", "tscircuit_layout_completeness"],
-            "provenance": artifact_provenance(spec, self.platform_root / "parts", "tscircuit", compiler_version=self.VERSION, command=self.command(entry), release_eligible=False),
+            "source_release_eligible": not unsupported_footprints,
+            "pcb_disabled": False,
+            "routing_disabled": False,
+            "unsupported_footprints": unsupported_footprints,
+            "sources": self.source_entries(target, [entry, compiler_entry]),
+            "contract_gates": list(self.gate_names),
+            "release_blocking_gates": list(self.gate_names),
+            "provenance": artifact_provenance(spec, self.platform_root / "parts", "tscircuit", compiler_version=self.VERSION, command=self.command(entry), release_eligible=not unsupported_footprints),
         })
         return [str(entry), str(compiler_entry), str(target / "source_manifest.json")]
 
     def command(self, entry: Path) -> list[str]:
         compiler_entry = entry.with_name("board.compiler.mjs")
-        # pcbDisabled/routingDisabled appear in both the generated source and the compiler flags
-        # because the tscircuit core resolves sel.net.* selectors at render time regardless of
-        # CLI flags, and without them compilation fails with "Could not find net for selector".
-        # Both must be removed together once the CLI gains offline sel.net.* resolution.
         return [
             str(self.platform_root / "node_modules" / ".bin" / "tsx"),
             str(self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"),
             "build", str(compiler_entry), "--ignore-config",
-            "--disable-pcb", "--routing-disabled", "--disable-parts-engine",
+            "--disable-parts-engine",
         ]
+
+    def evaluate(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
+        return self.complete_contract(self.compile(project, graph))
 
     def compile(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
         entry = project / "electronics" / "source" / "tscircuit" / "board.tsx"
@@ -144,6 +152,14 @@ class TSCircuitBackend:
             ]
         compiled_path = candidates[0]
         compiled: list[dict[str, Any]] = json.loads(compiled_path.read_text(encoding="utf-8"))
+        compiler_errors = [item for item in compiled if str(item.get("type", "")).endswith("_error")]
+        if compiler_errors:
+            failure = Failure(FailureCategory.EDA_ERROR, "compiled_circuit_contains_errors", "tscircuit emitted Circuit JSON error elements", details={"count": len(compiler_errors), "types": sorted({item.get("type") for item in compiler_errors})})
+            prerequisite = Failure(FailureCategory.EDA_ERROR, "compile_prerequisite_failed", "Prerequisite compile gate did not pass")
+            return [
+                GateReport("tscircuit_compile", Status.FAIL, [failure], artifacts=[str(compiled_path)], backend=backend),
+                *[GateReport(name, Status.BLOCKED, [prerequisite], backend=backend) for name in self.gate_names[1:]],
+            ]
         netlist = self.extract_netlist(compiled)
         netlist_path = project / "electronics" / "generated" / "tscircuit_netlist.json"
         write_json(netlist_path, netlist)
@@ -161,7 +177,8 @@ class TSCircuitBackend:
         pcb_components = [item for item in compiled if item.get("type") == "pcb_component"]
         pcb_traces = [item for item in compiled if item.get("type") == "pcb_trace"]
         all_component_refs = {item["ref"] for item in graph.get("components", [])}
-        placed_refs = {item.get("source_component_id", "") for item in pcb_components}
+        source_components = {item.get("source_component_id"): item for item in compiled if item.get("type") == "source_component"}
+        placed_refs = {source_components.get(item.get("source_component_id"), {}).get("name") for item in pcb_components}
 
         if not pcb_components:
             pcb_blocked = Failure(FailureCategory.EDA_ERROR, "pcb_layout_absent",
@@ -169,24 +186,23 @@ class TSCircuitBackend:
             footprint_gate = GateReport("tscircuit_footprint_parity", Status.BLOCKED, [pcb_blocked], backend=backend)
             layout_gate = GateReport("tscircuit_layout_completeness", Status.BLOCKED, [pcb_blocked], backend=backend)
         else:
-            # Footprint parity: check that footprint IDs in circuit.json match what we supplied
-            source_components = {item.get("source_component_id"): item for item in compiled if item.get("source_component_id") and item.get("name")}
+            # Footprint parity checks compiled pad numbers against the curated footprint contract.
+            pcb_by_source = {item.get("source_component_id"): item.get("pcb_component_id") for item in pcb_components}
+            pads_by_pcb: dict[str, set[str]] = {}
+            for pad in compiled:
+                if pad.get("type") not in {"pcb_smtpad", "pcb_plated_hole"}:
+                    continue
+                pads_by_pcb.setdefault(pad.get("pcb_component_id"), set()).update(str(hint).removeprefix("pin") for hint in pad.get("port_hints", []) if str(hint).removeprefix("pin").isdigit())
             footprint_failures: list[Failure] = []
             for component in graph.get("components", []):
-                expected_fp = component.get("footprint_metadata", {}).get("library_id") or component.get("footprint") or ""
-                sc = source_components.get(component["ref"])
-                compiled_fp = sc.get("footprint_id", "") if sc else ""
-                if expected_fp and not compiled_fp:
+                expected = set(map(str, component.get("footprint_metadata", {}).get("expected_pads", []))) or {str(pin["number"]) for pin in component.get("pins", [])}
+                source_id = next((key for key, value in source_components.items() if value.get("name") == component["ref"]), None)
+                compiled_pads = pads_by_pcb.get(pcb_by_source.get(source_id), set())
+                if expected != compiled_pads:
                     footprint_failures.append(Failure(
-                        FailureCategory.EDA_ERROR, "compiled_footprint_missing",
-                        f"{component['ref']}: expected footprint {expected_fp!r} but compiled circuit.json has no footprint_id",
-                        details={"ref": component["ref"], "expected": expected_fp, "compiled": ""},
-                    ))
-                elif expected_fp and compiled_fp and expected_fp != compiled_fp:
-                    footprint_failures.append(Failure(
-                        FailureCategory.EDA_ERROR, "footprint_parity_mismatch",
-                        f"{component['ref']}: expected footprint {expected_fp!r}, compiled {compiled_fp!r}",
-                        details={"ref": component["ref"], "expected": expected_fp, "compiled": compiled_fp},
+                        FailureCategory.EDA_ERROR, "footprint_pad_parity_mismatch",
+                        f"{component['ref']}: compiled pad contract differs from curated footprint metadata",
+                        details={"ref": component["ref"], "expected_pads": sorted(expected), "compiled_pads": sorted(compiled_pads)},
                     ))
             footprint_gate = GateReport(
                 "tscircuit_footprint_parity",
@@ -215,12 +231,20 @@ class TSCircuitBackend:
         return [compile_gate, netlist_gate, parity_gate, footprint_gate, layout_gate]
 
     @staticmethod
-    def _identifier(value: str) -> str:
-        return re.sub(r"[^A-Za-z0-9_]", "_", value)
+    def _footprint(library_id: str) -> str | None:
+        if not library_id or library_id.startswith("HW_Curated:"):
+            return None
+        if ":" in library_id:
+            library, name = library_id.split(":", 1)
+            return f"kicad:{library}/{name}"
+        normalized = library_id.lower()
+        if re.fullmatch(r"(?:0402|0603|0805|1206|1210|soic\d+|sot23(?:_5)?|qfn\d+|qfp\d+|pinrow\d+)", normalized):
+            return normalized
+        return None
 
     @staticmethod
-    def graph_netlist(graph: dict[str, Any]) -> dict[str, list[str]]:
-        return {item["name"]: sorted(item.get("connected_pins", [])) for item in graph.get("nets", [])}
+    def _identifier(value: str) -> str:
+        return re.sub(r"[^A-Za-z0-9_]", "_", value)
 
     @staticmethod
     def extract_netlist(circuit_json: list[dict[str, Any]]) -> dict[str, list[str]]:

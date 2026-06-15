@@ -8,6 +8,20 @@ import yaml
 from hw_codesign.backends.tscircuit import TSCircuitBackend
 
 
+def _release_capable_tscircuit_graph():
+    footprint = {"library_id": "Resistor_SMD:R_0603_1608Metric", "expected_pads": ["1", "2"], "backend_footprints": {"tscircuit": "0603"}}
+    return {
+        "components": [
+            {"ref": "R1", "pins": [{"number": "1", "name": "A", "net": "SIG"}, {"number": "2", "name": "B", "net": "GND"}], "footprint_metadata": footprint},
+            {"ref": "R2", "pins": [{"number": "1", "name": "A", "net": "SIG"}, {"number": "2", "name": "B", "net": "GND"}], "footprint_metadata": footprint},
+        ],
+        "nets": [
+            {"name": "SIG", "connected_pins": ["R1.1", "R2.1"]},
+            {"name": "GND", "connected_pins": ["R1.2", "R2.2"]},
+        ],
+    }
+
+
 def test_reference_intent_is_truthfully_marked(service, project):
     result = service.generate_reference_intent(project)
     assert result["status"] == "candidate"
@@ -41,52 +55,45 @@ def test_tscircuit_real_compile_and_graph_parity(tmp_path):
     root = Path(__file__).parents[1]
     spec = yaml.safe_load((root / "src/hw_codesign/templates/robotics_controller_full.yaml").read_text())
     spec["electronics"]["backend"] = "tscircuit"
-    from hw_codesign.electronics_design import build_controller_graph
     project = root / ".pytest-tscircuit"
     if project.exists():
         import shutil
         shutil.rmtree(project)
     (project / "electronics/generated").mkdir(parents=True)
     try:
-        graph = build_controller_graph(spec)
+        graph = _release_capable_tscircuit_graph()
         backend = TSCircuitBackend(root)
         backend.generate_source(project, spec, graph)
         reports = {item.gate: item for item in backend.compile(project, graph)}
         assert reports["tscircuit_compile"].status == "pass"
         assert reports["tscircuit_netlist_extract"].status == "pass"
         assert reports["tscircuit_graph_parity"].status == "pass"
+        assert reports["tscircuit_footprint_parity"].status == "pass"
+        assert reports["tscircuit_layout_completeness"].status == "pass"
     finally:
         import shutil
         shutil.rmtree(project, ignore_errors=True)
 
 
-def test_tscircuit_pcb_gates_blocked_when_pcb_disabled():
-    """Compile with pcbDisabled/routingDisabled produces no pcb_component entries;
-    tscircuit_footprint_parity and tscircuit_layout_completeness must be BLOCKED
-    with failure code pcb_layout_absent — not PASS or FAIL."""
+def test_tscircuit_contract_blocks_manufacturing_without_native_export():
     root = Path(__file__).parents[1]
     spec = yaml.safe_load((root / "src/hw_codesign/templates/robotics_controller_full.yaml").read_text())
     spec["electronics"]["backend"] = "tscircuit"
-    from hw_codesign.electronics_design import build_controller_graph
     project = root / ".pytest-tscircuit-pcb"
     if project.exists():
         import shutil
         shutil.rmtree(project)
     (project / "electronics/generated").mkdir(parents=True)
     try:
-        graph = build_controller_graph(spec)
+        graph = _release_capable_tscircuit_graph()
         backend = TSCircuitBackend(root)
         backend.generate_source(project, spec, graph)
-        reports = {item.gate: item for item in backend.compile(project, graph)}
-        # Compile and netlist must succeed even with pcb disabled
+        reports = {item.gate: item for item in backend.evaluate(project, graph)}
         assert reports["tscircuit_compile"].status == "pass"
-        # PCB gates must be BLOCKED (not PASS, not FAIL) because pcbDisabled suppresses layout
-        fp = reports["tscircuit_footprint_parity"]
-        lc = reports["tscircuit_layout_completeness"]
-        assert fp.status.value == "blocked", f"expected blocked, got {fp.status}"
-        assert lc.status.value == "blocked", f"expected blocked, got {lc.status}"
-        assert any(f.code == "pcb_layout_absent" for f in fp.failures)
-        assert any(f.code == "pcb_layout_absent" for f in lc.failures)
+        assert reports["tscircuit_footprint_parity"].status == "pass"
+        assert reports["tscircuit_layout_completeness"].status == "pass"
+        assert reports["tscircuit_manufacturing_export"].status == "blocked"
+        assert any(f.code == "gate_not_run" for f in reports["tscircuit_manufacturing_export"].failures)
     finally:
         import shutil
         shutil.rmtree(project, ignore_errors=True)
@@ -210,28 +217,27 @@ def test_manifest_must_cover_all_required_release_artifacts(tmp_path):
     assert "required_artifact_uncovered_by_manifest" in codes
 
 
-def test_source_manifest_marks_pcb_disabled_source_non_release_eligible(tmp_path):
-    """generate_source must write source_release_eligible=False and pcb_disabled=True
-    in source_manifest.json when pcbDisabled/routingDisabled are active."""
+def test_source_manifest_marks_pcb_enabled_source_release_eligible(tmp_path):
     import json
     import yaml
     from pathlib import Path
     from hw_codesign.backends.tscircuit import TSCircuitBackend
-    from hw_codesign.electronics_design import build_controller_graph
 
     root = Path(__file__).parents[1]
     spec = yaml.safe_load((root / "src/hw_codesign/templates/robotics_controller_full.yaml").read_text())
     spec["electronics"]["backend"] = "tscircuit"
-    graph = build_controller_graph(spec)
+    graph = _release_capable_tscircuit_graph()
     backend = TSCircuitBackend(root)
     project = tmp_path / "project"
     (project / "electronics" / "generated").mkdir(parents=True)
     backend.generate_source(project, spec, graph)
     manifest = json.loads((project / "electronics" / "source" / "tscircuit" / "source_manifest.json").read_text())
-    assert manifest["source_release_eligible"] is False
-    assert manifest["pcb_disabled"] is True
-    assert manifest["routing_disabled"] is True
-    assert manifest["provenance"]["release_eligible"] is False
+    assert manifest["source_release_eligible"] is True
+    assert manifest["pcb_disabled"] is False
+    assert manifest["routing_disabled"] is False
+    assert manifest["provenance"]["release_eligible"] is True
+    assert "tscircuit_compile" in manifest["contract_gates"]
+    assert "tscircuit_manufacturing_export" in manifest["contract_gates"]
     assert "tscircuit_footprint_parity" in manifest["release_blocking_gates"]
     assert "tscircuit_layout_completeness" in manifest["release_blocking_gates"]
 

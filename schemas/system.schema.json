@@ -29,11 +29,17 @@
     "compute": {"type": "object", "required": ["mcu"]},
     "actuation": {"type": "object", "required": ["motor_channels", "motor_channel_peak_current_a"]},
     "sensing": {"type": "object", "required": ["imu", "e_stop"]},
-    "mechanical": {"type": "object", "required": ["envelope", "enclosure_internal_mm"]},
+    "mechanical": {"type": "object", "required": ["envelope", "enclosure_internal_mm", "selected_variant", "variants", "mounting_holes", "connector_interfaces"]},
     "firmware": {"type": "object", "required": ["framework", "target"]},
     "manufacturing": {"type": "object", "required": ["pcb", "exports"]},
     "safety": {"type": "object", "required": ["emergency_stop", "required_protections"]},
     "assumptions": {"type": "object"},
-    "electronics": {"type": "object", "properties": {"backend": {"enum": ["reference", "tscircuit", "atopile"]}, "role_set": {"type": "string"}}}
+    "electronics": {"type": "object", "properties": {"backend": {"enum": ["reference", "tscircuit", "kicad", "python_netlist", "atopile"]}, "role_set": {"type": "string"}}},
+    "sourcing": {
+      "type": "object",
+      "properties": {
+        "provider": {"enum": ["curated", "lcsc_jlcpcb", "digikey", "mouser", "octopart"]}
+      }
+    }
   }
 }

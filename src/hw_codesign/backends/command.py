@@ -18,11 +18,24 @@ class ToolResult:
     available: bool
 
 
-def run_tool(executable: str, arguments: list[str], cwd: Path, timeout: int = 300, env: dict[str, str] | None = None) -> ToolResult:
+def resolve_tool(executable: str) -> str | None:
     resolved = shutil.which(executable)
     if resolved is None and executable == "kicad-cli":
         candidate = Path("/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli")
         resolved = str(candidate) if candidate.is_file() else None
+    return resolved
+
+
+def tool_version(executable: str) -> str | None:
+    resolved = resolve_tool(executable)
+    if resolved is None:
+        return None
+    completed = subprocess.run([resolved, "version"], capture_output=True, text=True, timeout=30, check=False)
+    return completed.stdout.strip() or completed.stderr.strip() or None
+
+
+def run_tool(executable: str, arguments: list[str], cwd: Path, timeout: int = 300, env: dict[str, str] | None = None) -> ToolResult:
+    resolved = resolve_tool(executable)
     command = [executable, *arguments]
     if resolved is None:
         return ToolResult(command, None, "", f"Executable not found: {executable}", False)

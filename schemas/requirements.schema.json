@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["raw_inputs", "active_lowered", "active_unresolved"],
+  "properties": {
+    "raw_inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "created_by"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^req_input_[0-9]{4,}$"},
+          "text": {"type": "string", "minLength": 1},
+          "created_by": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "active_lowered": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "spec_path", "status"],
+        "properties": {
+          "id": {"type": "string"},
+          "source": {"type": "string"},
+          "spec_path": {"type": "string", "minLength": 1},
+          "status": {"const": "lowered"}
+        }
+      }
+    },
+    "active_unresolved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "category", "status", "release_blocking", "reason"],
+        "properties": {
+          "id": {"type": "string"},
+          "source": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "status": {"enum": ["unresolved", "waived"]},
+          "release_blocking": {"type": "boolean"},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

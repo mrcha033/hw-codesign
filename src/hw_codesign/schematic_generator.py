@@ -28,10 +28,10 @@ def generate_kicad_schematic(name: str, graph: dict[str, Any], output: Path) -> 
             item["ref"],
             item["value"],
             position=positions[item["ref"]],
+            footprint=item["footprint"],
             MPN=item["mpn"],
             Manufacturer=item["manufacturer"],
             Supplier_SKU=item["supplier_sku"],
-            PCB_Footprint=item["footprint"],
         )
         local_pins = {pin["number"]: pin["position"] for pin in symbol.list_pins()}
         for pin in pins:

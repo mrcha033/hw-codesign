@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,9 @@ from .io import atomic_write_text, write_json
 from .provenance import artifact_provenance
 from .reference_backend import build_graph, generate_kicad
 from .resolver import ComponentResolver
+from .board_layout import component_positions
+from .placement import propose_placement
+from .mechanical_contract import build_mechanical_contract
 
 
 def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, backend: str = "reference") -> tuple[list[str], list[dict[str, Any]], dict[str, Any]]:
@@ -48,50 +52,66 @@ module RobotController:
             component["resolution"] = "unresolved"
             continue
         data = match.data
-        component.update({"mpn": data["mpn"], "manufacturer": data["manufacturer"], "package": data["package"], "symbol": data["symbol"], "footprint": data["footprint"]["library_id"], "footprint_metadata": data["footprint"], "lifecycle": data["lifecycle"], "sourcing": data["sourcing"], "constraints": data["constraints"], "review_status": data["review_status"], "resolution": match.resolution, "component_id": match.component_id, "resolution_provenance": match.provenance})
+        component.update({"mpn": data["mpn"], "manufacturer": data["manufacturer"], "package": data["package"], "symbol": data["symbol"], "footprint": data["footprint"]["library_id"], "footprint_metadata": data["footprint"], "lifecycle": data["lifecycle"], "sourcing": data["sourcing"], "supplier_offer": data.get("supplier_offer"), "datasheet_evidence": data.get("datasheet_evidence", []), "constraints": data["constraints"], "review_status": data["review_status"], "resolution": match.resolution, "component_id": match.component_id, "resolution_provenance": match.provenance})
+    proposal = propose_placement(spec, graph)
+    for component in graph["components"]:
+        placement = proposal.placements[component["ref"]]
+        component["pcb_position_mm"] = [placement.x_mm, placement.y_mm]
+    graph["placement"] = proposal.to_dict()
     graph["component_resolution"] = ComponentResolver.serialize(resolved)
     graph["component_provenance"] = {item.ref: item.provenance for item in resolved}
     graph["component_resolution_report"] = resolution_report.to_dict()
-    graph["provenance"] = artifact_provenance(spec, parts_root, backend, release_eligible=backend == "tscircuit")
+    graph["supplier_availability_report"] = resolver.supplier_availability_report.to_dict()
+    graph["datasheet_evidence_report"] = resolver.datasheet_evidence_report.to_dict()
+    graph["provenance"] = artifact_provenance(spec, parts_root, backend, release_eligible=False)
     graph_path = project / "electronics" / "generated" / "electrical_graph.json"
     write_json(graph_path, graph)
     return [str(intent / name) for name in files] + [str(graph_path), *generate_kicad(project, spec, graph)], [item for item in graph["component_resolution"]], resolution_report.to_dict()
 
 
-def generate_mechanical(project: Path, spec: dict[str, Any]) -> list[str]:
+def generate_mechanical(project: Path, spec: dict[str, Any], graph: dict[str, Any] | None = None) -> list[str]:
     source = project / "mechanical" / "source"
-    envelope = spec["mechanical"]["envelope"]
-    enclosure = spec["mechanical"]["enclosure_internal_mm"]
-    content = f'''"""Parametric build123d enclosure source generated from the project spec."""
-BOARD = ({envelope["board_width_mm"]}, {envelope["board_height_mm"]}, {envelope["board_thickness_mm"]})
-INTERNAL = ({enclosure[0]}, {enclosure[1]}, {enclosure[2]})
-WALL = {spec["mechanical"]["wall_thickness_mm"]}
-TOP_HEIGHT = {envelope["max_component_height_top_mm"]}
-BOTTOM_HEIGHT = {envelope["max_component_height_bottom_mm"]}
-INSERTION_CLEARANCE = 2.0
-MOUNTING_HOLES = ((6.0, 6.0), (BOARD[0] - 6.0, 6.0), (6.0, BOARD[1] - 6.0), (BOARD[0] - 6.0, BOARD[1] - 6.0))
-CONNECTOR_CUTOUTS = ((0.0, 18.0, 12.0, 10.0), (INTERNAL[0], 50.0, 12.0, 16.0))
+    source.mkdir(parents=True, exist_ok=True)
+    graph = graph or {"components": []}
+    contract = build_mechanical_contract(spec, graph)
+    contract_path = source / "mechanical_contract.json"
+    write_json(contract_path, contract)
+    atomic_write_text(source / "assembly.py", '''"""Generated parametric mechanical assembly entrypoint."""
+import argparse
+import json
+from pathlib import Path
+from hw_codesign.backends.mechanical import OpenCascadeMechanicalBackend
 
-def build():
-    try:
-        from build123d import Box, Cylinder, Pos, export_step, export_stl
-    except ImportError as exc:
-        raise RuntimeError("build123d is required to export enclosure geometry") from exc
-    outer = Box(INTERNAL[0] + 2 * WALL, INTERNAL[1] + 2 * WALL, INTERNAL[2] + WALL)
-    cavity = Pos(WALL, WALL, WALL) * Box(INTERNAL[0], INTERNAL[1], INTERNAL[2] + WALL)
-    base = outer - cavity
-    bosses = None
-    for x, y in MOUNTING_HOLES:
-        boss = Pos(WALL + x, WALL + y, WALL) * (Cylinder(3.2, 4.0) - Cylinder(1.6, 4.0))
-        bosses = boss if bosses is None else bosses + boss
-    lid = Pos(0, 0, INTERNAL[2] + WALL + 0.5) * Box(INTERNAL[0] + 2 * WALL, INTERNAL[1] + 2 * WALL, WALL)
-    return {{"base": base + bosses, "lid": lid, "assembly": base + bosses + lid}}
-'''
-    atomic_write_text(source / "enclosure.py", content)
-    atomic_write_text(source / "mounting_plate.py", "# Authoritative mounting-hole and boss coordinates live in enclosure.py.\n")
-    atomic_write_text(source / "connector_cutouts.py", "# Connector cutout rectangles and insertion clearance live in enclosure.py.\n")
-    atomic_write_text(source / "thermal_features.py", "# Cooling features require an explicitly resolved thermal assumption.\n")
-    return [str(path) for path in sorted(source.glob("*.py"))]
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--board-step", type=Path)
+    args = parser.parse_args()
+    contract = json.loads(Path(__file__).with_name("mechanical_contract.json").read_text(encoding="utf-8"))
+    report = OpenCascadeMechanicalBackend().generate_from_contract(contract, args.output, board_step=args.board_step)
+    print(json.dumps(report.to_dict(), sort_keys=True))
+    raise SystemExit(0 if report.status == "pass" else 1)
+''')
+    atomic_write_text(source / "enclosure_variants.py", "VARIANTS = " + repr(contract["variants"]) + "\nSELECTED_VARIANT = " + repr(contract["selected_variant"]) + "\n")
+    atomic_write_text(
+        source / "enclosure.py",
+        "BOARD = " + repr(contract["board"]) + "\nENCLOSURE = " + repr(contract["enclosure"]) + "\nCLEARANCES = " + repr(contract["clearances"]) + "\n",
+    )
+    atomic_write_text(source / "fixtures.py", "FIXTURES = " + repr(contract["fixtures"]) + "\nMOUNTING_HOLES = " + repr(contract["mounting_holes"]) + "\n")
+    atomic_write_text(source / "connector_cutouts.py", "CONNECTOR_CUTOUTS = " + repr(contract["connector_cutouts"]) + "\n")
+    source_files = sorted([contract_path, *source.glob("*.py")])
+    manifest = {
+        "artifact_type": "mechanical_source",
+        "backend": "opencascade",
+        "selected_variant": contract["selected_variant"],
+        "variants": [item["name"] for item in contract["variants"]],
+        "source_spec_hash": artifact_provenance(spec, project / "parts", "opencascade")["source_spec_hash"],
+        "sources": [{"path": path.name, "sha256": sha256(path.read_bytes()).hexdigest()} for path in source_files],
+        "release_eligible": False,
+    }
+    manifest_path = source / "source_manifest.json"
+    write_json(manifest_path, manifest)
+    return [str(path) for path in [*source_files, manifest_path]]
 
 
 def _pin_assignments(channels: int) -> list[dict[str, Any]]:

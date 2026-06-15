@@ -81,6 +81,21 @@ class ResolvedComponent:
     provenance: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class RepairPatch:
+    section: str
+    spec_path: str
+    value: Any
+    operation: Literal["replace"] = "replace"
+    requires_approval: bool = False
+    safety_class: Literal["safe", "review_required"] = "safe"
+    source_gate: str = ""
+    source_failure: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
 @dataclass
 class Net:
     name: str

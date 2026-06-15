@@ -14,6 +14,7 @@ from .io import atomic_write_text, write_json
 from .models import Failure, FailureCategory, GateReport, Status
 from .pcb_router import route_board
 from .schematic_generator import generate_kicad_schematic
+from .board_layout import component_positions
 
 
 PARTS = {
@@ -81,17 +82,7 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
     net_declarations = "\n".join(f'  (net {index} "{name}")' for name, index in net_ids.items())
     footprints = []
     pad_positions: dict[str, list[tuple[float, float]]] = defaultdict(list)
-    fixed_positions = {
-        "J1": (20, 5), "F1": (38, 5), "Q1": (56, 5), "D1": (74, 5), "U3": (92, 5), "U4": (112, 5), "U5": (132, 5),
-        "J5": (22, 27), "D2": (42, 27), "R4": (60, 27), "U6": (90, 27), "J3": (118, 27), "R1": (136, 27),
-        "U2": (22, 48), "R2": (42, 48), "R3": (58, 48), "J2": (104, 48), "Q2": (124, 48), "J4": (104, 69),
-        "U1": (70, 37),
-    }
-    capacitor_refs = [f"C{index}" for index in range(1, 11)]
-    fixed_positions.update({ref: (24 + (index % 5) * 22, 76 + (index // 5) * 13) for index, ref in enumerate(capacitor_refs)})
-    for index in range(1, 13):
-        side_index = (index - 1) % 6
-        fixed_positions[f"J{index + 10}"] = (3 if index <= 6 else 155, 7 + side_index * 15)
+    fixed_positions = component_positions(graph)
     for i, item in enumerate(graph["components"]):
         x, y = fixed_positions.get(item["ref"], (10 + (i % 7) * 20, 10 + (i // 7) * 15))
         high_current = any(item_pin["net"].startswith("VBAT") or item_pin["net"] == "VSYS" for item_pin in item["pins"])

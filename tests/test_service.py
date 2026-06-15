@@ -97,14 +97,15 @@ def test_natural_language_requirements_update_structured_spec(service, project):
 
 def test_unsupported_constraints_persist_to_spec_and_block_validation(service, project):
     """update_requirements with high-risk constraints that cannot be lowered must:
-    - return status='generated_with_unresolved_constraints'
+    - return status='generated' with has_unresolved_constraints=true
     - persist constraints to spec so validate_spec fails with unlowered_constraint_in_spec
     - thereby block the release pipeline without requiring agent to inspect the return value."""
     result = service.update_requirements(
         project,
         "16 channel 24V battery, IP67, CAN-FD, ASIL-B, 8A continuous, JLCPCB assembly, impedance-controlled"
     )
-    assert result["status"] == "generated_with_unresolved_constraints"
+    assert result["status"] == "generated"
+    assert result["has_unresolved_constraints"] is True
     assert result["unsupported_constraints"]
     spec = service.read_spec(project)
     assert spec.get("requirements", {}).get("active_unresolved"), "Constraints must be persisted to spec/requirements.yaml"

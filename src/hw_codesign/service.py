@@ -14,12 +14,16 @@ from .backends.freerouting import FreeroutingBackend
 from .backends.mechanical import OpenCascadeMechanicalBackend
 from .backends.zephyr import ZephyrBackend
 from .backends.tscircuit import TSCircuitBackend
+from .backends.python_netlist import PythonNetlistBackend
+from .backends.atopile import AtopileBackend
+from .backends.electronics import CONTRACT_STAGES
 from .artifacts import deterministic_zip, sha256, simple_pdf, write_manifest
 from .generators import generate_bom, generate_electronics, generate_firmware, generate_mechanical
 from .io import atomic_write_text, read_yaml, write_json, write_yaml
-from .models import Failure, FailureCategory, GateReport, Status
+from .models import Failure, FailureCategory, GateReport, RepairPatch, Status
 from .policy import ChangePolicy
 from .provenance import artifact_provenance
+from .placement import check_placement, propose_placement
 from .reference_backend import build_firmware_reference, export_fabrication, export_mechanical, internal_drc, internal_erc
 from .validation import Validator, persist_report
 from .workspace import Workspace
@@ -32,11 +36,13 @@ class HardwareService:
         self.parts_root = self.root / "parts" if (self.root / "parts").is_dir() else packaged_parts
         self.workspace = Workspace(self.root)
         self.validator = Validator(self.root / "schemas")
-        self.kicad = KiCadBackend()
+        self.kicad = KiCadBackend(self.root)
         self.freerouting = FreeroutingBackend(self.root)
         self.mechanical = OpenCascadeMechanicalBackend()
         self.zephyr = ZephyrBackend()
         self.tscircuit = TSCircuitBackend(self.root)
+        self.python_netlist = PythonNetlistBackend(self.root)
+        self.atopile = AtopileBackend(self.root)
 
     def create_project(self, name: str, template: str = "robotics_controller_full") -> dict[str, Any]:
         result = self.workspace.create_project(name, template)
@@ -116,8 +122,7 @@ class HardwareService:
             for i, (cat, label) in enumerate(matched, start=1)
         ]
         write_yaml(req_path, req_file)
-        status = "generated_with_unresolved_constraints" if unsupported_constraints else "generated"
-        return {"status": status, "mode": "replace_active_requirements", "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)], "unresolved_requirements": unresolved_ambiguous, "unsupported_constraints": unsupported_constraints}
+        return {"status": "generated", "has_unresolved_constraints": bool(unsupported_constraints), "mode": "replace_active_requirements", "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)], "unresolved_requirements": unresolved_ambiguous, "unsupported_constraints": unsupported_constraints}
 
     def validate_spec(self, project: str) -> dict[str, Any]:
         path = self.workspace.require_project(project)
@@ -131,14 +136,15 @@ class HardwareService:
         backend = spec.get("electronics", {}).get("backend", "reference")
         electronics, resolution, resolution_report = generate_electronics(path, spec, self.parts_root, backend)
         graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
-        if backend == "tscircuit":
-            electronics.extend(self.tscircuit.generate_source(path, spec, graph))
+        adapters = {"tscircuit": self.tscircuit, "kicad": self.kicad, "python_netlist": self.python_netlist, "atopile": self.atopile}
+        if backend in adapters:
+            electronics.extend(adapters[backend].generate_source(path, spec, graph))
         files = {
             "electronics": electronics,
-            "mechanical": generate_mechanical(path, spec),
+            "mechanical": generate_mechanical(path, spec, graph),
             "firmware": generate_firmware(path, spec, graph),
         }
-        provenance = artifact_provenance(spec, self.parts_root, backend, compiler_version=self.tscircuit.VERSION if backend == "tscircuit" else None, release_eligible=backend == "tscircuit")
+        provenance = artifact_provenance(spec, self.parts_root, backend, compiler_version=self.tscircuit.VERSION if backend == "tscircuit" else None, release_eligible=False)
         write_json(path / "mechanical" / "generated" / "provenance.json", provenance)
         write_json(path / "firmware" / "generated" / "provenance.json", provenance)
         files["bom"] = [generate_bom(path)]
@@ -165,13 +171,27 @@ class HardwareService:
         backend = spec.get("electronics", {}).get("backend", "reference")
         files, resolution, report = generate_electronics(path, spec, self.parts_root, backend)
         graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
-        if backend == "tscircuit": files.extend(self.tscircuit.generate_source(path, spec, graph))
-        return {"status": "candidate" if backend == "reference" else "generated", "files": files, "component_resolution": resolution, "resolution_report": report}
+        adapters = {"tscircuit": self.tscircuit, "kicad": self.kicad, "python_netlist": self.python_netlist, "atopile": self.atopile}
+        if backend in adapters:
+            files.extend(adapters[backend].generate_source(path, spec, graph))
+        return {
+            "status": "candidate" if backend == "reference" else "generated",
+            "files": files,
+            "component_resolution": resolution,
+            "resolution_report": report,
+            "supplier_availability_report": graph.get("supplier_availability_report"),
+            "datasheet_evidence_report": graph.get("datasheet_evidence_report"),
+        }
 
     def generate_mechanical_only(self, project: str) -> dict[str, Any]:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
-        files = generate_mechanical(path, spec)
+        graph_path = path / "electronics" / "generated" / "electrical_graph.json"
+        try:
+            graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.is_file() else {"components": []}
+        except json.JSONDecodeError:
+            graph = {"components": []}
+        files = generate_mechanical(path, spec, graph)
         return {"status": "generated", "files": files}
 
     def generate_firmware_only(self, project: str) -> dict[str, Any]:
@@ -188,9 +208,11 @@ class HardwareService:
         spec = self.read_spec(project)
         backend = spec.get("electronics", {}).get("backend", "reference")
         reports_dir = path / "validation" / "reports"
-        stale_tscircuit = ("tscircuit_compile.json", "tscircuit_netlist_extract.json", "tscircuit_graph_parity.json", "tscircuit_footprint_parity.json", "tscircuit_layout_completeness.json")
+        contract_report_names = tuple(f"{name}_{stage}.json" for name in ("tscircuit", "kicad", "python_netlist", "atopile") for stage in CONTRACT_STAGES)
         stale_reference = ("compiled_electronics_backend.json",)
-        for name in stale_tscircuit if backend != "tscircuit" else stale_reference:
+        active_contract = {f"{backend}_{stage}.json" for stage in CONTRACT_STAGES}
+        stale_contracts = contract_report_names if backend == "reference" else tuple(item for item in contract_report_names if item not in active_contract)
+        for name in stale_contracts + (stale_reference if backend != "reference" else ()):
             (reports_dir / name).unlink(missing_ok=True)
         reports = [
             self.validator.validate_spec(spec),
@@ -209,6 +231,14 @@ class HardwareService:
         if graph_path.exists():
             if graph.get("component_resolution_report"):
                 reports.append(self._report_from_dict(graph["component_resolution_report"]))
+            if graph.get("supplier_availability_report"):
+                reports.append(self._report_from_dict(graph["supplier_availability_report"]))
+            else:
+                reports.append(GateReport("supplier_availability", Status.BLOCKED, [Failure(FailureCategory.BOM_ERROR, "supplier_availability_not_resolved", "Regenerate electronics with a configured supplier adapter")]))
+            if graph.get("datasheet_evidence_report"):
+                reports.append(self._report_from_dict(graph["datasheet_evidence_report"]))
+            else:
+                reports.append(GateReport("datasheet_evidence", Status.BLOCKED, [Failure(FailureCategory.BOM_ERROR, "datasheet_evidence_not_resolved", "Regenerate electronics with the curated evidence catalog")]))
             reports.append(self.validator.check_bom(graph["components"]))
             reports.append(self.validator.check_sourcing(graph["components"]))
             reports.append(self.validator.check_component_metadata(graph["components"]))
@@ -217,12 +247,18 @@ class HardwareService:
         else:
             reports.append(GateReport("bom", Status.FAIL, [Failure(FailureCategory.BOM_ERROR, "missing_bom_source", "Generate electronics before checking the BOM")]))
         reports.extend([internal_erc(graph), internal_drc(path, spec, graph), build_firmware_reference(path)])
+        if graph.get("components"):
+            reports.append(check_placement(propose_placement(spec, graph), graph))
         if backend == "reference":
             reports.append(GateReport("compiled_electronics_backend", Status.BLOCKED, [Failure(FailureCategory.EDA_ERROR, "reference_backend_candidate_only", "Reference electronics backend produces candidate artifacts only")], backend={"name": "reference", "release_eligible": False}))
         elif backend == "atopile":
-            reports.append(GateReport("compiled_electronics_backend", Status.BLOCKED, [Failure(FailureCategory.EDA_ERROR, "backend_not_implemented", "Atopile backend is not implemented")], backend={"name": "atopile"}))
+            reports.extend(self.atopile.evaluate(path, graph))
         elif backend == "tscircuit":
-            reports.extend(self.tscircuit.compile(path, graph))
+            reports.extend(self.tscircuit.evaluate(path, graph))
+        elif backend == "kicad":
+            reports.extend(self.kicad.evaluate(path, graph))
+        elif backend == "python_netlist":
+            reports.extend(self.python_netlist.evaluate(path, graph))
         else:
             reports.append(GateReport("compiled_electronics_backend", Status.BLOCKED, [Failure(FailureCategory.EDA_ERROR, "unknown_backend", f"Unknown electronics backend: {backend}")]))
         if include_external:
@@ -232,7 +268,14 @@ class HardwareService:
             library_failures = [failure for failure in [*erc.failures, *drc.failures] if failure.details.get("type") in {"lib_footprint_issues", "lib_footprint_mismatch"}]
             library_status = Status.BLOCKED if Status.BLOCKED in {erc.status, drc.status} else (Status.FAIL if library_failures else Status.PASS)
             library_crosscheck = GateReport("kicad_library_crosscheck", library_status, library_failures, metrics={"method": "native_erc_drc_library_resolution", "issues": len(library_failures)}, backend={"name": "kicad-cli"})
-            mechanical = self.mechanical.generate(spec, path / "exports" / "candidates" / "native-check")
+            if backend == "tscircuit":
+                reports = [report for report in reports if report.gate != "tscircuit_manufacturing_export"]
+                manufacturing = self.kicad.export_manufacturing(path, path / "exports" / "candidates" / "backend-validation" / "tscircuit")
+                manufacturing.gate = "tscircuit_manufacturing_export"
+                manufacturing.backend = {**manufacturing.backend, "electronics_backend": "tscircuit", "export_bridge": "compiled_graph_to_kicad"}
+                reports.append(manufacturing)
+            board_step = self._latest_board_step(path)
+            mechanical = self.mechanical.generate(spec, path / "exports" / "candidates" / "native-check", graph=graph, board_step=board_step)
             mechanical.gate = "native_mechanical_validation"
             reports.extend([autoroute, erc, drc, library_crosscheck, mechanical, self.zephyr.build(path, spec.get("firmware", {}).get("target", "unknown"))])
         else:
@@ -246,8 +289,8 @@ class HardwareService:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         backend = spec.get("electronics", {}).get("backend", "reference")
-        if backend != "tscircuit":
-            return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "reference_backend_candidate_only", "Only compiled tscircuit designs are release eligible")]).to_dict()]}
+        if backend not in {"tscircuit", "kicad"}:
+            return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", "Release preparation requires a fully passing tscircuit or KiCad-native backend contract")]).to_dict()]}
         if not native_checks_confirmed:
             return {"status": "blocked", "code": "native_release_checks_required", "reports": checks["reports"]}
         if any(item["status"] != "pass" for item in checks["reports"]):
@@ -263,20 +306,17 @@ class HardwareService:
         shutil.rmtree(staging, ignore_errors=True)
         staging.mkdir(parents=True)
         files: list[str] = []
-        mechanical_report = self.mechanical.generate(spec, staging)
-        if mechanical_report.status == Status.PASS: files.extend(mechanical_report.artifacts)
-        persist_report(path, mechanical_report)
         fabrication_report = self.kicad.export_manufacturing(path, staging)
         if fabrication_report.status == Status.PASS:
             files.extend(fabrication_report.artifacts)
         persist_report(path, fabrication_report)
+        mechanical_report = self.mechanical.generate(spec, staging, graph=graph, board_step=staging / "mechanical" / "board.step", release_eligible=True)
+        if mechanical_report.status == Status.PASS: files.extend(mechanical_report.artifacts)
+        persist_report(path, mechanical_report)
         if mechanical_report.status != Status.PASS or fabrication_report.status != Status.PASS:
             shutil.rmtree(staging, ignore_errors=True)
             return {"status": "blocked" if Status.BLOCKED in {mechanical_report.status, fabrication_report.status} else "fail", "release_path": str(release), "reports": [fabrication_report.to_dict(), mechanical_report.to_dict()]}
         fabrication = staging / "fabrication"; fabrication.mkdir(parents=True, exist_ok=True)
-        for generated in (path / "electronics" / "generated" / "bom.csv",):
-            if generated.is_file(): (fabrication / generated.name).write_bytes(generated.read_bytes())
-        placement = fabrication / "pick_and_place.csv"; atomic_write_text(placement, "reference,x_mm,y_mm,rotation_deg\n")
         firmware = staging / "firmware"; firmware.mkdir(parents=True, exist_ok=True)
         firmware_sources = [(item, item.relative_to(path / "firmware").as_posix()) for item in sorted((path / "firmware").rglob("*")) if item.is_file() and "build" not in item.parts]
         deterministic_zip(firmware / "source.zip", firmware_sources)
@@ -321,19 +361,25 @@ class HardwareService:
             release / "fabrication" / "gerbers.zip", release / "fabrication" / "drill.zip",
             release / "fabrication" / "bom.csv", release / "fabrication" / "pick_and_place.csv",
             release / "fabrication" / "assembly_drawing.pdf",
-            release / "mechanical" / "enclosure.step", release / "mechanical" / "enclosure.stl", release / "mechanical" / "assembly.step",
+            release / "mechanical" / "board.step", release / "mechanical" / "enclosure.step", release / "mechanical" / "enclosure.stl", release / "mechanical" / "assembly.step",
+            release / "mechanical" / "mechanical_manifest.json",
             release / "firmware" / "source.zip", release / "docs" / "design_report.md",
             release / "firmware" / "pinmap.h", release / "firmware" / "devicetree.overlay", release / "firmware" / "build_instructions.md",
             release / "docs" / "validation_report.json", release / "docs" / "bringup_guide.md", release / "docs" / "known_risks.md",
             release / "docs" / "schematic.pdf", release / "docs" / "layout_preview.pdf", release / "docs" / "design_report.pdf",
             release / "docs" / "validation_report.pdf", release / "docs" / "bringup_guide.pdf", release / "manifest.json",
         ]
+        required.extend(release / "mechanical" / "variants" / f"enclosure_{variant['name']}.step" for variant in spec["mechanical"]["variants"])
+        fixtures = spec["mechanical"].get("fixtures", {})
+        if fixtures.get("mounting_plate", {}).get("enabled"):
+            required.append(release / "mechanical" / "mounting_plate.step")
+        if fixtures.get("frame_brackets", {}).get("enabled"):
+            required.extend([release / "mechanical" / "frame_bracket_left.step", release / "mechanical" / "frame_bracket_right.step"])
         backend = spec.get("electronics", {}).get("backend", "reference")
-        if backend != "tscircuit":
+        if backend not in {"tscircuit", "kicad"}:
             reports = [*reports, GateReport("backend_release_policy", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", f"Backend {backend} is not release eligible")])]
         else:
-            # Require PCB-level tscircuit gates in addition to netlist gates
-            required_tsc_gates = {"tscircuit_compile", "tscircuit_netlist_extract", "tscircuit_graph_parity", "tscircuit_footprint_parity", "tscircuit_layout_completeness"}
+            required_tsc_gates = {f"{backend}_{stage}" for stage in CONTRACT_STAGES}
             present_gates = {r.gate for r in reports}
             for gate_name in sorted(required_tsc_gates - present_gates):
                 reports = [*reports, GateReport(gate_name, Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "gate_not_run", f"Required gate was not executed: {gate_name}")])]
@@ -369,7 +415,7 @@ class HardwareService:
                 if code == "current_budget_exceeded" and per_channel > 0 and battery_peak > 0:
                     safe_channels = math.floor(battery_peak / per_channel)
                     if safe_channels >= 1:
-                        patches.append({"section": "system", "spec_path": "actuation.max_simultaneous_peak_channels", "value": safe_channels, "requires_approval": True})
+                        patches.append(RepairPatch("system", "actuation.max_simultaneous_peak_channels", safe_channels, requires_approval=True, safety_class="review_required", source_gate=report["gate"], source_failure=code).to_dict())
                 elif code == "insufficient_clearance":
                     axis = details.get("axis")
                     minimum = details.get("minimum_mm")
@@ -378,9 +424,9 @@ class HardwareService:
                     if idx is not None and minimum is not None and enclosure:
                         new_enclosure = list(enclosure)
                         new_enclosure[idx] = math.ceil(minimum)
-                        patches.append({"section": "mechanical", "spec_path": "mechanical.enclosure_internal_mm", "value": new_enclosure, "requires_approval": False})
+                        patches.append(RepairPatch("mechanical", "mechanical.enclosure_internal_mm", new_enclosure, source_gate=report["gate"], source_failure=code).to_dict())
                 elif code == "unlowered_requirement":
-                    patches.append({"section": "requirements", "spec_path": f"requirements.active_unresolved.{details.get('requirement_id', 'unknown')}.status", "value": "waived", "requires_approval": True})
+                    patches.append(RepairPatch("requirements", f"requirements.active_unresolved.{details.get('requirement_id', 'unknown')}.status", "waived", requires_approval=True, safety_class="review_required", source_gate=report["gate"], source_failure=code).to_dict())
                 actions.append({"gate": report["gate"], "failure_code": code, "action": action, "patches": patches, "requires_user_decision": requires})
         return {"status": "generated", "project": project, "requires_user_decision": requires_user_decision, "actions": actions}
 
@@ -448,15 +494,18 @@ class HardwareService:
                 if patch.get("requires_approval") and not approved:
                     proposals.append({"failure_code": action["failure_code"], "patch": patch, "reason": action["action"]})
                 else:
-                    self._apply_spec_patch(project, patch)
-                    applied.append(patch)
+                    patch_result = self._apply_spec_patch(project, patch)
+                    if patch_result["status"] == "pass":
+                        applied.append({**patch, "approval_granted": bool(patch.get("requires_approval") and approved)})
+                    else:
+                        proposals.append({"failure_code": action["failure_code"], "patch": patch, "reason": patch_result["message"]})
         if applied:
             self._append_decision_record(project, proposals, applied)
             iteration_id = self.workspace.snapshot(project, {"goal": "auto-repair", "patches_applied": len(applied)})
-            return {"status": "applied", "applied": applied, "proposals": proposals, "iteration_id": iteration_id}
+            return {"status": "pass", "applied": applied, "proposals": proposals, "iteration_id": iteration_id}
         if proposals:
             return {"status": "blocked", "applied": [], "proposals": proposals, "requires_user_decision": True}
-        return {"status": "no_repairs_available", "applied": [], "proposals": []}
+        return {"status": "generated", "applied": [], "proposals": []}
 
     def design_until_release(self, project: str, max_iterations: int = 8, include_external: bool = False) -> dict[str, Any]:
         iterations = []
@@ -482,11 +531,15 @@ class HardwareService:
             return {"status": "fail", "iterations": iterations, "repair": repair, "release_gate": result["release_gate"]}
         return {"status": "fail", "code": "max_iterations_exceeded", "iterations": iterations}
 
-    def _apply_spec_patch(self, project: str, patch: dict[str, Any]) -> None:
+    def _apply_spec_patch(self, project: str, patch: dict[str, Any]) -> dict[str, Any]:
+        if patch.get("operation") != "replace":
+            return {"status": "fail", "message": f"Unsupported patch operation: {patch.get('operation')}"}
         section = patch["section"]
         spec_path = patch["spec_path"]
         value = patch["value"]
         file_path = self.workspace.require_project(project) / "spec" / f"{section}.yaml"
+        if not file_path.is_file():
+            return {"status": "fail", "message": f"Patch target section does not exist: {section}"}
         data = read_yaml(file_path)
         parts = spec_path.split(".")
         node: Any = data
@@ -495,18 +548,27 @@ class HardwareService:
                 # List traversal: find item by id field
                 node = next((item for item in node if isinstance(item, dict) and item.get("id") == part), None)
                 if node is None:
-                    return
+                    return {"status": "fail", "message": f"Patch target id does not exist: {part}"}
             else:
+                if not isinstance(node, dict) or part not in node:
+                    return {"status": "fail", "message": f"Patch target path does not exist: {spec_path}"}
                 node = node[part]
         if isinstance(node, list):
             target_id = parts[-1]
+            found = False
             for item in node:
                 if isinstance(item, dict) and item.get("id") == target_id:
                     item["status"] = value
+                    found = True
                     break
+            if not found:
+                return {"status": "fail", "message": f"Patch target id does not exist: {target_id}"}
         else:
+            if not isinstance(node, dict):
+                return {"status": "fail", "message": f"Patch parent is not a mapping: {spec_path}"}
             node[parts[-1]] = value
         write_yaml(file_path, data)
+        return {"status": "pass", "message": "Patch applied"}
 
     def _append_decision_record(self, project: str, proposals: list[dict[str, Any]], applied: list[dict[str, Any]]) -> None:
         path = self.workspace.require_project(project) / "history" / "decisions.md"
@@ -515,14 +577,15 @@ class HardwareService:
         if applied:
             lines.append("### Applied patches\n")
             for patch in applied:
-                lines.append(f"- `{patch['spec_path']}` → `{patch['value']}`")
+                decision = "approved waiver/repair" if patch.get("approval_granted") else "automatic safe repair"
+                lines.append(f"- `{patch['spec_path']}` -> `{patch['value']}` ({decision}; source `{patch.get('source_gate')}:{patch.get('source_failure')}`)")
         if proposals:
             lines.append("\n### Pending proposals (require user decision)\n")
             for p in proposals:
                 lines.append(f"- [{p['failure_code']}] {p['reason']}")
         lines.append("")
         existing = path.read_text(encoding="utf-8")
-        path.write_text(existing + "\n".join(lines), encoding="utf-8")
+        atomic_write_text(path, existing + "\n".join(lines))
 
     def _write_candidate_bundle(self, project: str, iteration_id: str, generated: dict[str, Any], checks: dict[str, Any]) -> dict[str, Any]:
         path = self.workspace.require_project(project)
@@ -537,6 +600,14 @@ class HardwareService:
         provenance = json.loads(graph_path.read_text(encoding="utf-8")).get("provenance", {}) if graph_path.is_file() else {}
         write_manifest(target, target / "manifest.json", provenance=provenance, candidate_only=True)
         return {"status": "candidate", "candidate_only": True, "path": str(target), "bundle": str(bundle)}
+
+    @staticmethod
+    def _latest_board_step(project: Path) -> Path | None:
+        candidates = [
+            path for path in (project / "exports" / "candidates").rglob("board.step")
+            if path.is_file()
+        ] if (project / "exports" / "candidates").is_dir() else []
+        return max(candidates, key=lambda path: path.stat().st_mtime_ns) if candidates else None
 
     @staticmethod
     def _geometry_report(path: Path, spec: dict[str, Any]) -> GateReport:

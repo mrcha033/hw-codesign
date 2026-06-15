@@ -26,6 +26,22 @@ class Validator:
         for error in sorted(Draft202012Validator(schema).iter_errors(spec), key=lambda item: list(item.path)):
             path = ".".join(str(item) for item in error.absolute_path)
             failures.append(_failure(FailureCategory.SPEC_ERROR, "schema_violation", error.message, path))
+        mechanical_schema_path = self.schema_root / "mechanical.schema.json"
+        if mechanical_schema_path.is_file():
+            mechanical_schema = json.loads(mechanical_schema_path.read_text(encoding="utf-8"))
+            for error in sorted(Draft202012Validator(mechanical_schema).iter_errors(spec.get("mechanical", {})), key=lambda item: list(item.path)):
+                path = ".".join(["mechanical", *(str(item) for item in error.absolute_path)])
+                failures.append(_failure(FailureCategory.SPEC_ERROR, "mechanical_schema_violation", error.message, path))
+        requirements_schema_path = self.schema_root / "requirements.schema.json"
+        if requirements_schema_path.is_file():
+            requirements_schema = json.loads(requirements_schema_path.read_text(encoding="utf-8"))
+            requirements = spec.get("requirements", {})
+            for error in sorted(Draft202012Validator(requirements_schema).iter_errors(requirements), key=lambda item: list(item.path)):
+                path = ".".join(["requirements", *(str(item) for item in error.absolute_path)])
+                failures.append(_failure(FailureCategory.SPEC_ERROR, "requirements_schema_violation", error.message, path))
+            requirement_ids = [item.get("id") for key in ("raw_inputs", "active_lowered", "active_unresolved") for item in requirements.get(key, [])]
+            if len(requirement_ids) != len(set(requirement_ids)):
+                failures.append(_failure(FailureCategory.SPEC_ERROR, "duplicate_requirement_id", "Requirement identifiers must be unique", "requirements"))
 
         battery = spec.get("system", {}).get("supply", {}).get("battery", {})
         nominal = battery.get("pack_voltage_nominal")
