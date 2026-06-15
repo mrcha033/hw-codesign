@@ -70,6 +70,28 @@ def test_atopile_emits_real_ato_source_and_compile_gate_runs(service, project):
     # post-compile gates remain blocked (parity extraction not implemented)
     for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
         assert reports[f"atopile_{stage}"]["status"] == "blocked"
+        assert {failure["code"] for failure in reports[f"atopile_{stage}"]["failures"]} == {"gate_not_implemented"}
+
+
+def test_atopile_missing_cli_only_blocks_compile_as_tool_unavailable(service, project, monkeypatch):
+    _set_backend(service, project, "atopile")
+    service.generate_electronics_only(project)
+    monkeypatch.setattr("hw_codesign.backends.atopile.shutil.which", lambda _: None)
+    graph_path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
+    reports = {
+        report.gate: report
+        for report in service.atopile.evaluate(
+            service.workspace.require_project(project),
+            json.loads(graph_path.read_text(encoding="utf-8")),
+        )
+    }
+
+    assert reports["atopile_compile"].status == "blocked"
+    assert reports["atopile_compile"].failures[0].code == "tool_unavailable"
+    for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
+        report = reports[f"atopile_{stage}"]
+        assert report.status == "blocked"
+        assert [failure.code for failure in report.failures] == ["gate_not_implemented"]
 
 
 def test_non_release_backend_cannot_prepare_release(service, project):

@@ -19,25 +19,29 @@ requires extending those inputs and, potentially, the generators.
 ## Known limits
 
 - Two maintained board families are included: the STM32H7 robotics motor
-  controller and the ESP32-S3 IoT sensor data logger. The ESP32-S3 family's
-  component catalog is pending formal library review (`review_status: pending`),
-  so its component gates are expected to fail until verified entries are added.
-- The Atopile adapter now generates real `.ato` source and runs `ato build`.
-  The compile gate is active; the five post-compile gates (netlist extraction,
-  graph/footprint parity, layout, manufacturing export) remain `blocked` until
-  parity extraction from atopile's output is implemented.
+  controller and the ESP32-S3 IoT sensor data logger. Both component catalogs are
+  fully reviewed; the ESP32-S3-WROOM-1 symbol and footprint were verified against
+  the KiCad `RF_Module` library (2026-06-16).
+- The Atopile adapter generates real `.ato` source from the electrical graph and
+  runs `ato build`; the compile gate is active. The five post-compile gates
+  (netlist extraction, graph/footprint parity, layout, manufacturing export)
+  remain `blocked` with `gate_not_implemented` until parseable Atopile netlist
+  and PCB evidence is available.
 - The `reference` and `python_netlist` backends are candidate-only. Only
   `tscircuit` and `kicad` are release-eligible, and only when every configured
   native gate passes.
 - The complete cross-domain flow depends on native KiCad, OpenCASCADE,
-  Freerouting, tscircuit, and Zephyr tooling. The supported reproducible path is
-  the Linux container; bootstrap scripts also support macOS (`make toolchains`).
-  Windows has not been validated.
+  Freerouting, tscircuit, and Zephyr tooling. Validated paths: Linux container
+  (CI, `ubuntu-latest`), macOS (`make toolchains`), and Windows (Python test
+  suite via `windows-latest` CI — native toolchains not yet installed on Windows
+  runners).
 - Digital gates cannot certify fabrication quality, load thermals, EMI/EMC,
   vibration, abuse safety, ingress protection, transients, or connector life.
+  These physical qualification gaps are stated explicitly in every generated
+  report and cannot be closed by software.
 - The tracked `r1` export is historical digital evidence. The current checked-in
-  `reference` configuration is candidate-only and its current release gate is
-  expected to remain blocked.
+  `reference` configuration is candidate-only and its release gate is expected to
+  remain blocked unless a compiled backend is selected and all native gates pass.
 
 ## Run it
 
@@ -117,7 +121,7 @@ Two reference designs are included:
 | tscircuit | Pinned offline compile, Circuit JSON, graph/footprint parity, placement and routing checks | Release-eligible with the KiCad manufacturing bridge and native gates |
 | reference | Generates the included design intent and candidate artifacts | Candidate-only; used for tutorials and pipeline inspection |
 | Python netlist | Executes deterministic netlist and parity checks | Candidate-only; no PCB layout or manufacturing output |
-| Atopile | Generates real `.ato` source from the electrical graph; compile gate runs `ato build` | Candidate-only; post-compile gates blocked pending netlist extraction |
+| Atopile | Generates real `.ato` source from the electrical graph; compile gate runs `ato build` | Candidate-only; post-compile gates blocked with `gate_not_implemented` pending netlist extraction |
 
 This is not yet universal hardware design automation. Within the included
 robotics-controller family, users can change supported electrical, mechanical,
@@ -175,8 +179,6 @@ passed.
 
 ### Adoption milestones still open
 
-- Complete verification of the ESP32-S3 sensor data logger component catalog
-  (`review_status: pending` entries need KiCad library verification).
 - Publish a report screenshot or demo recording from a stable release workflow.
 - Fabricate and bring up a generated board, then publish photographs, measured
   results, deviations, and the exact artifact bundle sent to manufacturing.
@@ -197,8 +199,9 @@ passed.
   2.2.4 autoroute (DSN/SES round-trip), and Gerber/drill/position/BOM/STEP export
 - **Python-netlist** adapter: intentionally candidate-only; blocked from release
   because it has no PCB layout or manufacturing output — the block is explicit
-- **Atopile** adapter: placeholder emitting marked intent only, blocked on every
-  contract gate
+- **Atopile** adapter: emits `.ato` source and runs `ato build`; post-compile
+  netlist, parity, layout, and manufacturing gates remain explicitly blocked as
+  `gate_not_implemented`
 - KiCad CLI and Zephyr `west` adapters with structured `tool_unavailable` reports
   when the tool is absent — they do not silently skip
 

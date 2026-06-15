@@ -38,6 +38,24 @@ jobs:
       - run: uv sync --locked --extra dev --extra mcp
       - run: uv run pytest
 
+  test-windows:
+    name: Windows Python 3.11
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - uses: astral-sh/setup-uv@v8.2.0
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - run: npm ci --ignore-scripts
+      - run: uv sync --locked --extra dev --extra mcp
+      - run: uv run pytest
+        env:
+          PYTESTPATH: tests
+
   package-smoke:
     name: Wheel smoke test
     runs-on: ubuntu-latest
