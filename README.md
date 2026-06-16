@@ -18,18 +18,20 @@ requires extending those inputs and, potentially, the generators.
 
 ## Known limits
 
-- Two maintained board families are included: the STM32H7 robotics motor
-  controller and the ESP32-S3 IoT sensor data logger. Both component catalogs are
-  fully reviewed; the ESP32-S3-WROOM-1 symbol and footprint were verified against
-  the KiCad `RF_Module` library (2026-06-16).
+- Three maintained board families are included: the STM32H7 robotics motor
+  controller, the ESP32-S3 IoT sensor data logger, and the nRF52840 BLE sensor
+  node. All component catalogs are fully reviewed; the ESP32-S3-WROOM-1 symbol
+  and footprint were verified against the KiCad `RF_Module` library (2026-06-16).
 - The Atopile adapter generates real `.ato` source from the electrical graph and
-  runs `ato build`; the compile gate is active. The five post-compile gates
-  (netlist extraction, graph/footprint parity, layout, manufacturing export)
-  remain `blocked` with `gate_not_implemented` until parseable Atopile netlist
-  and PCB evidence is available.
-- The `reference` and `python_netlist` backends are candidate-only. Only
-  `tscircuit` and `kicad` are release-eligible, and only when every configured
-  native gate passes.
+  runs `ato build`; the compile gate is active. When compile passes,
+  `netlist_extract` and `graph_parity` are resolved via source-AST parity (signal
+  declarations parsed from the `.ato` file and compared against the electrical
+  graph). The three remaining post-compile gates (footprint parity, layout,
+  manufacturing export) are `blocked` pending a configured KiCad plugin path.
+- The `reference` and `atopile` backends are candidate-only. `tscircuit` and
+  `kicad` are fabrication-release-eligible; `python_netlist` is
+  netlist-release-eligible (produces `compiled_netlist.json` + firmware rather
+  than Gerbers). All release paths require every configured gate to pass.
 - The complete cross-domain flow depends on native KiCad, OpenCASCADE,
   Freerouting, tscircuit, and Zephyr tooling. Validated paths: Linux container
   (CI, `ubuntu-latest`), macOS (`make toolchains`), and Windows (Python test
@@ -108,20 +110,21 @@ Physical qualification risks (load thermals, EMI/EMC, vibration, abuse) are
 stated as explicit gaps in every generated report and cannot be closed by
 software.
 
-Two reference designs are included:
+Three reference designs are included:
 
 - **Robotics motor controller** — 4-layer PCB, STM32H7, 12 motor channels, CAN, 24 V VBAT
 - **IoT sensor data logger** — 2-layer PCB, ESP32-S3-WROOM-1, USB-C power, I2C IMU (template: `sensor_data_logger`)
+- **BLE sensor node** — 2-layer PCB, nRF52840-QIAA, LiPo charging (BQ24079 + BQ27441 + AP2112K), SHT31, 50×35 mm (template: `ble_sensor_node`)
 
 ### Backend maturity
 
 | Backend | What works | Release position |
 |---|---|---|
-| KiCad | Native netlist, ERC/DRC, Freerouting round trip, and manufacturing export | Release-eligible when every native gate passes |
-| tscircuit | Pinned offline compile, Circuit JSON, graph/footprint parity, placement and routing checks | Release-eligible with the KiCad manufacturing bridge and native gates |
+| KiCad | Native netlist, ERC/DRC, Freerouting round trip, and manufacturing export | Fabrication-release-eligible when every native gate passes |
+| tscircuit | Pinned offline compile, Circuit JSON, graph/footprint parity, placement and routing checks | Fabrication-release-eligible with the KiCad manufacturing bridge and native gates |
+| python_netlist | Deterministic netlist and parity checks; produces `compiled_netlist.json` + firmware | Netlist-release-eligible; layout and manufacturing gates are N/A (not blocking) |
 | reference | Generates the included design intent and candidate artifacts | Candidate-only; used for tutorials and pipeline inspection |
-| Python netlist | Executes deterministic netlist and parity checks | Candidate-only; no PCB layout or manufacturing output |
-| Atopile | Generates real `.ato` source from the electrical graph; compile gate runs `ato build` | Candidate-only; post-compile gates blocked with `gate_not_implemented` pending netlist extraction |
+| Atopile | Generates real `.ato` source; compile, netlist_extract, and graph_parity gates active; source-AST parity checks declared signals vs graph | Candidate-only; footprint/layout/manufacturing blocked pending KiCad plugin path |
 
 This is not yet universal hardware design automation. Within the included
 robotics-controller family, users can change supported electrical, mechanical,
@@ -197,11 +200,12 @@ passed.
   placement, routing, and error-element validation
 - **KiCad-native** adapter: native XML netlist extraction, ERC/DRC, Freerouting
   2.2.4 autoroute (DSN/SES round-trip), and Gerber/drill/position/BOM/STEP export
-- **Python-netlist** adapter: intentionally candidate-only; blocked from release
-  because it has no PCB layout or manufacturing output — the block is explicit
-- **Atopile** adapter: emits `.ato` source and runs `ato build`; post-compile
-  netlist, parity, layout, and manufacturing gates remain explicitly blocked as
-  `gate_not_implemented`
+- **Python-netlist** adapter: netlist-release-eligible; produces
+  `compiled_netlist.json` + firmware; layout and manufacturing gates are N/A
+  rather than blocking — the release tier is explicitly `"netlist"` not fabrication
+- **Atopile** adapter: emits `.ato` source and runs `ato build`; when compile
+  passes, `netlist_extract` and `graph_parity` are resolved via source-AST parity;
+  footprint/layout/manufacturing remain blocked pending a KiCad plugin path
 - KiCad CLI and Zephyr `west` adapters with structured `tool_unavailable` reports
   when the tool is absent — they do not silently skip
 
@@ -239,8 +243,9 @@ passed.
 - Release gate requires every configured gate at `pass`, all critical assumptions
   resolved by a human, and every declared artifact present on disk with a matching
   hash
-- Only `tscircuit` and `kicad` backends are release-eligible; `reference`,
-  `python_netlist`, and `atopile` are permanently candidate-only
+- Fabrication release: `tscircuit` and `kicad` backends (Gerber + drill + STEP);
+  netlist release: `python_netlist` backend (`compiled_netlist.json` + firmware);
+  `reference` and `atopile` are candidate-only
 
 ## Development setup
 

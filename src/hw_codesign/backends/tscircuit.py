@@ -4,6 +4,7 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -88,10 +89,14 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
         })
         return [str(entry), str(compiler_entry), str(target / "source_manifest.json")]
 
+    def _tsx_bin(self) -> Path:
+        name = "tsx.cmd" if sys.platform == "win32" else "tsx"
+        return self.platform_root / "node_modules" / ".bin" / name
+
     def command(self, entry: Path) -> list[str]:
         compiler_entry = entry.with_name("board.compiler.mjs")
         return [
-            str(self.platform_root / "node_modules" / ".bin" / "tsx"),
+            str(self._tsx_bin()),
             str(self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"),
             "build", str(compiler_entry), "--ignore-config",
             "--disable-parts-engine",
@@ -103,7 +108,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
     def compile(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
         entry = project / "electronics" / "source" / "tscircuit" / "board.tsx"
         cli = self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"
-        if shutil.which("node") is None or not cli.is_file() or not (self.platform_root / "node_modules" / ".bin" / "tsx").is_file():
+        if shutil.which("node") is None or not cli.is_file() or not self._tsx_bin().is_file():
             failure = Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "Pinned Node.js tscircuit CLI is unavailable; run npm ci")
             return [
                 GateReport(name, Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True})
@@ -117,7 +122,28 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                 "tscircuit_footprint_parity", "tscircuit_layout_completeness",
             )]
         shutil.rmtree(entry.parent / "dist", ignore_errors=True)
-        result = subprocess.run(self.command(entry), cwd=str(self.platform_root), capture_output=True, text=True, timeout=600)
+        try:
+            result = subprocess.run(self.command(entry), cwd=str(self.platform_root), capture_output=True, text=True, timeout=600)
+        except OSError as exc:
+            failure = Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", f"tscircuit CLI could not be executed: {exc}")
+            blocked = Failure(FailureCategory.TOOL_ERROR, "compile_prerequisite_failed", "Prerequisite compile gate did not pass")
+            return [
+                GateReport("tscircuit_compile", Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True}),
+                GateReport("tscircuit_netlist_extract", Status.BLOCKED, [blocked]),
+                GateReport("tscircuit_graph_parity", Status.BLOCKED, [blocked]),
+                GateReport("tscircuit_footprint_parity", Status.BLOCKED, [blocked]),
+                GateReport("tscircuit_layout_completeness", Status.BLOCKED, [blocked]),
+            ]
+        except subprocess.TimeoutExpired:
+            failure = Failure(FailureCategory.TOOL_ERROR, "tool_timeout", "tscircuit CLI did not complete within 600 s")
+            blocked = Failure(FailureCategory.TOOL_ERROR, "compile_prerequisite_failed", "Prerequisite compile gate did not pass")
+            return [
+                GateReport("tscircuit_compile", Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True}),
+                GateReport("tscircuit_netlist_extract", Status.BLOCKED, [blocked]),
+                GateReport("tscircuit_graph_parity", Status.BLOCKED, [blocked]),
+                GateReport("tscircuit_footprint_parity", Status.BLOCKED, [blocked]),
+                GateReport("tscircuit_layout_completeness", Status.BLOCKED, [blocked]),
+            ]
         backend = {
             "name": "tscircuit", "version": self.VERSION, "offline": True,
             "command": self.command(entry), "returncode": result.returncode,

@@ -61,11 +61,13 @@ demonstrating that the architecture generalizes beyond the current reference.
 - Choose `tscircuit` when the topology is supported by the pinned compiler and
   footprint mappings; native KiCad export is still required for manufacturing.
 - Choose `kicad` for the strongest current native release path.
-- Use `python_netlist` only for deterministic netlist/parity experiments.
-- Do not select `atopile` expecting release output. It emits `.ato` source and
-  runs `ato build`, but post-compile netlist, parity, layout, and manufacturing
-  gates are still blocked with `gate_not_implemented`: Atopile 0.15.7 produces
-  no parseable netlist or PCB output without a configured KiCad plugin path.
+- Use `python_netlist` when a netlist-tier release (compiled_netlist.json +
+  firmware) is sufficient; it is release-eligible at that tier but produces no
+  Gerbers or PCB layout.
+- Do not select `atopile` expecting fabrication release output. It emits `.ato`
+  source, runs `ato build`, and resolves `netlist_extract` and `graph_parity` via
+  source-AST parity. Footprint parity, layout, and manufacturing remain blocked
+  until a KiCad plugin path is configured.
 
 Every backend reports missing support as `blocked` or `fail`. Do not replace those
 statuses with manual green checks unless the missing evidence is represented by a

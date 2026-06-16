@@ -34,7 +34,7 @@ RUN python3 -m pip install --break-system-packages --no-cache-dir '.[mcp,cad]' \
     && git clone https://github.com/zephyrproject-rtos/hal_stm32.git .toolchains/zephyr/modules/hal/stm32 \
     && git -C .toolchains/zephyr/modules/hal/stm32 checkout --detach 1e753266ddfb4b07a8a0b1ec566e9637ea45d5ef \
     && git clone https://github.com/zephyrproject-rtos/CMSIS_6.git .toolchains/zephyr/modules/hal/cmsis_6 \
-    && git -C .toolchains/zephyr/modules/hal/cmsis_6 checkout --detach 06d952b6713a2ca41c9224a151 \
+    && git -C .toolchains/zephyr/modules/hal/cmsis_6 checkout --detach 06d952b6713a2ca41c9224a62075e4059402a151 \
     && python3 -m pip install --break-system-packages --no-cache-dir -r .toolchains/zephyr/scripts/requirements-base.txt \
     && rm -rf .toolchains/zephyr/.git .toolchains/zephyr/modules/hal/stm32/.git .toolchains/zephyr/modules/hal/cmsis_6/.git
 

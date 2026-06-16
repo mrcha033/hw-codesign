@@ -17,8 +17,9 @@ command -v curl >/dev/null || { echo "curl is required" >&2; exit 1; }
 command -v node >/dev/null || brew install node@22
 command -v npm >/dev/null || { echo "npm is required" >&2; exit 1; }
 
-python3 -m venv "$ROOT/.venv"
-"$ROOT/.venv/bin/pip" install '.[dev,mcp,cad]' west
+command -v uv >/dev/null || { echo "uv is required: https://docs.astral.sh/uv/getting-started/installation/" >&2; exit 1; }
+uv sync --locked --extra dev --extra mcp --extra cad
+uv pip install west
 npm --prefix "$ROOT" ci --ignore-scripts
 
 mkdir -p "$TOOLS"
@@ -42,7 +43,7 @@ echo "f5ed374182900ccc78e473518bbb9f6b869f4a07159495f663a76f52bb10523b  $FREEROU
 if [[ ! -d "$ZEPHYR/.git" ]]; then
   git clone --depth 1 --branch v4.2.0 https://github.com/zephyrproject-rtos/zephyr.git "$ZEPHYR"
 fi
-"$ROOT/.venv/bin/pip" install -r "$ZEPHYR/scripts/requirements-base.txt"
+uv pip install -r "$ZEPHYR/scripts/requirements-base.txt"
 
 clone_at() {
   local url="$1" path="$2" revision="$3"

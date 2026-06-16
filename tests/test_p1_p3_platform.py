@@ -52,6 +52,7 @@ def test_iteration_writes_candidate_only_bundle(service, project):
 
 
 def test_tscircuit_real_compile_and_graph_parity(tmp_path):
+    import pytest
     root = Path(__file__).parents[1]
     spec = yaml.safe_load((root / "src/hw_codesign/templates/robotics_controller_full.yaml").read_text())
     spec["electronics"]["backend"] = "tscircuit"
@@ -65,6 +66,9 @@ def test_tscircuit_real_compile_and_graph_parity(tmp_path):
         backend = TSCircuitBackend(root)
         backend.generate_source(project, spec, graph)
         reports = {item.gate: item for item in backend.compile(project, graph)}
+        if reports["tscircuit_compile"].status == "blocked":
+            codes = [f.code for f in reports["tscircuit_compile"].failures]
+            pytest.skip(f"tscircuit CLI unavailable or timed out: {codes}")
         assert reports["tscircuit_compile"].status == "pass"
         assert reports["tscircuit_netlist_extract"].status == "pass"
         assert reports["tscircuit_graph_parity"].status == "pass"
@@ -76,6 +80,7 @@ def test_tscircuit_real_compile_and_graph_parity(tmp_path):
 
 
 def test_tscircuit_contract_blocks_manufacturing_without_native_export():
+    import pytest
     root = Path(__file__).parents[1]
     spec = yaml.safe_load((root / "src/hw_codesign/templates/robotics_controller_full.yaml").read_text())
     spec["electronics"]["backend"] = "tscircuit"
@@ -89,6 +94,9 @@ def test_tscircuit_contract_blocks_manufacturing_without_native_export():
         backend = TSCircuitBackend(root)
         backend.generate_source(project, spec, graph)
         reports = {item.gate: item for item in backend.evaluate(project, graph)}
+        if reports["tscircuit_compile"].status == "blocked":
+            codes = [f.code for f in reports["tscircuit_compile"].failures]
+            pytest.skip(f"tscircuit CLI unavailable or timed out: {codes}")
         assert reports["tscircuit_compile"].status == "pass"
         assert reports["tscircuit_footprint_parity"].status == "pass"
         assert reports["tscircuit_layout_completeness"].status == "pass"

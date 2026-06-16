@@ -24,7 +24,8 @@ skipped. A required adapter stage that did not run is injected as a blocked
 
 A release is eligible only when all of the following are true:
 
-1. The electronics backend is `tscircuit` or `kicad`.
+1. The electronics backend is release-capable (`tscircuit`, `kicad`, or
+   `python_netlist`).
 2. Every supplied and required gate report has status `pass`.
 3. Every critical assumption marked `requires_user_review` has been resolved.
 4. Every required release artifact exists.
@@ -35,8 +36,15 @@ Any `fail` prevents release. Any `blocked` result makes the aggregate release
 gate `blocked`. Missing exports and integrity failures prevent release even if
 the design checks themselves passed.
 
-The `reference`, `python_netlist`, and `atopile` backends are candidate-only.
-They cannot become release-eligible through a manual status override.
+Three release tiers are defined:
+
+- **Fabrication** (`tscircuit`, `kicad`): Gerber + drill + STEP + BOM.
+  All six contract gates must pass, including layout and manufacturing export.
+- **Netlist** (`python_netlist`): `compiled_netlist.json` + firmware.
+  Compile, netlist_extract, graph_parity, and footprint_parity must pass;
+  layout_completeness and manufacturing_export are N/A for this tier.
+- **Candidate-only** (`reference`, `atopile`): no release path exists.
+  These backends cannot become release-eligible through a manual status override.
 
 ## Adapter contract
 

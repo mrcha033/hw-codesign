@@ -1,13 +1,13 @@
 .PHONY: install toolchains test lint sample check-sample docker-build
 
 install:
-	python3 -m pip install '.[dev,mcp]'
+	uv sync --locked --extra dev --extra mcp
 
 toolchains:
 	bash scripts/bootstrap_toolchains.sh
 
 test:
-	python3 -m pytest
+	uv run pytest
 
 sample:
 	hw --root . create-project quadruped_robot_controller
@@ -16,4 +16,4 @@ check-sample:
 	hw --root . design-until-release quadruped_robot_controller --external
 
 docker-build:
-	docker build -f docker/Dockerfile -t hw-codesign-platform:0.1.0 .
+	docker build -f docker/Dockerfile -t hw-codesign-platform:$(shell grep '^version' pyproject.toml | head -1 | cut -d'"' -f2) .
