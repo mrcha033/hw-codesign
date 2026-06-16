@@ -1,11 +1,20 @@
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Any
 
 from .contracts import TOOL_REGISTRY as _TR
 from .service import HardwareService
+
+
+def _enrich(result: dict[str, Any], **extra: Any) -> dict[str, Any]:
+    """Merge envelope fields into a tool result without overwriting existing keys."""
+    out = dict(result)
+    for key, value in extra.items():
+        out.setdefault(key, value)
+    return out
 
 
 def create_server(root: Path | str | None = None):
@@ -16,6 +25,10 @@ def create_server(root: Path | str | None = None):
 
     service = HardwareService(root or os.environ.get("HW_PLATFORM_ROOT", Path.cwd()))
     server = FastMCP("hw-codesign-platform")
+
+    # ------------------------------------------------------------------
+    # Project management
+    # ------------------------------------------------------------------
 
     @server.tool(name=_TR["hw_create_project"].name)
     def create_project(name: str, template: str = "robotics_controller_full", target: str = "manufacturable_pcb_with_enclosure_and_firmware") -> dict[str, Any]:
@@ -39,6 +52,10 @@ def create_server(root: Path | str | None = None):
         names = sorted(set(before_files) | set(after_files))
         return {"status": "pass", "project": project, "before": before, "after": after, "added": [name for name in names if name not in before_files], "removed": [name for name in names if name not in after_files], "changed": [name for name in names if name in before_files and name in after_files and before_files[name] != after_files[name]]}
 
+    # ------------------------------------------------------------------
+    # Spec read/write
+    # ------------------------------------------------------------------
+
     @server.tool(name=_TR["hw_read_spec"].name)
     def read_spec(project: str) -> dict[str, Any]:
         return {"status": "pass", "spec": service.read_spec(project)}
@@ -53,7 +70,9 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name=_TR["hw_update_requirements"].name)
     def update_requirements(project: str, requirements_text: str) -> dict[str, Any]:
-        return service.update_requirements(project, requirements_text)
+        result = service.update_requirements(project, requirements_text)
+        unsupported = result.get("unsupported_constraints") or []
+        return _enrich(result, release_blocking_failures=unsupported)
 
     @server.tool(name=_TR["hw_list_assumptions"].name)
     def list_assumptions(project: str) -> dict[str, Any]:
@@ -63,27 +82,65 @@ def create_server(root: Path | str | None = None):
     def resolve_assumption(project: str, name: str, resolution: str, approved: bool = False) -> dict[str, Any]:
         return service.resolve_assumption(project, name, resolution, approved)
 
+    # ------------------------------------------------------------------
+    # Generation (all generation tools emit candidate_only/release_eligible/release_blocking_failures)
+    # ------------------------------------------------------------------
+
     @server.tool(name=_TR["hw_generate_all"].name)
     def generate_all(project: str) -> dict[str, Any]:
-        return service.generate_all(project)
+        result = service.generate_all(project)
+        backend = result.get("backend", "reference")
+        from .service import _RELEASE_ELIGIBLE_BACKENDS
+        is_release_eligible_backend = backend in _RELEASE_ELIGIBLE_BACKENDS
+        return _enrich(result,
+            release_eligible=False,
+            candidate_only=True,
+            release_blocking_failures=[f"backend '{backend}' is candidate-only — run hw_check_release_gate to evaluate release eligibility"] if not is_release_eligible_backend else ["hw_check_release_gate must pass before release"],
+        )
 
     @server.tool(name=_TR["hw_generate_reference_intent"].name)
     def generate_reference_intent(project: str) -> dict[str, Any]:
-        return service.generate_reference_intent(project)
+        result = service.generate_reference_intent(project)
+        return _enrich(result,
+            release_eligible=False,
+            candidate_only=True,
+            release_blocking_failures=["reference backend is candidate-only — switch to tscircuit, kicad, or python_netlist for a release-eligible backend"],
+        )
 
     @server.tool(name=_TR["hw_generate_electronics_source"].name)
     def generate_electronics_tool(project: str) -> dict[str, Any]:
-        return service.generate_electronics_source(project)
+        result = service.generate_electronics_source(project)
+        spec = service.read_spec(project)
+        backend = spec.get("electronics", {}).get("backend", "reference")
+        from .service import _RELEASE_ELIGIBLE_BACKENDS
+        is_release_eligible_backend = backend in _RELEASE_ELIGIBLE_BACKENDS
+        return _enrich(result,
+            release_eligible=False,
+            candidate_only=True,
+            release_blocking_failures=[f"backend '{backend}' is candidate-only"] if not is_release_eligible_backend else ["hw_check_release_gate must pass before release"],
+        )
 
     @server.tool(name=_TR["hw_generate_mechanical"].name)
     def generate_mechanical_tool(project: str, backend: str = "build123d") -> dict[str, Any]:
         result = service.generate_mechanical_source(project)
-        return {"status": result["status"], "backend": backend, "files": result["files"]}
+        return _enrich({"status": result["status"], "backend": backend, "files": result["files"]},
+            release_eligible=False,
+            candidate_only=True,
+            release_blocking_failures=["hw_check_release_gate must pass before release"],
+        )
 
     @server.tool(name=_TR["hw_generate_firmware"].name)
     def generate_firmware_tool(project: str, framework: str = "zephyr") -> dict[str, Any]:
         result = service.generate_firmware_source(project)
-        return {"status": result["status"], "framework": framework, "files": result["files"]}
+        return _enrich({"status": result["status"], "framework": framework, "files": result["files"]},
+            release_eligible=False,
+            candidate_only=True,
+            release_blocking_failures=result.get("release_blocking_failures") or ["hw_check_release_gate must pass before release"],
+        )
+
+    # ------------------------------------------------------------------
+    # ERC / DRC / electrical checks
+    # ------------------------------------------------------------------
 
     @server.tool(name=_TR["hw_run_erc"].name)
     def run_erc(project: str) -> dict[str, Any]:
@@ -103,13 +160,20 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name=_TR["hw_extract_electrical_graph"].name)
     def extract_electrical_graph(project: str) -> dict[str, Any]:
-        import json
         path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
         return {"status": "generated" if path.exists() else "blocked", "graph": json.loads(path.read_text(encoding="utf-8")) if path.exists() else None}
+
+    # ------------------------------------------------------------------
+    # Fabrication exports (currently blocked — require native KiCad/CAD)
+    # ------------------------------------------------------------------
 
     @server.tool(name=_TR["hw_export_pcb_fabrication"].name)
     def export_pcb_fabrication(project: str) -> dict[str, Any]:
         return {"status": "blocked", "project": project, "code": "native_kicad_export_required", "message": "Fabrication export requires a generated KiCad board that passes ERC and DRC"}
+
+    # ------------------------------------------------------------------
+    # Mechanical checks and exports
+    # ------------------------------------------------------------------
 
     @server.tool(name=_TR["hw_check_mechanical_fit"].name)
     def check_mechanical_fit(project: str) -> dict[str, Any]:
@@ -122,6 +186,10 @@ def create_server(root: Path | str | None = None):
     @server.tool(name=_TR["hw_export_mechanical"].name)
     def export_mechanical(project: str) -> dict[str, Any]:
         return {"status": "blocked", "project": project, "code": "native_cad_export_required", "message": "STEP/STL export requires the pinned build123d backend and geometry validation"}
+
+    # ------------------------------------------------------------------
+    # Firmware checks and build
+    # ------------------------------------------------------------------
 
     @server.tool(name=_TR["hw_check_pinmap"].name)
     def check_pinmap(project: str) -> dict[str, Any]:
@@ -137,6 +205,10 @@ def create_server(root: Path | str | None = None):
         files = service.generate_firmware_only(project)["files"]
         return {"status": "generated", "files": [item for item in files if "test" in item]}
 
+    # ------------------------------------------------------------------
+    # Validation / repair loop
+    # ------------------------------------------------------------------
+
     @server.tool(name=_TR["hw_run_all_checks"].name)
     def run_all_checks(project: str, include_external: bool = True) -> dict[str, Any]:
         return service.run_all_checks(project, include_external)
@@ -147,7 +219,6 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name=_TR["hw_get_failure_report"].name)
     def get_failure_report(project: str, gate: str | None = None) -> dict[str, Any]:
-        import json
         directory = service.workspace.require_project(project) / "validation" / "reports"
         reports = [json.loads(item.read_text(encoding="utf-8")) for item in sorted(directory.glob("*.json")) if gate is None or item.stem == gate]
         return {"status": "pass", "project": project, "reports": reports}
@@ -156,6 +227,10 @@ def create_server(root: Path | str | None = None):
     def apply_repair_plan(project: str, approved: bool = False) -> dict[str, Any]:
         return service.apply_repair_plan(project, approved=approved)
 
+    # ------------------------------------------------------------------
+    # Design iteration
+    # ------------------------------------------------------------------
+
     @server.tool(name=_TR["hw_run_design_iteration"].name)
     def run_design_iteration(project: str, goal: str = "make all release gates pass", include_external: bool = True) -> dict[str, Any]:
         result = service.run_design_iteration(project, include_external)
@@ -163,8 +238,32 @@ def create_server(root: Path | str | None = None):
         return result
 
     @server.tool(name=_TR["hw_design_until_release"].name)
-    def design_until_release(project: str, max_iterations: int = 8, include_external: bool = False) -> dict[str, Any]:
+    def design_until_release(
+        project: str,
+        max_iterations: int = 8,
+        include_external: bool = False,
+        user_approved_autonomous_iteration: bool = False,
+    ) -> dict[str, Any]:
+        if not user_approved_autonomous_iteration:
+            return {
+                "status": "blocked",
+                "code": "autonomous_iteration_not_approved",
+                "message": (
+                    f"hw_design_until_release will run up to {max_iterations} generate→check→repair cycles "
+                    "autonomously without user review of intermediate states. "
+                    "Set user_approved_autonomous_iteration=true to proceed. "
+                    "Use hw_run_design_iteration for a single supervised iteration instead."
+                ),
+                "release_eligible": False,
+                "candidate_only": True,
+                "release_blocking_failures": ["user_approved_autonomous_iteration must be true"],
+                "iterations": [],
+            }
         return service.design_until_release(project, max_iterations, include_external)
+
+    # ------------------------------------------------------------------
+    # Release gate and exports
+    # ------------------------------------------------------------------
 
     @server.tool(name=_TR["hw_check_release_gate"].name)
     def check_release_gate(project: str) -> dict[str, Any]:
@@ -174,8 +273,14 @@ def create_server(root: Path | str | None = None):
     def generate_design_report(project: str) -> dict[str, Any]:
         return service.generate_design_report(project)
 
+    @server.tool(name=_TR["hw_export_candidate_bundle"].name)
+    def export_candidate_bundle(project: str) -> dict[str, Any]:
+        """Export a candidate bundle. Always candidate_only=true, release_eligible=false."""
+        return service.export_candidate_bundle(project)
+
     @server.tool(name=_TR["hw_export_release_bundle"].name)
     def export_release_bundle(project: str) -> dict[str, Any]:
+        """Export the release bundle. Requires all gates to pass. Distinct from candidate bundles."""
         return service.export_release_bundle(project)
 
     @server.tool(name=_TR["hw_verify_release"].name)
@@ -183,6 +288,55 @@ def create_server(root: Path | str | None = None):
         spec = service.read_spec(project)
         release = service.workspace.require_project(project) / "exports" / "releases" / spec["project"]["revision"]
         return service._artifact_integrity_report(release).to_dict()
+
+    # ------------------------------------------------------------------
+    # Platform introspection
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_get_capabilities"].name)
+    def get_capabilities() -> dict[str, Any]:
+        """Return available backends, external tools, and gate enablement. Call before generating."""
+        return service.get_capabilities()
+
+    @server.tool(name=_TR["hw_review_release_readiness"].name)
+    def review_release_readiness(project: str) -> dict[str, Any]:
+        """Summarise release readiness from persisted reports without re-running checks."""
+        return service.review_release_readiness(project)
+
+    # ------------------------------------------------------------------
+    # MCP resources — structured reads without tool invocations
+    # ------------------------------------------------------------------
+
+    @server.resource(
+        "hw://project/{project}/release-gate",
+        name="release-gate",
+        description="Current release gate status for a project (from persisted reports).",
+        mime_type="application/json",
+    )
+    def resource_release_gate(project: str) -> str:
+        result = service.review_release_readiness(project)
+        return json.dumps(result, indent=2)
+
+    @server.resource(
+        "hw://project/{project}/spec",
+        name="spec",
+        description="Full merged project spec.",
+        mime_type="application/json",
+    )
+    def resource_spec(project: str) -> str:
+        return json.dumps(service.read_spec(project), indent=2)
+
+    @server.resource(
+        "hw://project/{project}/requirements",
+        name="requirements",
+        description="Active requirements: lowered and unresolved constraints.",
+        mime_type="application/json",
+    )
+    def resource_requirements(project: str) -> str:
+        from .io import read_yaml
+        req_path = service.workspace.require_project(project) / "spec" / "requirements.yaml"
+        data = read_yaml(req_path) if req_path.is_file() else {}
+        return json.dumps(data, indent=2)
 
     return server
 

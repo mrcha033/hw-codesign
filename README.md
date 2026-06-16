@@ -306,12 +306,70 @@ Claude Desktop configuration:
 The configured workspace must be writable because projects, validation reports,
 review bundles, and release artifacts are created beneath it.
 
-Tools: `hw_create_project`, `hw_read_spec`, `hw_validate_spec`, generation
-tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`,
-`hw_generate_repair_plan`, `hw_run_design_iteration`, `hw_check_release_gate`,
-`hw_generate_design_report`. Generation is domain-explicit:
-`hw_generate_reference_intent`, `hw_generate_electronics_source`,
-`hw_generate_mechanical_source`, `hw_generate_firmware_source`.
+### Canonical agent workflow
+
+```
+hw_get_capabilities          ← which backends and external tools are installed
+hw_create_project / hw_open_project
+hw_update_requirements       ← lowers natural-language requirements; returns release_blocking_failures
+hw_generate_all              ← always candidate_only=true, release_eligible=false
+hw_run_all_checks            ← include_external=true for full gate matrix
+hw_review_release_readiness  ← single-call summary: blocking gates, requirements, assumptions
+hw_generate_repair_plan / hw_apply_repair_plan / hw_resolve_assumption
+hw_check_release_gate        ← only this tool may set release_eligible=true
+hw_export_candidate_bundle   ← archive checkpoint (candidate_only=true, release_eligible=false)
+hw_export_release_bundle     ← only reachable after check_release_gate passes
+```
+
+Every tool response carries a consistent envelope:
+
+| Field | Meaning |
+|-------|---------|
+| `release_eligible` | `false` on all generation and requirements tools; `true` only from `hw_check_release_gate` (status pass) and `hw_export_release_bundle` |
+| `candidate_only` | `true` when the backend or gate state precludes release |
+| `release_blocking_failures` | always-present list of strings; empty when clean |
+
+The invariant is enforced at the MCP layer:
+**candidate generated ≠ release passed ≠ fabrication qualified.**
+
+### Tools
+
+**Platform introspection**
+- `hw_get_capabilities` — available backends, external tools, and which gates each enables; call before generating
+
+**Project / spec**
+- `hw_create_project`, `hw_open_project`, `hw_snapshot_project`, `hw_compare_iterations`
+- `hw_read_spec`, `hw_validate_spec`, `hw_update_spec`, `hw_update_requirements`
+- `hw_list_assumptions`, `hw_resolve_assumption`
+
+**Generation** (all emit `release_eligible: false`, `candidate_only: true`)
+- `hw_generate_all`, `hw_generate_reference_intent`, `hw_generate_electronics_source`
+- `hw_generate_mechanical`, `hw_generate_firmware`
+
+**Validation**
+- `hw_run_all_checks`, `hw_check_release_gate`, `hw_get_failure_report`
+- `hw_run_erc`, `hw_run_drc`, `hw_check_electrical_semantics`, `hw_check_pinmap`
+- `hw_check_mechanical_fit`, `hw_build_firmware`
+
+**Iteration / repair**
+- `hw_run_design_iteration`, `hw_generate_repair_plan`, `hw_apply_repair_plan`
+- `hw_design_until_release` — requires `user_approved_autonomous_iteration=true`; returns `blocked` otherwise
+
+**Release readiness and export**
+- `hw_review_release_readiness` — aggregated summary from persisted reports without re-running checks
+- `hw_export_candidate_bundle` — candidate ZIP (`candidate_only=true`, `release_eligible=false`)
+- `hw_export_release_bundle` — release ZIP; only reachable after all gates pass
+- `hw_generate_design_report`, `hw_verify_release`
+
+### MCP resources
+
+URI-template resources for structured reads without tool calls:
+
+| Resource | Contents |
+|----------|----------|
+| `hw://project/{project}/release-gate` | Release readiness summary (same as `hw_review_release_readiness`) |
+| `hw://project/{project}/spec` | Full merged project spec |
+| `hw://project/{project}/requirements` | Active requirements: lowered and unresolved constraints |
 
 ## Distribution
 
@@ -336,6 +394,12 @@ tools, native ERC/DRC/build tools, semantic checks, `hw_run_all_checks`,
 | `fail` | check ran and found a violation |
 | `blocked` | required tooling or prior decision was absent |
 | `candidate` | artifact was generated but is not release-eligible |
+| `generated` | source or spec was written; does not imply gate passage or release eligibility |
+| `released` | all gates passed and the release bundle was exported |
+
+`generated` ≠ `pass` ≠ `released`. Every generation tool sets `release_eligible: false`
+regardless of status. Only `hw_check_release_gate` (status `pass`) and
+`hw_export_release_bundle` (status `released`) advance the invariant.
 
 The complete release, adapter, hash, and physical-evidence rules are defined in
 [Validation contract](docs/validation-contract.md).

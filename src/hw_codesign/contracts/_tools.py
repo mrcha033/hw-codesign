@@ -567,13 +567,18 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
 
     "hw_design_until_release": ToolDef(
         name="hw_design_until_release",
-        description="Run design iterations until the release gate passes or max_iterations is reached.",
+        description=(
+            "Run up to max_iterations generate→check→repair cycles autonomously. "
+            "Requires user_approved_autonomous_iteration=true — returns blocked otherwise. "
+            "Use hw_run_design_iteration for a single supervised iteration instead."
+        ),
         input_schema={
             "type": "object",
             "properties": {
-                "project":          {"type": "string"},
-                "max_iterations":   {"type": "integer", "default": 8, "minimum": 1},
-                "include_external": {"type": "boolean", "default": False},
+                "project":                          {"type": "string"},
+                "max_iterations":                   {"type": "integer", "default": 8, "minimum": 1},
+                "include_external":                 {"type": "boolean", "default": False},
+                "user_approved_autonomous_iteration": {"type": "boolean", "default": False, "description": "Must be true to allow autonomous iteration; blocks otherwise"},
             },
             "required": ["project"],
             "additionalProperties": False,
@@ -613,5 +618,49 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         input_schema=_project_only(),
         output_schema=ref("gate_report"),
         execution_mode="local",
+    ),
+
+    # -------------------------------------------------------------------
+    # Capabilities / platform introspection
+    # -------------------------------------------------------------------
+    "hw_get_capabilities": ToolDef(
+        name="hw_get_capabilities",
+        description=(
+            "Return available backends, external tools, and which gates each enables. "
+            "Call this before generating to learn which backends are installed and which are release-eligible vs. candidate-only."
+        ),
+        input_schema={"type": "object", "properties": {}, "additionalProperties": False},
+        output_schema=ref("capabilities_result"),
+        execution_mode="local",
+    ),
+
+    # -------------------------------------------------------------------
+    # Release readiness review
+    # -------------------------------------------------------------------
+    "hw_review_release_readiness": ToolDef(
+        name="hw_review_release_readiness",
+        description=(
+            "Summarise release readiness from persisted gate reports, requirements, and assumptions — "
+            "without re-running checks. Returns release_blocking_failures, blocking_gates, and a recommendation. "
+            "Use after hw_run_all_checks to get a human- and agent-readable verdict before hw_export_release_bundle."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("release_readiness_result"),
+    ),
+
+    # -------------------------------------------------------------------
+    # Candidate export (distinct from release export)
+    # -------------------------------------------------------------------
+    "hw_export_candidate_bundle": ToolDef(
+        name="hw_export_candidate_bundle",
+        description=(
+            "Export a candidate bundle ZIP from the current project state. "
+            "Always sets candidate_only=true and release_eligible=false. "
+            "Use for sharing design checkpoints or archiving iteration state. "
+            "To export a release-qualified bundle, use hw_export_release_bundle instead."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("candidate_bundle_result"),
+        execution_mode="async",
     ),
 }

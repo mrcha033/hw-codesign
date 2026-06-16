@@ -316,6 +316,83 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------
+    # capabilities_result — hw_get_capabilities output
+    # -------------------------------------------------------------------
+    "capabilities_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("capabilities_result"),
+        "title": "CapabilitiesResult",
+        "description": "Available backends, external tools, and which gates each enables.",
+        "type": "object",
+        "required": ["status", "backends", "release_eligible_backends", "candidate_only_backends", "external_tools", "missing_external_gates", "platform_root"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                   {"type": "string"},
+            "backends":                 {"type": "object", "additionalProperties": True},
+            "release_eligible_backends": {"type": "array", "items": {"type": "string"}},
+            "candidate_only_backends":  {"type": "array", "items": {"type": "string"}},
+            "external_tools":           {"type": "object", "additionalProperties": True},
+            "missing_external_gates":   {"type": "array", "items": {"type": "string"}},
+            "platform_root":            {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # release_readiness_result — hw_review_release_readiness output
+    # -------------------------------------------------------------------
+    "release_readiness_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("release_readiness_result"),
+        "title": "ReleaseReadinessResult",
+        "description": "Aggregated release-readiness summary from persisted gate reports, requirements, and assumptions.",
+        "type": "object",
+        "required": ["status", "release_eligible", "candidate_only", "release_blocking_failures", "project", "revision", "backend", "backend_release_eligible", "gate_data", "gate_summary", "blocking_gates", "blocker_categories", "assumptions", "recommendation"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                    {"type": "string", "enum": ["pass", "fail", "blocked"]},
+            "release_eligible":          {"type": "boolean"},
+            "candidate_only":            {"type": "boolean"},
+            "release_blocking_failures": {"type": "array", "items": {"type": "string"}},
+            "project":                   {"type": "string"},
+            "revision":                  {"type": "string"},
+            "backend":                   {"type": "string"},
+            "backend_release_eligible":  {"type": "boolean"},
+            "gate_data":                 {"type": "string", "enum": ["persisted", "none"]},
+            "gate_summary":              {"type": "object"},
+            "blocking_gates":            {"type": "array", "items": {"type": "object"}},
+            "blocker_categories":        {"type": "array", "items": {"type": "string"}},
+            "requirements":              {"type": ["object", "null"]},
+            "assumptions":               {"type": "object"},
+            "physical_qualification_gaps": {"type": "array", "items": {"type": "string"}},
+            "recommendation":            {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # candidate_bundle_result — hw_export_candidate_bundle output
+    # -------------------------------------------------------------------
+    "candidate_bundle_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("candidate_bundle_result"),
+        "title": "CandidateBundleResult",
+        "description": "Candidate bundle export — not release-eligible. Distinct from release_bundle_result.",
+        "type": "object",
+        "required": ["status", "candidate_only", "release_eligible", "release_blocking_failures", "iteration_id", "backend", "gate_status", "bundle", "path"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                    {"type": "string", "const": "candidate"},
+            "candidate_only":            {"type": "boolean", "const": True},
+            "release_eligible":          {"type": "boolean", "const": False},
+            "release_blocking_failures": {"type": "array", "items": {"type": "string"}},
+            "iteration_id":              {"type": "string"},
+            "backend":                   {"type": "string"},
+            "gate_status":               {"type": "string"},
+            "bundle":                    {"type": "string"},
+            "path":                      {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
     # opaque_result — explicit fallback for not-yet-modeled outputs
     # -------------------------------------------------------------------
     "opaque_result": {
