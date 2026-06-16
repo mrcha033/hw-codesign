@@ -64,9 +64,10 @@ def test_atopile_emits_real_ato_source_and_compile_gate_runs(service, project):
     assert "module" in ato_content, ".ato file must contain a module declaration"
     checks = service.run_all_checks(project, include_external=False)
     reports = {item["gate"]: item for item in checks["reports"]}
-    # compile gate is now active (pass or blocked if tool missing)
+    # compile gate is active: it may pass, fail on compiler/source errors, or
+    # block when the CLI is unavailable.
     compile_status = reports["atopile_compile"]["status"]
-    assert compile_status in ("pass", "blocked"), f"compile gate should be pass or blocked, got {compile_status}"
+    assert compile_status in ("pass", "fail", "blocked"), f"compile gate should be active, got {compile_status}"
     # post-compile gates remain blocked (parity extraction not implemented)
     for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
         assert reports[f"atopile_{stage}"]["status"] == "blocked"

@@ -26,30 +26,11 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
         import shutil
         shutil.rmtree(source / "tscircuit", ignore_errors=True)
         (project / "electronics" / "generated" / "tscircuit_netlist.json").unlink(missing_ok=True)
-    channels = int(spec["actuation"]["motor_channels"])
     header = "---\nartifact_type: design_intent\ncompiled: false\nrelease_eligible: false\nsource_of_truth: false\nbackend: reference\n---\n\n"
-    mcu_family = spec["compute"]["mcu"]["family"]
-    target_use = spec.get("project", {}).get("target_use", "embedded_system")
-    board_module_lines = [
-        "# Generated high-level hardware intent. Edit spec, then regenerate.",
-        f"module {mcu_family}Board:",
-        f"  mcu = new {mcu_family}",
-        "  power_input = new ProtectedPowerInput",
-    ]
-    if spec.get("sensing", {}).get("imu") == "required":
-        board_module_lines.append("  imu = new IMU")
-    if channels > 0:
-        board_module_lines.append(f"  motor_channels = new MotorChannel[{channels}]")
-    if spec.get("safety", {}).get("emergency_stop", {}).get("required"):
-        board_module_lines.append("  emergency_stop = new FailSafeEmergencyStop")
-    board = header + "\n".join(board_module_lines) + "\n"
-    supply_type = spec.get("system", {}).get("supply", {}).get("battery", {}).get("type", "battery")
-    if supply_type == "usb_pd":
-        power = header + "# USB-C power input and rail intent\nUSB5V -> fuse_or_efuse -> tvs -> regulator_3v3\n"
-    else:
-        power = header + "# VBAT protection and rail intent\nVBAT -> fuse_or_efuse -> reverse_polarity -> tvs -> controller power\nVBAT -> buck_5v -> regulator_3v3\n"
-    motors = header + f"# Channel intent\nchannels = {channels}\npeak_current_per_channel_a = {spec['actuation']['motor_channel_peak_current_a']}\n"
-    files = {"board.intent.md": board, "power_tree.intent.md": power, "motor_channels.intent.md": motors, "sensor_bus.intent.md": header + "# IMU and external sensor buses\n", "connectors.intent.md": header + "# Exposed power and debug connectors\n"}
+    files = _electronics_intent_files(spec, header)
+    for stale_intent in intent.glob("*.intent.md"):
+        if stale_intent.name not in files:
+            stale_intent.unlink()
     for name, content in files.items():
         atomic_write_text(intent / name, content)
     graph = build_graph(spec)
@@ -78,6 +59,43 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
     graph_path = project / "electronics" / "generated" / "electrical_graph.json"
     write_json(graph_path, graph)
     return [str(intent / name) for name in files] + [str(graph_path), *generate_kicad(project, spec, graph)], [item for item in graph["component_resolution"]], resolution_report.to_dict()
+
+
+def _electronics_intent_files(spec: dict[str, Any], header: str) -> dict[str, str]:
+    channels = int(spec["actuation"]["motor_channels"])
+    mcu_family = spec["compute"]["mcu"]["family"]
+    role_set = spec.get("electronics", {}).get("role_set", "")
+    supply_type = spec.get("system", {}).get("supply", {}).get("battery", {}).get("type", "battery")
+    board_module_lines = [
+        "# Generated high-level hardware intent. Edit spec, then regenerate.",
+        f"module {mcu_family}Board:",
+        f"  mcu = new {mcu_family}",
+    ]
+    if supply_type == "usb_pd":
+        board_module_lines.append("  power_input = new UsbCPowerInput")
+    else:
+        board_module_lines.append("  power_input = new ProtectedPowerInput")
+    if spec.get("sensing", {}).get("imu") == "required":
+        board_module_lines.append("  imu = new IMU")
+    if channels > 0:
+        board_module_lines.append(f"  motor_channels = new MotorChannel[{channels}]")
+    if spec.get("safety", {}).get("emergency_stop", {}).get("required"):
+        board_module_lines.append("  emergency_stop = new FailSafeEmergencyStop")
+
+    files = {
+        "board.intent.md": header + "\n".join(board_module_lines) + "\n",
+        "sensor_bus.intent.md": header + "# IMU and external sensor buses\n",
+        "connectors.intent.md": header + "# Exposed power and debug connectors\n",
+    }
+    if supply_type == "usb_pd":
+        files["power_tree.intent.md"] = header + "# USB-C power input and rail intent\nUSB_VBUS -> usb_esd -> regulator_3v3\n"
+    else:
+        files["power_tree.intent.md"] = header + "# VBAT protection and rail intent\nVBAT -> fuse_or_efuse -> reverse_polarity -> tvs -> controller power\nVBAT -> buck_5v -> regulator_3v3\n"
+    if channels > 0:
+        files["motor_channels.intent.md"] = header + f"# Channel intent\nchannels = {channels}\npeak_current_per_channel_a = {spec['actuation']['motor_channel_peak_current_a']}\n"
+    elif role_set == "sensor_data_logger":
+        files["data_logger.intent.md"] = header + "# Sensor data logger intent\nusb_console = required\ni2c_imu = required\nlocal_storage = not_modelled\n"
+    return files
 
 
 def generate_mechanical(project: Path, spec: dict[str, Any], graph: dict[str, Any] | None = None) -> list[str]:
@@ -137,16 +155,49 @@ def _pin_assignments(channels: int) -> list[dict[str, Any]]:
     return assignments
 
 
+def firmware_profile(spec: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
+    if graph.get("design_basis", {}).get("architecture") == "esp32s3_usb_i2c_sensor_data_logger":
+        return {
+            "project": "sensor_data_logger",
+            "reference_project": "sensor_data_logger_bsp",
+            "board_name": "sensor_data_logger",
+            "board_arch": "xtensa",
+            "dts_include": "#include <espressif/esp32s3.dtsi>",
+            "model": "HW Co-design ESP32-S3 Sensor Data Logger",
+            "compatible": "hw,sensor-data-logger",
+            "defconfig": "CONFIG_SOC_ESP32S3=y\nCONFIG_BOARD_SENSOR_DATA_LOGGER=y\n",
+            "kconfig_board": 'config BOARD_SENSOR_DATA_LOGGER\n  bool "ESP32-S3 Sensor Data Logger"\n',
+            "kconfig_default": 'if BOARD_SENSOR_DATA_LOGGER\nconfig BOARD\n  default "sensor_data_logger"\nendif\n',
+            "prj_conf": "CONFIG_GPIO=y\nCONFIG_I2C=y\nCONFIG_UART_CONSOLE=y\n",
+            "tests": {"test_i2c_imu.c": "/* Bring-up test stub: verify IMU identity and samples. */\n", "test_usb_console.c": "/* Bring-up test stub: verify USB console enumeration. */\n"},
+        }
+    return {
+        "project": "robot_controller",
+        "reference_project": "robot_controller_bsp",
+        "board_name": "robot_controller",
+        "board_arch": "arm",
+        "dts_include": "#include <st/h7/stm32h743Xi.dtsi>",
+        "model": "HW Co-design Robot Controller",
+        "compatible": "hw,robot-controller",
+        "defconfig": "CONFIG_SOC_STM32H743XX=y\nCONFIG_BOARD_ROBOT_CONTROLLER=y\n",
+        "kconfig_board": 'config BOARD_ROBOT_CONTROLLER\n  bool "Robot Controller"\n',
+        "kconfig_default": 'if BOARD_ROBOT_CONTROLLER\nconfig BOARD\n  default "robot_controller"\nendif\n',
+        "prj_conf": "CONFIG_GPIO=y\nCONFIG_I2C=y\nCONFIG_CAN=y\nCONFIG_PWM=y\n",
+        "tests": {"test_i2c_imu.c": "/* Bring-up test stub: verify IMU identity and samples. */\n", "test_motor_pwm.c": "/* Bring-up test stub: scope PWM with motor power disabled. */\n"},
+    }
+
+
 def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any] | None = None) -> list[str]:
     generated = project / "firmware" / "generated"
     app = project / "firmware" / "zephyr" / "app"
     graph = graph or json.loads((project / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    profile = firmware_profile(spec, graph)
     mcu = next((item for item in graph.get("components", []) if item.get("category") == "mcu"), None)
     assignments = []
     if mcu:
         for item in mcu.get("pins", []):
             net = item.get("net", "")
-            if net not in {"V3V3", "GND", "SWDIO", "SWCLK", "NRST", "USB_DP", "USB_DM", "IMU_INT"}:
+            if net not in {"V3V3", "GND", "SWDIO", "SWCLK", "NRST"}:
                 assignments.append({"signal": net, "mcu_pin": item.get("mcu_pin", item["name"]), "net_name": net, "graph_pin": f"{mcu['ref']}.{item['number']}"})
     write_json(generated / "pinmap.json", assignments)
     pinmap = "#pragma once\n\n" + "\n".join(f'#define PIN_{item["signal"]} "{item["mcu_pin"]}"' for item in assignments) + "\n"
@@ -155,23 +206,32 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     atomic_write_text(generated / "devicetree.overlay", overlay)
     atomic_write_text(generated / "board.cmake", "# Generated Zephyr board integration entrypoint.\n")
     atomic_write_text(generated / "kconfig.defconfig", "# Generated project defaults.\n")
-    atomic_write_text(app / "CMakeLists.txt", "cmake_minimum_required(VERSION 3.20.0)\nfind_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})\nproject(robot_controller)\ntarget_sources(app PRIVATE src/main.c)\n")
-    atomic_write_text(app / "prj.conf", "CONFIG_GPIO=y\nCONFIG_I2C=y\nCONFIG_CAN=y\nCONFIG_PWM=y\n")
+    atomic_write_text(app / "CMakeLists.txt", f"cmake_minimum_required(VERSION 3.20.0)\nfind_package(Zephyr REQUIRED HINTS $ENV{{ZEPHYR_BASE}})\nproject({profile['project']})\ntarget_sources(app PRIVATE src/main.c)\n")
+    atomic_write_text(app / "prj.conf", profile["prj_conf"])
     atomic_write_text(app / "src" / "main.c", '#include <zephyr/kernel.h>\nint main(void) { return 0; }\n')
     tests = project / "firmware" / "zephyr" / "tests"
-    atomic_write_text(tests / "test_i2c_imu.c", "/* Bring-up test stub: verify IMU identity and samples. */\n")
-    atomic_write_text(tests / "test_motor_pwm.c", "/* Bring-up test stub: scope PWM with motor power disabled. */\n")
-    board_dir = project / "firmware" / "zephyr" / "boards" / "arm" / "robot_controller"
-    atomic_write_text(board_dir / "robot_controller.dts", '/dts-v1/;\n#include <st/h7/stm32h743Xi.dtsi>\n/ { model = "HW Co-design Robot Controller"; compatible = "hw,robot-controller"; chosen { zephyr,console = &usart3; }; };\n')
-    atomic_write_text(board_dir / "robot_controller_defconfig", "CONFIG_SOC_STM32H743XX=y\nCONFIG_BOARD_ROBOT_CONTROLLER=y\n")
-    atomic_write_text(board_dir / "Kconfig.board", 'config BOARD_ROBOT_CONTROLLER\n  bool "Robot Controller"\n')
-    atomic_write_text(board_dir / "Kconfig.defconfig", 'if BOARD_ROBOT_CONTROLLER\nconfig BOARD\n  default "robot_controller"\nendif\n')
+    tests.mkdir(parents=True, exist_ok=True)
+    for stale_test in tests.glob("test_*.c"):
+        if stale_test.name not in profile["tests"]:
+            stale_test.unlink()
+    for name, content in profile["tests"].items():
+        atomic_write_text(tests / name, content)
+    board_dir = project / "firmware" / "zephyr" / "boards" / profile["board_arch"] / profile["board_name"]
+    board_name = profile["board_name"]
+    atomic_write_text(board_dir / f"{board_name}.dts", f'/dts-v1/;\n{profile["dts_include"]}\n/ {{ model = "{profile["model"]}"; compatible = "{profile["compatible"]}"; chosen {{ zephyr,console = &usart3; }}; }};\n')
+    atomic_write_text(board_dir / f"{board_name}_defconfig", profile["defconfig"])
+    atomic_write_text(board_dir / "Kconfig.board", profile["kconfig_board"])
+    atomic_write_text(board_dir / "Kconfig.defconfig", profile["kconfig_default"])
     reference = project / "firmware" / "reference"
-    atomic_write_text(reference / "CMakeLists.txt", "cmake_minimum_required(VERSION 3.20)\nproject(robot_controller_bsp C)\nenable_testing()\nadd_library(board_bsp src/board.c)\ntarget_include_directories(board_bsp PUBLIC include ../generated)\nadd_executable(bringup_tests tests/bringup_tests.c)\ntarget_link_libraries(bringup_tests PRIVATE board_bsp)\nadd_test(NAME bringup_tests COMMAND bringup_tests)\n")
+    motor_pwm_count = len([item for item in assignments if item["signal"].endswith("_PWM")])
+    pin_self_test = " && ".join(f'PIN_{item["signal"]}[0] != 0' for item in assignments) or "1"
+    estop_required = bool(spec.get("safety", {}).get("emergency_stop", {}).get("required"))
+    estop_assert = " assert(board_estop_is_fail_safe());" if estop_required else ""
+    atomic_write_text(reference / "CMakeLists.txt", f"cmake_minimum_required(VERSION 3.20)\nproject({profile['reference_project']} C)\nenable_testing()\nadd_library(board_bsp src/board.c)\ntarget_include_directories(board_bsp PUBLIC include ../generated)\nadd_executable(bringup_tests tests/bringup_tests.c)\ntarget_link_libraries(bringup_tests PRIVATE board_bsp)\nadd_test(NAME bringup_tests COMMAND bringup_tests)\n")
     atomic_write_text(reference / "include" / "board.h", "#pragma once\n#include <stddef.h>\nsize_t board_motor_channel_count(void);\nint board_estop_is_fail_safe(void);\nint board_pinmap_self_test(void);\n")
-    atomic_write_text(reference / "src" / "board.c", f'#include "board.h"\n#include "pinmap.h"\nsize_t board_motor_channel_count(void) {{ return {len([item for item in assignments if item["signal"].endswith("_PWM")])}; }}\nint board_estop_is_fail_safe(void) {{ return 1; }}\nint board_pinmap_self_test(void) {{ return PIN_ESTOP_IN[0] != 0 && PIN_I2C_IMU_SCL[0] != 0; }}\n')
-    atomic_write_text(reference / "tests" / "bringup_tests.c", f'#include "board.h"\n#include <assert.h>\n#include <stdio.h>\nint main(void) {{ assert(board_motor_channel_count() == {len([item for item in assignments if item["signal"].endswith("_PWM")])}); assert(board_estop_is_fail_safe()); assert(board_pinmap_self_test()); puts("bringup tests passed"); return 0; }}\n')
-    return [str(path) for path in sorted(generated.iterdir()) if path.name != "provenance.json"] + [str(app / "src" / "main.c"), str(tests / "test_i2c_imu.c"), str(tests / "test_motor_pwm.c"), str(board_dir / "robot_controller.dts"), str(reference / "CMakeLists.txt")]
+    atomic_write_text(reference / "src" / "board.c", f'#include "board.h"\n#include "pinmap.h"\nsize_t board_motor_channel_count(void) {{ return {motor_pwm_count}; }}\nint board_estop_is_fail_safe(void) {{ return {1 if estop_required else 0}; }}\nint board_pinmap_self_test(void) {{ return {pin_self_test}; }}\n')
+    atomic_write_text(reference / "tests" / "bringup_tests.c", f'#include "board.h"\n#include <assert.h>\n#include <stdio.h>\nint main(void) {{ assert(board_motor_channel_count() == {motor_pwm_count});{estop_assert} assert(board_pinmap_self_test()); puts("bringup tests passed"); return 0; }}\n')
+    return [str(path) for path in sorted(generated.iterdir()) if path.name != "provenance.json"] + [str(app / "src" / "main.c"), *[str(tests / name) for name in sorted(profile["tests"])], str(board_dir / f"{board_name}.dts"), str(reference / "CMakeLists.txt")]
 
 
 def generate_bom(project: Path) -> str:

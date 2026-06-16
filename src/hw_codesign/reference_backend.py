@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .artifacts import box_stl, deterministic_zip, step_box
-from .electronics_design import build_controller_graph
+from .electronics_design import build_controller_graph, build_sensor_data_logger_graph
 from .io import atomic_write_text, write_json
 from .models import Failure, FailureCategory, GateReport, Status
 from .pcb_router import route_board
@@ -29,6 +29,8 @@ PARTS = {
 
 
 def build_graph(spec: dict[str, Any]) -> dict[str, Any]:
+    if spec.get("project", {}).get("template") == "sensor_data_logger" or spec.get("electronics", {}).get("role_set") == "sensor_data_logger":
+        return build_sensor_data_logger_graph(spec)
     return build_controller_graph(spec)
 
 
@@ -44,7 +46,7 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
             stale.unlink()
     pro = {"board": {"design_settings": {"rules": {"min_clearance": spec["manufacturing"]["pcb"]["min_clearance_mm"], "min_track_width": spec["manufacturing"]["pcb"]["min_track_width_mm"]}}}, "meta": {"filename": f"{name}.kicad_pro", "version": 1}}
     write_json(target / f"{name}.kicad_pro", pro)
-    schematic = _legacy_schematic(graph)
+    schematic = _legacy_schematic(spec, graph)
     atomic_write_text(target / f"{name}.sch", schematic)
     generate_kicad_schematic(name, graph, target / f"{name}.kicad_sch")
     board_text, routing_failures = _kicad_board(spec, graph)
@@ -64,8 +66,9 @@ def _kicad_schematic_stub(name: str, graph: dict[str, Any]) -> str:
     return f'(kicad_sch (version 20231120) (generator hw_codesign) (uuid 00000000-0000-0000-0000-000000000001) (paper "A4")\n  (lib_symbols)\n{labels}\n  (sheet_instances (path "/" (page "1")))\n)\n'
 
 
-def _legacy_schematic(graph: dict[str, Any]) -> str:
-    lines = ["EESchema Schematic File Version 4", "LIBS:power", "EELAYER 29 0", "EELAYER END", "$Descr A4 11693 8268", "Sheet 1 1", "Title \"Robot Controller\"", "$EndDescr"]
+def _legacy_schematic(spec: dict[str, Any], graph: dict[str, Any]) -> str:
+    title = _design_title(spec, graph)
+    lines = ["EESchema Schematic File Version 4", "LIBS:power", "EELAYER 29 0", "EELAYER END", "$Descr A4 11693 8268", "Sheet 1 1", f"Title \"{title}\"", "$EndDescr"]
     for index, item in enumerate(graph["components"]):
         x, y = 1500 + (index % 4) * 2000, 1200 + (index // 4) * 900
         lines.extend(("$Comp", f"L Connector_Generic:Conn_01x02 {item['ref']}", f"U 1 1 {1000 + index:X}", f"P {x} {y}", f"F 0 \"{item['ref']}\" H {x + 80} {y + 200} 50  0000 C CNN", f"F 1 \"{item['value']}\" H {x + 80} {y - 200} 50  0000 C CNN", f"F 2 \"{item['footprint']}\" H {x} {y} 50  0001 C CNN", "\t1    0    0    -1", "$EndComp"))
@@ -76,7 +79,7 @@ def _legacy_schematic(graph: dict[str, Any]) -> str:
 def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
     env = spec["mechanical"]["envelope"]
     width, height = env["board_width_mm"], env["board_height_mm"]
-    layers = '\n'.join(('    (0 "F.Cu" signal)', '    (2 "In1.Cu" power)', '    (4 "In2.Cu" power)', '    (31 "B.Cu" signal)', '    (36 "B.SilkS" user "b.silkscreen")', '    (37 "F.SilkS" user "f.silkscreen")', '    (38 "B.Mask" user)', '    (39 "F.Mask" user)', '    (44 "Edge.Cuts" user)'))
+    layers, copper_layers, plane_layers = _kicad_stackup(spec)
     net_ids = {item["name"]: index for index, item in enumerate(graph["nets"], 1)}
     routed_nets = [{**item, "id": net_ids[item["name"]]} for item in graph["nets"]]
     net_declarations = "\n".join(f'  (net {index} "{name}")' for name, index in net_ids.items())
@@ -107,10 +110,11 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
     (property "Substitute_MPN" "{item.get('substitute_mpn') or ''}")
     (fp_rect (start {body_start_x:.3f} -1) (end {body_end_x:.3f} {body_height:.3f}) (stroke (width 0.2) (type default)) (fill none) (layer "F.Fab"))
 {chr(10).join(pads)})''')
-    segments, vias, routing_failures = route_board(routed_nets, pad_positions, width, height, route_signals=False)
-    plane_layers = {"GND": "In1.Cu", "V5": "In2.Cu", "V3V3": "B.Cu"}
+    segments, vias, routing_failures = route_board(routed_nets, pad_positions, width, height, route_signals=False, layers=copper_layers, plane_layer_by_net=plane_layers)
     zones = []
     for net_name, layer in plane_layers.items():
+        if net_name not in net_ids:
+            continue
         zones.append(f'''  (zone (net {net_ids[net_name]}) (net_name "{net_name}") (layer "{layer}") (hatch edge 0.5)
     (connect_pads (clearance 0.25))
     (min_thickness 0.25)
@@ -131,8 +135,37 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
 )\n''', routing_failures
 
 
+def _design_title(spec: dict[str, Any], graph: dict[str, Any]) -> str:
+    architecture = graph.get("design_basis", {}).get("architecture")
+    if architecture == "esp32s3_usb_i2c_sensor_data_logger":
+        return "ESP32-S3 Sensor Data Logger"
+    if spec.get("project", {}).get("template") == "sensor_data_logger" or spec.get("electronics", {}).get("role_set") == "sensor_data_logger":
+        return "ESP32-S3 Sensor Data Logger"
+    return "Robot Controller"
+
+
+def _kicad_stackup(spec: dict[str, Any]) -> tuple[str, tuple[str, ...], dict[str, str]]:
+    requested_layers = int(spec.get("manufacturing", {}).get("pcb", {}).get("layers", 2))
+    common = (
+        '    (36 "B.SilkS" user "b.silkscreen")',
+        '    (37 "F.SilkS" user "f.silkscreen")',
+        '    (38 "B.Mask" user)',
+        '    (39 "F.Mask" user)',
+        '    (44 "Edge.Cuts" user)',
+    )
+    if requested_layers <= 2:
+        layer_lines = ('    (0 "F.Cu" signal)', '    (31 "B.Cu" signal)', *common)
+        return "\n".join(layer_lines), ("F.Cu", "B.Cu"), {"GND": "B.Cu"}
+    layer_lines = ('    (0 "F.Cu" signal)', '    (2 "In1.Cu" power)', '    (4 "In2.Cu" power)', '    (31 "B.Cu" signal)', *common)
+    return "\n".join(layer_lines), ("F.Cu", "In1.Cu", "In2.Cu", "B.Cu"), {"GND": "In1.Cu", "V5": "In2.Cu", "V3V3": "B.Cu"}
+
+
 def internal_erc(graph: dict[str, Any]) -> GateReport:
-    required = {"mcu", "imu", "regulator", "can", "motor_io", "fuse", "reverse_polarity", "tvs", "efuse", "safety_gate"}
+    architecture = graph.get("design_basis", {}).get("architecture")
+    if architecture == "esp32s3_usb_i2c_sensor_data_logger":
+        required = {"power_input", "tvs", "regulator", "mcu", "imu", "debug"}
+    else:
+        required = {"mcu", "imu", "regulator", "can", "motor_io", "fuse", "reverse_polarity", "tvs", "efuse", "safety_gate"}
     present = {item["category"] for item in graph["components"]}
     missing = sorted(required - present)
     failures = [Failure(FailureCategory.EDA_ERROR, "missing_required_block", f"Missing schematic block: {item}") for item in missing]

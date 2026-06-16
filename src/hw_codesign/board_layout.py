@@ -17,6 +17,21 @@ _ANCHORS: dict[str, tuple[float, float]] = {
     "U1": (70.0, 37.0),
 }
 
+_SENSOR_DATA_LOGGER_ANCHORS: dict[str, tuple[float, float]] = {
+    "J1": (18.0, 4.0),
+    "D1": (30.0, 10.0),
+    "U3": (44.0, 12.0),
+    "U1": (38.0, 28.0),
+    "U2": (18.0, 28.0),
+    "J2": (58.0, 44.0),
+    "R1": (18.0, 38.0),
+    "R2": (27.0, 38.0),
+    "R3": (50.0, 25.0),
+    "C1": (35.0, 39.0),
+    "C2": (44.0, 39.0),
+    "C9": (56.0, 14.0),
+}
+
 
 def _seed_table() -> dict[str, tuple[tuple[float, float], str]]:
     """Provenance-tagged seed coordinates.
@@ -36,13 +51,20 @@ def _seed_table() -> dict[str, tuple[tuple[float, float], str]]:
     return table
 
 
+def _sensor_data_logger_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
+    return {
+        ref: (xy, "sensor_data_logger_anchor")
+        for ref, xy in _SENSOR_DATA_LOGGER_ANCHORS.items()
+    }
+
+
 def _grid_fallback(index: int) -> tuple[float, float]:
     return (10.0 + (index % 7) * 20.0, 10.0 + (index // 7) * 15.0)
 
 
 def component_positions(graph: dict[str, Any]) -> dict[str, tuple[float, float]]:
     """Backward-compatible coordinate lookup (ref -> (x_mm, y_mm))."""
-    table = _seed_table()
+    table = _seed_table_for_graph(graph)
     return {
         item["ref"]: table[item["ref"]][0] if item["ref"] in table else _grid_fallback(index)
         for index, item in enumerate(graph.get("components", []))
@@ -51,8 +73,14 @@ def component_positions(graph: dict[str, Any]) -> dict[str, tuple[float, float]]
 
 def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
     """Provenance tag for each placed reference (mirrors ``component_positions``)."""
-    table = _seed_table()
+    table = _seed_table_for_graph(graph)
     return {
         item["ref"]: table[item["ref"]][1] if item["ref"] in table else "grid_fallback"
         for item in graph.get("components", [])
     }
+
+
+def _seed_table_for_graph(graph: dict[str, Any]) -> dict[str, tuple[tuple[float, float], str]]:
+    if graph.get("design_basis", {}).get("architecture") == "esp32s3_usb_i2c_sensor_data_logger":
+        return _sensor_data_logger_seed_table()
+    return _seed_table()

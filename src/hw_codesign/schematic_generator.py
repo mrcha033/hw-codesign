@@ -23,8 +23,9 @@ def generate_kicad_schematic(name: str, graph: dict[str, Any], output: Path) -> 
 
     for item in components:
         pins = item["pins"]
+        symbol_pin_count = _symbol_pin_count(pins)
         symbol = schematic.components.add(
-            f"Connector_Generic:Conn_01x{len(pins):02d}",
+            f"Connector_Generic:Conn_01x{symbol_pin_count:02d}",
             item["ref"],
             item["value"],
             position=positions[item["ref"]],
@@ -63,6 +64,11 @@ def _normalize_uuids(path: Path, namespace: str) -> None:
         return replacements[source]
 
     path.write_text(UUID_PATTERN.sub(replace, text), encoding="utf-8")
+
+
+def _symbol_pin_count(pins: list[dict[str, Any]]) -> int:
+    numeric = [int(str(pin["number"])) for pin in pins if str(pin.get("number", "")).isdigit()]
+    return max(numeric, default=len(pins))
 
 
 def _reference_key(reference: str) -> tuple[str, int]:

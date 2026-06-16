@@ -187,10 +187,17 @@ class Validator:
         for assignment in assignments:
             if assignment.get("net_name") not in hardware_nets:
                 failures.append(_failure(FailureCategory.FIRMWARE_ERROR, "missing_hardware_net", f"Firmware signal has no electrical net: {assignment.get('net_name')}", "firmware.pin_assignments"))
-        required_prefixes = ("MOTOR", "CAN_", "I2C_IMU_", "ESTOP_")
         firmware_nets = {item.get("net_name") for item in assignments}
-        for net in hardware_nets:
-            if net.startswith(required_prefixes) and net not in firmware_nets and not net.endswith(("CURRENT", "ENC")) and net not in {"CANH", "CANL", "ESTOP_GATE"}:
+        ignored_mcu_nets = {"V3V3", "V5", "GND", "SWDIO", "SWCLK", "NRST"}
+        required_nets = {
+            pin.get("net")
+            for component in graph.get("components", [])
+            if component.get("category") == "mcu"
+            for pin in component.get("pins", [])
+            if pin.get("role") not in {"power_in", "power_out", "ground"} and pin.get("net") not in ignored_mcu_nets
+        }
+        for net in sorted(required_nets):
+            if net not in firmware_nets:
                 failures.append(_failure(FailureCategory.FIRMWARE_ERROR, "missing_firmware_assignment", f"Electrical signal lacks firmware assignment: {net}", "electronics.nets"))
         return self._report("hw_sw_parity", failures)
 

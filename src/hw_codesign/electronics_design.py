@@ -78,6 +78,89 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
     return {"components": components, "nets": nets, "design_basis": {"motor_topology": "external_driver_modules", "board_carries_motor_power": False, "max_simultaneous_peak_channels": min(channels, 10), "architecture": "protected_controller_and_external_driver_io"}}
 
 
+def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
+    components = [
+        component("J1", "power_input", "USB-C POWER", "USB4105-GF-A", "USB_C_16Pin", [
+            pin(1, "VBUS", "USB_VBUS", "power_in"),
+            pin(2, "GND", "GND", "ground"),
+            pin(3, "D+", "USB_DP_RAW", "bidirectional"),
+            pin(4, "D-", "USB_DM_RAW", "bidirectional"),
+        ], manufacturer="GCT"),
+        component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", [
+            pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
+            pin(2, "DP_OUT", "USB_DP", "bidirectional"),
+            pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"),
+            pin(4, "DM_OUT", "USB_DM", "bidirectional"),
+            pin(5, "GND", "GND", "ground"),
+        ], manufacturer="STMicroelectronics"),
+        component("U3", "regulator", "3V3 Buck", "TPS62133RGTR", "VQFN16", [
+            pin(1, "VIN", "USB_VBUS", "power_in"),
+            pin(2, "VOUT", "V3V3", "power_out"),
+            pin(3, "GND", "GND", "ground"),
+        ], manufacturer="Texas Instruments"),
+        component("U1", "mcu", "ESP32-S3-WROOM-1", "ESP32-S3-WROOM-1-N8", "RF_Module:ESP32-S3-WROOM-1", [
+            pin(1, "GND", "GND", "ground"),
+            pin(2, "3V3", "V3V3", "power_in"),
+            {**pin(3, "EN", "ESP_EN", "input"), "mcu_pin": "EN"},
+            {**pin(12, "IO8", "I2C_IMU_SCL", "open_drain"), "mcu_pin": "GPIO8"},
+            {**pin(13, "USB_D-", "USB_DM", "bidirectional"), "mcu_pin": "USB_D-"},
+            {**pin(14, "USB_D+", "USB_DP", "bidirectional"), "mcu_pin": "USB_D+"},
+            {**pin(15, "IO3", "I2C_IMU_SDA", "open_drain"), "mcu_pin": "GPIO3"},
+            {**pin(27, "IO0", "BOOT", "input"), "mcu_pin": "GPIO0"},
+            {**pin(36, "RXD0", "UART_RX", "input"), "mcu_pin": "RXD0"},
+            {**pin(37, "TXD0", "UART_TX", "output"), "mcu_pin": "TXD0"},
+            {**pin(39, "IO1", "IMU_INT", "input"), "mcu_pin": "GPIO1"},
+            pin(40, "GND", "GND", "ground"),
+            pin(41, "GND", "GND", "ground"),
+        ], manufacturer="Espressif Systems"),
+        component("U2", "imu", "ICM-42688-P", "ICM-42688-P", "LGA14", [
+            pin(1, "VDD", "V3V3", "power_in"),
+            pin(2, "GND", "GND", "ground"),
+            pin(3, "SCL", "I2C_IMU_SCL", "open_drain"),
+            pin(4, "SDA", "I2C_IMU_SDA", "open_drain"),
+            pin(5, "INT1", "IMU_INT", "output"),
+        ], manufacturer="TDK InvenSense"),
+        component("J2", "debug", "UART DEBUG", "Samtec-FTSH-105-01-L-DV-K", "Cortex_Debug_10Pin", [
+            pin(1, "VREF", "V3V3", "power_out"),
+            pin(2, "TXD", "UART_TX", "output"),
+            pin(3, "RXD", "UART_RX", "input"),
+            pin(4, "BOOT", "BOOT", "input"),
+            pin(5, "GND", "GND", "ground"),
+        ], manufacturer="Samtec"),
+        component("R1", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SCL", "I2C_IMU_SCL", "passive")], manufacturer="Yageo"),
+        component("R2", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SDA", "I2C_IMU_SDA", "passive")], manufacturer="Yageo"),
+        component("R3", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "EN", "ESP_EN", "passive")], manufacturer="Yageo"),
+        component("C1", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
+        component("C2", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
+        component("C9", "bulk_cap", "22uF", "GRM31CR61E226ME15L", "C1206", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
+    ]
+    net_classes = {"GND": "ground", "USB_VBUS": "power", "V3V3": "power", "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb"}
+    endpoints: dict[str, list[str]] = defaultdict(list)
+    for item in components:
+        for item_pin in item["pins"]:
+            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+    nets = [
+        {
+            "name": name,
+            "signal_class": net_classes.get(name, "i2c" if name.startswith("I2C_") else "signal"),
+            "voltage_domain": _domain(name),
+            "connected_pins": sorted(pins),
+            "required_track_width_mm": 0.5 if net_classes.get(name) == "power" else 0.15,
+        }
+        for name, pins in sorted(endpoints.items())
+    ]
+    return {
+        "components": components,
+        "nets": nets,
+        "design_basis": {
+            "architecture": "esp32s3_usb_i2c_sensor_data_logger",
+            "usb_powered": True,
+            "integral_antenna_keepout_required": True,
+            "board_carries_motor_power": False,
+        },
+    }
+
+
 def _domain(name: str) -> str | None:
     if name == "GND": return "GND"
     if name.startswith("VBAT") or name == "VSYS": return "VBAT"

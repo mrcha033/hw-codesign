@@ -20,7 +20,7 @@ from .backends.python_netlist import PythonNetlistBackend
 from .backends.atopile import AtopileBackend
 from .backends.electronics import CONTRACT_STAGES
 from .artifacts import deterministic_zip, sha256, simple_pdf, write_manifest
-from .generators import generate_bom, generate_electronics, generate_firmware, generate_mechanical
+from .generators import firmware_profile, generate_bom, generate_electronics, generate_firmware, generate_mechanical
 from .io import atomic_write_text, read_yaml, write_json, write_yaml
 from .models import Failure, FailureCategory, GateReport, RepairPatch, Status
 from .policy import ChangePolicy
@@ -335,6 +335,7 @@ class HardwareService:
         if unresolved_assumptions:
             return {"status": "blocked", "code": "unresolved_critical_assumptions", "unresolved": unresolved_assumptions, "reports": checks["reports"]}
         graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+        profile = firmware_profile(spec, graph)
         release = path / "exports" / "releases" / spec["project"]["revision"]
         if release.exists():
             return {"status": "blocked", "code": "release_revision_exists", "release_path": str(release)}
@@ -359,19 +360,19 @@ class HardwareService:
         for name in ("pinmap.h", "devicetree.overlay"):
             source = path / "firmware" / "generated" / name
             (firmware / name).write_bytes(source.read_bytes())
-        atomic_write_text(firmware / "build_instructions.md", "# Firmware Build\n\nReference verification: `cmake -S firmware/reference -B build -G Ninja && cmake --build build && ctest --test-dir build`.\n\nZephyr target: `west build -b robot_controller firmware/zephyr/app`.\n")
+        atomic_write_text(firmware / "build_instructions.md", self._release_firmware_build_instructions(profile))
         docs = staging / "docs"; docs.mkdir(parents=True, exist_ok=True)
         statuses = [f"{item['gate']}: {item['status']}" for item in checks["reports"]]
         atomic_write_text(docs / "design_report.md", "# Design Report\n\n" + "\n".join(f"- {line}" for line in statuses) + "\n")
         write_json(docs / "validation_report.json", checks)
-        atomic_write_text(docs / "bringup_guide.md", "# Bring-up Guide\n\n1. Inspect assembly and verify no shorts with power removed.\n2. Current-limit the bench supply below 0.5 A and apply 24 V through the protected input.\n3. Verify 5 V and 3.3 V rails before fitting the MCU.\n4. Keep motor enable disabled; flash the Zephyr image over SWD.\n5. Verify console, IMU identity, CAN loopback, E-stop latch, then each PWM/encoder/current channel.\n6. Increase load only under instrumented thermal and transient monitoring.\n")
-        atomic_write_text(docs / "known_risks.md", "# Known Risks\n\n- EMI/EMC, full-load thermal behavior, vibration life, battery abuse, motor transients, ingress protection, and connector fatigue require physical qualification.\n- The reference design controls external motor drivers; it does not route 8 A motor phase current through the controller PCB.\n")
-        simple_pdf("Robot Controller Schematic", [f"Components: {len(graph['components'])}", f"Nets: {len(graph['nets'])}", "See KiCad project for editable source."], docs / "schematic.pdf")
+        atomic_write_text(docs / "bringup_guide.md", self._release_bringup_guide(profile))
+        atomic_write_text(docs / "known_risks.md", self._release_known_risks(profile))
+        simple_pdf(f"{profile['model']} Schematic", [f"Components: {len(graph['components'])}", f"Nets: {len(graph['nets'])}", "See KiCad project for editable source."], docs / "schematic.pdf")
         simple_pdf("Assembly Drawing", ["Top-side placement is provided in fabrication/pick_and_place.csv.", "Verify connector orientation before assembly."], docs / "assembly_drawing.pdf")
         simple_pdf("Validation Report", statuses, docs / "validation_report.pdf")
         simple_pdf("Design Report", statuses + ["Physical qualification risks are listed in known_risks.md."], docs / "design_report.pdf")
         simple_pdf("Layout Preview", [f"Board envelope: {spec['mechanical']['envelope']['board_width_mm']} x {spec['mechanical']['envelope']['board_height_mm']} mm", f"Placement entries: {len(graph['components'])}"], docs / "layout_preview.pdf")
-        simple_pdf("Bring-up Guide", ["Current-limit initial power-up.", "Verify rails before MCU operation.", "Test E-stop before motor enable.", "Run each channel with motor power isolated."], docs / "bringup_guide.pdf")
+        simple_pdf("Bring-up Guide", self._release_bringup_pdf_lines(profile), docs / "bringup_guide.pdf")
         (staging / "fabrication" / "assembly_drawing.pdf").write_bytes((docs / "assembly_drawing.pdf").read_bytes())
         provenance = graph.get("provenance", {}) | {"release_eligible": True, "candidate_only": False}
         write_json(staging / "provenance.json", provenance)
@@ -384,6 +385,66 @@ class HardwareService:
         for report in reports:
             report["artifacts"] = [item.replace(str(staging), str(release), 1) for item in report.get("artifacts", [])]
         return {"status": "released", "release_path": str(release), "files": files + [str(release / "firmware" / "source.zip"), manifest], "reports": reports}
+
+    @staticmethod
+    def _release_firmware_build_instructions(profile: dict[str, Any]) -> str:
+        return (
+            "# Firmware Build\n\n"
+            "Reference verification: `cmake -S firmware/reference -B build -G Ninja && cmake --build build && ctest --test-dir build`.\n\n"
+            f"Zephyr target: `west build -b {profile['board_name']} firmware/zephyr/app`.\n"
+        )
+
+    @staticmethod
+    def _release_bringup_guide(profile: dict[str, Any]) -> str:
+        if profile["board_name"] == "sensor_data_logger":
+            return (
+                "# Bring-up Guide\n\n"
+                "1. Inspect assembly and verify no shorts with power removed.\n"
+                "2. Current-limit the USB supply below 0.5 A and apply 5 V through USB-C VBUS.\n"
+                "3. Verify the 3.3 V rail before enabling the ESP32-S3 module.\n"
+                "4. Flash the Zephyr image over the ESP32-S3 USB boot path.\n"
+                "5. Verify USB console enumeration, I2C pullups, IMU identity, and interrupt activity.\n"
+                "6. Increase logging duration only under instrumented thermal and current monitoring.\n"
+            )
+        return (
+            "# Bring-up Guide\n\n"
+            "1. Inspect assembly and verify no shorts with power removed.\n"
+            "2. Current-limit the bench supply below 0.5 A and apply 24 V through the protected input.\n"
+            "3. Verify 5 V and 3.3 V rails before fitting the MCU.\n"
+            "4. Keep motor enable disabled; flash the Zephyr image over SWD.\n"
+            "5. Verify console, IMU identity, CAN loopback, E-stop latch, then each PWM/encoder/current channel.\n"
+            "6. Increase load only under instrumented thermal and transient monitoring.\n"
+        )
+
+    @staticmethod
+    def _release_known_risks(profile: dict[str, Any]) -> str:
+        if profile["board_name"] == "sensor_data_logger":
+            return (
+                "# Known Risks\n\n"
+                "- EMI/EMC, USB signal integrity, antenna keepout effectiveness, enclosure detuning, ESD robustness, connector fatigue, and logging endurance require physical qualification.\n"
+                "- The secondary reference design is USB-powered and does not validate battery, motor, CAN, or high-current power behavior.\n"
+            )
+        return (
+            "# Known Risks\n\n"
+            "- EMI/EMC, full-load thermal behavior, vibration life, battery abuse, motor transients, ingress protection, and connector fatigue require physical qualification.\n"
+            "- The reference design controls external motor drivers; it does not route 8 A motor phase current through the controller PCB.\n"
+        )
+
+    @staticmethod
+    def _release_bringup_pdf_lines(profile: dict[str, Any]) -> list[str]:
+        if profile["board_name"] == "sensor_data_logger":
+            return [
+                "Current-limit initial USB-C power-up.",
+                "Verify the 3.3 V rail before ESP32-S3 operation.",
+                "Verify USB console enumeration.",
+                "Verify I2C IMU identity and interrupt activity.",
+            ]
+        return [
+            "Current-limit initial power-up.",
+            "Verify rails before MCU operation.",
+            "Test E-stop before motor enable.",
+            "Run each channel with motor power isolated.",
+        ]
 
     def check_release_gate(self, project: str, reports: list[GateReport] | None = None, include_external: bool = False) -> dict[str, Any]:
         path = self.workspace.require_project(project)

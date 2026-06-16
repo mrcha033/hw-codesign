@@ -24,6 +24,22 @@ def test_generation_is_deterministic_and_cross_domain(service, project):
     assert routing["signal_routing"] == "deferred_to_freerouting"
 
 
+def test_robotics_controller_kicad_artifacts_keep_four_layer_stackup(service, project):
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    kicad_dir = path / "electronics" / "generated" / "kicad"
+    legacy_schematic = (kicad_dir / f"{project}.sch").read_text(encoding="utf-8")
+    board = (kicad_dir / f"{project}.kicad_pcb").read_text(encoding="utf-8")
+
+    assert 'Title "Robot Controller"' in legacy_schematic
+    assert '(0 "F.Cu" signal)' in board
+    assert '(2 "In1.Cu" power)' in board
+    assert '(4 "In2.Cu" power)' in board
+    assert '(31 "B.Cu" signal)' in board
+    assert '(net_name "GND") (layer "In1.Cu")' in board
+    assert '(net_name "V5") (layer "In2.Cu")' in board
+
+
 def test_freerouting_log_parser_distinguishes_complete_and_incomplete():
     assert FreeroutingBackend._final_unrouted("final score: 988.64 (1 unrouted)\n") == 1
     assert FreeroutingBackend._final_unrouted("final score: 992.25\nSaving board\n") == 0
