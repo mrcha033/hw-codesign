@@ -6,6 +6,8 @@ __pycache__/
 htmlcov/
 dist/
 build/
+packaging/dist/
+packaging/build/
 *.egg-info/
 projects/*/firmware/*/build/
 .toolchains/

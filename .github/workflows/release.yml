@@ -81,6 +81,66 @@ jobs:
           path: release-assets/
           if-no-files-found: error
 
+  build-binaries:
+    name: Build standalone binary (${{ matrix.os }})
+    needs: build
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_suffix: linux-x86_64
+            bin_suffix: ""
+            archive_ext: tar.gz
+          - os: macos-latest
+            artifact_suffix: macos-arm64
+            bin_suffix: ""
+            archive_ext: tar.gz
+          - os: windows-latest
+            artifact_suffix: windows-x86_64
+            bin_suffix: .exe
+            archive_ext: zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v8.2.0
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - name: Install project and PyInstaller
+        shell: bash
+        run: |
+          uv sync --locked --extra mcp
+          uv pip install pyinstaller
+      - name: Build binaries
+        shell: bash
+        run: uv run pyinstaller packaging/hw.spec --distpath packaging/dist --workpath packaging/build --noconfirm
+      - name: Smoke-test hw binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          smoke="$(mktemp -d)"
+          ./packaging/dist/hw${{ matrix.bin_suffix }} --root "$smoke" create-project smoke_project
+          ./packaging/dist/hw${{ matrix.bin_suffix }} --root "$smoke" validate-spec smoke_project
+      - name: Package binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          archive="hw-${version}-${{ matrix.artifact_suffix }}.${{ matrix.archive_ext }}"
+          if [[ "${{ matrix.archive_ext }}" == "zip" ]]; then
+            cd packaging/dist
+            7z a "../../${archive}" hw.exe hw-mcp.exe
+            cd ../..
+          else
+            tar czf "${archive}" -C packaging/dist hw hw-mcp
+          fi
+          echo "ARCHIVE=${archive}" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.artifact_suffix }}
+          path: ${{ env.ARCHIVE }}
+          if-no-files-found: error
+
   publish-pypi:
     name: Publish to PyPI
     needs: build
@@ -143,7 +203,7 @@ jobs:
 
   github-release:
     name: Create GitHub release
-    needs: [publish-pypi, publish-container]
+    needs: [publish-pypi, publish-container, build-binaries]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -151,6 +211,18 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: release-assets
+          path: release-assets
+      - uses: actions/download-artifact@v4
+        with:
+          name: binary-linux-x86_64
+          path: release-assets
+      - uses: actions/download-artifact@v4
+        with:
+          name: binary-macos-arm64
+          path: release-assets
+      - uses: actions/download-artifact@v4
+        with:
+          name: binary-windows-x86_64
           path: release-assets
       - name: Publish release assets
         env:

@@ -47,6 +47,24 @@ requires extending those inputs and, potentially, the generators.
 
 ## Run it
 
+**No Python required — download a standalone binary** from the
+[latest release](../../releases/latest):
+
+| Platform | File |
+|---|---|
+| Linux x86-64 | `hw-{version}-linux-x86_64.tar.gz` |
+| macOS arm64 | `hw-{version}-macos-arm64.tar.gz` |
+| Windows x86-64 | `hw-{version}-windows-x86_64.zip` |
+
+Each archive contains `hw` (CLI) and `hw-mcp` (MCP server). macOS users must
+clear Gatekeeper quarantine after download: `xattr -d com.apple.quarantine ./hw ./hw-mcp`.
+
+These binaries are the lightweight CLI and MCP distribution. Native release gates
+(KiCad fabrication, Freerouting, Zephyr) require the container or locally installed
+toolchains — the same limitation as the Python package.
+
+**Or run directly with uv** (no install):
+
 Start the MCP server without cloning or installing the repository:
 
 ```bash
@@ -59,16 +77,12 @@ Run the CLI the same way:
 uvx --from hw-codesign-platform hw --root . create-project quadruped_robot_controller
 ```
 
-For KiCad, OpenCASCADE, Freerouting, tscircuit, and Zephyr in one environment,
-use the full-toolchain container:
+**For full toolchains** (KiCad, OpenCASCADE, Freerouting, tscircuit, Zephyr):
 
 ```bash
 docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest \
   export-review quadruped_robot_controller
 ```
-
-The Python package is the lightweight CLI and MCP distribution. Native release
-gates require the container or locally installed toolchains.
 
 New here? Follow [Zero to first candidate report](docs/first-run.md). Before
 interpreting a green or blocked result, read the
