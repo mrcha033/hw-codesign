@@ -145,3 +145,142 @@ def test_update_requirements_replaces_active_unresolved_constraints(service, pro
     checks = service.run_all_checks(project, include_external=False)
     codes = {f["code"] for report in checks["reports"] for f in report["failures"]}
     assert "unlowered_requirement" not in codes
+
+
+# ---------------------------------------------------------------------------
+# Candidate lifecycle
+# ---------------------------------------------------------------------------
+
+def test_list_candidates_empty_before_iteration(service, project):
+    result = service.list_candidates(project)
+    assert result["status"] == "pass"
+    assert result["candidates"] == []
+    assert result["count"] == 0
+
+
+def test_list_candidates_finds_candidates_after_iteration(service, project):
+    service.run_design_iteration(project, include_external=False)
+    result = service.list_candidates(project)
+    assert result["count"] >= 1
+    c = result["candidates"][0]
+    assert "candidate_id" in c
+    assert "backend" in c
+    assert "gate_summary" in c
+    # Scratch dirs (reference-fabrication, native-check) must NOT appear
+    assert all(c["candidate_id"].isdigit() for c in result["candidates"])
+
+
+def test_get_candidate_missing_returns_blocked(service, project):
+    result = service.get_candidate(project, "9999")
+    assert result["status"] == "blocked"
+    assert result["code"] == "candidate_not_found"
+
+
+def test_get_candidate_returns_frozen_data(service, project):
+    service.run_design_iteration(project, include_external=False)
+    candidates = service.list_candidates(project)
+    cid = candidates["candidates"][0]["candidate_id"]
+    result = service.get_candidate(project, cid)
+    assert result["status"] == "pass"
+    assert result["candidate_id"] == cid
+    assert "checks" in result["candidate"]
+
+
+def test_review_candidate_uses_frozen_checks_not_live_reports(service, project):
+    service.run_design_iteration(project, include_external=False)
+    cid = service.list_candidates(project)["candidates"][0]["candidate_id"]
+    review = service.review_candidate(project, cid)
+    assert review["status"] in {"pass", "fail", "blocked", "unknown"}
+    assert "gate_summary" in review
+    assert "blocking_gates" in review
+    assert "recommendation" in review
+    # Run fresh checks (changes live reports dir) — frozen review must be stable
+    service.run_all_checks(project, include_external=False)
+    review2 = service.review_candidate(project, cid)
+    assert review2["gate_summary"] == review["gate_summary"]
+
+
+def test_compare_candidates_detects_no_change(service, project):
+    service.run_design_iteration(project, include_external=False)
+    service.run_design_iteration(project, include_external=False)
+    candidates = service.list_candidates(project)["candidates"]
+    assert len(candidates) >= 2
+    a, b = candidates[0]["candidate_id"], candidates[1]["candidate_id"]
+    result = service.compare_candidates(project, a, b)
+    assert result["status"] == "pass"
+    assert "readiness_delta" in result
+    assert "artifact_delta" in result
+    assert "risk_delta" in result
+    assert "recommendation" in result
+    delta = result["readiness_delta"]
+    assert isinstance(delta["blocking_gates_removed"], list)
+    assert isinstance(delta["blocking_gates_added"], list)
+    assert isinstance(delta["pass_count_delta"], int)
+
+
+def test_compare_candidates_missing_returns_blocked(service, project):
+    service.run_design_iteration(project, include_external=False)
+    cid = service.list_candidates(project)["candidates"][0]["candidate_id"]
+    result = service.compare_candidates(project, cid, "9999")
+    assert result["status"] == "blocked"
+    assert result["code"] == "candidate_not_found"
+
+
+# ---------------------------------------------------------------------------
+# Fabrication review preparation
+# ---------------------------------------------------------------------------
+
+def test_prepare_fabrication_review_before_any_candidate(service, project):
+    result = service.prepare_fabrication_review(project)
+    assert result["status"] == "pass"
+    assert result["label"] == "do_not_fabricate"
+    assert "artifact_presence" in result
+    assert "fab_review_checklist" in result
+    assert len(result["fab_review_checklist"]) >= 5
+
+
+def test_prepare_fabrication_review_after_iteration(service, project):
+    service.run_design_iteration(project, include_external=False)
+    cid = service.list_candidates(project)["candidates"][0]["candidate_id"]
+    result = service.prepare_fabrication_review(project, candidate_id=cid)
+    assert result["status"] == "pass"
+    assert result["label"] in {"do_not_fabricate", "review_only", "release_candidate"}
+    assert result["candidate_id"] == cid
+    assert "erc_status" in result
+    assert "drc_status" in result
+    assert isinstance(result["unresolved_assumptions"], list)
+    assert isinstance(result["physical_qualification_gaps"], list)
+
+
+# ---------------------------------------------------------------------------
+# Environment diagnosis
+# ---------------------------------------------------------------------------
+
+def test_diagnose_environment_candidate_target_always_ready(service, project):
+    result = service.diagnose_environment(target="candidate")
+    assert result["status"] == "pass"
+    assert result["ready"] is True
+    assert result["missing_tools"] == []
+    assert result["blocked_gates"] == []
+
+
+def test_diagnose_environment_returns_structured_output(service, project):
+    result = service.diagnose_environment(target="fabrication_release")
+    assert result["target"] == "fabrication_release"
+    assert isinstance(result["ready"], bool)
+    assert isinstance(result["missing_tools"], list)
+    assert isinstance(result["blocked_gates"], list)
+    assert isinstance(result["install_hints"], dict)
+    assert isinstance(result["tool_availability"], dict)
+
+
+def test_diagnose_environment_backend_adds_tool_requirement(service, project, monkeypatch):
+    monkeypatch.setattr("shutil.which", lambda cmd: None if cmd == "node" else "/usr/bin/java")
+    result = service.diagnose_environment(target="candidate", backend="tscircuit")
+    assert "node" in result["missing_tools"]
+
+
+def test_diagnose_environment_unknown_target_is_blocked(service, project):
+    result = service.diagnose_environment(target="nonexistent_target")
+    assert result["status"] == "blocked"
+    assert result["code"] == "unknown_target"

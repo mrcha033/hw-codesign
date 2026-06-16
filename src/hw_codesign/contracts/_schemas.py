@@ -346,25 +346,28 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
         "title": "ReleaseReadinessResult",
         "description": "Aggregated release-readiness summary from persisted gate reports, requirements, and assumptions.",
         "type": "object",
-        "required": ["status", "release_eligible", "candidate_only", "release_blocking_failures", "project", "revision", "backend", "backend_release_eligible", "gate_data", "gate_summary", "blocking_gates", "blocker_categories", "assumptions", "recommendation"],
+        "required": ["status", "release_eligible", "release_gate_authoritative", "readiness_estimate", "candidate_only", "release_blocking_failures", "project", "revision", "backend", "backend_release_eligible", "gate_data", "data_freshness", "gate_summary", "blocking_gates", "blocker_categories", "assumptions", "recommendation"],
         "additionalProperties": True,
         "properties": {
-            "status":                    {"type": "string", "enum": ["pass", "fail", "blocked"]},
-            "release_eligible":          {"type": "boolean"},
-            "candidate_only":            {"type": "boolean"},
-            "release_blocking_failures": {"type": "array", "items": {"type": "string"}},
-            "project":                   {"type": "string"},
-            "revision":                  {"type": "string"},
-            "backend":                   {"type": "string"},
-            "backend_release_eligible":  {"type": "boolean"},
-            "gate_data":                 {"type": "string", "enum": ["persisted", "none"]},
-            "gate_summary":              {"type": "object"},
-            "blocking_gates":            {"type": "array", "items": {"type": "object"}},
-            "blocker_categories":        {"type": "array", "items": {"type": "string"}},
-            "requirements":              {"type": ["object", "null"]},
-            "assumptions":               {"type": "object"},
+            "status":                      {"type": "string", "enum": ["pass", "fail", "blocked"]},
+            "release_eligible":            {"type": "boolean", "const": False, "description": "Always false — only hw_check_release_gate (status pass) confers release eligibility."},
+            "release_gate_authoritative":  {"type": "boolean", "const": False, "description": "Always false — this tool reads persisted reports and is not the release gate."},
+            "readiness_estimate":          {"type": "string", "enum": ["pass", "fail", "blocked"], "description": "Assessment based on persisted reports; not a gate outcome."},
+            "candidate_only":              {"type": "boolean"},
+            "release_blocking_failures":   {"type": "array", "items": {"type": "string"}},
+            "project":                     {"type": "string"},
+            "revision":                    {"type": "string"},
+            "backend":                     {"type": "string"},
+            "backend_release_eligible":    {"type": "boolean"},
+            "gate_data":                   {"type": "string", "enum": ["persisted", "none"]},
+            "data_freshness":              {"type": "string", "enum": ["current", "possibly_stale", "unknown", "none"], "description": "Heuristic freshness based on spec vs report file mtimes. possibly_stale means spec was modified after last check run."},
+            "gate_summary":                {"type": "object"},
+            "blocking_gates":              {"type": "array", "items": {"type": "object"}},
+            "blocker_categories":          {"type": "array", "items": {"type": "string"}},
+            "requirements":                {"type": ["object", "null"]},
+            "assumptions":                 {"type": "object"},
             "physical_qualification_gaps": {"type": "array", "items": {"type": "string"}},
-            "recommendation":            {"type": "string"},
+            "recommendation":              {"type": "string"},
         },
     },
 
@@ -389,6 +392,155 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
             "gate_status":               {"type": "string"},
             "bundle":                    {"type": "string"},
             "path":                      {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # candidate_list_result — hw_list_candidates output
+    # -------------------------------------------------------------------
+    "candidate_list_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("candidate_list_result"),
+        "title": "CandidateListResult",
+        "type": "object",
+        "required": ["status", "project", "candidates", "count"],
+        "additionalProperties": True,
+        "properties": {
+            "status":     {"type": "string"},
+            "project":    {"type": "string"},
+            "count":      {"type": "integer"},
+            "candidates": {"type": "array", "items": {"type": "object", "additionalProperties": True}},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # candidate_review_result — hw_review_candidate output
+    # -------------------------------------------------------------------
+    "candidate_review_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("candidate_review_result"),
+        "title": "CandidateReviewResult",
+        "description": "Readiness summary for a single candidate from its frozen gate reports.",
+        "type": "object",
+        "required": ["status", "project", "candidate_id", "backend", "backend_release_eligible", "gate_summary", "blocking_gates", "release_blocking_failures", "recommendation"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                    {"type": "string"},
+            "project":                   {"type": "string"},
+            "candidate_id":              {"type": "string"},
+            "backend":                   {"type": "string"},
+            "backend_release_eligible":  {"type": "boolean"},
+            "gate_summary":              {"type": "object"},
+            "blocking_gates":            {"type": "array", "items": {"type": "object"}},
+            "release_blocking_failures": {"type": "array", "items": {"type": "string"}},
+            "assumptions":               {"type": ["object", "null"]},
+            "recommendation":            {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # compare_candidates_result — hw_compare_candidates output
+    # -------------------------------------------------------------------
+    "compare_candidates_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("compare_candidates_result"),
+        "title": "CompareCandidatesResult",
+        "description": "Delta between two candidate snapshots across gates, artifacts, and risk.",
+        "type": "object",
+        "required": ["status", "project", "candidate_a", "candidate_b", "readiness_delta", "artifact_delta", "risk_delta", "recommendation"],
+        "additionalProperties": True,
+        "properties": {
+            "status":      {"type": "string"},
+            "project":     {"type": "string"},
+            "candidate_a": {"type": "string"},
+            "candidate_b": {"type": "string"},
+            "readiness_delta": {
+                "type": "object",
+                "required": ["blocking_gates_removed", "blocking_gates_added", "pass_count_delta", "fail_count_delta", "blocked_count_delta"],
+                "additionalProperties": True,
+                "properties": {
+                    "blocking_gates_removed": {"type": "array", "items": {"type": "string"}},
+                    "blocking_gates_added":   {"type": "array", "items": {"type": "string"}},
+                    "pass_count_delta":       {"type": "integer"},
+                    "fail_count_delta":       {"type": "integer"},
+                    "blocked_count_delta":    {"type": "integer"},
+                },
+            },
+            "artifact_delta": {
+                "type": "object",
+                "required": ["added", "removed", "changed"],
+                "additionalProperties": True,
+                "properties": {
+                    "added":   {"type": "array", "items": {"type": "string"}},
+                    "removed": {"type": "array", "items": {"type": "string"}},
+                    "changed": {"type": "array", "items": {"type": "string"}},
+                },
+            },
+            "risk_delta": {
+                "type": "object",
+                "required": ["new_physical_gaps", "resolved_assumptions", "new_unresolved_assumptions"],
+                "additionalProperties": True,
+                "properties": {
+                    "new_physical_gaps":          {"type": "array", "items": {"type": "string"}},
+                    "resolved_assumptions":       {"type": "array", "items": {"type": "string"}},
+                    "new_unresolved_assumptions": {"type": "array", "items": {"type": "string"}},
+                },
+            },
+            "recommendation": {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # fabrication_review_result — hw_prepare_fabrication_review output
+    # -------------------------------------------------------------------
+    "fabrication_review_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("fabrication_review_result"),
+        "title": "FabricationReviewResult",
+        "description": "Structured fabrication review packet. label determines ordering readiness.",
+        "type": "object",
+        "required": ["status", "project", "label", "backend", "backend_release_eligible", "gate_status", "erc_status", "drc_status", "artifact_presence", "unresolved_assumptions", "unresolved_requirements", "physical_qualification_gaps", "fab_review_checklist"],
+        "additionalProperties": True,
+        "properties": {
+            "status":                   {"type": "string"},
+            "project":                  {"type": "string"},
+            "candidate_id":             {"type": ["string", "null"]},
+            "label":                    {"type": "string", "enum": ["do_not_fabricate", "review_only", "release_candidate"]},
+            "backend":                  {"type": "string"},
+            "backend_release_eligible": {"type": "boolean"},
+            "gate_status":              {"type": "object"},
+            "erc_status":               {"type": "string"},
+            "drc_status":               {"type": "string"},
+            "toolchain_versions":       {"type": "object"},
+            "artifact_presence":        {"type": "object"},
+            "unresolved_assumptions":   {"type": "array", "items": {"type": "string"}},
+            "unresolved_requirements":  {"type": "array"},
+            "physical_qualification_gaps": {"type": "array", "items": {"type": "string"}},
+            "fab_review_checklist":     {"type": "array", "items": {"type": "string"}},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # environment_diagnosis_result — hw_diagnose_environment output
+    # -------------------------------------------------------------------
+    "environment_diagnosis_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("environment_diagnosis_result"),
+        "title": "EnvironmentDiagnosisResult",
+        "description": "Target-conditioned diagnosis of missing tools and blocked gates.",
+        "type": "object",
+        "required": ["status", "target", "ready", "missing_tools", "blocked_gates", "install_hints", "tool_availability"],
+        "additionalProperties": True,
+        "properties": {
+            "status":           {"type": "string", "enum": ["pass", "fail", "blocked"]},
+            "target":           {"type": "string"},
+            "backend":          {"type": ["string", "null"]},
+            "description":      {"type": "string"},
+            "ready":            {"type": "boolean"},
+            "missing_tools":    {"type": "array", "items": {"type": "string"}},
+            "blocked_gates":    {"type": "array", "items": {"type": "string"}},
+            "install_hints":    {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+            "tool_availability": {"type": "object", "additionalProperties": {"type": "boolean"}},
         },
     },
 

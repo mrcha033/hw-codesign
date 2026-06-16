@@ -56,6 +56,23 @@ def build_parser() -> argparse.ArgumentParser:
     upload = commands.add_parser("upload-review")
     upload.add_argument("project")
     upload.add_argument("--destination", default=None, help="Hosted viewer endpoint URL")
+    commands.add_parser("list-candidates").add_argument("project")
+    get_cand = commands.add_parser("get-candidate")
+    get_cand.add_argument("project")
+    get_cand.add_argument("candidate_id")
+    review_cand = commands.add_parser("review-candidate")
+    review_cand.add_argument("project")
+    review_cand.add_argument("candidate_id")
+    cmp_cand = commands.add_parser("compare-candidates")
+    cmp_cand.add_argument("project")
+    cmp_cand.add_argument("candidate_a")
+    cmp_cand.add_argument("candidate_b")
+    fab_review = commands.add_parser("prepare-fabrication-review")
+    fab_review.add_argument("project")
+    fab_review.add_argument("--candidate-id", default=None)
+    diag = commands.add_parser("diagnose-environment")
+    diag.add_argument("--target", default="fabrication_release", choices=["fabrication_release", "candidate", "firmware_only", "full_release"])
+    diag.add_argument("--backend", default=None)
     return parser
 
 
@@ -99,6 +116,18 @@ def main() -> int:
             return 0
         elif args.command == "upload-review":
             result = service.upload_review(args.project, destination=args.destination)
+        elif args.command == "list-candidates":
+            result = service.list_candidates(args.project)
+        elif args.command == "get-candidate":
+            result = service.get_candidate(args.project, args.candidate_id)
+        elif args.command == "review-candidate":
+            result = service.review_candidate(args.project, args.candidate_id)
+        elif args.command == "compare-candidates":
+            result = service.compare_candidates(args.project, args.candidate_a, args.candidate_b)
+        elif args.command == "prepare-fabrication-review":
+            result = service.prepare_fabrication_review(args.project, args.candidate_id)
+        elif args.command == "diagnose-environment":
+            result = service.diagnose_environment(args.target, args.backend)
         else:
             raise AssertionError(args.command)
         _emit(result)

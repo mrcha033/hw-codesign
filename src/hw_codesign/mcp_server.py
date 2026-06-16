@@ -10,11 +10,8 @@ from .service import HardwareService
 
 
 def _enrich(result: dict[str, Any], **extra: Any) -> dict[str, Any]:
-    """Merge envelope fields into a tool result without overwriting existing keys."""
-    out = dict(result)
-    for key, value in extra.items():
-        out.setdefault(key, value)
-    return out
+    """Merge envelope fields into a tool result, always overriding for safety-critical contract fields."""
+    return {**result, **extra}
 
 
 def create_server(root: Path | str | None = None):
@@ -34,7 +31,7 @@ def create_server(root: Path | str | None = None):
     def create_project(name: str, template: str = "robotics_controller_full", target: str = "manufacturable_pcb_with_enclosure_and_firmware") -> dict[str, Any]:
         result = service.create_project(name, template)
         result["target"] = target
-        return result
+        return _enrich(result, release_eligible=False, candidate_only=True, release_blocking_failures=["project created — run generate and hw_check_release_gate before release"])
 
     @server.tool(name=_TR["hw_open_project"].name)
     def open_project(project: str) -> dict[str, Any]:
@@ -42,7 +39,8 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name=_TR["hw_snapshot_project"].name)
     def snapshot_project(project: str) -> dict[str, Any]:
-        return {"project": project, "iteration_id": service.workspace.snapshot(project), "status": "generated"}
+        return _enrich({"project": project, "iteration_id": service.workspace.snapshot(project), "status": "generated"},
+            release_eligible=False, candidate_only=True, release_blocking_failures=["snapshot is a candidate artifact — hw_check_release_gate must pass before release"])
 
     @server.tool(name=_TR["hw_compare_iterations"].name)
     def compare_iterations(project: str, before: str, after: str) -> dict[str, Any]:
@@ -72,7 +70,9 @@ def create_server(root: Path | str | None = None):
     def update_requirements(project: str, requirements_text: str) -> dict[str, Any]:
         result = service.update_requirements(project, requirements_text)
         unsupported = result.get("unsupported_constraints") or []
-        return _enrich(result, release_blocking_failures=unsupported)
+        existing = result.get("release_blocking_failures") or []
+        combined = list(dict.fromkeys(existing + unsupported))
+        return _enrich(result, release_blocking_failures=combined)
 
     @server.tool(name=_TR["hw_list_assumptions"].name)
     def list_assumptions(project: str) -> dict[str, Any]:
@@ -211,7 +211,10 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name=_TR["hw_run_all_checks"].name)
     def run_all_checks(project: str, include_external: bool = True) -> dict[str, Any]:
-        return service.run_all_checks(project, include_external)
+        result = service.run_all_checks(project, include_external)
+        failing = [r["gate"] for r in result.get("reports", []) if r["status"] != "pass"]
+        return _enrich(result, release_eligible=False, candidate_only=True,
+            release_blocking_failures=failing or ["hw_check_release_gate must pass before release"])
 
     @server.tool(name=_TR["hw_generate_repair_plan"].name)
     def generate_repair_plan(project: str) -> dict[str, Any]:
@@ -267,7 +270,14 @@ def create_server(root: Path | str | None = None):
 
     @server.tool(name=_TR["hw_check_release_gate"].name)
     def check_release_gate(project: str) -> dict[str, Any]:
-        return service.check_release_gate(project)
+        result = service.check_release_gate(project)
+        passed = result.get("status") == "pass"
+        blocking = [f["message"] for f in result.get("failures", [])] if not passed else []
+        return _enrich(result,
+            release_eligible=passed,
+            candidate_only=not passed,
+            release_blocking_failures=blocking,
+        )
 
     @server.tool(name=_TR["hw_generate_design_report"].name)
     def generate_design_report(project: str) -> dict[str, Any]:
@@ -278,16 +288,64 @@ def create_server(root: Path | str | None = None):
         """Export a candidate bundle. Always candidate_only=true, release_eligible=false."""
         return service.export_candidate_bundle(project)
 
+    # ------------------------------------------------------------------
+    # Candidate lifecycle
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_list_candidates"].name)
+    def list_candidates(project: str) -> dict[str, Any]:
+        return service.list_candidates(project)
+
+    @server.tool(name=_TR["hw_get_candidate"].name)
+    def get_candidate(project: str, candidate_id: str) -> dict[str, Any]:
+        return service.get_candidate(project, candidate_id)
+
+    @server.tool(name=_TR["hw_review_candidate"].name)
+    def review_candidate(project: str, candidate_id: str) -> dict[str, Any]:
+        return service.review_candidate(project, candidate_id)
+
+    @server.tool(name=_TR["hw_compare_candidates"].name)
+    def compare_candidates(project: str, candidate_a: str, candidate_b: str) -> dict[str, Any]:
+        return service.compare_candidates(project, candidate_a, candidate_b)
+
+    # ------------------------------------------------------------------
+    # Fabrication review preparation
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_prepare_fabrication_review"].name)
+    def prepare_fabrication_review(project: str, candidate_id: str | None = None) -> dict[str, Any]:
+        return service.prepare_fabrication_review(project, candidate_id)
+
+    # ------------------------------------------------------------------
+    # Environment diagnosis
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_diagnose_environment"].name)
+    def diagnose_environment(target: str = "fabrication_release", backend: str | None = None) -> dict[str, Any]:
+        return service.diagnose_environment(target, backend)
+
     @server.tool(name=_TR["hw_export_release_bundle"].name)
     def export_release_bundle(project: str) -> dict[str, Any]:
         """Export the release bundle. Requires all gates to pass. Distinct from candidate bundles."""
-        return service.export_release_bundle(project)
+        result = service.export_release_bundle(project)
+        released = result.get("status") == "released"
+        return _enrich(result,
+            release_eligible=released,
+            candidate_only=not released,
+            release_blocking_failures=[] if released else ["release gate did not pass — hw_check_release_gate must pass before hw_export_release_bundle"],
+        )
 
     @server.tool(name=_TR["hw_verify_release"].name)
     def verify_release(project: str) -> dict[str, Any]:
         spec = service.read_spec(project)
         release = service.workspace.require_project(project) / "exports" / "releases" / spec["project"]["revision"]
-        return service._artifact_integrity_report(release).to_dict()
+        result = service._artifact_integrity_report(release).to_dict()
+        passed = result.get("status") == "pass"
+        return _enrich(result,
+            release_eligible=False,
+            candidate_only=not passed,
+            release_blocking_failures=[] if passed else ["artifact integrity check failed — release bundle may be incomplete or corrupt"],
+        )
 
     # ------------------------------------------------------------------
     # Platform introspection

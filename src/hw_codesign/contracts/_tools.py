@@ -663,4 +663,128 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         output_schema=ref("candidate_bundle_result"),
         execution_mode="async",
     ),
+
+    # -------------------------------------------------------------------
+    # Candidate lifecycle
+    # -------------------------------------------------------------------
+    "hw_list_candidates": ToolDef(
+        name="hw_list_candidates",
+        description=(
+            "List all candidate snapshots for a project. "
+            "Returns candidate_id, backend, gate_summary (pass/fail/blocked counts), and frozen status "
+            "for each candidate — without re-running checks. "
+            "Use hw_review_candidate for a detailed readiness summary of a specific candidate."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("candidate_list_result"),
+    ),
+
+    "hw_get_candidate": ToolDef(
+        name="hw_get_candidate",
+        description="Return the full frozen candidate record (checks, generated files, backend) for a specific candidate ID.",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":      {"type": "string"},
+                "candidate_id": {"type": "string", "description": "Iteration ID of the candidate (e.g. '0003')"},
+            },
+            "required": ["project", "candidate_id"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("opaque_result"),
+    ),
+
+    "hw_review_candidate": ToolDef(
+        name="hw_review_candidate",
+        description=(
+            "Summarise readiness of a specific candidate from its frozen gate reports — "
+            "does not re-run checks or read live validation/reports/. "
+            "Returns gate_summary, blocking_gates, release_blocking_failures, assumptions, and a recommendation. "
+            "Stable across subsequent check runs — two old candidates compare independently."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":      {"type": "string"},
+                "candidate_id": {"type": "string", "description": "Iteration ID of the candidate"},
+            },
+            "required": ["project", "candidate_id"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("candidate_review_result"),
+    ),
+
+    "hw_compare_candidates": ToolDef(
+        name="hw_compare_candidates",
+        description=(
+            "Compare two candidate snapshots and return a structured delta: "
+            "readiness_delta (blocking gates resolved/added, count deltas), "
+            "artifact_delta (files added/removed/changed in electronics, mechanical, firmware), "
+            "risk_delta (resolved/new unresolved assumptions), and a recommendation. "
+            "Excludes 'external_gate_not_run' blocks so deltas reflect design quality, not invocation context. "
+            "Use to determine whether a repair actually improved the design."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":     {"type": "string"},
+                "candidate_a": {"type": "string", "description": "Earlier candidate ID"},
+                "candidate_b": {"type": "string", "description": "Later candidate ID to compare against"},
+            },
+            "required": ["project", "candidate_a", "candidate_b"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("compare_candidates_result"),
+    ),
+
+    # -------------------------------------------------------------------
+    # Fabrication review preparation
+    # -------------------------------------------------------------------
+    "hw_prepare_fabrication_review": ToolDef(
+        name="hw_prepare_fabrication_review",
+        description=(
+            "Build a structured fabrication review packet from the current candidate state. "
+            "Returns a label ('do_not_fabricate', 'review_only', or 'release_candidate'), "
+            "ERC/DRC status, toolchain versions, artifact presence (gerbers, drill, BOM, PnP), "
+            "unresolved assumptions, unresolved requirements, and a human fab-review checklist. "
+            "Distinct from hw_export_release_bundle — this is for human review before ordering, not for release export."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":      {"type": "string"},
+                "candidate_id": {"type": ["string", "null"], "default": None, "description": "Candidate ID to review; defaults to latest candidate"},
+            },
+            "required": ["project"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("fabrication_review_result"),
+    ),
+
+    # -------------------------------------------------------------------
+    # Environment diagnosis
+    # -------------------------------------------------------------------
+    "hw_diagnose_environment": ToolDef(
+        name="hw_diagnose_environment",
+        description=(
+            "Diagnose the current environment against a target release tier. "
+            "Returns ready (bool), missing_tools, blocked_gates, and per-platform install_hints. "
+            "Targets: 'fabrication_release' (ERC, DRC, autoroute), 'candidate' (no native tools), "
+            "'firmware_only' (ARM cross-compiler), 'full_release' (all validations). "
+            "More useful than hw_get_capabilities because it gives a target-conditioned verdict."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "target":  {"type": "string", "default": "fabrication_release",
+                            "enum": ["fabrication_release", "candidate", "firmware_only", "full_release"],
+                            "description": "Target release tier to diagnose against"},
+                "backend": {"type": ["string", "null"], "default": None,
+                            "description": "Electronics backend to include backend-specific tool requirements"},
+            },
+            "additionalProperties": False,
+        },
+        output_schema=ref("environment_diagnosis_result"),
+        execution_mode="local",
+    ),
 }
