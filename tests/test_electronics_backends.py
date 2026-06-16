@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import pytest
 
 from hw_codesign.backends.command import ToolResult
@@ -162,7 +163,7 @@ def test_kicad_manufacturing_gate_requires_and_exports_all_artifacts(service, pr
     release = project_path / "exports" / "candidates" / "manufacturing-test"
     report = service.kicad.export_manufacturing(project_path, release)
     assert report.status == "pass"
-    assert {path.split("/")[-1] for path in report.artifacts} >= {"gerbers.zip", "drill.zip", "pick_and_place.csv", "bom.csv", "board.step"}
+    assert {Path(path).name for path in report.artifacts} >= {"gerbers.zip", "drill.zip", "pick_and_place.csv", "bom.csv", "board.step"}
     assert (release / "fabrication" / "pick_and_place.csv").stat().st_size > 0
     assert (release / "fabrication" / "bom.csv").stat().st_size > 0
 

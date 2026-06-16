@@ -34,6 +34,15 @@ from .workspace import Workspace
 
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
 _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
+_RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist"})
+
+
+def _cadquery_available() -> bool:
+    try:
+        import cadquery  # noqa: F401
+        return True
+    except ImportError:
+        return False
 
 
 def _portable_review_value(value: Any, workspace_root: Path) -> Any:
@@ -50,15 +59,15 @@ def _portable_review_value(value: Any, workspace_root: Path) -> Any:
 def _portable_review_string(value: str, workspace_root: Path) -> str:
     root = workspace_root.resolve()
     root_text = root.as_posix()
-    if value == root_text:
+    norm = value.replace("\\", "/")
+    if norm == root_text:
         return "."
-    if value.startswith(f"{root_text}/"):
-        return Path(value).resolve().relative_to(root).as_posix()
-    if root_text in value:
-        return value.replace(root_text, ".")
+    if norm.startswith(f"{root_text}/"):
+        return norm[len(root_text) + 1:]
+    if root_text in norm:
+        return norm.replace(root_text, ".")
     if _WINDOWS_ABSOLUTE_PATH.match(value):
-        normalized = value.replace("\\", "/")
-        return f"<host-path>/{normalized.split('/')[-1]}"
+        return f"<host-path>/{norm.split('/')[-1]}"
     if _POSIX_ABSOLUTE_PATH.match(value):
         return f"<host-path>/{Path(value).name}"
     return value
@@ -686,6 +695,161 @@ class HardwareService:
                 return {"status": "blocked", "iterations": iterations, "repair": repair, "release_gate": result["release_gate"]}
             return {"status": "fail", "iterations": iterations, "repair": repair, "release_gate": result["release_gate"]}
         return {"status": "fail", "code": "max_iterations_exceeded", "iterations": iterations}
+
+    def get_capabilities(self) -> dict[str, Any]:
+        """Return available backends, external tools, and which gates each tool enables."""
+        import shutil
+        backends: dict[str, Any] = {
+            "reference":      {"name": "reference",      "release_eligible": False, "candidate_only": True,  "description": "Reference intent generator — produces candidate artifacts only"},
+            "tscircuit":      {"name": "tscircuit",      "release_eligible": True,  "candidate_only": False, "description": "tscircuit Circuit JSON compiler — release-eligible via compiled KiCad export", "requires_tool": "node"},
+            "kicad":          {"name": "kicad",          "release_eligible": True,  "candidate_only": False, "description": "KiCad-native backend — release-eligible", "requires_tool": "kicad_cli"},
+            "python_netlist": {"name": "python_netlist", "release_eligible": True,  "candidate_only": False, "description": "Python netlist backend — release-eligible at netlist tier"},
+            "atopile":        {"name": "atopile",        "release_eligible": False, "candidate_only": True,  "description": "atopile backend — candidate artifacts only", "requires_tool": "ato"},
+        }
+        tools: dict[str, Any] = {
+            "kicad_cli":         {"available": bool(shutil.which("kicad-cli")),          "description": "KiCad CLI — native ERC, DRC, and Gerber export",        "gates": ["native_erc", "native_drc", "kicad_library_crosscheck"]},
+            "java":              {"available": bool(shutil.which("java")),               "description": "Java runtime — Freerouting autorouter",                    "gates": ["autoroute"]},
+            "node":              {"available": bool(shutil.which("node")),               "description": "Node.js — tscircuit CLI compilation",                      "gates": ["tscircuit_compile", "tscircuit_manufacturing_export"]},
+            "arm_none_eabi_gcc": {"available": bool(shutil.which("arm-none-eabi-gcc")), "description": "ARM cross-compiler — native Zephyr firmware build",        "gates": ["native_zephyr_build"]},
+            "ato":               {"available": bool(shutil.which("ato")),               "description": "atopile CLI — atopile backend compilation",                "gates": ["atopile_compile"]},
+            "cadquery_ocp":      {"available": _cadquery_available(),                   "description": "cadquery-ocp — native mechanical CAD validation and export", "gates": ["native_mechanical_validation"]},
+        }
+        missing_external_gates: list[str] = sorted({gate for t in tools.values() if not t["available"] for gate in t["gates"]})
+        return {
+            "status": "pass",
+            "backends": backends,
+            "release_eligible_backends": [n for n, b in backends.items() if b["release_eligible"]],
+            "candidate_only_backends": [n for n, b in backends.items() if b["candidate_only"]],
+            "external_tools": tools,
+            "missing_external_gates": missing_external_gates,
+            "platform_root": str(self.root),
+        }
+
+    def review_release_readiness(self, project: str) -> dict[str, Any]:
+        """Summarise release readiness from persisted gate reports without re-running checks."""
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        backend = spec.get("electronics", {}).get("backend", "reference")
+
+        persisted_reports: list[dict[str, Any]] = []
+        reports_dir = path / "validation" / "reports"
+        if reports_dir.is_dir():
+            for item in sorted(reports_dir.glob("*.json")):
+                try:
+                    data = json.loads(item.read_text(encoding="utf-8"))
+                    if isinstance(data, dict) and "gate" in data and "status" in data:
+                        persisted_reports.append(data)
+                except (json.JSONDecodeError, OSError):
+                    pass
+
+        has_gate_data = bool(persisted_reports)
+        pass_count = sum(1 for r in persisted_reports if r["status"] == "pass")
+        fail_count = sum(1 for r in persisted_reports if r["status"] == "fail")
+        blocked_count = sum(1 for r in persisted_reports if r["status"] == "blocked")
+        blocking = [r for r in persisted_reports if r["status"] != "pass"]
+        blocker_categories: list[str] = sorted({f["category"] for r in blocking for f in r.get("failures", [])})
+
+        req_path = path / "spec" / "requirements.yaml"
+        requirements_summary: dict[str, Any] | None = None
+        release_blocking_requirements: list[dict[str, Any]] = []
+        if req_path.is_file():
+            req_data = read_yaml(req_path).get("requirements", {})
+            active_unresolved = req_data.get("active_unresolved", [])
+            release_blocking_requirements = [r for r in active_unresolved if r.get("release_blocking")]
+            requirements_summary = {
+                "active_lowered_count": len(req_data.get("active_lowered", [])),
+                "active_unresolved_count": len(active_unresolved),
+                "release_blocking_count": len(release_blocking_requirements),
+                "release_blocking": release_blocking_requirements,
+            }
+
+        raw_assumptions = spec.get("assumptions", {})
+        unresolved_critical = sorted(name for name, a in raw_assumptions.items() if a.get("critical") and a.get("requires_user_review"))
+        assumptions_summary = {
+            "total": len(raw_assumptions),
+            "unresolved_critical": len(unresolved_critical),
+            "unresolved_critical_names": unresolved_critical,
+        }
+
+        backend_release_eligible = backend in _RELEASE_ELIGIBLE_BACKENDS
+
+        release_blocking_failures: list[str] = []
+        if not backend_release_eligible:
+            release_blocking_failures.append(f"backend '{backend}' is candidate-only and not release-eligible")
+        release_blocking_failures.extend(r["gate"] for r in blocking)
+        release_blocking_failures.extend(f"requirement:{req.get('source', req.get('id', '?'))}" for req in release_blocking_requirements)
+        release_blocking_failures.extend(f"critical_assumption:{name}" for name in unresolved_critical)
+
+        if not has_gate_data:
+            overall_status = "blocked"
+            recommendation = "No gate reports found. Run hw_run_all_checks first, then hw_review_release_readiness."
+        elif not backend_release_eligible:
+            overall_status = "blocked"
+            recommendation = f"Backend '{backend}' is candidate-only. Switch to tscircuit, kicad, or python_netlist."
+        elif blocking:
+            overall_status = "blocked" if blocked_count > 0 else "fail"
+            recommendation = f"{len(blocking)} gate(s) blocking. Run hw_generate_repair_plan → hw_apply_repair_plan."
+        elif release_blocking_requirements:
+            overall_status = "fail"
+            recommendation = f"{len(release_blocking_requirements)} release-blocking requirement(s) unresolved. Use hw_update_requirements or hw_resolve_assumption."
+        elif unresolved_critical:
+            overall_status = "fail"
+            recommendation = f"{len(unresolved_critical)} unresolved critical assumption(s). Use hw_resolve_assumption."
+        else:
+            overall_status = "pass"
+            recommendation = "Persisted gates pass and no known blockers. Confirm with hw_check_release_gate (include_external=true) before hw_export_release_bundle."
+
+        return {
+            "status": overall_status,
+            "release_eligible": False,
+            "candidate_only": not backend_release_eligible,
+            "release_blocking_failures": release_blocking_failures,
+            "project": project,
+            "revision": spec["project"]["revision"],
+            "backend": backend,
+            "backend_release_eligible": backend_release_eligible,
+            "gate_data": "persisted" if has_gate_data else "none",
+            "gate_summary": {"total": len(persisted_reports), "pass": pass_count, "fail": fail_count, "blocked": blocked_count},
+            "blocking_gates": [{"gate": r["gate"], "status": r["status"], "failure_count": len(r.get("failures", []))} for r in blocking],
+            "blocker_categories": blocker_categories,
+            "requirements": requirements_summary,
+            "assumptions": assumptions_summary,
+            "physical_qualification_gaps": [
+                "EMI/EMC compliance not validated by digital checks",
+                "Full-load thermal behavior requires instrumented hardware testing",
+                "Vibration life, connector fatigue, and ingress protection require physical qualification",
+            ],
+            "recommendation": recommendation,
+        }
+
+    def export_candidate_bundle(self, project: str) -> dict[str, Any]:
+        """Export a candidate bundle from the current project state and run internal checks."""
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        backend = spec.get("electronics", {}).get("backend", "reference")
+        checks = self.run_all_checks(project, include_external=False)
+        iteration_id = self.workspace.snapshot(project, {"goal": "candidate_export"})
+        graph_path = path / "electronics" / "generated" / "electrical_graph.json"
+        provenance = json.loads(graph_path.read_text(encoding="utf-8")).get("provenance", {}) if graph_path.is_file() else {}
+        target = path / "exports" / "candidates" / iteration_id
+        target.mkdir(parents=True, exist_ok=True)
+        write_json(target / "candidate.json", {"status": "candidate", "candidate_only": True, "release_eligible": False, "iteration_id": iteration_id, "backend": backend, "checks": checks})
+        sources = [(item, item.relative_to(path).as_posix()) for domain in ("electronics", "mechanical", "firmware") for item in (path / domain).rglob("*") if item.is_file() and "build" not in item.parts]
+        bundle = target / f"{project}-{iteration_id}-candidate.zip"
+        deterministic_zip(bundle, sources)
+        write_manifest(target, target / "manifest.json", provenance=provenance, candidate_only=True)
+        release_blocking_failures = [r["gate"] for r in checks["reports"] if r["status"] != "pass"]
+        return {
+            "status": "candidate",
+            "candidate_only": True,
+            "release_eligible": False,
+            "release_blocking_failures": release_blocking_failures,
+            "iteration_id": iteration_id,
+            "backend": backend,
+            "gate_status": checks.get("status", "unknown"),
+            "bundle": str(bundle),
+            "path": str(target),
+        }
 
     def _apply_spec_patch(self, project: str, patch: dict[str, Any]) -> dict[str, Any]:
         if patch.get("operation") != "replace":

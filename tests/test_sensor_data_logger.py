@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from hw_codesign.io import read_yaml, write_yaml
 from hw_codesign.models import GateReport, Status
@@ -50,7 +51,7 @@ def test_sensor_data_logger_intent_files_are_sensor_specific(service):
     stale.write_text("stale motor intent\n", encoding="utf-8")
 
     result = service.generate_electronics_only(project)
-    generated_names = {path.rsplit("/", 1)[-1] for path in result["files"]}
+    generated_names = {Path(path).name for path in result["files"]}
     intent_dir = project_path / "electronics" / "intent"
     board_intent = (intent_dir / "board.intent.md").read_text(encoding="utf-8")
     power_intent = (intent_dir / "power_tree.intent.md").read_text(encoding="utf-8")
