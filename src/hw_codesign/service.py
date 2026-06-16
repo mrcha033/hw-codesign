@@ -34,7 +34,7 @@ from .workspace import Workspace
 
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
 _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
-_RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist"})
+_RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist", "atopile"})
 
 
 def _cadquery_available() -> bool:
@@ -341,8 +341,8 @@ class HardwareService:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         backend = spec.get("electronics", {}).get("backend", "reference")
-        if backend not in {"tscircuit", "kicad", "python_netlist"}:
-            return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", "Release preparation requires a tscircuit, KiCad-native, or python_netlist backend contract")]).to_dict()]}
+        if backend not in _RELEASE_ELIGIBLE_BACKENDS:
+            return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", "Release preparation requires a release-eligible electronics backend")]).to_dict()]}
         if not native_checks_confirmed:
             return {"status": "blocked", "code": "native_release_checks_required", "reports": checks["reports"]}
         if any(item["status"] != "pass" for item in checks["reports"]):
@@ -360,7 +360,11 @@ class HardwareService:
         staging.mkdir(parents=True)
         files: list[str] = []
         if backend == "python_netlist":
-            fabrication_report = self._python_netlist_release_fabrication(path, staging)
+            fabrication_report = self.python_netlist.export_manufacturing(path, staging)
+            if fabrication_report.status == Status.BLOCKED:
+                fabrication_report = self._python_netlist_release_fabrication(path, staging)
+        elif backend == "atopile":
+            fabrication_report = self._atopile_release_fabrication(path, staging)
         else:
             fabrication_report = self.kicad.export_manufacturing(path, staging)
         if fabrication_report.status == Status.PASS:
@@ -425,6 +429,35 @@ class HardwareService:
             artifacts=[str(target)],
             metrics={"release_tier": "netlist", "artifact": "compiled_netlist.json"},
             backend={"name": "python_netlist", "release_tier": "netlist"},
+        )
+
+    def _atopile_release_fabrication(self, project_path: Path, staging: Path) -> GateReport:
+        source_dir = project_path / "electronics" / "source" / "atopile"
+        ato_file = source_dir / "design.ato"
+        ato_yaml = source_dir / "ato.yaml"
+        if not ato_file.is_file():
+            return GateReport(
+                "atopile_fabrication",
+                Status.BLOCKED,
+                [Failure(FailureCategory.EDA_ERROR, "source_not_generated", "Run generate_electronics_only first to produce atopile source")],
+                backend={"name": "atopile", "release_tier": "hdl_source"},
+            )
+        dest = staging / "fabrication" / "atopile_source"
+        dest.mkdir(parents=True, exist_ok=True)
+        target_ato = dest / "design.ato"
+        target_yaml = dest / "ato.yaml"
+        target_ato.write_bytes(ato_file.read_bytes())
+        artifacts = [str(target_ato)]
+        if ato_yaml.is_file():
+            target_yaml.write_bytes(ato_yaml.read_bytes())
+            artifacts.append(str(target_yaml))
+        return GateReport(
+            "atopile_fabrication",
+            Status.PASS,
+            [],
+            artifacts=artifacts,
+            metrics={"release_tier": "hdl_source", "artifact": "design.ato"},
+            backend={"name": "atopile", "release_tier": "hdl_source"},
         )
 
     @staticmethod
@@ -523,11 +556,16 @@ class HardwareService:
         revision = spec["project"]["revision"]
         release = path / "exports" / "releases" / revision
         backend = spec.get("electronics", {}).get("backend", "reference")
-        # Fabrication artifacts differ by backend: python_netlist produces a compiled netlist
-        # at netlist tier rather than gerber/drill manufacturing files.
-        if backend == "python_netlist":
+        if backend == "atopile":
             fab_required = [
-                release / "fabrication" / "compiled_netlist.json",
+                release / "fabrication" / "atopile_source" / "design.ato",
+                release / "fabrication" / "assembly_drawing.pdf",
+            ]
+        elif backend == "python_netlist":
+            fab_required = [
+                release / "fabrication" / "gerbers.zip",
+                release / "fabrication" / "pick_and_place.csv",
+                release / "fabrication" / "bom.csv",
                 release / "fabrication" / "assembly_drawing.pdf",
             ]
         else:
@@ -1118,7 +1156,7 @@ class HardwareService:
             "tscircuit":      {"name": "tscircuit",      "release_eligible": True,  "candidate_only": False, "description": "tscircuit Circuit JSON compiler — release-eligible via compiled KiCad export", "requires_tool": "node"},
             "kicad":          {"name": "kicad",          "release_eligible": True,  "candidate_only": False, "description": "KiCad-native backend — release-eligible", "requires_tool": "kicad_cli"},
             "python_netlist": {"name": "python_netlist", "release_eligible": True,  "candidate_only": False, "description": "Python netlist backend — release-eligible at netlist tier"},
-            "atopile":        {"name": "atopile",        "release_eligible": False, "candidate_only": True,  "description": "atopile backend — candidate artifacts only", "requires_tool": "ato"},
+            "atopile":        {"name": "atopile",        "release_eligible": True,  "candidate_only": False, "description": "atopile backend — release-eligible HDL source; fabrication requires KiCad plugin", "requires_tool": "ato"},
         }
         tools: dict[str, Any] = {
             "kicad_cli":         {"available": bool(shutil.which("kicad-cli")),          "description": "KiCad CLI — native ERC, DRC, and Gerber export",        "gates": ["native_erc", "native_drc", "kicad_library_crosscheck"]},

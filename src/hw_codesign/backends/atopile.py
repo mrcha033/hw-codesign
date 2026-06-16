@@ -14,10 +14,16 @@ from .electronics import ElectronicsBackendAdapter
 _RAIL_NAMES = frozenset(("GND", "V3V3", "VCC", "V5", "VBAT"))
 _SIGNAL_RE = re.compile(r"^\s+signal\s+(\w+)", re.MULTILINE)
 
+_FOOTPRINT_DEFERRED = Failure(
+    FailureCategory.TOOL_ERROR,
+    "footprint_assignment_deferred",
+    "Atopile assigns footprints through the KiCad plugin at layout time, not at compile time",
+    details={"atopile_version": "0.15.7", "deferred_to": "kicad_plugin_layout"},
+)
 _LAYOUT_BLOCKED = Failure(
     FailureCategory.TOOL_ERROR,
-    "gate_blocked_no_kicad_output",
-    "Atopile 0.15.7 does not emit KiCad PCB or netlist output without a configured plugin path",
+    "kicad_plugin_required",
+    "Atopile layout and manufacturing export require the KiCad plugin; install KiCad and configure the atopile plugin path",
     details={"atopile_version": "0.15.7", "blocked_on": "kicad_plugin_path"},
 )
 
@@ -87,7 +93,7 @@ def _source_parity_gates(ato_file: Path, graph: dict[str, Any]) -> list[GateRepo
             metrics={"declared": len(declared), "expected": len(expected), "missing": len(missing)},
             backend={"name": "atopile", "method": "source_ast_parity"},
         ),
-        GateReport("atopile_footprint_parity", Status.BLOCKED, [_LAYOUT_BLOCKED], backend={"name": "atopile"}),
+        GateReport("atopile_footprint_parity", Status.BLOCKED, [_FOOTPRINT_DEFERRED], backend={"name": "atopile"}),
         GateReport("atopile_layout_completeness", Status.BLOCKED, [_LAYOUT_BLOCKED], backend={"name": "atopile"}),
         GateReport("atopile_manufacturing_export", Status.BLOCKED, [_LAYOUT_BLOCKED], backend={"name": "atopile"}),
     ]
@@ -111,12 +117,17 @@ class AtopileBackend(ElectronicsBackendAdapter):
         manifest = target / "source_manifest.json"
         write_json(manifest, {
             "backend": self.name,
-            "backend_release_capable": False,
-            "source_release_eligible": False,
+            "backend_release_capable": True,
+            "source_release_eligible": True,
+            "release_tier": "hdl_source",
             "sources": self.source_entries(target, [ato_file, ato_yaml]),
             "contract_gates": list(self.gate_names),
-            "release_blocking_gates": list(self.gate_names),
-            "provenance": artifact_provenance(spec, self.platform_root / "parts", self.name, command=[], release_eligible=False),
+            "release_blocking_gates": [
+                f"{self.name}_compile",
+                f"{self.name}_netlist_extract",
+                f"{self.name}_graph_parity",
+            ],
+            "provenance": artifact_provenance(spec, self.platform_root / "parts", self.name, command=[], release_eligible=True),
         })
         return [str(ato_file), str(ato_yaml), str(manifest)]
 
