@@ -1,5 +1,11 @@
 # hw-codesign: verifiable hardware co-design release pipeline
 
+[![CI](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/hw-codesign-platform)](https://pypi.org/project/hw-codesign-platform/)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://pypi.org/project/hw-codesign-platform/)
+[![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey)](#run-it)
+[![MCP](https://img.shields.io/badge/MCP-FastMCP%203.4-purple)](#mcp-server)
+
 An agent-facing CLI and MCP server for generating hardware design candidates and
 proving which release checks actually ran. It is currently strongest for
 **tscircuit/KiCad-backed robotics-controller flows**, not arbitrary board
@@ -15,6 +21,24 @@ requires extending those inputs and, potentially, the generators.
 > BOM, firmware, reports, and a downloadable candidate bundle. It does not yet
 > claim a fabricated, electrically brought-up, thermally qualified, or EMC-tested
 > board.
+
+---
+
+## Contents
+
+- [Known limits](#known-limits)
+- [Run it](#run-it)
+- [Current scope](#current-scope)
+- [First workflow](#first-workflow)
+- [Generated example](#generated-example)
+- [Capabilities](#capabilities)
+- [Development setup](#development-setup)
+- [MCP server](#mcp-server)
+- [Distribution](#distribution)
+- [Gate semantics](#gate-semantics)
+- [Repository layout](#repository-layout)
+
+---
 
 ## Known limits
 
@@ -45,6 +69,8 @@ requires extending those inputs and, potentially, the generators.
   `reference` configuration is candidate-only and its release gate is expected to
   remain blocked unless a compiled backend is selected and all native gates pass.
 
+---
+
 ## Run it
 
 **No Python required — download a standalone binary** from the
@@ -65,15 +91,11 @@ toolchains — the same limitation as the Python package.
 
 **Or run directly with uv** (no install):
 
-Start the MCP server without cloning or installing the repository:
-
 ```bash
+# MCP server
 HW_PLATFORM_ROOT="$PWD" uvx --from 'hw-codesign-platform[mcp]' hw-mcp
-```
 
-Run the CLI the same way:
-
-```bash
+# CLI
 uvx --from hw-codesign-platform hw --root . create-project quadruped_robot_controller
 ```
 
@@ -114,6 +136,8 @@ vs.
 
 The difference is observable in JSON and enforced by the release gate.
 
+---
+
 ## Current scope
 
 A command-line and MCP-server platform that takes a structured YAML spec and
@@ -146,6 +170,8 @@ firmware, sourcing, and manufacturing parameters. A new topology requires a new
 role set/component catalog and may require generator changes; see the adaptation
 guide.
 
+---
+
 ## First workflow
 
 The shortest useful workflow intentionally ends in a `blocked` result while
@@ -175,6 +201,8 @@ release. The command writes specs, generated intent and source, gate reports,
 an iteration snapshot, and a candidate ZIP under `projects/first_board/`. The
 full file map and interpretation are in the first-run guide.
 
+---
+
 ## Generated example
 
 The tracked robotics-controller example provides inspectable output without
@@ -201,6 +229,8 @@ passed.
   results, deviations, and the exact artifact bundle sent to manufacturing.
 - Record thermal, transient, EMI/EMC, vibration, and connector qualification as
   physical evidence rather than software gate output.
+
+---
 
 ## Capabilities
 
@@ -261,6 +291,8 @@ passed.
   netlist release: `python_netlist` backend (`compiled_netlist.json` + firmware);
   `reference` and `atopile` are candidate-only
 
+---
+
 ## Development setup
 
 ```bash
@@ -280,6 +312,8 @@ Install the pinned native macOS backends and run the complete flow:
 make toolchains
 .venv/bin/hw --root . design-until-release quadruped_robot_controller --external
 ```
+
+---
 
 ## MCP server
 
@@ -314,62 +348,105 @@ hw_create_project / hw_open_project
 hw_update_requirements       ← lowers natural-language requirements; returns release_blocking_failures
 hw_generate_all              ← always candidate_only=true, release_eligible=false
 hw_run_all_checks            ← include_external=true for full gate matrix
-hw_review_release_readiness  ← single-call summary: blocking gates, requirements, assumptions
+hw_review_release_readiness  ← non-authoritative summary: blocking gates, requirements, assumptions
 hw_generate_repair_plan / hw_apply_repair_plan / hw_resolve_assumption
-hw_check_release_gate        ← only this tool may set release_eligible=true
+hw_check_release_gate        ← release_eligible=true when status==pass
 hw_export_candidate_bundle   ← archive checkpoint (candidate_only=true, release_eligible=false)
-hw_export_release_bundle     ← only reachable after check_release_gate passes
+hw_export_release_bundle     ← release_eligible=true when status==released; only reachable after gate passes
 ```
 
-Every tool response carries a consistent envelope:
+### Response envelope
+
+Every tool response carries a consistent envelope that enforces the core invariant:
+**candidate generated ≠ release passed ≠ fabrication qualified.**
 
 | Field | Meaning |
-|-------|---------|
-| `release_eligible` | `false` on all generation and requirements tools; `true` only from `hw_check_release_gate` (status pass) and `hw_export_release_bundle` |
+|---|---|
+| `release_eligible` | `false` on every tool; `true` only from `hw_check_release_gate` (status `pass`) and `hw_export_release_bundle` (status `released`) |
 | `candidate_only` | `true` when the backend or gate state precludes release |
-| `release_blocking_failures` | always-present list of strings; empty when clean |
+| `release_blocking_failures` | always-present list of strings; empty only when no blockers are known |
 
-The invariant is enforced at the MCP layer:
-**candidate generated ≠ release passed ≠ fabrication qualified.**
+`hw_review_release_readiness` additionally carries:
+
+| Field | Meaning |
+|---|---|
+| `release_gate_authoritative` | always `false` — this tool reads persisted reports; only `hw_check_release_gate` is authoritative |
+| `readiness_estimate` | `pass` / `fail` / `blocked` based on persisted reports; not a gate outcome |
+| `data_freshness` | `current` / `possibly_stale` / `unknown` — heuristic based on spec vs report file timestamps; `possibly_stale` means the spec was modified after the last check run |
 
 ### Tools
 
 **Platform introspection**
 - `hw_get_capabilities` — available backends, external tools, and which gates each enables; call before generating
+- `hw_diagnose_environment` — detailed environment probe: Python version, toolchain paths, installed packages
 
 **Project / spec**
-- `hw_create_project`, `hw_open_project`, `hw_snapshot_project`, `hw_compare_iterations`
-- `hw_read_spec`, `hw_validate_spec`, `hw_update_spec`, `hw_update_requirements`
-- `hw_list_assumptions`, `hw_resolve_assumption`
+- `hw_create_project` — create a new project from a template
+- `hw_open_project` — open an existing project and return its spec
+- `hw_snapshot_project` — snapshot the current project state as a named iteration
+- `hw_compare_iterations` — diff two iteration snapshots
+- `hw_read_spec` — read the merged project spec
+- `hw_validate_spec` — validate the spec against its JSON Schema; returns failures with field paths
+- `hw_update_spec` — write a spec section; requires `user_approved=true` for safety-critical sections
+- `hw_update_requirements` — lower natural-language requirements into typed spec fields; returns `release_blocking_failures` for unsupported constraints
+- `hw_list_assumptions` — list all declared design assumptions and their resolution state
+- `hw_resolve_assumption` — resolve a named assumption; requires `approved=true`
 
 **Generation** (all emit `release_eligible: false`, `candidate_only: true`)
-- `hw_generate_all`, `hw_generate_reference_intent`, `hw_generate_electronics_source`
-- `hw_generate_mechanical`, `hw_generate_firmware`
+- `hw_generate_all` — generate electronics, mechanical, and firmware sources in one step
+- `hw_generate_reference_intent` — generate reference-backend intent artifacts only
+- `hw_generate_electronics_source` — generate electronics source for the configured backend
+- `hw_generate_mechanical` — generate mechanical source (enclosure, mounting, fixtures)
+- `hw_generate_firmware` — generate Zephyr firmware source (pinmap, devicetree, app scaffold)
+- `hw_generate_bringup_tests` — generate bring-up test scripts from the firmware source
 
 **Validation**
-- `hw_run_all_checks`, `hw_check_release_gate`, `hw_get_failure_report`
-- `hw_run_erc`, `hw_run_drc`, `hw_check_electrical_semantics`, `hw_check_pinmap`
-- `hw_check_mechanical_fit`, `hw_build_firmware`
+- `hw_run_all_checks` — run all configured gates; `include_external=false` skips native toolchain gates
+- `hw_check_release_gate` — run the full release gate; `release_eligible=true` only when status is `pass`
+- `hw_get_failure_report` — read persisted gate reports from disk; optionally filter by gate name
+- `hw_run_erc` — run KiCad-native ERC; returns structured failures
+- `hw_run_drc` — run KiCad-native DRC against a named fab profile
+- `hw_check_electrical_semantics` — validate electrical graph semantics against spec constraints
+- `hw_extract_electrical_graph` — return the resolved electrical graph JSON
+- `hw_check_pinmap` — validate firmware pin assignments against the electrical graph
+- `hw_check_mechanical_fit` — run mechanical clearance, interference, and alignment checks
+- `hw_build_firmware` — invoke `west build` for the Zephyr target; returns structured build result
 
 **Iteration / repair**
-- `hw_run_design_iteration`, `hw_generate_repair_plan`, `hw_apply_repair_plan`
-- `hw_design_until_release` — requires `user_approved_autonomous_iteration=true`; returns `blocked` otherwise
+- `hw_run_design_iteration` — single supervised generate→check→repair cycle
+- `hw_generate_repair_plan` — propose spec patches for current gate failures
+- `hw_apply_repair_plan` — apply safe patches automatically; proposals requiring approval are returned, not applied
+- `hw_design_until_release` — autonomous generate→check→repair loop; requires `user_approved_autonomous_iteration=true` or returns `blocked`
+
+**Candidate management**
+- `hw_export_candidate_bundle` — snapshot and ZIP the current state (`candidate_only=true`, `release_eligible=false`)
+- `hw_list_candidates` — list all candidate bundles for a project
+- `hw_get_candidate` — retrieve metadata for a specific candidate bundle
+- `hw_review_candidate` — structured review of a candidate: gate summary, blocking failures, provenance
+- `hw_compare_candidates` — diff two candidate bundles by gate status and artifact hashes
 
 **Release readiness and export**
-- `hw_review_release_readiness` — aggregated summary from persisted reports without re-running checks
-- `hw_export_candidate_bundle` — candidate ZIP (`candidate_only=true`, `release_eligible=false`)
-- `hw_export_release_bundle` — release ZIP; only reachable after all gates pass
-- `hw_generate_design_report`, `hw_verify_release`
+- `hw_review_release_readiness` — non-authoritative summary from persisted reports; check `readiness_estimate` and `data_freshness` fields
+- `hw_check_release_gate` — authoritative gate; the only tool that sets `release_eligible=true`
+- `hw_prepare_fabrication_review` — assemble a fabrication review package for external DFM review
+- `hw_export_pcb_fabrication` — export PCB fabrication files (Gerber, drill, BOM, pick-and-place); requires KiCad native
+- `hw_export_mechanical` — export STEP/STL mechanical files; requires OpenCASCADE
+- `hw_import_board_step` — import an externally sourced board STEP into the mechanical assembly
+- `hw_export_release_bundle` — ZIP the release directory; sets `release_eligible=true` when status is `released`
+- `hw_generate_design_report` — generate a human-readable design report markdown
+- `hw_verify_release` — verify artifact integrity of the release directory against its manifest
 
 ### MCP resources
 
 URI-template resources for structured reads without tool calls:
 
 | Resource | Contents |
-|----------|----------|
-| `hw://project/{project}/release-gate` | Release readiness summary (same as `hw_review_release_readiness`) |
+|---|---|
+| `hw://project/{project}/release-gate` | Non-authoritative release readiness summary (`release_gate_authoritative: false`; use `hw_check_release_gate` for the authoritative gate) |
 | `hw://project/{project}/spec` | Full merged project spec |
 | `hw://project/{project}/requirements` | Active requirements: lowered and unresolved constraints |
+
+---
 
 ## Distribution
 
@@ -386,10 +463,12 @@ URI-template resources for structured reads without tool calls:
 - MCP registry publication is deferred until the public tool interface and
   versioning policy are stable.
 
+---
+
 ## Gate semantics
 
 | Status | Meaning |
-|--------|---------|
+|---|---|
 | `pass` | check ran and found no blocking finding |
 | `fail` | check ran and found a violation |
 | `blocked` | required tooling or prior decision was absent |
@@ -397,12 +476,14 @@ URI-template resources for structured reads without tool calls:
 | `generated` | source or spec was written; does not imply gate passage or release eligibility |
 | `released` | all gates passed and the release bundle was exported |
 
-`generated` ≠ `pass` ≠ `released`. Every generation tool sets `release_eligible: false`
-regardless of status. Only `hw_check_release_gate` (status `pass`) and
-`hw_export_release_bundle` (status `released`) advance the invariant.
+`generated` ≠ `pass` ≠ `released`. Every tool emits `release_eligible: false`
+unless it is `hw_check_release_gate` (status `pass`) or `hw_export_release_bundle`
+(status `released`).
 
 The complete release, adapter, hash, and physical-evidence rules are defined in
 [Validation contract](docs/validation-contract.md).
+
+---
 
 ## Repository layout
 
