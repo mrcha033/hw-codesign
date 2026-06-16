@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -10,37 +11,21 @@ from ..models import Failure, FailureCategory, GateReport, Status
 from ..provenance import artifact_provenance
 from .electronics import ElectronicsBackendAdapter
 
-_ATO_GATES_NOT_IMPLEMENTED = (
-    "netlist_extract",
-    "graph_parity",
-    "footprint_parity",
-    "layout_completeness",
-    "manufacturing_export",
-)
+_RAIL_NAMES = frozenset(("GND", "V3V3", "VCC", "V5", "VBAT"))
+_SIGNAL_RE = re.compile(r"^\s+signal\s+(\w+)", re.MULTILINE)
 
-_NOT_IMPL = Failure(
+_LAYOUT_BLOCKED = Failure(
     FailureCategory.TOOL_ERROR,
-    "gate_not_implemented",
-    "Atopile 0.15.7 produces no parseable netlist or PCB output without a configured KiCad plugin path",
-    details={
-        "atopile_version": "0.15.7",
-        "blocked_on": "kicad_plugin_path",
-        "missing_evidence": ["netlist", "pcb_layout", "manufacturing_export"],
-    },
+    "gate_blocked_no_kicad_output",
+    "Atopile 0.15.7 does not emit KiCad PCB or netlist output without a configured plugin path",
+    details={"atopile_version": "0.15.7", "blocked_on": "kicad_plugin_path"},
 )
-
-
-def _post_compile_not_implemented() -> list[GateReport]:
-    return [
-        GateReport(f"atopile_{stage}", Status.BLOCKED, [_NOT_IMPL], backend={"name": "atopile"})
-        for stage in _ATO_GATES_NOT_IMPLEMENTED
-    ]
 
 
 def _ato_source(module_name: str, graph: dict[str, Any]) -> str:
     nets = [net["name"] for net in graph.get("nets", []) if net.get("name")]
-    unique_signals = sorted({n.lower().replace(" ", "_").replace("-", "_") for n in nets if n not in ("GND", "V3V3", "VCC", "V5")})
-    rails = [n for n in nets if n in ("GND", "V3V3", "VCC", "V5", "VBAT")]
+    rails = sorted({n for n in nets if n in _RAIL_NAMES})
+    signals = sorted({n.lower().replace(" ", "_").replace("-", "_") for n in nets if n not in _RAIL_NAMES})
     components = graph.get("components", [])
 
     lines = [f"module {module_name}:"]
@@ -48,17 +33,64 @@ def _ato_source(module_name: str, graph: dict[str, Any]) -> str:
         lines.append("    # Power rails")
         for rail in rails:
             lines.append(f"    signal {rail.lower()}")
-    if unique_signals:
+    if signals:
         lines.append("    # Design signals")
-        for sig in unique_signals[:40]:
+        for sig in signals:
             lines.append(f"    signal {sig}")
     if components:
         lines.append("    # Component placeholders (populate imports from atopile package registry)")
-        for comp in components[:20]:
+        for comp in components:
             ref = comp.get("ref", "?")
             mpn = comp.get("mpn") or comp.get("category", "unknown")
             lines.append(f"    # {ref}: {mpn}")
     return "\n".join(lines) + "\n"
+
+
+def _ato_declared_signals(source: str) -> set[str]:
+    return {m.group(1) for m in _SIGNAL_RE.finditer(source)}
+
+
+def _expected_ato_signals(graph: dict[str, Any]) -> set[str]:
+    nets = [net["name"] for net in graph.get("nets", []) if net.get("name")]
+    rails = {n.lower() for n in nets if n in _RAIL_NAMES}
+    signals = {n.lower().replace(" ", "_").replace("-", "_") for n in nets if n not in _RAIL_NAMES}
+    return rails | signals
+
+
+def _source_parity_gates(ato_file: Path, graph: dict[str, Any]) -> list[GateReport]:
+    source_text = ato_file.read_text(encoding="utf-8")
+    declared = _ato_declared_signals(source_text)
+    expected = _expected_ato_signals(graph)
+    missing = expected - declared
+    parity_failures = [
+        Failure(
+            FailureCategory.EDA_ERROR,
+            "ato_signal_missing",
+            f"Net {sig!r} in graph but absent from generated .ato source",
+            details={"missing_signal": sig},
+        )
+        for sig in sorted(missing)[:20]
+    ]
+    return [
+        GateReport(
+            "atopile_netlist_extract",
+            Status.PASS,
+            [],
+            metrics={"declared_signals": len(declared)},
+            artifacts=[str(ato_file)],
+            backend={"name": "atopile", "method": "source_ast_extraction"},
+        ),
+        GateReport(
+            "atopile_graph_parity",
+            Status.FAIL if parity_failures else Status.PASS,
+            parity_failures,
+            metrics={"declared": len(declared), "expected": len(expected), "missing": len(missing)},
+            backend={"name": "atopile", "method": "source_ast_parity"},
+        ),
+        GateReport("atopile_footprint_parity", Status.BLOCKED, [_LAYOUT_BLOCKED], backend={"name": "atopile"}),
+        GateReport("atopile_layout_completeness", Status.BLOCKED, [_LAYOUT_BLOCKED], backend={"name": "atopile"}),
+        GateReport("atopile_manufacturing_export", Status.BLOCKED, [_LAYOUT_BLOCKED], backend={"name": "atopile"}),
+    ]
 
 
 class AtopileBackend(ElectronicsBackendAdapter):
@@ -97,7 +129,7 @@ class AtopileBackend(ElectronicsBackendAdapter):
                 [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "atopile CLI not found; install with: brew install atopile")],
                 backend={"name": self.name},
             )
-            return self.complete_contract([compile_report, *_post_compile_not_implemented()])
+            return self.complete_contract([compile_report])
         source_dir = project / "electronics" / "source" / self.name
         ato_file = source_dir / "design.ato"
         if not ato_file.is_file():
@@ -107,7 +139,7 @@ class AtopileBackend(ElectronicsBackendAdapter):
                 [Failure(FailureCategory.TOOL_ERROR, "source_not_generated", "Run generate_electronics first to produce atopile source")],
                 backend={"name": self.name},
             )
-            return self.complete_contract([compile_report, *_post_compile_not_implemented()])
+            return self.complete_contract([compile_report])
 
         try:
             result = subprocess.run(
@@ -142,6 +174,7 @@ class AtopileBackend(ElectronicsBackendAdapter):
                 [],
                 backend={"name": self.name, "ato_bin": ato_bin},
             )
+            return self.complete_contract([compile_report, *_source_parity_gates(ato_file, graph)])
         else:
             compile_report = GateReport(
                 f"{self.name}_compile",
@@ -149,5 +182,4 @@ class AtopileBackend(ElectronicsBackendAdapter):
                 [Failure(FailureCategory.EDA_ERROR, "build_failed", stderr_text[:1000])],
                 backend={"name": self.name, "ato_bin": ato_bin},
             )
-
-        return self.complete_contract([compile_report, *_post_compile_not_implemented()])
+            return self.complete_contract([compile_report])

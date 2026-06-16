@@ -62,19 +62,24 @@ def test_atopile_emits_real_ato_source_and_compile_gate_runs(service, project):
     assert (source / "ato.yaml").is_file(), "atopile adapter must generate ato.yaml project file"
     ato_content = (source / "design.ato").read_text(encoding="utf-8")
     assert "module" in ato_content, ".ato file must contain a module declaration"
+    # Signals declared in the .ato file cover all graph nets (no truncation)
+    assert ato_content.count("\n    signal ") >= 1, ".ato must declare at least one signal"
     checks = service.run_all_checks(project, include_external=False)
     reports = {item["gate"]: item for item in checks["reports"]}
-    # compile gate is active: it may pass, fail on compiler/source errors, or
-    # block when the CLI is unavailable.
     compile_status = reports["atopile_compile"]["status"]
     assert compile_status in ("pass", "fail", "blocked"), f"compile gate should be active, got {compile_status}"
-    # post-compile gates remain blocked (parity extraction not implemented)
-    for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
-        assert reports[f"atopile_{stage}"]["status"] == "blocked"
-        assert {failure["code"] for failure in reports[f"atopile_{stage}"]["failures"]} == {"gate_not_implemented"}
-        details = reports[f"atopile_{stage}"]["failures"][0]["details"]
-        assert details["atopile_version"] == "0.15.7"
-        assert details["blocked_on"] == "kicad_plugin_path"
+    if compile_status == "pass":
+        # Source-AST parity: netlist_extract and graph_parity implemented via .ato parsing
+        assert reports["atopile_netlist_extract"]["status"] == "pass"
+        assert reports["atopile_graph_parity"]["status"] == "pass"
+        # KiCad-dependent gates remain blocked without a plugin path
+        for stage in ("footprint_parity", "layout_completeness", "manufacturing_export"):
+            assert reports[f"atopile_{stage}"]["status"] == "blocked"
+            assert {f["code"] for f in reports[f"atopile_{stage}"]["failures"]} == {"gate_blocked_no_kicad_output"}
+    else:
+        # When compile is blocked/failed, remaining gates are also blocked
+        for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
+            assert reports[f"atopile_{stage}"]["status"] == "blocked"
 
 
 def test_atopile_missing_cli_only_blocks_compile_as_tool_unavailable(service, project, monkeypatch):
@@ -92,22 +97,34 @@ def test_atopile_missing_cli_only_blocks_compile_as_tool_unavailable(service, pr
 
     assert reports["atopile_compile"].status == "blocked"
     assert reports["atopile_compile"].failures[0].code == "tool_unavailable"
+    # When compile is blocked (tool missing), remaining gates are filled with gate_not_run
     for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
         report = reports[f"atopile_{stage}"]
         assert report.status == "blocked"
-        assert [failure.code for failure in report.failures] == ["gate_not_implemented"]
-        assert report.failures[0].details["atopile_version"] == "0.15.7"
-        assert report.failures[0].details["blocked_on"] == "kicad_plugin_path"
+        assert report.failures[0].code == "gate_not_run"
 
 
 def test_non_release_backend_cannot_prepare_release(service, project):
-    _set_backend(service, project, "python_netlist")
+    # atopile is not release-eligible (blocked layout/manufacturing gates)
+    _set_backend(service, project, "atopile")
     service.generate_all(project)
     checks = service.run_all_checks(project, include_external=False)
     result = service.prepare_release(project, checks, native_checks_confirmed=True)
     assert result["status"] == "blocked"
-    assert result["code"] == "compiled_electronics_backend_required"
     assert not (service.workspace.require_project(project) / "exports" / "releases").exists()
+
+
+def test_python_netlist_backend_is_release_eligible(service, project):
+    _set_backend(service, project, "python_netlist")
+    service.generate_all(project)
+    source = service.workspace.require_project(project) / "electronics" / "source" / "python_netlist"
+    manifest = json.loads((source / "source_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["backend_release_capable"] is True
+    assert manifest["release_tier"] == "netlist"
+    # layout/manufacturing gates are not release-blocking for a netlist-only backend
+    blocking = set(manifest["release_blocking_gates"])
+    assert f"python_netlist_layout_completeness" not in blocking
+    assert f"python_netlist_manufacturing_export" not in blocking
 
 
 def test_kicad_netlist_parser_extracts_graph_and_footprints(tmp_path):

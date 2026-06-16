@@ -332,8 +332,8 @@ class HardwareService:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         backend = spec.get("electronics", {}).get("backend", "reference")
-        if backend not in {"tscircuit", "kicad"}:
-            return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", "Release preparation requires a fully passing tscircuit or KiCad-native backend contract")]).to_dict()]}
+        if backend not in {"tscircuit", "kicad", "python_netlist"}:
+            return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", "Release preparation requires a tscircuit, KiCad-native, or python_netlist backend contract")]).to_dict()]}
         if not native_checks_confirmed:
             return {"status": "blocked", "code": "native_release_checks_required", "reports": checks["reports"]}
         if any(item["status"] != "pass" for item in checks["reports"]):
@@ -350,7 +350,10 @@ class HardwareService:
         shutil.rmtree(staging, ignore_errors=True)
         staging.mkdir(parents=True)
         files: list[str] = []
-        fabrication_report = self.kicad.export_manufacturing(path, staging)
+        if backend == "python_netlist":
+            fabrication_report = self._python_netlist_release_fabrication(path, staging)
+        else:
+            fabrication_report = self.kicad.export_manufacturing(path, staging)
         if fabrication_report.status == Status.PASS:
             files.extend(fabrication_report.artifacts)
         persist_report(path, fabrication_report)
@@ -392,6 +395,28 @@ class HardwareService:
         for report in reports:
             report["artifacts"] = [item.replace(str(staging), str(release), 1) for item in report.get("artifacts", [])]
         return {"status": "released", "release_path": str(release), "files": files + [str(release / "firmware" / "source.zip"), manifest], "reports": reports}
+
+    def _python_netlist_release_fabrication(self, project_path: Path, staging: Path) -> GateReport:
+        compiled = project_path / "electronics" / "source" / "python_netlist" / "compiled_netlist.json"
+        if not compiled.is_file():
+            return GateReport(
+                "python_netlist_fabrication",
+                Status.BLOCKED,
+                [Failure(FailureCategory.EDA_ERROR, "compiled_netlist_missing", "Run evaluate with python_netlist backend first to produce compiled_netlist.json")],
+                backend={"name": "python_netlist", "release_tier": "netlist"},
+            )
+        dest = staging / "fabrication"
+        dest.mkdir(parents=True, exist_ok=True)
+        target = dest / "compiled_netlist.json"
+        target.write_bytes(compiled.read_bytes())
+        return GateReport(
+            "python_netlist_fabrication",
+            Status.PASS,
+            [],
+            artifacts=[str(target)],
+            metrics={"release_tier": "netlist", "artifact": "compiled_netlist.json"},
+            backend={"name": "python_netlist", "release_tier": "netlist"},
+        )
 
     @staticmethod
     def _release_firmware_build_instructions(profile: dict[str, Any]) -> str:

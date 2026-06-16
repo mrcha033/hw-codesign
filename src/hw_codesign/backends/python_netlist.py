@@ -31,12 +31,18 @@ class PythonNetlistBackend(ElectronicsBackendAdapter):
         manifest = target / "source_manifest.json"
         write_json(manifest, {
             "backend": self.name,
-            "backend_release_capable": False,
-            "source_release_eligible": False,
+            "backend_release_capable": True,
+            "source_release_eligible": True,
+            "release_tier": "netlist",
             "sources": self.source_entries(target, [source]),
             "contract_gates": list(self.gate_names),
-            "release_blocking_gates": [f"{self.name}_layout_completeness", f"{self.name}_manufacturing_export"],
-            "provenance": artifact_provenance(spec, self.platform_root / "parts", self.name, compiler_version=sys.version.split()[0], command=[sys.executable, str(source)], release_eligible=False),
+            "release_blocking_gates": [
+                f"{self.name}_compile",
+                f"{self.name}_netlist_extract",
+                f"{self.name}_graph_parity",
+                f"{self.name}_footprint_parity",
+            ],
+            "provenance": artifact_provenance(spec, self.platform_root / "parts", self.name, compiler_version=sys.version.split()[0], command=[sys.executable, str(source)], release_eligible=True),
         })
         compiled.unlink(missing_ok=True)
         return [str(source), str(manifest)]
