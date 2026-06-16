@@ -26,6 +26,22 @@ def resolve_tool(executable: str) -> str | None:
     return resolved
 
 
+def resolve_kicad_python() -> str | None:
+    """Return path to KiCad's bundled Python for pcbnew scripting access."""
+    env_path = os.environ.get("HW_KICAD_PYTHON")
+    if env_path:
+        p = Path(env_path)
+        if p.is_file():
+            return str(p)
+    for candidate in [
+        Path("/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"),
+        Path("/usr/lib/kicad/lib/python3/dist-packages/../../../bin/python3"),
+    ]:
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 def tool_version(executable: str) -> str | None:
     resolved = resolve_tool(executable)
     if resolved is None:
