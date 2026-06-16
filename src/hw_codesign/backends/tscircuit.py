@@ -106,6 +106,41 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             "--disable-parts-engine",
         ]
 
+    def _patch_windows_esm_imports(self) -> None:
+        """Patch importFromUserLand in tscircuit bundles to use file:// URLs on Windows.
+
+        tsx 4.22.4 does not convert Windows absolute paths to file:// URLs in its
+        ESM load hook, causing ERR_UNSUPPORTED_ESM_URL_SCHEME on Node.js v22.
+        This applies the same pathToFileURL fix that the rest of the bundle already uses.
+        """
+        targets = [
+            self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "build" / "build.worker.js",
+            self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js",
+        ]
+        fix_user = (
+            'const _fixedUserPath = /^[A-Za-z]:[/\\\\]/.test(resolvedUserPath)'
+            ' ? "file:///" + resolvedUserPath.replace(/\\\\/g, "/") : resolvedUserPath;\n'
+            '      return await import(_fixedUserPath);'
+        )
+        fix_cli = (
+            'const _fixedCliPath = /^[A-Za-z]:[/\\\\]/.test(resolvedCliPath)'
+            ' ? "file:///" + resolvedCliPath.replace(/\\\\/g, "/") : resolvedCliPath;\n'
+            '      return await import(_fixedCliPath);'
+        )
+        for target in targets:
+            if not target.is_file():
+                continue
+            text = target.read_text(encoding="utf-8")
+            changed = False
+            if "return await import(resolvedUserPath);" in text:
+                text = text.replace("return await import(resolvedUserPath);", fix_user)
+                changed = True
+            if "return await import(resolvedCliPath);" in text:
+                text = text.replace("return await import(resolvedCliPath);", fix_cli)
+                changed = True
+            if changed:
+                target.write_text(text, encoding="utf-8")
+
     def evaluate(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
         return self.complete_contract(self.compile(project, graph))
 
@@ -126,6 +161,8 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                 "tscircuit_footprint_parity", "tscircuit_layout_completeness",
             )]
         shutil.rmtree(entry.parent / "dist", ignore_errors=True)
+        if sys.platform == "win32":
+            self._patch_windows_esm_imports()
         try:
             result = subprocess.run(self.command(entry), cwd=str(self.platform_root), capture_output=True, text=True, timeout=600)
         except OSError as exc:
