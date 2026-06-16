@@ -95,10 +95,14 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
 
     def command(self, entry: Path) -> list[str]:
         compiler_entry = entry.with_name("board.compiler.mjs")
+        try:
+            entry_arg = compiler_entry.relative_to(self.platform_root).as_posix()
+        except ValueError:
+            entry_arg = compiler_entry.as_posix()
         return [
             str(self._tsx_bin()),
             str(self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"),
-            "build", str(compiler_entry), "--ignore-config",
+            "build", entry_arg, "--ignore-config",
             "--disable-parts-engine",
         ]
 
