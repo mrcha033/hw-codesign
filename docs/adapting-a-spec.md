@@ -62,7 +62,10 @@ demonstrating that the architecture generalizes beyond the current reference.
   footprint mappings; native KiCad export is still required for manufacturing.
 - Choose `kicad` for the strongest current native release path.
 - Use `python_netlist` only for deterministic netlist/parity experiments.
-- Do not select `atopile` expecting compiled output; it is currently a placeholder.
+- Do not select `atopile` expecting release output. It emits `.ato` source and
+  runs `ato build`, but post-compile netlist, parity, layout, and manufacturing
+  gates are still blocked with `gate_not_implemented`: Atopile 0.15.7 produces
+  no parseable netlist or PCB output without a configured KiCad plugin path.
 
 Every backend reports missing support as `blocked` or `fail`. Do not replace those
 statuses with manual green checks unless the missing evidence is represented by a

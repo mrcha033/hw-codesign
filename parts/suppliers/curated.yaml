@@ -23,3 +23,4 @@ records:
   - {component_id: grm188_100n, supplier_sku: GRM188R71C104KA01D, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: grm31_22u, supplier_sku: GRM31CR61E226ME15L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: grm32_10u_50v, supplier_sku: GRM32ER71H106KA12L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: esp32s3_wroom_1, supplier_sku: ESP32-S3-WROOM-1-N8, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-16'}}

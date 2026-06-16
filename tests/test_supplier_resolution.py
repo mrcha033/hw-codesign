@@ -142,6 +142,33 @@ def test_generated_graph_contains_supplier_and_datasheet_provenance(service, pro
     assert all(component["datasheet_evidence"] for component in graph["components"])
 
 
+def test_esp32s3_library_metadata_is_verified():
+    root = Path(__file__).parents[1]
+    component_db = yaml.safe_load((root / "parts" / "components" / "sensor_data_logger.yaml").read_text(encoding="utf-8"))
+    esp32 = next(component for component in component_db["components"] if component["id"] == "esp32s3_wroom_1")
+    expected_pins = {str(number) for number in range(1, 42)}
+
+    assert esp32["review_status"] == "approved"
+    assert esp32["resolution_provenance"]["reviewed_at"] != "pending"
+    assert esp32["symbol"]["verified"] is True
+    assert esp32["footprint"]["verified"] is True
+    assert esp32["symbol"]["library_id"] == "RF_Module:ESP32-S3-WROOM-1"
+    assert esp32["footprint"]["library_id"] == "RF_Module:ESP32-S3-WROOM-1"
+    assert set(esp32["symbol"]["expected_pins"]) == expected_pins
+    assert set(esp32["footprint"]["expected_pads"]) == expected_pins
+
+    evidence = yaml.safe_load((root / "parts" / "evidence" / "datasheets.yaml").read_text(encoding="utf-8"))["evidence"]
+    esp32_evidence = [item for item in evidence if item["component_id"] == "esp32s3_wroom_1"]
+    assert any(
+        item["review_status"] == "approved"
+        and {"identity", "pins", "symbol", "package", "footprint"}.issubset(set(item["supports"]))
+        for item in esp32_evidence
+    )
+
+    supplier_records = yaml.safe_load((root / "parts" / "suppliers" / "curated.yaml").read_text(encoding="utf-8"))["records"]
+    assert any(record["component_id"] == "esp32s3_wroom_1" for record in supplier_records)
+
+
 def test_stale_observed_at_blocks_availability(tmp_path):
     template_spec = _template_spec()
     parts_root = _parts_copy(tmp_path)

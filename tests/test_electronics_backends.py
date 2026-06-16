@@ -71,6 +71,9 @@ def test_atopile_emits_real_ato_source_and_compile_gate_runs(service, project):
     for stage in ("netlist_extract", "graph_parity", "footprint_parity", "layout_completeness", "manufacturing_export"):
         assert reports[f"atopile_{stage}"]["status"] == "blocked"
         assert {failure["code"] for failure in reports[f"atopile_{stage}"]["failures"]} == {"gate_not_implemented"}
+        details = reports[f"atopile_{stage}"]["failures"][0]["details"]
+        assert details["atopile_version"] == "0.15.7"
+        assert details["blocked_on"] == "kicad_plugin_path"
 
 
 def test_atopile_missing_cli_only_blocks_compile_as_tool_unavailable(service, project, monkeypatch):
@@ -92,6 +95,8 @@ def test_atopile_missing_cli_only_blocks_compile_as_tool_unavailable(service, pr
         report = reports[f"atopile_{stage}"]
         assert report.status == "blocked"
         assert [failure.code for failure in report.failures] == ["gate_not_implemented"]
+        assert report.failures[0].details["atopile_version"] == "0.15.7"
+        assert report.failures[0].details["blocked_on"] == "kicad_plugin_path"
 
 
 def test_non_release_backend_cannot_prepare_release(service, project):

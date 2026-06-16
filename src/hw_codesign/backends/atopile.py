@@ -21,8 +21,20 @@ _ATO_GATES_NOT_IMPLEMENTED = (
 _NOT_IMPL = Failure(
     FailureCategory.TOOL_ERROR,
     "gate_not_implemented",
-    "Atopile adapter does not yet implement post-compile parity and export gates",
+    "Atopile 0.15.7 produces no parseable netlist or PCB output without a configured KiCad plugin path",
+    details={
+        "atopile_version": "0.15.7",
+        "blocked_on": "kicad_plugin_path",
+        "missing_evidence": ["netlist", "pcb_layout", "manufacturing_export"],
+    },
 )
+
+
+def _post_compile_not_implemented() -> list[GateReport]:
+    return [
+        GateReport(f"atopile_{stage}", Status.BLOCKED, [_NOT_IMPL], backend={"name": "atopile"})
+        for stage in _ATO_GATES_NOT_IMPLEMENTED
+    ]
 
 
 def _ato_source(module_name: str, graph: dict[str, Any]) -> str:
@@ -79,14 +91,23 @@ class AtopileBackend(ElectronicsBackendAdapter):
     def evaluate(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
         ato_bin = shutil.which("ato")
         if not ato_bin:
-            return self.blocked_contract(
-                "tool_unavailable",
-                "atopile CLI not found; install with: brew install atopile",
+            compile_report = GateReport(
+                f"{self.name}_compile",
+                Status.BLOCKED,
+                [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "atopile CLI not found; install with: brew install atopile")],
+                backend={"name": self.name},
             )
+            return self.complete_contract([compile_report, *_post_compile_not_implemented()])
         source_dir = project / "electronics" / "source" / self.name
         ato_file = source_dir / "design.ato"
         if not ato_file.is_file():
-            return self.blocked_contract("source_not_generated", "Run generate_electronics first to produce atopile source")
+            compile_report = GateReport(
+                f"{self.name}_compile",
+                Status.BLOCKED,
+                [Failure(FailureCategory.TOOL_ERROR, "source_not_generated", "Run generate_electronics first to produce atopile source")],
+                backend={"name": self.name},
+            )
+            return self.complete_contract([compile_report, *_post_compile_not_implemented()])
 
         try:
             result = subprocess.run(
@@ -129,8 +150,4 @@ class AtopileBackend(ElectronicsBackendAdapter):
                 backend={"name": self.name, "ato_bin": ato_bin},
             )
 
-        remaining = [
-            GateReport(f"{self.name}_{stage}", Status.BLOCKED, [_NOT_IMPL], backend={"name": self.name})
-            for stage in _ATO_GATES_NOT_IMPLEMENTED
-        ]
-        return self.complete_contract([compile_report, *remaining])
+        return self.complete_contract([compile_report, *_post_compile_not_implemented()])

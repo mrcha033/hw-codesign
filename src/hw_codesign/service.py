@@ -32,6 +32,38 @@ from .validation import Validator, persist_report
 from .workspace import Workspace
 
 
+_WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
+_POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
+
+
+def _portable_review_value(value: Any, workspace_root: Path) -> Any:
+    """Return review-bundle data without machine-local absolute paths."""
+    if isinstance(value, dict):
+        return {key: _portable_review_value(item, workspace_root) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_portable_review_value(item, workspace_root) for item in value]
+    if isinstance(value, str):
+        return _portable_review_string(value, workspace_root)
+    return value
+
+
+def _portable_review_string(value: str, workspace_root: Path) -> str:
+    root = workspace_root.resolve()
+    root_text = root.as_posix()
+    if value == root_text:
+        return "."
+    if value.startswith(f"{root_text}/"):
+        return Path(value).resolve().relative_to(root).as_posix()
+    if root_text in value:
+        return value.replace(root_text, ".")
+    if _WINDOWS_ABSOLUTE_PATH.match(value):
+        normalized = value.replace("\\", "/")
+        return f"<host-path>/{normalized.split('/')[-1]}"
+    if _POSIX_ABSOLUTE_PATH.match(value):
+        return f"<host-path>/{Path(value).name}"
+    return value
+
+
 class HardwareService:
     def __init__(self, root: Path | str):
         self.root = Path(root).resolve()
@@ -681,6 +713,7 @@ class HardwareService:
             ],
             key=lambda r: r["gate"],
         )
+        gate_reports = _portable_review_value(gate_reports, self.workspace.root)
 
         # Placement summary from graph if available.
         graph_path = path / "electronics" / "generated" / "electrical_graph.json"

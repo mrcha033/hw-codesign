@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -11,6 +13,17 @@ from hw_codesign.review_viewer import _merge_bundle
 
 def _schema() -> dict:
     return json.loads((Path(__file__).parents[1] / "schemas" / "review_bundle.schema.json").read_text(encoding="utf-8"))
+
+
+def _strings(value):
+    if isinstance(value, dict):
+        for item in value.values():
+            yield from _strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _strings(item)
+    elif isinstance(value, str):
+        yield value
 
 
 def test_export_review_produces_valid_bundle(service, project):
@@ -38,6 +51,57 @@ def test_export_review_produces_valid_bundle(service, project):
     assert isinstance(bundle["iterations"], list)
     assert isinstance(bundle["candidates"], list)
     assert isinstance(bundle["artifacts"], list)
+
+
+def test_committed_review_bundle_sample_is_portable_and_hash_valid():
+    root = Path(__file__).parents[1]
+    bundle_path = root / "examples" / "robotics-motor-controller" / "proof" / "review_bundle.json"
+    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+
+    Draft202012Validator(_schema()).validate(bundle)
+    assert not any(re.search(r"(/Users/|/private/|/tmp/|[A-Za-z]:\\)", item) for item in _strings(bundle))
+
+    canonical = {key: value for key, value in bundle.items() if key not in {"bundle_hash", "generated_at"}}
+    digest = hashlib.sha256(json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert bundle["bundle_hash"] == digest
+
+
+def test_export_review_bundle_paths_are_portable(service, project):
+    service.generate_all(project)
+    service.run_all_checks(project, include_external=False)
+    project_path = service.workspace.require_project(project)
+    absolute_artifact = project_path / "validation" / "reports" / "portable_artifact.txt"
+    absolute_artifact.write_text("evidence\n", encoding="utf-8")
+    report = {
+        "gate": "portable_path_probe",
+        "status": "blocked",
+        "failures": [
+            {
+                "category": "TOOL_ERROR",
+                "code": "absolute_path_probe",
+                "message": f"Tool wrote {absolute_artifact}",
+                "severity": "error",
+                "path": str(absolute_artifact),
+                "details": {"command": ["/usr/local/bin/tool", str(absolute_artifact)]},
+                "requires_user_decision": False,
+            }
+        ],
+        "metrics": {},
+        "artifacts": [str(absolute_artifact)],
+        "backend": {"command": ["/usr/local/bin/tool", str(absolute_artifact)]},
+    }
+    (project_path / "validation" / "reports" / "portable_path_probe.json").write_text(json.dumps(report), encoding="utf-8")
+
+    result = service.export_review(project)
+    bundle = json.loads(Path(result["file"]).read_text(encoding="utf-8"))
+    strings = list(_strings(bundle))
+
+    assert not any(str(service.workspace.root) in item for item in strings)
+    probe = next(item for item in bundle["gate_reports"] if item["gate"] == "portable_path_probe")
+    assert probe["artifacts"] == [f"projects/{project}/validation/reports/portable_artifact.txt"]
+    assert probe["failures"][0]["path"] == f"projects/{project}/validation/reports/portable_artifact.txt"
+    assert probe["backend"]["command"][1] == f"projects/{project}/validation/reports/portable_artifact.txt"
+    assert probe["backend"]["command"][0] == "<host-path>/tool"
 
 
 def test_export_review_bundle_hash_excludes_generated_at(service, project):

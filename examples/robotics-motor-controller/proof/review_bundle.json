@@ -1,0 +1,1045 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/assembly_drawing.pdf",
+      "sha256": "fe194b7a1f906e498f789bf5a3751534c18021af44c620c580201db68b85b5e5"
+    },
+    {
+      "path": "docs/bringup_guide.md",
+      "sha256": "b5d47baee40ea6992ff48eabc96589bc51784860a35e00d1b17913a8159daa91"
+    },
+    {
+      "path": "docs/bringup_guide.pdf",
+      "sha256": "b2aff8cf6cb37a90ae4d9562ae0c907b0eacca4c1c32a7e1ee9b6d0c739efb64"
+    },
+    {
+      "path": "docs/design_report.md",
+      "sha256": "78ca2511cb99a91e55b26ed28dae86b1ca3b18549c7712ea9d51fa251134902d"
+    },
+    {
+      "path": "docs/design_report.pdf",
+      "sha256": "b793877ce9d59aa559bad01fc92c032b1d987b8a7c97843d351e373968eb2c87"
+    },
+    {
+      "path": "docs/known_risks.md",
+      "sha256": "d670b9d261c2892820288fa530e76076ae199ebe032e09f0a1aa5cc280f1e8de"
+    },
+    {
+      "path": "docs/layout_preview.pdf",
+      "sha256": "73532e73f6b2879caf9ad336efce59319815916befe4f3ace8b2bb68e5a8ebc3"
+    },
+    {
+      "path": "docs/schematic.pdf",
+      "sha256": "519809dc375516cec28f5bfdbfcaff3e9b3e90481a7eefd019f60d59093d4deb"
+    },
+    {
+      "path": "docs/validation_report.json",
+      "sha256": "cc6f3ffee03e8af3a6093fa790f7801e44c279320c5be38a0e08124df3bc4905"
+    },
+    {
+      "path": "docs/validation_report.pdf",
+      "sha256": "14a41b4f02201ffa9cf0fbffd84c96667638dc219ef20ebb8ab05f665fc69cc8"
+    },
+    {
+      "path": "fabrication/assembly_drawing.pdf",
+      "sha256": "fe194b7a1f906e498f789bf5a3751534c18021af44c620c580201db68b85b5e5"
+    },
+    {
+      "path": "fabrication/assembly_drawing.svg",
+      "sha256": "f166c44317ad65937d0ce950b55fb2ea553245f727741d6ea052302de7ded439"
+    },
+    {
+      "path": "fabrication/bom.csv",
+      "sha256": "3e9988169f22b2188caf2daa4b59222288bb7d2e704cf9cffd0e92363cee300c"
+    },
+    {
+      "path": "fabrication/drill.zip",
+      "sha256": "264142968ed4af16fbf2a5c1aaba418a0a8270bb3aa7d77b839ee23c68d4d983"
+    },
+    {
+      "path": "fabrication/gerbers.zip",
+      "sha256": "608b810478b5ce644968b8554415a3ce3131e4bdcfb48d7ab16c4f43083da605"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-B_Cu.gbl",
+      "sha256": "007d64f31fa22c4ae17ea119e7dda6576a2cacc907d1d327cebf3fd17473a7bc"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-B_Mask.gbs",
+      "sha256": "6219b8b2ce681a77c328d0a5c863ed7845ed3ff9fe6bb5018bb70f8310119b67"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-Edge_Cuts.gm1",
+      "sha256": "1de1e5d500f1c1419faef96b524a14d55bf51bf27225f5dc60fe16766c6d68f1"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-F_Cu.gtl",
+      "sha256": "dc9121b71a033df0e1c5c128a44608b2c1cb103f05794b49a1a883031022dc81"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-F_Mask.gts",
+      "sha256": "9872258b7a73aabaaf5e5cf5661e68a2c5cd7d767e9a782c20a09554a9936724"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-In1_Cu.g1",
+      "sha256": "2cbbfe41334436f3a0a7f571fbb0d2be2cd9e727e17f7b800514d2d48e61e147"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-In2_Cu.g2",
+      "sha256": "b2c949839b41397e64d0ee728553de368bf731d0c3368b98f9f80670e07a1c21"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-b_silkscreen.gbo",
+      "sha256": "57b59e9ba61d9a5390df4834a24cdca5c4b53dd1455ebcedd4f54d799c1f157b"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-drl_map.pdf",
+      "sha256": "f6b6fa5c028acf18a45b7e20dd68f1838a856e5443389e9a0fc46802c98bffaa"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-f_silkscreen.gto",
+      "sha256": "3aa4e468051c721411efbbd84f4c2390db1ff3989dda197b15301c30e9ee2b9c"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller-job.gbrjob",
+      "sha256": "bcf2719a0b6b049947d8337250cd5f0e6482cbcdbf75379ec371d4da8e8c3d16"
+    },
+    {
+      "path": "fabrication/native_kicad/quadruped_robot_controller.drl",
+      "sha256": "f763309044e036c9aa9f991291710d7bbe3200172be6f6bd5ae12d3409cdef60"
+    },
+    {
+      "path": "fabrication/pick_and_place.csv",
+      "sha256": "e33cffd92dc80cad6eb0bb97ce80747aa7cb7666ae55d9a8430c04c0de845f85"
+    },
+    {
+      "path": "fabrication/quadruped_robot_controller-Edge_Cuts.gm1",
+      "sha256": "76c2b07cf11fc34d0a3995d72726f797aae223a781125bca4bbbdbc12fc529f0"
+    },
+    {
+      "path": "fabrication/quadruped_robot_controller.drl",
+      "sha256": "3235d5405b105599bf42367a703b50e055c513baac72ca0e9448933a7cda56a6"
+    },
+    {
+      "path": "firmware/build_instructions.md",
+      "sha256": "88dc08607a0b30eaa2dc448983938cb18d6a1640b11bf2be6947db5c52c61a48"
+    },
+    {
+      "path": "firmware/devicetree.overlay",
+      "sha256": "9c6510a5b7f9f1155325b848cfcdf6c11a446074c271a619836b4419494ae6b3"
+    },
+    {
+      "path": "firmware/pinmap.h",
+      "sha256": "61858b06c4f5829a2ed332b9e58f04636015d494590a4604dd5e4fd2ae1f9750"
+    },
+    {
+      "path": "firmware/source.zip",
+      "sha256": "29707f8316f55e4027625d86aae42c49be163fd9cb39a28dbd0729f34eb3ed63"
+    },
+    {
+      "path": "mechanical/assembly.step",
+      "sha256": "b20c69e9abdd9d19b66d417f14b1129e0877b8aa894d4649623751b429aa465e"
+    },
+    {
+      "path": "mechanical/board.step",
+      "sha256": "bf37af0f4b845228265edcec33d167da3c208ad7279a36e84b844f2c7f1a013a"
+    },
+    {
+      "path": "mechanical/enclosure.step",
+      "sha256": "c2612ebb21d8315037d84e07cfd37e39ad973e9e0f46dad72e87f75b3a58c338"
+    },
+    {
+      "path": "mechanical/enclosure.stl",
+      "sha256": "d56c5654045632c78d0dc6bb3fa879b0a7224a4f8980f13a05b72e5f9178112d"
+    }
+  ],
+  "assumptions": {
+    "total": 3,
+    "unresolved_critical": 0,
+    "unresolved_critical_names": []
+  },
+  "bundle_hash": "6af21957984bfef2590c2160763fd65365ac7f7b226e28b1d73218f9b34db250",
+  "bundle_version": "1.0",
+  "candidates": [],
+  "comments": [],
+  "component_resolution": {
+    "requested": 42,
+    "resolved": 42,
+    "status": "pass",
+    "supplier_provider": "unknown"
+  },
+  "gate_reports": [
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Freerouting was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "autoroute",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "bom",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "name": "reference",
+        "release_eligible": false
+      },
+      "failures": [
+        {
+          "category": "EDA_ERROR",
+          "code": "reference_backend_candidate_only",
+          "details": {},
+          "message": "Reference electronics backend produces candidate artifacts only",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "compiled_electronics_backend",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "component_provenance",
+      "metrics": {
+        "components_checked": 42
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "parts/role_sets/robotics_controller.yaml"
+      ],
+      "backend": {
+        "mutates_database": false,
+        "name": "ComponentResolver"
+      },
+      "failures": [],
+      "gate": "component_resolution",
+      "metrics": {
+        "critical_roles": 13,
+        "requested": 42,
+        "resolved": 42
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "firmware_pinmap",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "hw_sw_parity",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "deterministic": true,
+        "name": "reference-ir-erc"
+      },
+      "failures": [],
+      "gate": "ir_erc",
+      "metrics": {
+        "components": 42,
+        "nets": 60
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/quadruped_robot_controller/electronics/generated/kicad/quadruped_robot_controller.kicad_pcb"
+      ],
+      "backend": {
+        "deterministic": true,
+        "name": "reference-ir-drc"
+      },
+      "failures": [],
+      "gate": "ir_pcb_sanity",
+      "metrics": {
+        "footprints": 42,
+        "layers": 4,
+        "pads": 203,
+        "segments": 172
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad library cross-check was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "kicad_library_crosscheck",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "mechanical_fit",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad DRC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_drc",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad ERC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_erc",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Native CAD validation was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_mechanical_validation",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Native Zephyr build was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_zephyr_build",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "pin_symbol_footprint",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/quadruped_robot_controller/firmware/reference/build/bringup_tests"
+      ],
+      "backend": {
+        "name": "reference-host-bsp",
+        "returncode": 0,
+        "stderr": ""
+      },
+      "failures": [],
+      "gate": "reference_firmware_build",
+      "metrics": {},
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "reference_backend_candidate_only"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: compiled_electronics_backend",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "external_gate_not_run"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: autoroute",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "external_gate_not_run"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: native_erc",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "external_gate_not_run"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: native_drc",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "external_gate_not_run"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: kicad_library_crosscheck",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "external_gate_not_run"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: native_mechanical_validation",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "external_gate_not_run"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: native_zephyr_build",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "compiled_electronics_backend_required",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "compiled_electronics_backend_required"
+              ],
+              "status": "blocked"
+            }
+          },
+          "message": "Required gate did not pass: backend_release_policy",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "failed_gate",
+          "details": {
+            "details": {
+              "failure_codes": [
+                "missing_manifest"
+              ],
+              "status": "fail"
+            }
+          },
+          "message": "Required gate did not pass: artifact_integrity",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: gerbers.zip",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/fabrication/gerbers.zip",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: drill.zip",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/fabrication/drill.zip",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: bom.csv",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/fabrication/bom.csv",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: pick_and_place.csv",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/fabrication/pick_and_place.csv",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: assembly_drawing.pdf",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/fabrication/assembly_drawing.pdf",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: enclosure.step",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/mechanical/enclosure.step",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: enclosure.stl",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/mechanical/enclosure.stl",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: assembly.step",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/mechanical/assembly.step",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: source.zip",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/firmware/source.zip",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: design_report.md",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/design_report.md",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: pinmap.h",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/firmware/pinmap.h",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: devicetree.overlay",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/firmware/devicetree.overlay",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: build_instructions.md",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/firmware/build_instructions.md",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: validation_report.json",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/validation_report.json",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: bringup_guide.md",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/bringup_guide.md",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: known_risks.md",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/known_risks.md",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: schematic.pdf",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/schematic.pdf",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: layout_preview.pdf",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/layout_preview.pdf",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: design_report.pdf",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/design_report.pdf",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: validation_report.pdf",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/validation_report.pdf",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: bringup_guide.pdf",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/docs/bringup_guide.pdf",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "missing_export",
+          "details": {},
+          "message": "Required release artifact is missing: manifest.json",
+          "path": "projects/quadruped_robot_controller/exports/releases/r1/manifest.json",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "release",
+      "metrics": {
+        "errors": 31,
+        "warnings": 0
+      },
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "semantic_electrical",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "sourcing",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "spec_schema",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    }
+  ],
+  "generated_at": "2026-06-16T00:52:29.360154+00:00",
+  "iterations": [
+    {
+      "created_at": "2026-06-14T10:17:40.585921+00:00",
+      "failed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "firmware_build",
+        "semantic_electrical"
+      ],
+      "goal": "make all release gates pass",
+      "iteration_id": "0001",
+      "passed_gates": [
+        "firmware_pinmap",
+        "mechanical_fit",
+        "spec_schema"
+      ],
+      "status": "blocked"
+    },
+    {
+      "created_at": "2026-06-14T10:18:30.441591+00:00",
+      "failed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "firmware_build",
+        "semantic_electrical"
+      ],
+      "goal": "make all release gates pass",
+      "iteration_id": "0002",
+      "passed_gates": [
+        "firmware_pinmap",
+        "mechanical_fit",
+        "spec_schema"
+      ],
+      "status": "blocked"
+    },
+    {
+      "created_at": "2026-06-14T10:25:44.611769+00:00",
+      "failed_gates": [
+        "semantic_electrical"
+      ],
+      "goal": "make all release gates pass",
+      "iteration_id": "0003",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_fit",
+        "spec_schema"
+      ],
+      "status": "blocked"
+    },
+    {
+      "created_at": "2026-06-14T10:25:45.121196+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0004",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_fit",
+        "semantic_electrical",
+        "spec_schema"
+      ],
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-06-14T10:27:56.562032+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0005",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_fit",
+        "semantic_electrical",
+        "spec_schema"
+      ],
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-06-14T10:42:06.477457+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0006",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_fit",
+        "native_drc",
+        "native_erc",
+        "native_firmware_build",
+        "semantic_electrical",
+        "spec_schema"
+      ],
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-06-14T10:45:09.707221+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0007",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "fabrication_export",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_fit",
+        "native_drc",
+        "native_erc",
+        "native_firmware_build",
+        "semantic_electrical",
+        "spec_schema"
+      ],
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-06-14T10:51:51.283325+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0008",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "fabrication_export",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_export",
+        "mechanical_fit",
+        "native_drc",
+        "native_erc",
+        "native_firmware_build",
+        "semantic_electrical",
+        "spec_schema"
+      ],
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-06-14T10:53:24.655299+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0009",
+      "passed_gates": [
+        "bom",
+        "drc",
+        "erc",
+        "fabrication_export",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "mechanical_export",
+        "mechanical_fit",
+        "native_drc",
+        "native_erc",
+        "native_firmware_build",
+        "semantic_electrical",
+        "spec_schema"
+      ],
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-06-14T12:27:35.682976+00:00",
+      "failed_gates": [],
+      "goal": "make all release gates pass",
+      "iteration_id": "0010",
+      "passed_gates": [
+        "autoroute",
+        "bom",
+        "drc",
+        "erc",
+        "fabrication_export",
+        "firmware_build",
+        "firmware_pinmap",
+        "geometry",
+        "hw_sw_parity",
+        "mechanical_export",
+        "mechanical_fit",
+        "native_drc",
+        "native_erc",
+        "native_firmware_build",
+        "semantic_electrical",
+        "sourcing",
+        "spec_schema"
+      ],
+      "status": "passed"
+    }
+  ],
+  "placement": null,
+  "project": {
+    "backend": "reference",
+    "name": "quadruped_robot_controller",
+    "revision": "r1",
+    "target_use": "rideable_or_mobile_robot"
+  },
+  "release": {
+    "artifact_count": 38,
+    "release_id": "r1"
+  },
+  "requirements": null,
+  "summary": {
+    "blocked": 8,
+    "fail": 0,
+    "other": 0,
+    "pass": 13,
+    "total": 21
+  }
+}

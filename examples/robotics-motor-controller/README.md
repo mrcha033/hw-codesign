@@ -13,6 +13,7 @@ specification is under
 | Procurement | [BOM CSV](../../projects/quadruped_robot_controller/exports/r1/fabrication/bom.csv) | Generated component list |
 | Mechanical | [Assembly STEP](../../projects/quadruped_robot_controller/exports/r1/mechanical/assembly.step) | Generated assembly geometry |
 | Validation | [historical validation JSON](../../projects/quadruped_robot_controller/exports/r1/docs/validation_report.json) | Digital checks recorded for the tracked export |
+| Current review | [portable review bundle](proof/review_bundle.json) | Current gate reports with machine-local paths normalized |
 | Integrity | [release manifest](../../projects/quadruped_robot_controller/exports/r1/manifest.json) | Artifact paths, sizes, and SHA-256 hashes |
 | Risk boundary | [known risks](../../projects/quadruped_robot_controller/exports/r1/docs/known_risks.md) | Physical checks not established by software |
 
@@ -43,6 +44,12 @@ Representative blocked gates are:
 | `native_zephyr_build` | A native Zephyr build was not requested. |
 | `release` | Required upstream gates did not pass. |
 
+The committed portable review bundle has hash:
+
+```text
+6af21957984bfef2590c2160763fd65365ac7f7b226e28b1d73218f9b34db250
+```
+
 Regenerate the machine-readable review bundle locally with:
 
 ```bash
@@ -51,13 +58,10 @@ uvx --from hw-codesign-platform hw --root . export-review quadruped_robot_contro
 
 The output is
 `projects/quadruped_robot_controller/exports/working/review/bundle.json`.
-Generated working exports are intentionally ignored; tagged GitHub releases
-attach the canonical bundle and its JSON Schema.
-
-A committed sample `bundle.json` remains open because the current exporter
-retains absolute local paths in gate artifacts and backend metadata. Publishing
-that file as portable canonical evidence requires path normalization first. The
-[bundle schema](../../schemas/review_bundle.schema.json) is tracked today.
+Generated working exports are intentionally ignored; the committed sample above
+is copied from that output after path normalization. The
+[bundle schema](../../schemas/review_bundle.schema.json) is tracked today, and
+tagged GitHub releases attach the canonical bundle and schema.
 
 ## Evidence not yet present
 
