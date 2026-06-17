@@ -37,6 +37,66 @@ _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
 _RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist", "atopile"})
 
 
+def _module_summary(m: dict[str, Any]) -> str:
+    behavior = m.get("behavior", "unknown")
+    if behavior == "timeout_shutdown":
+        trigger = m.get("trigger", {})
+        return f"timeout_shutdown: signal={trigger.get('signal','?')}, timeout={trigger.get('timeout_ms','?')}ms"
+    if behavior == "periodic_transmit":
+        frame = m.get("frame", {})
+        transport = m.get("transport", "can").upper()
+        return f"periodic_transmit: {transport} id={frame.get('id','?')} dlc={frame.get('dlc','?')} every {m.get('interval_ms','?')}ms"
+    if behavior == "state_machine":
+        states = m.get("states", [])
+        return f"state_machine: {len(states)} states, {len(m.get('transitions', []))} transitions"
+    if behavior == "sensor_poll":
+        return f"sensor_poll: {m.get('sensor','?')} on {m.get('bus','i2c').upper()} every {m.get('poll_interval_ms', 100)}ms"
+    return behavior
+
+
+def _derive_agent_actions(actions: list[dict[str, Any]], spec: dict[str, Any]) -> list[dict[str, Any]]:
+    """Map repair-plan actions to specific agent tool calls."""
+    agent_actions: list[dict[str, Any]] = []
+    for action in actions:
+        code = action["failure_code"]
+        gate = action.get("gate", "")
+        if code == "missing_required_block":
+            msg = action["action"]
+            # Extract category from message like "Missing schematic block: can"
+            category = msg.split(":")[-1].strip() if ":" in msg else ""
+            if category:
+                agent_actions.append({
+                    "tool": "hw_propose_circuit_block",
+                    "args": {"category": category},
+                    "reason": f"'{category}' block is missing from schematic",
+                })
+        elif code == "single_pin_net":
+            agent_actions.append({
+                "tool": "hw_add_circuit_block",
+                "args": {},
+                "reason": "A net has only one connection — add the missing component or correct the net name",
+            })
+        elif code in {"placement_ref_not_in_bom", "placement_target_not_in_bom"}:
+            agent_actions.append({
+                "tool": "hw_set_placement_constraint",
+                "args": {},
+                "reason": action["action"],
+            })
+        elif code in {"unresolved_signal_reference", "firmware_signal_not_in_pinmap"}:
+            agent_actions.append({
+                "tool": "hw_design_firmware_module",
+                "args": {},
+                "reason": action["action"],
+            })
+        elif action.get("patches"):
+            agent_actions.append({
+                "tool": "hw_apply_repair_plan",
+                "args": {"patches": action["patches"]},
+                "reason": action["action"],
+            })
+    return agent_actions
+
+
 def _cadquery_available() -> bool:
     try:
         import cadquery  # noqa: F401
@@ -271,6 +331,9 @@ class HardwareService:
             reports.append(self.validator.check_pinmap(pinmap))
         else:
             reports.append(GateReport("firmware_pinmap", Status.FAIL, [Failure(FailureCategory.FIRMWARE_ERROR, "missing_pinmap", "Generate firmware before checking the pinmap")]))
+        fw_modules = spec.get("firmware", {}).get("modules", [])
+        if fw_modules:
+            reports.append(self.validator.check_firmware_modules(fw_modules, pinmap))
         graph_path = path / "electronics" / "generated" / "electrical_graph.json"
         graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else {"components": [], "nets": []}
         if graph_path.exists():
@@ -652,7 +715,8 @@ class HardwareService:
                 elif code == "unlowered_requirement":
                     patches.append(RepairPatch("requirements", f"requirements.active_unresolved.{details.get('requirement_id', 'unknown')}.status", "waived", requires_approval=True, safety_class="review_required", source_gate=report["gate"], source_failure=code).to_dict())
                 actions.append({"gate": report["gate"], "failure_code": code, "action": action, "patches": patches, "requires_user_decision": requires})
-        return {"status": "generated", "project": project, "requires_user_decision": requires_user_decision, "actions": actions}
+        agent_actions = _derive_agent_actions(actions, spec)
+        return {"status": "generated", "project": project, "requires_user_decision": requires_user_decision, "actions": actions, "agent_actions": agent_actions}
 
     def resolve_assumption(self, project: str, name: str, resolution: Any, approved: bool) -> dict[str, Any]:
         path = self.workspace.require_project(project) / "spec" / "system.yaml"
@@ -1402,6 +1466,337 @@ class HardwareService:
             },
             "count": len(PART_REGISTRY),
         }
+
+    # ------------------------------------------------------------------
+    # Electronics topology authoring (Phase B)
+    # ------------------------------------------------------------------
+
+    def propose_circuit_block(self, category: str, interface: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Look up candidate components from the curated parts DB by category."""
+        import yaml
+        components_dir = self.parts_root / "components"
+        if not components_dir.is_dir():
+            return {"status": "blocked", "code": "parts_db_missing", "message": "Curated parts database not found"}
+        candidates: list[dict[str, Any]] = []
+        for path in sorted(components_dir.glob("*.yaml")):
+            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            for item in data.get("components", []):
+                if item.get("category") == category:
+                    candidates.append({
+                        "component_id": item["id"],
+                        "mpn": item.get("mpn", ""),
+                        "manufacturer": item.get("manufacturer", ""),
+                        "package": item.get("package", ""),
+                        "lifecycle": item.get("lifecycle", "unknown"),
+                        "pins": item.get("pins", []),
+                    })
+        return {
+            "status": "pass",
+            "category": category,
+            "candidates": candidates,
+            "count": len(candidates),
+            "usage_hint": (
+                "Select a component_id and call hw_add_circuit_block with ref, category, mpn, "
+                "footprint, and connections (pin_name -> net_name mapping)."
+            ),
+        }
+
+    def add_circuit_block(self, project: str, block: dict[str, Any]) -> dict[str, Any]:
+        """Add an agent-authored circuit block to the project spec and re-run ERC."""
+        path = self.workspace.require_project(project)
+        ref = block.get("ref") or block.get("id")
+        if not ref:
+            return {"status": "blocked", "code": "missing_ref",
+                    "message": "block must include 'ref' (e.g. 'U7')"}
+        if not block.get("connections"):
+            return {"status": "blocked", "code": "missing_connections",
+                    "message": "block must include 'connections' mapping {pin_name: net_name}"}
+        block = {**block, "ref": ref, "id": ref}
+
+        # Check for ref conflict with base topology
+        base_spec = {**self.read_spec(project), "agent_electronics": {}}
+        from .reference_backend import build_graph, internal_erc
+        base_graph = build_graph(base_spec)
+        base_refs = {c["ref"] for c in base_graph["components"]}
+        if ref in base_refs:
+            return {
+                "status": "blocked",
+                "code": "ref_conflict",
+                "message": f"Ref '{ref}' already exists in base topology. Choose a different ref.",
+                "existing_refs": sorted(base_refs),
+            }
+
+        # Persist to spec/agent_blocks.yaml (key: agent_electronics, sorted after system.yaml)
+        agent_path = path / "spec" / "agent_blocks.yaml"
+        agent_data: dict[str, Any] = read_yaml(agent_path) if agent_path.is_file() else {}
+        existing = agent_data.setdefault("agent_electronics", {}).get("blocks", [])
+        existing = [b for b in existing if (b.get("ref") or b.get("id")) != ref]
+        existing.append(block)
+        agent_data["agent_electronics"]["blocks"] = existing
+        write_yaml(agent_path, agent_data)
+
+        merged_spec = self.read_spec(project)
+        graph = build_graph(merged_spec)
+        erc_report = internal_erc(graph)
+        persist_report(path, erc_report)
+
+        return {
+            "status": erc_report.status.value,
+            "project": project,
+            "ref": ref,
+            "components_total": len(graph["components"]),
+            "nets_total": len(graph["nets"]),
+            "gate_report": erc_report.to_dict(),
+        }
+
+    def list_circuit_blocks(self, project: str) -> dict[str, Any]:
+        """List all agent-authored circuit blocks for a project."""
+        path = self.workspace.require_project(project)
+        agent_path = path / "spec" / "agent_blocks.yaml"
+        blocks: list[dict[str, Any]] = []
+        if agent_path.is_file():
+            data = read_yaml(agent_path)
+            blocks = data.get("agent_electronics", {}).get("blocks", [])
+        return {"status": "pass", "project": project, "blocks": blocks, "count": len(blocks)}
+
+    # ------------------------------------------------------------------
+    # PCB placement constraints (Phase C)
+    # ------------------------------------------------------------------
+
+    def set_placement_constraint(self, project: str, constraint: dict[str, Any]) -> dict[str, Any]:
+        """Add or update a PCB placement constraint in the project spec."""
+        path = self.workspace.require_project(project)
+        ref = constraint.get("ref")
+        if not ref:
+            return {"status": "blocked", "code": "missing_ref",
+                    "message": "constraint must include 'ref' (the component reference to constrain)"}
+        relationship = constraint.get("relationship")
+        if relationship not in {"adjacent_to", "near_connector", "same_side", "opposite_side", "thermal_separation"}:
+            return {
+                "status": "blocked",
+                "code": "invalid_relationship",
+                "message": "relationship must be one of: adjacent_to, near_connector, same_side, opposite_side, thermal_separation",
+            }
+
+        # Check that ref exists in the current graph
+        spec = self.read_spec(project)
+        from .reference_backend import build_graph
+        graph = build_graph(spec)
+        known_refs = {c["ref"] for c in graph["components"]}
+        if ref not in known_refs:
+            return {
+                "status": "blocked",
+                "code": "ref_not_in_bom",
+                "message": f"Ref '{ref}' is not in the current BOM. Add it first via hw_add_circuit_block.",
+                "known_refs": sorted(known_refs),
+            }
+        if constraint.get("target") and constraint["target"] not in known_refs:
+            return {
+                "status": "blocked",
+                "code": "target_not_in_bom",
+                "message": f"Target '{constraint['target']}' is not in the current BOM.",
+                "known_refs": sorted(known_refs),
+            }
+
+        agent_path = path / "spec" / "agent_blocks.yaml"
+        agent_data: dict[str, Any] = read_yaml(agent_path) if agent_path.is_file() else {}
+        existing = agent_data.setdefault("placement", {}).get("constraints", [])
+        existing = [c for c in existing if c.get("ref") != ref]
+        existing.append(constraint)
+        agent_data["placement"]["constraints"] = existing
+        write_yaml(agent_path, agent_data)
+
+        # Re-run placement gate so the agent immediately sees compliance
+        updated_spec = self.read_spec(project)
+        gate_report = check_placement(propose_placement(updated_spec, graph), graph)
+        persist_report(path, gate_report)
+
+        return {
+            "status": gate_report.status.value,
+            "project": project,
+            "ref": ref,
+            "constraint": constraint,
+            "constraint_count": len(existing),
+            "placement_gate": {
+                "status": gate_report.status.value,
+                "errors": gate_report.metrics.get("errors", 0),
+                "violations": [f.code for f in gate_report.failures if f.severity == "error"],
+            },
+        }
+
+    def list_placement_constraints(self, project: str) -> dict[str, Any]:
+        """List all agent-authored PCB placement constraints for a project."""
+        path = self.workspace.require_project(project)
+        agent_path = path / "spec" / "agent_blocks.yaml"
+        constraints: list[dict[str, Any]] = []
+        if agent_path.is_file():
+            data = read_yaml(agent_path)
+            constraints = data.get("placement", {}).get("constraints", [])
+        return {"status": "pass", "project": project, "constraints": constraints, "count": len(constraints)}
+
+    # ------------------------------------------------------------------
+    # Firmware module authoring (Phase D)
+    # ------------------------------------------------------------------
+
+    def design_firmware_module(self, project: str, module_spec: dict[str, Any]) -> dict[str, Any]:
+        """Author a firmware module from a behavior spec and write it into the project."""
+        from .backends.firmware_modules import BEHAVIOR_SCHEMAS, _RENDERERS, render_module
+        from .validation import persist_report
+
+        path = self.workspace.require_project(project)
+        behavior = module_spec.get("behavior")
+        if behavior not in _RENDERERS:
+            return {
+                "status": "blocked",
+                "code": "unknown_behavior",
+                "behavior": behavior,
+                "available_behaviors": sorted(_RENDERERS),
+            }
+        mid = module_spec.get("id")
+        if not mid or not mid.replace("_", "").isalnum():
+            return {
+                "status": "blocked",
+                "code": "invalid_module_id",
+                "message": "id must be a non-empty alphanumeric+underscore identifier",
+            }
+
+        try:
+            output = render_module(module_spec)
+        except Exception as exc:
+            return {"status": "blocked", "code": "render_error", "message": str(exc)}
+
+        modules_dir = path / "firmware" / "modules"
+        modules_dir.mkdir(parents=True, exist_ok=True)
+        c_path = modules_dir / f"{mid}.c"
+        h_path = modules_dir / f"{mid}.h"
+        from .io import atomic_write_text
+        atomic_write_text(c_path, output.c_source)
+        atomic_write_text(h_path, output.h_source)
+
+        # Persist the module spec into firmware.yaml so generate_firmware picks it up
+        firmware_yaml = path / "spec" / "firmware.yaml"
+        firmware_data = read_yaml(firmware_yaml) if firmware_yaml.is_file() else {"firmware": {}}
+        fw = firmware_data.setdefault("firmware", {})
+        existing_modules: list[dict[str, Any]] = fw.get("modules", [])
+        existing_modules = [m for m in existing_modules if m.get("id") != mid]
+        existing_modules.append(module_spec)
+        fw["modules"] = existing_modules
+        write_yaml(firmware_yaml, firmware_data)
+
+        # Run the firmware module validation gate
+        spec = self.read_spec(project)
+        pinmap_path = path / "firmware" / "generated" / "pinmap.json"
+        import json as _json
+        pinmap = _json.loads(pinmap_path.read_text(encoding="utf-8")) if pinmap_path.is_file() else []
+        gate_report = self.validator.check_firmware_modules(fw.get("modules", []), pinmap)
+        persist_report(path, gate_report)
+
+        artifacts = [str(c_path), str(h_path)]
+        if output.dts_fragment:
+            artifacts.append("devicetree.overlay (fragment ready — regenerate firmware to apply)")
+
+        return {
+            "status": gate_report.status.value,
+            "project": project,
+            "module_id": mid,
+            "behavior": behavior,
+            "artifacts": artifacts,
+            "kconfig_flags": output.kconfig_flags,
+            "stack_size_bytes": output.stack_size_bytes,
+            "gate_report": gate_report.to_dict(),
+        }
+
+    def list_firmware_modules(self, project: str) -> dict[str, Any]:
+        """List firmware modules currently authored in the project spec."""
+        spec = self.read_spec(project)
+        modules = spec.get("firmware", {}).get("modules", [])
+        return {
+            "status": "pass",
+            "project": project,
+            "modules": [
+                {
+                    "id": m.get("id"),
+                    "behavior": m.get("behavior"),
+                    "summary": _module_summary(m),
+                }
+                for m in modules
+            ],
+            "count": len(modules),
+        }
+
+    # ------------------------------------------------------------------
+    # Unified agent workflow (Phase E)
+    # ------------------------------------------------------------------
+
+    def record_design_decision(self, project: str, domain: str, decision: str, rationale: str) -> dict[str, Any]:
+        """Append a structured design decision to history/decisions.jsonl."""
+        path = self.workspace.require_project(project)
+        decisions_path = path / "history" / "decisions.jsonl"
+        import uuid
+        record = {
+            "decision_id": f"dec_{uuid.uuid4().hex[:8]}",
+            "timestamp": datetime.now(UTC).isoformat(),
+            "domain": domain,
+            "decision": decision,
+            "rationale": rationale,
+        }
+        existing = []
+        if decisions_path.is_file():
+            import json as _json
+            existing = [_json.loads(line) for line in decisions_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        existing.append(record)
+        atomic_write_text(decisions_path, "\n".join(json.dumps(r) for r in existing) + "\n")
+        return {
+            "status": "pass",
+            "project": project,
+            "decision_id": record["decision_id"],
+            "domain": domain,
+            "decision": decision,
+            "rationale": rationale,
+        }
+
+    def check_cross_domain_consistency(self, project: str) -> dict[str, Any]:
+        """Validate that agent-authored content references valid artifacts across domains."""
+        from .models import Failure, FailureCategory, Status
+        path = self.workspace.require_project(project)
+        spec = self.read_spec(project)
+        from .reference_backend import build_graph
+        graph = build_graph(spec)
+        bom_refs = {c["ref"] for c in graph["components"]}
+        failures: list[Failure] = []
+
+        # Check placement constraints reference real BOM refs
+        agent_path = path / "spec" / "agent_blocks.yaml"
+        agent_data: dict[str, Any] = read_yaml(agent_path) if agent_path.is_file() else {}
+        for constraint in agent_data.get("placement", {}).get("constraints", []):
+            ref = constraint.get("ref")
+            if ref and ref not in bom_refs:
+                failures.append(Failure(FailureCategory.EDA_ERROR, "placement_ref_not_in_bom",
+                    f"Placement constraint ref '{ref}' is not in the BOM", path=f"placement.constraints.{ref}"))
+            target = constraint.get("target")
+            if target and target not in bom_refs:
+                failures.append(Failure(FailureCategory.EDA_ERROR, "placement_target_not_in_bom",
+                    f"Placement constraint target '{target}' is not in the BOM", path=f"placement.constraints.{ref}"))
+
+        # Check firmware modules reference signals in the pinmap
+        pinmap_path = path / "firmware" / "generated" / "pinmap.json"
+        if pinmap_path.is_file():
+            pinmap = json.loads(pinmap_path.read_text(encoding="utf-8"))
+            known_signals = {item.get("signal") for item in pinmap if item.get("signal")}
+            for mod in spec.get("firmware", {}).get("modules", []):
+                signal = mod.get("trigger", {}).get("signal")
+                if signal and known_signals and signal not in known_signals:
+                    failures.append(Failure(FailureCategory.FIRMWARE_ERROR, "firmware_signal_not_in_pinmap",
+                        f"Firmware module '{mod.get('id')}' references signal '{signal}' not in pinmap",
+                        path=f"firmware.modules.{mod.get('id')}"))
+
+        from .models import GateReport
+        report = GateReport("cross_domain_consistency",
+                            Status.FAIL if failures else Status.PASS, failures,
+                            metrics={"bom_refs": len(bom_refs), "constraints_checked": len(agent_data.get("placement", {}).get("constraints", []))},
+                            backend={"name": "cross-domain-consistency", "deterministic": True})
+        persist_report(path, report)
+        return report.to_dict()
 
     def _apply_spec_patch(self, project: str, patch: dict[str, Any]) -> dict[str, Any]:
         if patch.get("operation") != "replace":

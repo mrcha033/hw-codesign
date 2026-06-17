@@ -367,6 +367,80 @@ def create_server(root: Path | str | None = None):
         return service.get_part_types()
 
     # ------------------------------------------------------------------
+    # Firmware module authoring (Phase D)
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_design_firmware_module"].name)
+    def design_firmware_module(project: str, module_spec: dict) -> dict[str, Any]:
+        """Author a firmware behavior module and generate its C source + header."""
+        return service.design_firmware_module(project, module_spec)
+
+    @server.tool(name=_TR["hw_list_firmware_modules"].name)
+    def list_firmware_modules(project: str) -> dict[str, Any]:
+        """List firmware modules authored in the project spec."""
+        return service.list_firmware_modules(project)
+
+    @server.tool(name=_TR["hw_get_firmware_behavior_library"].name)
+    def get_firmware_behavior_library() -> dict[str, Any]:
+        """Return available firmware behavior types with descriptions and intent schemas."""
+        from .backends.firmware_modules import BEHAVIOR_DESCRIPTIONS, BEHAVIOR_SCHEMAS, _RENDERERS
+        behaviors = {
+            name: {
+                "description": BEHAVIOR_DESCRIPTIONS.get(name, ""),
+                "intent_schema": BEHAVIOR_SCHEMAS.get(name, {}),
+            }
+            for name in sorted(_RENDERERS)
+        }
+        return {"status": "pass", "behaviors": behaviors, "count": len(behaviors)}
+
+    # ------------------------------------------------------------------
+    # Electronics topology authoring (Phase B)
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_propose_circuit_block"].name)
+    def propose_circuit_block(category: str, interface: dict | None = None) -> dict[str, Any]:
+        """Look up curated components by category. Call before hw_add_circuit_block."""
+        return service.propose_circuit_block(category, interface)
+
+    @server.tool(name=_TR["hw_add_circuit_block"].name)
+    def add_circuit_block(project: str, block: dict) -> dict[str, Any]:
+        """Add an agent-authored circuit block to the design and re-run ERC."""
+        return service.add_circuit_block(project, block)
+
+    @server.tool(name=_TR["hw_list_circuit_blocks"].name)
+    def list_circuit_blocks(project: str) -> dict[str, Any]:
+        """List all agent-authored circuit blocks for a project."""
+        return service.list_circuit_blocks(project)
+
+    # ------------------------------------------------------------------
+    # PCB placement constraints (Phase C)
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_set_placement_constraint"].name)
+    def set_placement_constraint(project: str, constraint: dict) -> dict[str, Any]:
+        """Set a PCB placement relationship constraint for a component."""
+        return service.set_placement_constraint(project, constraint)
+
+    @server.tool(name=_TR["hw_list_placement_constraints"].name)
+    def list_placement_constraints(project: str) -> dict[str, Any]:
+        """List all placement constraints for a project."""
+        return service.list_placement_constraints(project)
+
+    # ------------------------------------------------------------------
+    # Unified agent workflow (Phase E)
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_record_design_decision"].name)
+    def record_design_decision(project: str, domain: str, decision: str, rationale: str) -> dict[str, Any]:
+        """Append a structured design decision to history/decisions.jsonl."""
+        return service.record_design_decision(project, domain, decision, rationale)
+
+    @server.tool(name=_TR["hw_check_cross_domain_consistency"].name)
+    def check_cross_domain_consistency(project: str) -> dict[str, Any]:
+        """Validate cross-domain references: BOM, pinmap, and placement constraints."""
+        return service.check_cross_domain_consistency(project)
+
+    # ------------------------------------------------------------------
     # Platform introspection
     # ------------------------------------------------------------------
 

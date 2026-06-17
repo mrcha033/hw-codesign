@@ -8,8 +8,11 @@ electrical graph, and checks a proposal against those constraints.
 
 Design constraints (intentional, to keep the feature credible):
 
-* Coordinates are never invented here. The proposal reuses the hand-tuned seed
-  so the tuned routing and mechanical gates keep producing identical output.
+* Seed coordinates are reused for all refs without an agent constraint, so
+  hand-tuned routing and mechanical gates produce identical output.
+* Agent-authored constraints (adjacent_to, near_connector) derive positions from
+  the relationship geometry.  Only constrained refs get derived coordinates;
+  provenance is tagged on each placement so the source is always auditable.
 * Constraint thresholds are derived from independent sources (the spec, board
   geometry, the connector contract) rather than reverse-engineered so the seed
   passes. If the seed violates a principled check, that is reported honestly.
@@ -98,11 +101,53 @@ def _courtyard_side_mm(pin_count: int) -> float:
     return round(max(4.0, math.sqrt(max(pin_count, 1)) * 3.0), 3)
 
 
+def _derive_agent_constraint_position(
+    relationship: str,
+    constraint: dict[str, Any],
+    target: "Placement",
+    board_width: float,
+    board_height: float,
+) -> tuple[float, float]:
+    """Return a (x_mm, y_mm) derived from the constraint relationship to *target*.
+
+    Positions are clamped to a 2 mm inset so they remain on-board.  The derived
+    coordinate is intentionally coarse — the placement_constraints gate will
+    validate the final position and report any violations.
+    """
+    tx, ty = target.x_mm, target.y_mm
+    lo_x, hi_x = 2.0, max(2.0, board_width - 2.0)
+    lo_y, hi_y = 2.0, max(2.0, board_height - 2.0)
+
+    if relationship == "adjacent_to":
+        max_d = float(constraint.get("max_distance_mm", 5.0))
+        offset = max(1.5, min(max_d * 0.7, 5.0))
+        for dx, dy in ((offset, 0.0), (-offset, 0.0), (0.0, offset), (0.0, -offset)):
+            cx, cy = tx + dx, ty + dy
+            if lo_x <= cx <= hi_x and lo_y <= cy <= hi_y:
+                return cx, cy
+        return max(lo_x, min(tx + offset, hi_x)), max(lo_y, min(ty, hi_y))
+
+    if relationship == "near_connector":
+        step = 8.0
+        x_frac = tx / board_width if board_width > 0 else 0.5
+        y_frac = ty / board_height if board_height > 0 else 0.5
+        if abs(x_frac - 0.5) >= abs(y_frac - 0.5):
+            cx_dir = -1.0 if tx > board_width / 2 else 1.0
+            return max(lo_x, min(tx + cx_dir * step, hi_x)), max(lo_y, min(ty, hi_y))
+        else:
+            cy_dir = -1.0 if ty > board_height / 2 else 1.0
+            return max(lo_x, min(tx, hi_x)), max(lo_y, min(ty + cy_dir * step, hi_y))
+
+    # Fallback for unrecognised relationships: step right
+    return max(lo_x, min(tx + 5.0, hi_x)), max(lo_y, min(ty, hi_y))
+
+
 def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementProposal:
     """Build a structured, provenance-tagged placement proposal.
 
-    Coordinates come from the curated seed (no coordinate is invented here).
-    Constraints are derived from the spec and graph.
+    Seed coordinates are used for all refs without an agent constraint.
+    Agent-authored constraints (from ``spec.placement.constraints``) derive
+    positions from their relationship geometry.
     """
     mechanical = spec.get("mechanical", {})
     envelope = mechanical.get("envelope", {})
@@ -113,18 +158,19 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
     sources = placement_sources(graph)
     components = graph.get("components", [])
 
+    _seed_rationale: dict[str, str] = {
+        "curated_anchor": "Hand-tuned anchor from the reference layout seed.",
+        "decoupling_row_seed": "Seed row reserved for decoupling capacitors.",
+        "connector_edge_seed": "Seed pushed to a board edge for connector access.",
+        "grid_fallback": "Deterministic grid fallback; no curated anchor for this reference.",
+    }
+
     placements: dict[str, Placement] = {}
     for item in components:
         ref = item["ref"]
         x, y = positions[ref]
         side_mm = _courtyard_side_mm(len(item.get("pins", [])))
         source = sources.get(ref, "grid_fallback")
-        rationale = {
-            "curated_anchor": "Hand-tuned anchor from the reference layout seed.",
-            "decoupling_row_seed": "Seed row reserved for decoupling capacitors.",
-            "connector_edge_seed": "Seed pushed to a board edge for connector access.",
-            "grid_fallback": "Deterministic grid fallback; no curated anchor for this reference.",
-        }.get(source, "")
         placements[ref] = Placement(
             ref=ref,
             x_mm=float(x),
@@ -134,10 +180,47 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
             courtyard_w_mm=side_mm,
             courtyard_h_mm=side_mm,
             source=source,
-            rationale=rationale,
+            rationale=_seed_rationale.get(source, ""),
         )
 
-    constraints = _derive_constraints(spec, graph)
+    # Apply agent-authored constraints: derive positions for constrained refs.
+    agent_constraints_spec = spec.get("placement", {}).get("constraints", [])
+    agent_constraint_list: list[PlacementConstraint] = []
+    _kind_map = {"adjacent_to": "agent_adjacent_to", "near_connector": "agent_near_connector"}
+    for ac in agent_constraints_spec:
+        ref = ac.get("ref")
+        relationship = ac.get("relationship", "")
+        target_ref = ac.get("target")
+        if not ref or ref not in placements:
+            continue
+        target_placement = placements.get(target_ref) if target_ref else None
+        if relationship in {"adjacent_to", "near_connector"} and target_placement is not None:
+            cx, cy = _derive_agent_constraint_position(relationship, ac, target_placement, width, height)
+            original = placements[ref]
+            placements[ref] = Placement(
+                ref=ref,
+                x_mm=cx,
+                y_mm=cy,
+                rotation_deg=original.rotation_deg,
+                side=original.side,
+                courtyard_w_mm=original.courtyard_w_mm,
+                courtyard_h_mm=original.courtyard_h_mm,
+                source=f"agent_constraint_{relationship}",
+                rationale=ac.get("rationale", f"Position derived from {relationship} constraint relative to {target_ref}."),
+            )
+        kind = _kind_map.get(relationship, f"agent_{relationship}")
+        agent_constraint_list.append(
+            PlacementConstraint(
+                kind=kind,
+                target_ref=ref,
+                params={k: v for k, v in ac.items() if k != "ref"},
+                derived_from="spec.placement.constraints",
+                enforced=True,
+                rationale=ac.get("rationale", ""),
+            )
+        )
+
+    constraints = _derive_constraints(spec, graph) + agent_constraint_list
     return PlacementProposal(width, height, placements, constraints)
 
 
@@ -346,6 +429,50 @@ def check_placement(proposal: PlacementProposal, graph: dict[str, Any]) -> GateR
                     edge_distance_mm=round(distance, 3),
                     max_edge_distance_mm=max_edge,
                 )
+        elif constraint.kind == "agent_adjacent_to":
+            constrained = placements.get(constraint.target_ref)
+            anchor_ref = constraint.params.get("target")
+            anchor = placements.get(anchor_ref) if anchor_ref else None
+            if constrained is None or anchor is None:
+                continue
+            distance = math.hypot(constrained.x_mm - anchor.x_mm, constrained.y_mm - anchor.y_mm)
+            max_d = float(constraint.params.get("max_distance_mm", 5.0))
+            if distance > max_d:
+                record(
+                    "error",
+                    "constraint_adjacent_to_violated",
+                    f"{constraint.target_ref} is {distance:.2f} mm from {anchor_ref} (limit {max_d} mm)",
+                    ref=constraint.target_ref,
+                    target=anchor_ref,
+                    distance_mm=round(distance, 3),
+                    max_distance_mm=max_d,
+                )
+        elif constraint.kind == "agent_near_connector":
+            constrained = placements.get(constraint.target_ref)
+            connector_ref = constraint.params.get("target")
+            connector = placements.get(connector_ref) if connector_ref else None
+            if constrained is None or connector is None:
+                continue
+            side = constraint.params.get("side", "same_half")
+            if side == "same_half":
+                x_frac = connector.x_mm / width if width > 0 else 0.5
+                y_frac = connector.y_mm / height if height > 0 else 0.5
+                if abs(x_frac - 0.5) >= abs(y_frac - 0.5):
+                    axis = "x"
+                    ok = (constrained.x_mm > width / 2) == (connector.x_mm > width / 2)
+                else:
+                    axis = "y"
+                    ok = (constrained.y_mm > height / 2) == (connector.y_mm > height / 2)
+                if not ok:
+                    record(
+                        "error",
+                        "constraint_near_connector_violated",
+                        f"{constraint.target_ref} is not in the same {axis}-half as connector {connector_ref}",
+                        ref=constraint.target_ref,
+                        target=connector_ref,
+                        side=side,
+                        axis=axis,
+                    )
         elif constraint.kind == "decoupling_proximity" and not constraint.enforced:
             record(
                 "info",

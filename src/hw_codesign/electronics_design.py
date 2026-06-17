@@ -298,3 +298,106 @@ def _domain(name: str) -> str | None:
     if name == "V5": return "V5"
     if name == "USB_VBUS": return "USB_5V"
     return "V3V3"
+
+
+_WELL_KNOWN_NET_CLASSES: dict[str, str] = {
+    "GND": "ground",
+    "V3V3": "power", "V5": "power", "VSYS": "power",
+    "VBAT": "power", "VBAT_RAW": "power", "VBAT_FUSED": "power", "USB_VBUS": "power",
+    "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
+    "I2C_SCL": "i2c", "I2C_SDA": "i2c", "I2C_IMU_SCL": "i2c", "I2C_IMU_SDA": "i2c",
+    "CANH": "can", "CANL": "can",
+}
+
+
+def _block_to_component(block: dict[str, Any]) -> dict[str, Any]:
+    """Convert an agent-authored electronics block to a component dict for graph merging."""
+    connections = block.get("connections", {})
+    pins_list: list[dict[str, Any]] = []
+    for pin_num, (pin_name, net_name) in enumerate(connections.items(), 1):
+        if net_name in {"V3V3", "V5", "VSYS", "VBAT", "VBAT_RAW", "USB_VBUS"}:
+            pin_role = "power_in"
+        elif net_name == "GND":
+            pin_role = "ground"
+        else:
+            pin_role = "bidirectional"
+        pins_list.append(pin(pin_num, pin_name, net_name, pin_role))
+    extra = {
+        k: v for k, v in block.items()
+        if k not in {"ref", "id", "category", "value", "mpn", "footprint", "connections"}
+    }
+    return component(
+        ref=block["ref"],
+        category=block.get("category", "agent_block"),
+        value=block.get("value", block.get("ref", "AGENT BLOCK")),
+        mpn=block.get("mpn", "UNSPECIFIED"),
+        footprint=block.get("footprint", ""),
+        pins=pins_list,
+        **extra,
+    )
+
+
+def build_graph_from_spec(spec: dict[str, Any]) -> dict[str, Any]:
+    """Build the electronics graph, merging agent-authored blocks from spec.
+
+    Agent blocks are read from ``spec["agent_electronics"]["blocks"]``.
+    They are appended to the base topology chosen by role_set/template.
+    Nets are re-derived from all components so new nets appear automatically.
+    """
+    role_set = spec.get("electronics", {}).get("role_set", "")
+    template = spec.get("project", {}).get("template", "")
+    if role_set == "ble_sensor_node" or template == "ble_sensor_node":
+        base_graph = build_ble_sensor_node_graph(spec)
+    elif role_set == "sensor_data_logger" or template == "sensor_data_logger":
+        base_graph = build_sensor_data_logger_graph(spec)
+    else:
+        base_graph = build_controller_graph(spec)
+
+    agent_blocks = (
+        spec.get("agent_electronics", {}).get("blocks", [])
+        + spec.get("electronics", {}).get("blocks", [])
+    )
+    if not agent_blocks:
+        return base_graph
+
+    base_refs = {c["ref"] for c in base_graph["components"]}
+    extra_components: list[dict[str, Any]] = []
+    for block in agent_blocks:
+        ref = block.get("ref") or block.get("id")
+        if not ref or ref in base_refs:
+            continue
+        extra_components.append(_block_to_component({**block, "ref": ref}))
+
+    if not extra_components:
+        return base_graph
+
+    all_components = base_graph["components"] + extra_components
+
+    net_classes: dict[str, str] = dict(_WELL_KNOWN_NET_CLASSES)
+    for item in extra_components:
+        for item_pin in item["pins"]:
+            net = item_pin["net"]
+            if net not in net_classes and (net.endswith("H") or net.endswith("L")):
+                net_classes[net] = "can"
+
+    endpoints: dict[str, list[str]] = defaultdict(list)
+    for item in all_components:
+        for item_pin in item["pins"]:
+            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+
+    nets = []
+    for name in sorted(endpoints):
+        signal_class = net_classes.get(name, "analog" if name.endswith("CURRENT") else "signal")
+        nets.append({
+            "name": name,
+            "signal_class": signal_class,
+            "voltage_domain": _domain(name),
+            "connected_pins": sorted(endpoints[name]),
+            "required_track_width_mm": (
+                2.0 if signal_class == "power" and name.startswith("VBAT")
+                else 0.5 if signal_class == "power"
+                else 0.2
+            ),
+        })
+
+    return {**base_graph, "components": all_components, "nets": nets}

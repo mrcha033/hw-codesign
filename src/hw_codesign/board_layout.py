@@ -63,12 +63,25 @@ def _grid_fallback(index: int) -> tuple[float, float]:
 
 
 def component_positions(graph: dict[str, Any]) -> dict[str, tuple[float, float]]:
-    """Backward-compatible coordinate lookup (ref -> (x_mm, y_mm))."""
+    """Coordinate lookup (ref -> (x_mm, y_mm)).
+
+    Prefers ``pcb_position_mm`` written by the placement pipeline so that all
+    downstream consumers (reference backend, fabrication export) use the same
+    coordinates the placement gate validated.  Falls back to the seed table,
+    then to the deterministic grid.
+    """
     table = _seed_table_for_graph(graph)
-    return {
-        item["ref"]: table[item["ref"]][0] if item["ref"] in table else _grid_fallback(index)
-        for index, item in enumerate(graph.get("components", []))
-    }
+    positions: dict[str, tuple[float, float]] = {}
+    for index, item in enumerate(graph.get("components", [])):
+        ref = item["ref"]
+        if "pcb_position_mm" in item:
+            pos = item["pcb_position_mm"]
+            positions[ref] = (float(pos[0]), float(pos[1]))
+        elif ref in table:
+            positions[ref] = table[ref][0]
+        else:
+            positions[ref] = _grid_fallback(index)
+    return positions
 
 
 def placement_sources(graph: dict[str, Any]) -> dict[str, str]:

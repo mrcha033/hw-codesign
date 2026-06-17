@@ -26,6 +26,8 @@ ROLE_BY_CATEGORY = {
 
 
 def role_for_component(component: dict[str, Any]) -> str:
+    if "role" in component:
+        return component["role"]
     category = component["category"]
     if category == "regulator":
         return "regulator_5v" if component["ref"] == "U4" else "regulator_3v3"

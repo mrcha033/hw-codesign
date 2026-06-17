@@ -816,6 +816,277 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
     ),
 
     # -------------------------------------------------------------------
+    # Firmware module authoring (Phase D)
+    # -------------------------------------------------------------------
+    "hw_design_firmware_module": ToolDef(
+        name="hw_design_firmware_module",
+        description=(
+            "Author a firmware behavior module from a structured spec. "
+            "Generates a Zephyr C source file, header, optional DTS fragment, and prj.conf additions "
+            "under firmware/modules/{id}.c|h. Persists the module spec into firmware.yaml so "
+            "hw_generate_firmware picks it up automatically. "
+            "Behavior types: timeout_shutdown, periodic_transmit, state_machine, sensor_poll. "
+            "Call hw_list_firmware_modules to see current modules or hw_generate_firmware to "
+            "rebuild the full BSP with modules compiled in."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string", "description": "Project name"},
+                "module_spec": {
+                    "type": "object",
+                    "description": (
+                        "Firmware module specification. Must include 'id' (alphanumeric identifier) "
+                        "and 'behavior' (one of: timeout_shutdown, periodic_transmit, state_machine, sensor_poll). "
+                        "Additional fields are behavior-specific — see hw_get_firmware_behavior_library for schemas."
+                    ),
+                    "required": ["id", "behavior"],
+                    "additionalProperties": True,
+                    "properties": {
+                        "id": {"type": "string", "description": "Module identifier; used as C symbol prefix and file name"},
+                        "behavior": {
+                            "type": "string",
+                            "enum": ["timeout_shutdown", "periodic_transmit", "state_machine", "sensor_poll"],
+                        },
+                    },
+                },
+            },
+            "required": ["project", "module_spec"],
+            "additionalProperties": False,
+        },
+        output_schema={
+            "type": "object",
+            "required": ["status", "module_id", "behavior", "artifacts"],
+            "additionalProperties": True,
+            "properties": {
+                "status":            {"type": "string"},
+                "module_id":         {"type": "string"},
+                "behavior":          {"type": "string"},
+                "artifacts":         {"type": "array", "items": {"type": "string"}},
+                "kconfig_flags":     {"type": "array", "items": {"type": "string"}},
+                "stack_size_bytes":  {"type": "integer"},
+                "gate_report":       {"type": "object", "additionalProperties": True},
+            },
+        },
+    ),
+
+    "hw_list_firmware_modules": ToolDef(
+        name="hw_list_firmware_modules",
+        description=(
+            "List all firmware modules currently authored in the project spec. "
+            "Returns each module's id, behavior type, and a one-line summary. "
+            "Use hw_design_firmware_module to add or update a module."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string"},
+            },
+            "required": ["project"],
+            "additionalProperties": False,
+        },
+        output_schema={
+            "type": "object",
+            "required": ["status", "modules", "count"],
+            "additionalProperties": False,
+            "properties": {
+                "status":  {"type": "string"},
+                "project": {"type": "string"},
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id":       {"type": "string"},
+                            "behavior": {"type": "string"},
+                            "summary":  {"type": "string"},
+                        },
+                    },
+                },
+                "count": {"type": "integer"},
+            },
+        },
+        execution_mode="local",
+    ),
+
+    "hw_get_firmware_behavior_library": ToolDef(
+        name="hw_get_firmware_behavior_library",
+        description=(
+            "Return all available firmware behavior types with descriptions and full intent schemas. "
+            "Call this before hw_design_firmware_module to understand what parameters each behavior accepts."
+        ),
+        input_schema={"type": "object", "properties": {}, "additionalProperties": False},
+        output_schema={
+            "type": "object",
+            "required": ["status", "behaviors"],
+            "additionalProperties": False,
+            "properties": {
+                "status":    {"type": "string"},
+                "behaviors": {"type": "object", "additionalProperties": True},
+                "count":     {"type": "integer"},
+            },
+        },
+        execution_mode="local",
+    ),
+
+    # -------------------------------------------------------------------
+    # Electronics topology authoring (Phase B)
+    # -------------------------------------------------------------------
+    "hw_propose_circuit_block": ToolDef(
+        name="hw_propose_circuit_block",
+        description=(
+            "Look up curated component candidates for a circuit category. "
+            "Returns a list of MPNs, packages, and lifecycle status from the curated parts database. "
+            "Call this before hw_add_circuit_block to discover what components are available. "
+            "Categories: can_transceiver, imu, mcu, regulator, power_input, fuse, usb_esd, charger, fuel_gauge, env_sensor."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "description": "Component category (e.g. 'can_transceiver', 'imu', 'regulator')",
+                },
+                "interface": {
+                    "type": "object",
+                    "description": "Optional interface requirements for filtering",
+                    "additionalProperties": True,
+                },
+            },
+            "required": ["category"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("circuit_block_proposal_result"),
+        execution_mode="local",
+    ),
+
+    "hw_add_circuit_block": ToolDef(
+        name="hw_add_circuit_block",
+        description=(
+            "Add an agent-authored circuit block to the project design. "
+            "Merges the block into the electronics graph and re-runs ERC. "
+            "Required: ref (e.g. 'U7'), category, mpn, footprint, connections ({pin_name: net_name}). "
+            "Optional: value, role (explicit resolver role). "
+            "Use hw_propose_circuit_block first to find valid MPNs."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string"},
+                "block": {
+                    "type": "object",
+                    "properties": {
+                        "ref":          {"type": "string"},
+                        "category":     {"type": "string"},
+                        "value":        {"type": "string"},
+                        "mpn":          {"type": "string"},
+                        "footprint":    {"type": "string"},
+                        "role":         {"type": "string"},
+                        "component_id": {"type": "string"},
+                        "connections":  {"type": "object", "additionalProperties": {"type": "string"}},
+                    },
+                    "required": ["ref", "category", "mpn", "footprint", "connections"],
+                    "additionalProperties": True,
+                },
+            },
+            "required": ["project", "block"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("circuit_block_result"),
+    ),
+
+    "hw_list_circuit_blocks": ToolDef(
+        name="hw_list_circuit_blocks",
+        description="List all agent-authored circuit blocks currently in the project spec.",
+        input_schema=_project_only(),
+        output_schema=ref("circuit_block_list_result"),
+        execution_mode="local",
+    ),
+
+    # -------------------------------------------------------------------
+    # PCB placement constraints (Phase C)
+    # -------------------------------------------------------------------
+    "hw_set_placement_constraint": ToolDef(
+        name="hw_set_placement_constraint",
+        description=(
+            "Express a PCB placement relationship for a component. "
+            "Validated against the current BOM and stored in the project spec. "
+            "Relationships: adjacent_to, near_connector, same_side, opposite_side, thermal_separation."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string"},
+                "constraint": {
+                    "type": "object",
+                    "properties": {
+                        "ref":             {"type": "string"},
+                        "relationship":    {
+                            "type": "string",
+                            "enum": ["adjacent_to", "near_connector", "same_side", "opposite_side", "thermal_separation"],
+                        },
+                        "target":          {"type": "string"},
+                        "max_distance_mm": {"type": "number"},
+                        "side":            {"type": "string", "enum": ["top", "bottom", "same_half", "any"]},
+                        "rationale":       {"type": "string"},
+                    },
+                    "required": ["ref", "relationship"],
+                    "additionalProperties": True,
+                },
+            },
+            "required": ["project", "constraint"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("placement_constraint_result"),
+    ),
+
+    "hw_list_placement_constraints": ToolDef(
+        name="hw_list_placement_constraints",
+        description="List all agent-authored PCB placement constraints for a project.",
+        input_schema=_project_only(),
+        output_schema=ref("placement_constraint_list_result"),
+        execution_mode="local",
+    ),
+
+    # -------------------------------------------------------------------
+    # Unified agent workflow (Phase E)
+    # -------------------------------------------------------------------
+    "hw_record_design_decision": ToolDef(
+        name="hw_record_design_decision",
+        description=(
+            "Record an agent design decision to the project journal (history/decisions.jsonl). "
+            "Domains: electronics, mechanical, firmware, pcb, sourcing, system. "
+            "Call when making a non-obvious design choice."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":   {"type": "string"},
+                "domain":    {
+                    "type": "string",
+                    "enum": ["electronics", "mechanical", "firmware", "pcb", "sourcing", "system"],
+                },
+                "decision":  {"type": "string", "description": "One-sentence description of the decision"},
+                "rationale": {"type": "string", "description": "Reason for the decision"},
+            },
+            "required": ["project", "domain", "decision", "rationale"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("design_decision_result"),
+    ),
+
+    "hw_check_cross_domain_consistency": ToolDef(
+        name="hw_check_cross_domain_consistency",
+        description=(
+            "Validate cross-domain references: placement constraints reference real BOM refs, "
+            "firmware modules reference pinmap signals. "
+            "Run after adding circuit blocks, constraints, or firmware modules."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("opaque_result"),
+    ),
+
+    # -------------------------------------------------------------------
     # Environment diagnosis
     # -------------------------------------------------------------------
     "hw_diagnose_environment": ToolDef(

@@ -639,6 +639,126 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------
+    # circuit_block_proposal_result — hw_propose_circuit_block output
+    # -------------------------------------------------------------------
+    "circuit_block_proposal_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("circuit_block_proposal_result"),
+        "title": "CircuitBlockProposalResult",
+        "description": "Curated component candidates for a given circuit category.",
+        "type": "object",
+        "required": ["status", "category", "candidates", "count"],
+        "additionalProperties": True,
+        "properties": {
+            "status":     {"type": "string"},
+            "category":   {"type": "string"},
+            "candidates": {"type": "array", "items": {"type": "object", "additionalProperties": True}},
+            "count":      {"type": "integer"},
+            "usage_hint": {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # circuit_block_result — hw_add_circuit_block output
+    # -------------------------------------------------------------------
+    "circuit_block_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("circuit_block_result"),
+        "title": "CircuitBlockResult",
+        "description": "Result of adding an agent-authored circuit block to the design.",
+        "type": "object",
+        "required": ["status", "project", "ref"],
+        "additionalProperties": True,
+        "properties": {
+            "status":            {"type": "string"},
+            "project":           {"type": "string"},
+            "ref":               {"type": "string"},
+            "components_total":  {"type": "integer"},
+            "nets_total":        {"type": "integer"},
+            "gate_report":       {"type": "object", "additionalProperties": True},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # circuit_block_list_result — hw_list_circuit_blocks output
+    # -------------------------------------------------------------------
+    "circuit_block_list_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("circuit_block_list_result"),
+        "title": "CircuitBlockListResult",
+        "description": "List of agent-authored circuit blocks for a project.",
+        "type": "object",
+        "required": ["status", "project", "blocks", "count"],
+        "additionalProperties": True,
+        "properties": {
+            "status":  {"type": "string"},
+            "project": {"type": "string"},
+            "blocks":  {"type": "array", "items": {"type": "object", "additionalProperties": True}},
+            "count":   {"type": "integer"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # placement_constraint_result — hw_set_placement_constraint output
+    # -------------------------------------------------------------------
+    "placement_constraint_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("placement_constraint_result"),
+        "title": "PlacementConstraintResult",
+        "description": "Result of setting a PCB placement constraint.",
+        "type": "object",
+        "required": ["status", "project", "ref", "constraint"],
+        "additionalProperties": True,
+        "properties": {
+            "status":           {"type": "string"},
+            "project":          {"type": "string"},
+            "ref":              {"type": "string"},
+            "constraint":       {"type": "object", "additionalProperties": True},
+            "constraint_count": {"type": "integer"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # placement_constraint_list_result — hw_list_placement_constraints output
+    # -------------------------------------------------------------------
+    "placement_constraint_list_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("placement_constraint_list_result"),
+        "title": "PlacementConstraintListResult",
+        "description": "List of agent-authored PCB placement constraints for a project.",
+        "type": "object",
+        "required": ["status", "project", "constraints", "count"],
+        "additionalProperties": True,
+        "properties": {
+            "status":      {"type": "string"},
+            "project":     {"type": "string"},
+            "constraints": {"type": "array", "items": {"type": "object", "additionalProperties": True}},
+            "count":       {"type": "integer"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # design_decision_result — hw_record_design_decision output
+    # -------------------------------------------------------------------
+    "design_decision_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("design_decision_result"),
+        "title": "DesignDecisionResult",
+        "description": "Result of recording an agent design decision to the project journal.",
+        "type": "object",
+        "required": ["status", "project", "decision_id", "domain", "decision", "rationale"],
+        "additionalProperties": True,
+        "properties": {
+            "status":      {"type": "string"},
+            "project":     {"type": "string"},
+            "decision_id": {"type": "string"},
+            "domain":      {"type": "string"},
+            "decision":    {"type": "string"},
+            "rationale":   {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
     # opaque_result — explicit fallback for not-yet-modeled outputs
     # -------------------------------------------------------------------
     "opaque_result": {

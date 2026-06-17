@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import replace
 from pathlib import Path
 
@@ -204,6 +205,103 @@ def test_hard_placement_failure_blocks_release(spec, graph):
     release = Validator.release_gate([passing_other, failing], assumptions={}, required_artifacts=[])
     assert release.status != Status.PASS
     assert any("placement_constraints" in f.message for f in release.failures)
+
+
+def test_agent_adjacent_to_derives_position_and_passes(spec: dict, graph: dict):
+    refs = [c["ref"] for c in graph["components"]]
+    constrained_ref, target_ref = refs[0], refs[1]
+    spec_with = {**spec, "placement": {"constraints": [{
+        "ref": constrained_ref, "relationship": "adjacent_to",
+        "target": target_ref, "max_distance_mm": 5.0,
+    }]}}
+    proposal = propose_placement(spec_with, graph)
+
+    assert proposal.placements[constrained_ref].source == "agent_constraint_adjacent_to"
+    anchor = proposal.placements[target_ref]
+    placed = proposal.placements[constrained_ref]
+    distance = math.hypot(placed.x_mm - anchor.x_mm, placed.y_mm - anchor.y_mm)
+    assert distance <= 5.0
+
+    report = check_placement(proposal, graph)
+    assert report.status == Status.PASS
+    assert not any(f.code == "constraint_adjacent_to_violated" for f in report.failures)
+
+
+def test_agent_adjacent_to_violation_fails(spec: dict, graph: dict):
+    refs = [c["ref"] for c in graph["components"]]
+    constrained_ref, target_ref = refs[0], refs[1]
+    spec_with = {**spec, "placement": {"constraints": [{
+        "ref": constrained_ref, "relationship": "adjacent_to",
+        "target": target_ref, "max_distance_mm": 1.0,
+    }]}}
+    proposal = propose_placement(spec_with, graph)
+    # Force a clear distance violation
+    proposal.placements[constrained_ref] = replace(proposal.placements[constrained_ref], x_mm=10.0, y_mm=10.0)
+    proposal.placements[target_ref] = replace(proposal.placements[target_ref], x_mm=100.0, y_mm=80.0)
+
+    report = check_placement(proposal, graph)
+    assert report.status == Status.FAIL
+    assert any(f.code == "constraint_adjacent_to_violated" for f in report.failures)
+
+
+def test_agent_near_connector_derives_position_in_same_half(spec: dict, graph: dict):
+    connector_ref = "J1"
+    if connector_ref not in {c["ref"] for c in graph["components"]}:
+        pytest.skip("J1 not in graph")
+    non_connectors = [c["ref"] for c in graph["components"] if not c["ref"].startswith("J")]
+    if not non_connectors:
+        pytest.skip("no non-connector components")
+    constrained_ref = non_connectors[0]
+    spec_with = {**spec, "placement": {"constraints": [{
+        "ref": constrained_ref, "relationship": "near_connector",
+        "target": connector_ref, "side": "same_half",
+    }]}}
+    proposal = propose_placement(spec_with, graph)
+
+    assert proposal.placements[constrained_ref].source == "agent_constraint_near_connector"
+    report = check_placement(proposal, graph)
+    assert report.status == Status.PASS
+    assert not any(f.code == "constraint_near_connector_violated" for f in report.failures)
+
+
+def test_agent_near_connector_violation_fails(spec: dict, graph: dict):
+    connector_ref = "J1"
+    if connector_ref not in {c["ref"] for c in graph["components"]}:
+        pytest.skip("J1 not in graph")
+    non_connectors = [c["ref"] for c in graph["components"] if not c["ref"].startswith("J")]
+    if not non_connectors:
+        pytest.skip("no non-connector components")
+    constrained_ref = non_connectors[0]
+    spec_with = {**spec, "placement": {"constraints": [{
+        "ref": constrained_ref, "relationship": "near_connector",
+        "target": connector_ref, "side": "same_half",
+    }]}}
+    proposal = propose_placement(spec_with, graph)
+    # J1 is on the front (low-y) half; push constrained_ref to the rear half
+    height = proposal.board_height_mm
+    connector_pos = proposal.placements[connector_ref]
+    opposite_y = height - connector_pos.y_mm - 1.0
+    proposal.placements[constrained_ref] = replace(proposal.placements[constrained_ref], y_mm=max(2.0, opposite_y))
+
+    report = check_placement(proposal, graph)
+    assert report.status == Status.FAIL
+    assert any(f.code == "constraint_near_connector_violated" for f in report.failures)
+
+
+def test_unconstrained_refs_keep_seed_positions_when_agent_constraints_present(spec: dict, graph: dict):
+    refs = [c["ref"] for c in graph["components"]]
+    constrained_ref, target_ref = refs[0], refs[1]
+    unconstrained_refs = refs[2:]
+    spec_with = {**spec, "placement": {"constraints": [{
+        "ref": constrained_ref, "relationship": "adjacent_to",
+        "target": target_ref, "max_distance_mm": 5.0,
+    }]}}
+    proposal_with = propose_placement(spec_with, graph)
+    proposal_without = propose_placement(spec, graph)
+
+    for ref in unconstrained_refs:
+        assert proposal_with.placements[ref].x_mm == proposal_without.placements[ref].x_mm
+        assert proposal_with.placements[ref].y_mm == proposal_without.placements[ref].y_mm
 
 
 def test_pipeline_emits_placement_gate_and_structured_graph(service, project):

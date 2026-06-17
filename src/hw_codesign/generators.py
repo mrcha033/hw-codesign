@@ -206,6 +206,7 @@ def firmware_profile(spec: dict[str, Any], graph: dict[str, Any]) -> dict[str, A
 
 
 def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any] | None = None) -> list[str]:
+    from .backends.firmware_modules import render_module
     generated = project / "firmware" / "generated"
     app = project / "firmware" / "zephyr" / "app"
     graph = graph or json.loads((project / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -220,12 +221,52 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     write_json(generated / "pinmap.json", assignments)
     pinmap = "#pragma once\n\n" + "\n".join(f'#define PIN_{item["signal"]} "{item["mcu_pin"]}"' for item in assignments) + "\n"
     atomic_write_text(generated / "pinmap.h", pinmap)
-    overlay = "/ {\n  chosen { zephyr,console = &usart3; };\n};\n"
-    atomic_write_text(generated / "devicetree.overlay", overlay)
+    overlay_lines = ["/ {\n  chosen { zephyr,console = &usart3; };\n};"]
     atomic_write_text(generated / "board.cmake", "# Generated Zephyr board integration entrypoint.\n")
     atomic_write_text(generated / "kconfig.defconfig", "# Generated project defaults.\n")
-    atomic_write_text(app / "CMakeLists.txt", f"cmake_minimum_required(VERSION 3.20.0)\nfind_package(Zephyr REQUIRED HINTS $ENV{{ZEPHYR_BASE}})\nproject({profile['project']})\ntarget_sources(app PRIVATE src/main.c)\n")
-    atomic_write_text(app / "prj.conf", profile["prj_conf"])
+    # Collect module-level kconfig additions so prj.conf is written once
+    module_kconfig: list[str] = []
+    modules = spec.get("firmware", {}).get("modules", [])
+    modules_dir = project / "firmware" / "modules"
+    module_files: list[str] = []
+    if modules:
+        modules_dir.mkdir(parents=True, exist_ok=True)
+        cmake_sources: list[str] = []
+        live_ids: set[str] = set()
+        for mod_spec in modules:
+            output = render_module(mod_spec)
+            live_ids.add(output.id)
+            c_path = modules_dir / f"{output.id}.c"
+            h_path = modules_dir / f"{output.id}.h"
+            atomic_write_text(c_path, output.c_source)
+            atomic_write_text(h_path, output.h_source)
+            module_files.extend([str(c_path), str(h_path)])
+            cmake_sources.append(f"firmware/modules/{output.id}.c")
+            if output.dts_fragment:
+                overlay_lines.append(f"\n/* {output.id} */\n{output.dts_fragment}")
+            for flag in output.kconfig_flags:
+                if flag not in module_kconfig:
+                    module_kconfig.append(flag)
+        modules_cmake = modules_dir / "CMakeLists.txt"
+        sources_block = "\n".join(f"  ../../../{src}" for src in cmake_sources)
+        atomic_write_text(modules_cmake, f"# Generated firmware modules\ntarget_sources(app PRIVATE\n{sources_block}\n)\n")
+        module_files.append(str(modules_cmake))
+        for stale_c in modules_dir.glob("*.c"):
+            if stale_c.stem not in live_ids:
+                stale_c.unlink()
+        for stale_h in modules_dir.glob("*.h"):
+            if stale_h.stem not in live_ids:
+                stale_h.unlink()
+    overlay = "\n".join(overlay_lines) + "\n"
+    atomic_write_text(generated / "devicetree.overlay", overlay)
+    prj_conf = profile["prj_conf"]
+    if module_kconfig:
+        existing_flags = {line.strip() for line in prj_conf.splitlines() if line.strip().startswith("CONFIG_")}
+        new_flags = sorted(f for f in set(module_kconfig) if f not in existing_flags)
+        if new_flags:
+            prj_conf = prj_conf.rstrip("\n") + "\n# firmware modules\n" + "\n".join(new_flags) + "\n"
+    atomic_write_text(app / "CMakeLists.txt", f"cmake_minimum_required(VERSION 3.20.0)\nfind_package(Zephyr REQUIRED HINTS $ENV{{ZEPHYR_BASE}})\nproject({profile['project']})\ntarget_sources(app PRIVATE src/main.c)\n" + ("include(${CMAKE_CURRENT_SOURCE_DIR}/../../../firmware/modules/CMakeLists.txt)\n" if modules else ""))
+    atomic_write_text(app / "prj.conf", prj_conf)
     atomic_write_text(app / "src" / "main.c", '#include <zephyr/kernel.h>\nint main(void) { return 0; }\n')
     tests = project / "firmware" / "zephyr" / "tests"
     tests.mkdir(parents=True, exist_ok=True)
@@ -249,7 +290,8 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     atomic_write_text(reference / "include" / "board.h", "#pragma once\n#include <stddef.h>\nsize_t board_motor_channel_count(void);\nint board_estop_is_fail_safe(void);\nint board_pinmap_self_test(void);\n")
     atomic_write_text(reference / "src" / "board.c", f'#include "board.h"\n#include "pinmap.h"\nsize_t board_motor_channel_count(void) {{ return {motor_pwm_count}; }}\nint board_estop_is_fail_safe(void) {{ return {1 if estop_required else 0}; }}\nint board_pinmap_self_test(void) {{ return {pin_self_test}; }}\n')
     atomic_write_text(reference / "tests" / "bringup_tests.c", f'#include "board.h"\n#include <assert.h>\n#include <stdio.h>\nint main(void) {{ assert(board_motor_channel_count() == {motor_pwm_count});{estop_assert} assert(board_pinmap_self_test()); puts("bringup tests passed"); return 0; }}\n')
-    return [str(path) for path in sorted(generated.iterdir()) if path.name != "provenance.json"] + [str(app / "src" / "main.c"), *[str(tests / name) for name in sorted(profile["tests"])], str(board_dir / f"{board_name}.dts"), str(reference / "CMakeLists.txt")]
+    bsp_files = [str(path) for path in sorted(generated.iterdir()) if path.name != "provenance.json"]
+    return bsp_files + module_files + [str(app / "src" / "main.c"), *[str(tests / name) for name in sorted(profile["tests"])], str(board_dir / f"{board_name}.dts"), str(reference / "CMakeLists.txt")]
 
 
 def generate_bom(project: Path) -> str:

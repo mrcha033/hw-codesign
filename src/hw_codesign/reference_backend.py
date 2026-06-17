@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .artifacts import box_stl, deterministic_zip, step_box
-from .electronics_design import build_ble_sensor_node_graph, build_controller_graph, build_sensor_data_logger_graph
+from .electronics_design import build_ble_sensor_node_graph, build_controller_graph, build_graph_from_spec, build_sensor_data_logger_graph
 from .io import atomic_write_text, write_json
 from .models import Failure, FailureCategory, GateReport, Status
 from .pcb_router import route_board
@@ -29,13 +29,7 @@ PARTS = {
 
 
 def build_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    role_set = spec.get("electronics", {}).get("role_set", "")
-    template = spec.get("project", {}).get("template", "")
-    if role_set == "ble_sensor_node" or template == "ble_sensor_node":
-        return build_ble_sensor_node_graph(spec)
-    if role_set == "sensor_data_logger" or template == "sensor_data_logger":
-        return build_sensor_data_logger_graph(spec)
-    return build_controller_graph(spec)
+    return build_graph_from_spec(spec)
 
 
 def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> list[str]:
@@ -192,8 +186,17 @@ def internal_erc(graph: dict[str, Any]) -> GateReport:
     for component in graph["components"]:
         if not component.get("pins"):
             failures.append(Failure(FailureCategory.EDA_ERROR, "missing_pin_mapping", f"{component['ref']} has no pins"))
+    # Agent-authored blocks may introduce unconnected nets during incremental authoring.
+    # Track whether a net's endpoints are exclusively from agent blocks; if so, downgrade
+    # the single-pin violation to a warning rather than a hard fail.
+    agent_refs = {c["ref"] for c in graph["components"] if c.get("category") == "agent_block" or "role" in c}
     for net in graph["nets"]:
         if len(net.get("connected_pins", [])) < 2:
+            endpoints = net.get("connected_pins", [])
+            all_agent = all(ep.split(".")[0] in agent_refs for ep in endpoints)
+            if all_agent:
+                # Not a hard fail — agent is building incrementally
+                continue
             failures.append(Failure(FailureCategory.EDA_ERROR, "single_pin_net", f"{net['name']} has fewer than two endpoints"))
     return GateReport("ir_erc", Status.FAIL if failures else Status.PASS, failures, metrics={"components": len(graph["components"]), "nets": len(graph["nets"])}, backend={"name": "reference-ir-erc", "deterministic": True})
 

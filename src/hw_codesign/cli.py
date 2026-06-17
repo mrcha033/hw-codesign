@@ -78,6 +78,22 @@ def build_parser() -> argparse.ArgumentParser:
     design_part.add_argument("--intent", default="{}", help="JSON string of intent parameters")
     commands.add_parser("list-parts").add_argument("project")
     commands.add_parser("get-part-types")
+    propose_block = commands.add_parser("propose-circuit-block")
+    propose_block.add_argument("category")
+    add_block = commands.add_parser("add-circuit-block")
+    add_block.add_argument("project")
+    add_block.add_argument("--block", default="{}", help="JSON block spec")
+    commands.add_parser("list-circuit-blocks").add_argument("project")
+    set_constraint = commands.add_parser("set-placement-constraint")
+    set_constraint.add_argument("project")
+    set_constraint.add_argument("--constraint", default="{}", help="JSON constraint spec")
+    commands.add_parser("list-placement-constraints").add_argument("project")
+    record_decision = commands.add_parser("record-design-decision")
+    record_decision.add_argument("project")
+    record_decision.add_argument("--domain", required=True, choices=["electronics", "mechanical", "firmware", "pcb", "sourcing", "system"])
+    record_decision.add_argument("--decision", required=True)
+    record_decision.add_argument("--rationale", required=True)
+    commands.add_parser("check-cross-domain-consistency").add_argument("project")
     diag = commands.add_parser("diagnose-environment")
     diag.add_argument("--target", default="fabrication_release", choices=["fabrication_release", "candidate", "firmware_only", "full_release"])
     diag.add_argument("--backend", default=None)
@@ -141,6 +157,22 @@ def main() -> int:
             result = service.list_parts(args.project)
         elif args.command == "get-part-types":
             result = service.get_part_types()
+        elif args.command == "propose-circuit-block":
+            result = service.propose_circuit_block(args.category)
+        elif args.command == "add-circuit-block":
+            import json as _json
+            result = service.add_circuit_block(args.project, _json.loads(args.block))
+        elif args.command == "list-circuit-blocks":
+            result = service.list_circuit_blocks(args.project)
+        elif args.command == "set-placement-constraint":
+            import json as _json
+            result = service.set_placement_constraint(args.project, _json.loads(args.constraint))
+        elif args.command == "list-placement-constraints":
+            result = service.list_placement_constraints(args.project)
+        elif args.command == "record-design-decision":
+            result = service.record_design_decision(args.project, args.domain, args.decision, args.rationale)
+        elif args.command == "check-cross-domain-consistency":
+            result = service.check_cross_domain_consistency(args.project)
         elif args.command == "diagnose-environment":
             result = service.diagnose_environment(args.target, args.backend)
         else:

@@ -201,6 +201,97 @@ class Validator:
                 failures.append(_failure(FailureCategory.FIRMWARE_ERROR, "missing_firmware_assignment", f"Electrical signal lacks firmware assignment: {net}", "electronics.nets"))
         return self._report("hw_sw_parity", failures)
 
+    def check_firmware_modules(
+        self,
+        modules: list[dict[str, Any]],
+        pinmap: list[dict[str, Any]],
+    ) -> GateReport:
+        from .backends.firmware_modules import _RENDERERS, BEHAVIOR_SCHEMAS
+        failures: list[Failure] = []
+        known_signals = {item.get("signal") for item in pinmap if item.get("signal")}
+        seen_ids: set[str] = set()
+        isr_count = 0
+        total_stack = 0
+        _ISR_BUDGET = 8
+        _STACK_BUDGET_BYTES = 65536
+
+        for mod in modules:
+            mid = mod.get("id", "<unnamed>")
+            behavior = mod.get("behavior")
+
+            if mid in seen_ids:
+                failures.append(_failure(
+                    FailureCategory.FIRMWARE_ERROR, "duplicate_module_id",
+                    f"Module id '{mid}' is duplicated", f"firmware.modules.{mid}",
+                ))
+            seen_ids.add(mid)
+
+            if behavior not in _RENDERERS:
+                failures.append(_failure(
+                    FailureCategory.FIRMWARE_ERROR, "unknown_behavior",
+                    f"Module '{mid}' has unknown behavior '{behavior}'",
+                    f"firmware.modules.{mid}.behavior",
+                    available=sorted(_RENDERERS),
+                ))
+                continue
+
+            # Signal reference check for timeout_shutdown
+            if behavior == "timeout_shutdown":
+                signal = mod.get("trigger", {}).get("signal")
+                if signal and known_signals and signal not in known_signals:
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR, "unresolved_signal_reference",
+                        f"Module '{mid}' references signal '{signal}' not in pinmap",
+                        f"firmware.modules.{mid}.trigger.signal",
+                        signal=signal,
+                        known_signals=sorted(known_signals),
+                    ))
+                timeout_ms = mod.get("trigger", {}).get("timeout_ms")
+                if timeout_ms is not None and int(timeout_ms) < 1:
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR, "invalid_timeout",
+                        f"Module '{mid}' timeout_ms must be >= 1",
+                        f"firmware.modules.{mid}.trigger.timeout_ms",
+                    ))
+                isr_count += 1  # timer ISR
+
+            # Render to get stack info
+            try:
+                from .backends.firmware_modules import render_module
+                output = render_module(mod)
+                total_stack += output.stack_size_bytes
+                if output.is_isr:
+                    isr_count += 1
+            except Exception as exc:
+                failures.append(_failure(
+                    FailureCategory.FIRMWARE_ERROR, "module_render_error",
+                    f"Module '{mid}' failed to render: {exc}",
+                    f"firmware.modules.{mid}",
+                ))
+
+        if isr_count > _ISR_BUDGET:
+            failures.append(_failure(
+                FailureCategory.FIRMWARE_ERROR, "isr_budget_exceeded",
+                f"Module ISR count {isr_count} exceeds budget of {_ISR_BUDGET}",
+                "firmware.modules",
+                isr_count=isr_count, budget=_ISR_BUDGET,
+            ))
+        if total_stack > _STACK_BUDGET_BYTES:
+            failures.append(_failure(
+                FailureCategory.FIRMWARE_ERROR, "stack_budget_exceeded",
+                f"Aggregate module stack {total_stack} B exceeds budget of {_STACK_BUDGET_BYTES} B",
+                "firmware.modules",
+                total_stack_bytes=total_stack, budget_bytes=_STACK_BUDGET_BYTES,
+            ))
+
+        report = self._report("firmware_modules", failures)
+        report.metrics = {
+            "module_count": len(modules),
+            "isr_count": isr_count,
+            "total_stack_bytes": total_stack,
+        }
+        return report
+
     def check_requirements_lowering(self, spec: dict[str, Any]) -> GateReport:
         failures: list[Failure] = []
         for item in spec.get("requirements", {}).get("active_unresolved", []):
