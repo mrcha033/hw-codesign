@@ -762,6 +762,60 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
     ),
 
     # -------------------------------------------------------------------
+    # Mechanical part design (agent-authored CAD)
+    # -------------------------------------------------------------------
+    "hw_design_part": ToolDef(
+        name="hw_design_part",
+        description=(
+            "Design a parametric 3D-printable mechanical part from agent-specified intent. "
+            "Part types: pcb_mount_bracket (L/U bracket for extrusion/panel mounting), "
+            "standoff_tower (M2–M4 standoff with threaded bore), "
+            "cable_clip (snap-fit cable retention), "
+            "din_rail_adapter (TS-35 DIN rail plate), "
+            "custom_enclosure_variant (box with agent-specified cutouts, glands, vents). "
+            "Returns STEP + STL artifacts, FDM printability analysis, and a part_design gate report. "
+            "Call hw_get_part_types first to see the intent schema for each part type."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":   {"type": "string"},
+                "part_name": {"type": "string", "description": "Agent-chosen identifier (used as file name)"},
+                "part_type": {
+                    "type": "string",
+                    "enum": ["pcb_mount_bracket", "standoff_tower", "cable_clip", "din_rail_adapter", "custom_enclosure_variant"],
+                },
+                "intent": {
+                    "type": "object",
+                    "description": "Part-type-specific design constraints. Call hw_get_part_types to see the full schema.",
+                    "additionalProperties": True,
+                },
+            },
+            "required": ["project", "part_name", "part_type", "intent"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("part_design_result"),
+    ),
+
+    "hw_list_parts": ToolDef(
+        name="hw_list_parts",
+        description="List all designed mechanical parts for a project with their gate status and printability.",
+        input_schema=_project_only(),
+        output_schema=ref("part_list_result"),
+    ),
+
+    "hw_get_part_types": ToolDef(
+        name="hw_get_part_types",
+        description=(
+            "Return all available part types with descriptions and their full intent schemas. "
+            "Call this before hw_design_part to understand what parameters each part type accepts."
+        ),
+        input_schema={"type": "object", "properties": {}, "additionalProperties": False},
+        output_schema=ref("part_types_result"),
+        execution_mode="local",
+    ),
+
+    # -------------------------------------------------------------------
     # Environment diagnosis
     # -------------------------------------------------------------------
     "hw_diagnose_environment": ToolDef(

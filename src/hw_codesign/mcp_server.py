@@ -348,6 +348,25 @@ def create_server(root: Path | str | None = None):
         )
 
     # ------------------------------------------------------------------
+    # Mechanical part design (agent-authored CAD)
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_design_part"].name)
+    def design_part(project: str, part_name: str, part_type: str, intent: dict) -> dict[str, Any]:
+        """Design a parametric 3D-printable part from agent intent. Returns STEP/STL + printability gate."""
+        return service.design_part(project, part_name, part_type, intent)
+
+    @server.tool(name=_TR["hw_list_parts"].name)
+    def list_parts(project: str) -> dict[str, Any]:
+        """List all designed mechanical parts for a project."""
+        return service.list_parts(project)
+
+    @server.tool(name=_TR["hw_get_part_types"].name)
+    def get_part_types() -> dict[str, Any]:
+        """Return available part types and their full intent schemas."""
+        return service.get_part_types()
+
+    # ------------------------------------------------------------------
     # Platform introspection
     # ------------------------------------------------------------------
 

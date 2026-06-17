@@ -545,6 +545,100 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------
+    # part_design_result — hw_design_part output
+    # -------------------------------------------------------------------
+    "part_design_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("part_design_result"),
+        "title": "PartDesignResult",
+        "description": "Result of designing a parametric mechanical part from agent intent.",
+        "type": "object",
+        "required": ["status", "part_name", "part_type"],
+        "additionalProperties": True,
+        "properties": {
+            "status":          _STATUS_ENUM,
+            "part_name":       {"type": "string"},
+            "part_type":       {"type": "string"},
+            "artifacts":       {"type": "array", "items": {"type": "string"}},
+            "printability":    {
+                "type": "object",
+                "properties": {
+                    "printable":              {"type": "boolean"},
+                    "max_overhang_deg":       {"type": "number"},
+                    "min_wall_mm":            {"type": "number"},
+                    "min_hole_mm":            {"type": "number"},
+                    "stl_manifold":           {"type": "boolean"},
+                    "recommended_orientation": {"type": "string"},
+                    "violations":             {"type": "array", "items": {"type": "string"}},
+                },
+            },
+            "gate_report":     {"$ref": _id("gate_report")},
+            "candidate_only":  {"type": "boolean"},
+            "release_eligible": {"type": "boolean"},
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # part_list_result — hw_list_parts output
+    # -------------------------------------------------------------------
+    "part_list_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("part_list_result"),
+        "title": "PartListResult",
+        "type": "object",
+        "required": ["status", "project", "parts", "count"],
+        "additionalProperties": True,
+        "properties": {
+            "status":  {"type": "string"},
+            "project": {"type": "string"},
+            "count":   {"type": "integer"},
+            "parts":   {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["part_name", "part_type", "gate_status"],
+                    "additionalProperties": True,
+                    "properties": {
+                        "part_name":      {"type": "string"},
+                        "part_type":      {"type": "string"},
+                        "gate_status":    {"type": "string"},
+                        "printability":   {"type": ["boolean", "null"]},
+                        "artifact_count": {"type": "integer"},
+                    },
+                },
+            },
+        },
+    },
+
+    # -------------------------------------------------------------------
+    # part_types_result — hw_get_part_types output
+    # -------------------------------------------------------------------
+    "part_types_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("part_types_result"),
+        "title": "PartTypesResult",
+        "type": "object",
+        "required": ["status", "part_types", "count"],
+        "additionalProperties": True,
+        "properties": {
+            "status":     {"type": "string"},
+            "count":      {"type": "integer"},
+            "part_types": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "object",
+                    "required": ["description", "intent_schema"],
+                    "additionalProperties": True,
+                    "properties": {
+                        "description":   {"type": "string"},
+                        "intent_schema": {"type": "object"},
+                    },
+                },
+            },
+        },
+    },
+
+    # -------------------------------------------------------------------
     # opaque_result — explicit fallback for not-yet-modeled outputs
     # -------------------------------------------------------------------
     "opaque_result": {

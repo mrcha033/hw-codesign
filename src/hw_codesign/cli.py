@@ -70,6 +70,14 @@ def build_parser() -> argparse.ArgumentParser:
     fab_review = commands.add_parser("prepare-fabrication-review")
     fab_review.add_argument("project")
     fab_review.add_argument("--candidate-id", default=None)
+    design_part = commands.add_parser("design-part")
+    design_part.add_argument("project")
+    design_part.add_argument("--part-name", required=True)
+    design_part.add_argument("--part-type", required=True,
+                             choices=["pcb_mount_bracket", "standoff_tower", "cable_clip", "din_rail_adapter", "custom_enclosure_variant"])
+    design_part.add_argument("--intent", default="{}", help="JSON string of intent parameters")
+    commands.add_parser("list-parts").add_argument("project")
+    commands.add_parser("get-part-types")
     diag = commands.add_parser("diagnose-environment")
     diag.add_argument("--target", default="fabrication_release", choices=["fabrication_release", "candidate", "firmware_only", "full_release"])
     diag.add_argument("--backend", default=None)
@@ -126,6 +134,13 @@ def main() -> int:
             result = service.compare_candidates(args.project, args.candidate_a, args.candidate_b)
         elif args.command == "prepare-fabrication-review":
             result = service.prepare_fabrication_review(args.project, args.candidate_id)
+        elif args.command == "design-part":
+            import json as _json
+            result = service.design_part(args.project, args.part_name, args.part_type, _json.loads(args.intent))
+        elif args.command == "list-parts":
+            result = service.list_parts(args.project)
+        elif args.command == "get-part-types":
+            result = service.get_part_types()
         elif args.command == "diagnose-environment":
             result = service.diagnose_environment(args.target, args.backend)
         else:

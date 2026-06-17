@@ -1322,6 +1322,87 @@ class HardwareService:
             "path": str(target),
         }
 
+    # ------------------------------------------------------------------
+    # Mechanical part design (agent-authored CAD)
+    # ------------------------------------------------------------------
+
+    def design_part(self, project: str, part_name: str, part_type: str, intent: dict[str, Any]) -> dict[str, Any]:
+        """Design a parametric mechanical part from agent-specified intent."""
+        from .backends.parts import PART_REGISTRY
+        path = self.workspace.require_project(project)
+        if part_type not in PART_REGISTRY:
+            return {
+                "status": "blocked",
+                "code": "unknown_part_type",
+                "part_type": part_type,
+                "available_part_types": sorted(PART_REGISTRY),
+            }
+        parts_dir = path / "mechanical" / "parts" / part_name
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        intent_path = parts_dir / "intent.json"
+        write_json(intent_path, {"part_name": part_name, "part_type": part_type, "intent": intent})
+        result = PART_REGISTRY[part_type]().design(intent, parts_dir, part_name)
+        if result.get("status") not in ("blocked",):
+            manifest = {
+                "part_name": part_name,
+                "part_type": part_type,
+                "intent": intent,
+                "artifacts": result.get("artifacts", []),
+                "printability": result.get("printability", {}),
+                "gate_status": result.get("gate_report", {}).get("status", "unknown"),
+                "candidate_only": True,
+                "release_eligible": False,
+            }
+            write_json(parts_dir / "part_manifest.json", manifest)
+        return result
+
+    def list_parts(self, project: str) -> dict[str, Any]:
+        """List all designed parts for a project."""
+        path = self.workspace.require_project(project)
+        parts_root = path / "mechanical" / "parts"
+        parts = []
+        if parts_root.is_dir():
+            for item in sorted(parts_root.iterdir()):
+                if not item.is_dir():
+                    continue
+                manifest_path = item / "part_manifest.json"
+                if manifest_path.is_file():
+                    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    parts.append({
+                        "part_name": data.get("part_name", item.name),
+                        "part_type": data.get("part_type", "unknown"),
+                        "gate_status": data.get("gate_status", "unknown"),
+                        "printability": data.get("printability", {}).get("printable"),
+                        "artifact_count": len(data.get("artifacts", [])),
+                    })
+                else:
+                    intent_path = item / "intent.json"
+                    if intent_path.is_file():
+                        data = json.loads(intent_path.read_text(encoding="utf-8"))
+                        parts.append({
+                            "part_name": data.get("part_name", item.name),
+                            "part_type": data.get("part_type", "unknown"),
+                            "gate_status": "unknown",
+                            "printability": None,
+                            "artifact_count": 0,
+                        })
+        return {"status": "pass", "project": project, "parts": parts, "count": len(parts)}
+
+    def get_part_types(self) -> dict[str, Any]:
+        """Return available part types with their intent schemas."""
+        from .backends.parts import PART_DESCRIPTIONS, PART_INTENT_SCHEMAS, PART_REGISTRY
+        return {
+            "status": "pass",
+            "part_types": {
+                pt: {
+                    "description": PART_DESCRIPTIONS.get(pt, ""),
+                    "intent_schema": PART_INTENT_SCHEMAS.get(pt, {}),
+                }
+                for pt in sorted(PART_REGISTRY)
+            },
+            "count": len(PART_REGISTRY),
+        }
+
     def _apply_spec_patch(self, project: str, patch: dict[str, Any]) -> dict[str, Any]:
         if patch.get("operation") != "replace":
             return {"status": "fail", "message": f"Unsupported patch operation: {patch.get('operation')}"}
