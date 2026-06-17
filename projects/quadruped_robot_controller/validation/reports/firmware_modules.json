@@ -1,0 +1,12 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "firmware_modules",
+  "metrics": {
+    "isr_count": 1,
+    "module_count": 3,
+    "total_stack_bytes": 6144
+  },
+  "status": "pass"
+}

@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "BOM_ERROR",
+      "code": "datasheet_evidence_not_resolved",
+      "details": {},
+      "message": "Regenerate electronics with the curated evidence catalog",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "datasheet_evidence",
+  "metrics": {},
+  "status": "blocked"
+}

@@ -13,4 +13,5 @@ projects/*/firmware/*/build/
 .toolchains/
 node_modules/
 projects/*/exports/
+projects/*/electronics/generated/kicad/.history/
 .DS_Store
