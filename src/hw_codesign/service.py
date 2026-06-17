@@ -2090,13 +2090,7 @@ class HardwareService:
         return {"status": "generated", "file": str(bundle_path), "html": str(html_path), "bundle_hash": bundle_hash, "gate_count": len(gate_reports)}
 
     def upload_review(self, project: str, destination: str | None = None) -> dict[str, Any]:
-        """Upload the review bundle to a hosted viewer.
-
-        DEFERRED: This method builds and validates the local bundle but does not
-        execute a real network upload without an explicit destination URL confirmed
-        by the user.  Cloud execution (step 7) is intentionally out of scope for
-        this implementation phase.
-        """
+        """POST the review bundle to a hosted viewer endpoint."""
         export_result = self.export_review(project)
         bundle_path = Path(export_result["file"])
         if not destination:
@@ -2105,21 +2099,150 @@ class HardwareService:
                 "code": "destination_required",
                 "message": (
                     "Hosted upload requires an explicit destination URL. "
-                    "Re-run with --destination <url> once you have configured a viewer endpoint. "
-                    "Cloud execution is deferred to a future implementation phase."
+                    "Re-run with --destination <url> once you have configured a receiver endpoint "
+                    "(e.g. hw serve-receiver --port 7476 on a shared machine)."
                 ),
                 "bundle": str(bundle_path),
                 "bundle_hash": export_result["bundle_hash"],
             }
-        # Mechanism stub: an actual HTTP PUT would go here once a destination is confirmed.
+        import urllib.request as _urlreq
+        bundle_bytes = bundle_path.read_bytes()
+        req = _urlreq.Request(
+            destination,
+            data=bundle_bytes,
+            method="POST",
+            headers={
+                "Content-Type": "application/json",
+                "X-Bundle-Hash": export_result["bundle_hash"],
+                "X-Bundle-Project": project,
+            },
+        )
+        try:
+            with _urlreq.urlopen(req, timeout=30) as resp:
+                http_status = resp.getcode()
+                body = resp.read(4096).decode(errors="replace")
+        except Exception as exc:
+            return {
+                "status": "fail",
+                "code": "upload_failed",
+                "message": str(exc),
+                "bundle": str(bundle_path),
+                "bundle_hash": export_result["bundle_hash"],
+                "destination": destination,
+            }
         return {
-            "status": "blocked",
-            "code": "hosted_upload_not_implemented",
-            "message": "Hosted upload mechanism is defined but not yet wired to a live endpoint.",
+            "status": "generated",
             "bundle": str(bundle_path),
             "bundle_hash": export_result["bundle_hash"],
             "destination": destination,
+            "http_status": http_status,
+            "response": body,
+            "note": "Bundle uploaded. Ensure the receiver endpoint is on a private network if the bundle contains proprietary data.",
         }
+
+    def export_standalone_review(self, project: str) -> dict[str, Any]:
+        """Export a self-contained single-file HTML review (no server required)."""
+        export_result = self.export_review(project)
+        bundle_path = Path(export_result["file"])
+        bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+        comments_path = bundle_path.parent / "comments.jsonl"
+        comments: list[dict] = []
+        if comments_path.is_file():
+            for line in comments_path.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if line:
+                    try:
+                        comments.append(json.loads(line))
+                    except Exception:
+                        pass
+        from .review_viewer import build_standalone_html
+        html = build_standalone_html({**bundle, "comments": comments})
+        standalone_path = bundle_path.parent / "review_standalone.html"
+        standalone_path.write_text(html, encoding="utf-8")
+        return {
+            "status": "generated",
+            "file": str(standalone_path),
+            "bundle_hash": export_result["bundle_hash"],
+            "comment_count": len(comments),
+            "note": "Self-contained HTML — share this file directly. No server required.",
+        }
+
+    def list_project_summaries(self) -> dict[str, Any]:
+        """Return a summary of all projects in the workspace with their latest bundle status."""
+        summaries = []
+        for name in self.workspace.list_projects():
+            bundle_path = self.workspace.project_path(name) / "exports" / "working" / "review" / "bundle.json"
+            if bundle_path.is_file():
+                try:
+                    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+                    summary = bundle.get("summary", {})
+                    summaries.append({
+                        "name": name,
+                        "has_bundle": True,
+                        "generated_at": bundle.get("generated_at"),
+                        "bundle_hash": (bundle.get("bundle_hash") or "")[:12],
+                        "pass": summary.get("pass", 0),
+                        "fail": summary.get("fail", 0),
+                        "blocked": summary.get("blocked", 0),
+                        "total": summary.get("total", 0),
+                    })
+                except Exception:
+                    summaries.append({"name": name, "has_bundle": False})
+            else:
+                summaries.append({"name": name, "has_bundle": False})
+        return {"status": "generated", "projects": summaries}
+
+    def add_review_comment(
+        self,
+        project: str,
+        text: str,
+        target_type: str = "general",
+        target_id: str | None = None,
+        author: str | None = None,
+        gate: str | None = None,
+    ) -> dict[str, Any]:
+        """Append a comment to the project's review comments sidecar."""
+        import uuid
+        from datetime import UTC, datetime
+        path = self.workspace.require_project(project)
+        comments_path = path / "exports" / "working" / "review" / "comments.jsonl"
+        comments_path.parent.mkdir(parents=True, exist_ok=True)
+        comments_path.touch(exist_ok=True)
+        bundle_hash = ""
+        bundle_path = comments_path.parent / "bundle.json"
+        if bundle_path.is_file():
+            try:
+                bundle_hash = json.loads(bundle_path.read_text(encoding="utf-8")).get("bundle_hash", "")
+            except Exception:
+                pass
+        entry: dict = {
+            "id": str(uuid.uuid4()),
+            "timestamp": datetime.now(UTC).isoformat(),
+            "target_type": target_type,
+            "target_id": target_id,
+            "author": author,
+            "gate": gate,
+            "text": text,
+            "bundle_hash": bundle_hash,
+        }
+        with comments_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry, sort_keys=True) + "\n")
+        return {"status": "generated", "comment_id": entry["id"], "timestamp": entry["timestamp"]}
+
+    def list_review_comments(self, project: str) -> dict[str, Any]:
+        """Return all review comments for a project."""
+        path = self.workspace.require_project(project)
+        comments_path = path / "exports" / "working" / "review" / "comments.jsonl"
+        comments: list[dict] = []
+        if comments_path.is_file():
+            for line in comments_path.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if line:
+                    try:
+                        comments.append(json.loads(line))
+                    except Exception:
+                        pass
+        return {"status": "generated", "comments": comments, "count": len(comments)}
 
     @staticmethod
     def _report_set(reports: list[GateReport]) -> dict[str, Any]:

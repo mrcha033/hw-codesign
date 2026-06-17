@@ -441,6 +441,34 @@ def create_server(root: Path | str | None = None):
         return service.check_cross_domain_consistency(project)
 
     # ------------------------------------------------------------------
+    # Review sharing and collaboration
+    # ------------------------------------------------------------------
+
+    @server.tool(name=_TR["hw_share_review"].name)
+    def share_review(project: str) -> dict[str, Any]:
+        """Export a self-contained single-file HTML review for sharing."""
+        return service.export_standalone_review(project)
+
+    @server.tool(name=_TR["hw_add_review_comment"].name)
+    def add_review_comment(
+        project: str,
+        text: str,
+        target_type: str = "general",
+        target_id: str | None = None,
+        author: str | None = None,
+        gate: str | None = None,
+    ) -> dict[str, Any]:
+        """Add a comment or decision note to the project review."""
+        effective_type = "gate_failure" if gate and target_type == "general" else target_type
+        effective_id = target_id or gate
+        return service.add_review_comment(project, text, effective_type, effective_id, author, gate)
+
+    @server.tool(name=_TR["hw_list_review_comments"].name)
+    def list_review_comments(project: str) -> dict[str, Any]:
+        """Return all review comments for a project."""
+        return service.list_review_comments(project)
+
+    # ------------------------------------------------------------------
     # Platform introspection
     # ------------------------------------------------------------------
 

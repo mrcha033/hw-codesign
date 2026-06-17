@@ -109,7 +109,8 @@ function renderPlacement(pl){
 
 function renderComments(comments,hash){
   if(!comments||!comments.length) return '';
-  let t=`<section><h2>Comments (${comments.length}) — <a href="/comment" style="color:#60a5fa;font-size:.8rem">Add comment</a></h2>`;
+  const commentLink=window.__BUNDLE_DATA?'':' — <a href="/comment" style="color:#60a5fa;font-size:.8rem">Add comment</a>';
+  let t=`<section><h2>Comments (${comments.length})${commentLink}</h2>`;
   for(const c of comments){
     const target=c.target_id?` [${esc(c.target_type||'general')}:${esc(c.target_id)}]`:(c.gate?` [gate:${esc(c.gate)}]`:'');
     t+=`<details open><summary>${esc(c.timestamp)}${target}${c.author?' — '+esc(c.author):''}</summary><pre>${esc(c.text)}</pre></details>`;
@@ -138,15 +139,19 @@ function render(b){
 
 async function load(){
   try{
-    const r=await fetch('/api/bundle');
-    if(!r.ok){document.getElementById('status').textContent='Error: '+r.status;return;}
-    const b=await r.json();
+    let b;
+    if(window.__BUNDLE_DATA){b=window.__BUNDLE_DATA;}
+    else{
+      const r=await fetch('/api/bundle');
+      if(!r.ok){document.getElementById('status').textContent='Error: '+r.status;return;}
+      b=await r.json();
+    }
     document.getElementById('status').textContent='';
     document.getElementById('app').innerHTML=render(b);
   }catch(e){document.getElementById('status').textContent='Failed to load bundle: '+String(e);}
 }
 load();
-setInterval(load,30000);
+if(!window.__BUNDLE_DATA) setInterval(load,30000);
 </script>
 </body>
 </html>
@@ -261,6 +266,311 @@ def serve_review(service: "HardwareService", project: str, port: int = 7474, ope
     print(f"Review viewer: {url}")
     print(f"Bundle: {bundle_path}")
     print(f"Comments: {comments_path}")
+    print("Press Ctrl-C to stop.")
+    if open_browser:
+        threading.Timer(0.3, lambda: webbrowser.open(url)).start()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
+# ---------------------------------------------------------------------------
+# Standalone HTML export (no server required — data embedded in the file)
+# ---------------------------------------------------------------------------
+
+def build_standalone_html(bundle: dict, comments: list | None = None) -> str:
+    """Return a self-contained HTML string with bundle data embedded as JS."""
+    merged = {**bundle, "comments": comments or bundle.get("comments", [])}
+    # Replace </ with <\/ to prevent the JSON from breaking the <script> tag.
+    data_json = json.dumps(merged, separators=(",", ":")).replace("</", "<\\/")
+    injection = f"<script>window.__BUNDLE_DATA={data_json};</script>"
+    return _VIEWER_HTML.replace("</body>", injection + "\n</body>")
+
+
+# ---------------------------------------------------------------------------
+# Multi-project dashboard server
+# ---------------------------------------------------------------------------
+
+_DASHBOARD_HTML = """\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>hw-codesign Dashboard</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;padding:1.5rem 2rem;background:#0f172a;color:#e2e8f0;}
+h1{margin:0 0 .25rem;font-size:1.5rem;}
+.meta{color:#94a3b8;font-size:.85rem;margin-bottom:1.5rem;}
+table{border-collapse:collapse;width:100%;font-size:.85rem;}
+th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid #1e293b;}
+th{color:#94a3b8;font-weight:500;}
+.chip{display:inline-block;padding:.15rem .5rem;border-radius:999px;font-size:.75rem;font-weight:600;background:#1e293b;margin-right:.25rem;}
+a{color:#60a5fa;text-decoration:none;}a:hover{text-decoration:underline;}
+.muted{color:#64748b;}
+</style>
+</head>
+<body>
+<h1>hw-codesign Dashboard</h1>
+<div id="status" class="meta">Loading projects…</div>
+<table id="tbl" style="display:none">
+<thead><tr><th>Project</th><th>Gate status</th><th>Last export</th><th></th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+<script>
+const SC={pass:"#22c55e",fail:"#ef4444",blocked:"#f97316"};
+function chip(s,n){return n?`<span class="chip" style="color:${SC[s]||'#94a3b8'}">${n} ${s}</span>`:''}
+function row(p){
+  const chips=chip('pass',p.pass)+chip('fail',p.fail)+chip('blocked',p.blocked);
+  const when=p.generated_at?(new Date(p.generated_at)).toLocaleString():'—';
+  const link=p.has_bundle?`<a href="/project/${encodeURIComponent(p.name)}">View</a>`:'<span class="muted">no bundle</span>';
+  return `<tr><td><strong>${p.name}</strong></td><td>${chips||'<span class="muted">—</span>'}</td><td class="muted">${when}</td><td>${link}</td></tr>`;
+}
+async function load(){
+  try{
+    const r=await fetch('/api/projects');
+    if(!r.ok){document.getElementById('status').textContent='Error: '+r.status;return;}
+    const d=await r.json();
+    const projects=d.projects||[];
+    document.getElementById('status').textContent=`${projects.length} project${projects.length===1?'':'s'}`;
+    document.getElementById('tbody').innerHTML=projects.map(row).join('');
+    document.getElementById('tbl').style.display='';
+  }catch(e){document.getElementById('status').textContent='Failed: '+String(e);}
+}
+load();
+setInterval(load,30000);
+</script>
+</body>
+</html>
+"""
+
+_RECEIVER_HTML = """\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>hw-codesign Review Receiver</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;padding:1.5rem 2rem;background:#0f172a;color:#e2e8f0;}
+h1{margin:0 0 .25rem;font-size:1.5rem;}
+.meta{color:#94a3b8;font-size:.85rem;margin-bottom:1.5rem;}
+table{border-collapse:collapse;width:100%;font-size:.85rem;}
+th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid #1e293b;}
+th{color:#94a3b8;font-weight:500;}
+a{color:#60a5fa;text-decoration:none;}a:hover{text-decoration:underline;}
+.muted{color:#64748b;}
+code{background:#1e293b;padding:.1rem .35rem;border-radius:.25rem;font-size:.8rem;}
+</style>
+</head>
+<body>
+<h1>hw-codesign Review Receiver</h1>
+<div class="meta">Upload: <code>hw upload-review &lt;project&gt; --destination http://&lt;host&gt;:{PORT}/api/upload</code></div>
+<div id="status" class="meta">Loading…</div>
+<table id="tbl" style="display:none">
+<thead><tr><th>Project</th><th>Hash</th><th>Received</th><th></th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+<script>
+function row(b){
+  const when=(new Date(b.received_at)).toLocaleString();
+  return `<tr><td><strong>${b.project_name||'unknown'}</strong></td><td class="muted">${(b.bundle_hash||'').slice(0,12)}</td><td class="muted">${when}</td><td><a href="/bundle/${encodeURIComponent(b.bundle_hash)}">View</a></td></tr>`;
+}
+async function load(){
+  try{
+    const r=await fetch('/api/bundles');
+    if(!r.ok){document.getElementById('status').textContent='Error: '+r.status;return;}
+    const d=await r.json();
+    const bundles=d.bundles||[];
+    document.getElementById('status').textContent=`${bundles.length} bundle${bundles.length===1?'':'s'} received`;
+    document.getElementById('tbody').innerHTML=bundles.map(row).join('');
+    document.getElementById('tbl').style.display='';
+  }catch(e){document.getElementById('status').textContent='Failed: '+String(e);}
+}
+load();
+setInterval(load,10000);
+</script>
+</body>
+</html>
+"""
+
+
+class _DashboardHandler(http.server.BaseHTTPRequestHandler):
+    service: "HardwareService"
+
+    def log_message(self, fmt: str, *args: object) -> None:
+        pass
+
+    def do_GET(self) -> None:  # noqa: N802
+        parts = [p for p in urllib.parse.urlparse(self.path).path.split("/") if p]
+
+        if not parts:
+            self._respond(200, "text/html", _DASHBOARD_HTML.encode())
+        elif parts == ["api", "projects"]:
+            data = json.dumps(self.service.list_project_summaries(), sort_keys=True, indent=2).encode()
+            self._respond(200, "application/json", data)
+        elif len(parts) >= 2 and parts[0] == "project":
+            name = parts[1]
+            if len(parts) >= 4 and parts[2:4] == ["api", "bundle"]:
+                # Serve the raw bundle JSON for this project
+                try:
+                    result = self.service.export_review(name)
+                    bundle_path = Path(result["file"])
+                    comments_path = bundle_path.parent / "comments.jsonl"
+                    merged = _merge_bundle(bundle_path, comments_path)
+                    data = json.dumps(merged, sort_keys=True, indent=2).encode()
+                    self._respond(200, "application/json", data)
+                except Exception as exc:
+                    self._respond(404, "application/json", json.dumps({"error": str(exc)}).encode())
+            else:
+                # Serve the viewer with embedded bundle data
+                try:
+                    result = self.service.export_review(name)
+                    bundle_path = Path(result["file"])
+                    comments_path = bundle_path.parent / "comments.jsonl"
+                    merged = _merge_bundle(bundle_path, comments_path)
+                    html = build_standalone_html(merged)
+                    self._respond(200, "text/html", html.encode())
+                except Exception as exc:
+                    self._respond(404, "text/plain", str(exc).encode())
+        else:
+            self._respond(404, "text/plain", b"not found")
+
+    def _respond(self, code: int, ctype: str, body: bytes) -> None:
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if body:
+            self.wfile.write(body)
+
+
+def serve_dashboard(service: "HardwareService", port: int = 7475, open_browser: bool = True) -> None:
+    class Handler(_DashboardHandler):
+        pass
+
+    Handler.service = service
+
+    server = http.server.HTTPServer(("127.0.0.1", port), Handler)
+    url = f"http://127.0.0.1:{port}/"
+    print(f"Dashboard: {url}")
+    print("Press Ctrl-C to stop.")
+    if open_browser:
+        threading.Timer(0.3, lambda: webbrowser.open(url)).start()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
+# ---------------------------------------------------------------------------
+# Bundle receiver server (accepts uploaded bundles via HTTP POST)
+# ---------------------------------------------------------------------------
+
+class _ReceiverHandler(http.server.BaseHTTPRequestHandler):
+    inbox_dir: Path
+    port: int
+
+    def log_message(self, fmt: str, *args: object) -> None:
+        pass
+
+    def do_GET(self) -> None:  # noqa: N802
+        parts = [p for p in urllib.parse.urlparse(self.path).path.split("/") if p]
+
+        if not parts:
+            html = _RECEIVER_HTML.replace("{PORT}", str(self.port))
+            self._respond(200, "text/html", html.encode())
+        elif parts == ["api", "bundles"]:
+            bundles = []
+            for path in sorted(self.inbox_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+                try:
+                    meta_path = path.with_suffix(".meta.json")
+                    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.is_file() else {}
+                    bundles.append(meta)
+                except Exception:
+                    pass
+            self._respond(200, "application/json", json.dumps({"bundles": bundles}, sort_keys=True, indent=2).encode())
+        elif len(parts) == 3 and parts[:2] == ["api", "bundle"]:
+            bundle_hash = urllib.parse.unquote(parts[2])
+            bundle_path = self.inbox_dir / f"{bundle_hash}.json"
+            if bundle_path.is_file():
+                self._respond(200, "application/json", bundle_path.read_bytes())
+            else:
+                self._respond(404, "text/plain", b"bundle not found")
+        elif len(parts) == 2 and parts[0] == "bundle":
+            bundle_hash = urllib.parse.unquote(parts[1])
+            bundle_path = self.inbox_dir / f"{bundle_hash}.json"
+            if bundle_path.is_file():
+                try:
+                    bundle = json.loads(bundle_path.read_bytes())
+                    html = build_standalone_html(bundle)
+                    self._respond(200, "text/html", html.encode())
+                except Exception as exc:
+                    self._respond(500, "text/plain", str(exc).encode())
+            else:
+                self._respond(404, "text/plain", b"bundle not found")
+        else:
+            self._respond(404, "text/plain", b"not found")
+
+    def do_POST(self) -> None:  # noqa: N802
+        if [p for p in urllib.parse.urlparse(self.path).path.split("/") if p] != ["api", "upload"]:
+            self._respond(404, "text/plain", b"not found")
+            return
+        length = int(self.headers.get("Content-Length", 0))
+        if length > 50 * 1024 * 1024:
+            self._respond(413, "text/plain", b"bundle too large (>50 MB)")
+            return
+        body = self.rfile.read(length)
+        try:
+            bundle = json.loads(body)
+            bundle_hash = bundle.get("bundle_hash", "")
+            if not bundle_hash:
+                self._respond(400, "text/plain", b"bundle missing bundle_hash")
+                return
+        except Exception:
+            self._respond(400, "text/plain", b"invalid JSON")
+            return
+
+        from datetime import UTC, datetime
+        bundle_path = self.inbox_dir / f"{bundle_hash}.json"
+        bundle_path.write_bytes(body)
+        meta = {
+            "bundle_hash": bundle_hash,
+            "project_name": bundle.get("project", {}).get("name", "unknown"),
+            "received_at": datetime.now(UTC).isoformat(),
+            "summary": bundle.get("summary", {}),
+        }
+        (self.inbox_dir / f"{bundle_hash}.meta.json").write_text(json.dumps(meta, sort_keys=True), encoding="utf-8")
+        print(f"Received bundle {bundle_hash[:12]} for project {meta['project_name']!r}")
+        self._respond(200, "application/json", json.dumps({"status": "received", "bundle_hash": bundle_hash}).encode())
+
+    def _respond(self, code: int, ctype: str, body: bytes) -> None:
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if body:
+            self.wfile.write(body)
+
+
+def serve_receiver(inbox_dir: Path, port: int = 7476, open_browser: bool = True) -> None:
+    inbox_dir = Path(inbox_dir)
+    inbox_dir.mkdir(parents=True, exist_ok=True)
+
+    class Handler(_ReceiverHandler):
+        pass
+
+    Handler.inbox_dir = inbox_dir
+    Handler.port = port
+
+    server = http.server.HTTPServer(("0.0.0.0", port), Handler)
+    url = f"http://127.0.0.1:{port}/"
+    print(f"Receiver: {url}")
+    print(f"Inbox: {inbox_dir}")
+    print(f"Upload: hw upload-review <project> --destination http://<host>:{port}/api/upload")
     print("Press Ctrl-C to stop.")
     if open_browser:
         threading.Timer(0.3, lambda: webbrowser.open(url)).start()

@@ -1087,6 +1087,56 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
     ),
 
     # -------------------------------------------------------------------
+    # Review sharing and collaboration
+    # -------------------------------------------------------------------
+    "hw_share_review": ToolDef(
+        name="hw_share_review",
+        description=(
+            "Export a self-contained single-file HTML review for sharing (email, Slack, PR attachment). "
+            "The HTML embeds the full bundle and all comments — no server required. "
+            "Returns file path and bundle_hash. Call after hw_run_all_checks or hw_check_release_gate."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("opaque_result"),
+    ),
+
+    "hw_add_review_comment": ToolDef(
+        name="hw_add_review_comment",
+        description=(
+            "Add a comment or decision note to the project's review. "
+            "Comments are stored in a sidecar file alongside the review bundle and appear in the viewer. "
+            "Use target_type='gate_failure' + target_id='<gate_name>' to anchor a comment to a specific gate."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":     {"type": "string"},
+                "text":        {"type": "string", "description": "Comment body"},
+                "target_type": {
+                    "type": "string",
+                    "enum": ["general", "gate_failure", "requirement", "component"],
+                    "default": "general",
+                },
+                "target_id":   {"type": ["string", "null"], "default": None,
+                                "description": "Gate name, requirement ID, or component ref"},
+                "author":      {"type": ["string", "null"], "default": None},
+                "gate":        {"type": ["string", "null"], "default": None,
+                                "description": "Gate name shorthand (sets target_type=gate_failure automatically)"},
+            },
+            "required": ["project", "text"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("opaque_result"),
+    ),
+
+    "hw_list_review_comments": ToolDef(
+        name="hw_list_review_comments",
+        description="Return all review comments for a project in chronological order.",
+        input_schema=_project_only(),
+        output_schema=ref("opaque_result"),
+    ),
+
+    # -------------------------------------------------------------------
     # Environment diagnosis
     # -------------------------------------------------------------------
     "hw_diagnose_environment": ToolDef(

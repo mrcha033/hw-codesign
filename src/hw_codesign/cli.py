@@ -49,13 +49,31 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("project")
     export_review = commands.add_parser("export-review")
     export_review.add_argument("project")
+    export_standalone = commands.add_parser("export-standalone-review")
+    export_standalone.add_argument("project")
     serve = commands.add_parser("serve-review")
     serve.add_argument("project")
     serve.add_argument("--port", type=int, default=7474)
     serve.add_argument("--no-open", action="store_true", help="Do not open a browser tab automatically")
+    dashboard = commands.add_parser("serve-dashboard")
+    dashboard.add_argument("--port", type=int, default=7475)
+    dashboard.add_argument("--no-open", action="store_true")
     upload = commands.add_parser("upload-review")
     upload.add_argument("project")
     upload.add_argument("--destination", default=None, help="Hosted viewer endpoint URL")
+    receiver = commands.add_parser("serve-receiver")
+    receiver.add_argument("--port", type=int, default=7476)
+    receiver.add_argument("--inbox-dir", default=None, help="Directory to store received bundles")
+    receiver.add_argument("--no-open", action="store_true")
+    commands.add_parser("list-projects")
+    add_comment = commands.add_parser("add-review-comment")
+    add_comment.add_argument("project")
+    add_comment.add_argument("text")
+    add_comment.add_argument("--author", default=None)
+    add_comment.add_argument("--target-type", default="general", choices=["general", "gate_failure", "requirement", "component"])
+    add_comment.add_argument("--target-id", default=None)
+    add_comment.add_argument("--gate", default=None)
+    commands.add_parser("list-review-comments").add_argument("project")
     commands.add_parser("list-candidates").add_argument("project")
     get_cand = commands.add_parser("get-candidate")
     get_cand.add_argument("project")
@@ -134,12 +152,33 @@ def main() -> int:
             result = service.generate_design_report(args.project)
         elif args.command == "export-review":
             result = service.export_review(args.project)
+        elif args.command == "export-standalone-review":
+            result = service.export_standalone_review(args.project)
         elif args.command == "serve-review":
             from .review_viewer import serve_review
             serve_review(service, args.project, port=args.port, open_browser=not args.no_open)
             return 0
+        elif args.command == "serve-dashboard":
+            from .review_viewer import serve_dashboard
+            serve_dashboard(service, port=args.port, open_browser=not args.no_open)
+            return 0
         elif args.command == "upload-review":
             result = service.upload_review(args.project, destination=args.destination)
+        elif args.command == "serve-receiver":
+            from .review_viewer import serve_receiver
+            from pathlib import Path as _Path
+            inbox = _Path(args.inbox_dir) if args.inbox_dir else args.root / ".review-inbox"
+            serve_receiver(inbox, port=args.port, open_browser=not args.no_open)
+            return 0
+        elif args.command == "list-projects":
+            result = service.list_project_summaries()
+        elif args.command == "add-review-comment":
+            result = service.add_review_comment(
+                args.project, args.text, target_type=args.target_type,
+                target_id=args.target_id, author=args.author, gate=args.gate,
+            )
+        elif args.command == "list-review-comments":
+            result = service.list_review_comments(args.project)
         elif args.command == "list-candidates":
             result = service.list_candidates(args.project)
         elif args.command == "get-candidate":

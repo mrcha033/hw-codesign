@@ -64,6 +64,15 @@ class Workspace:
         for directory in directories:
             (path / directory).mkdir(parents=True, exist_ok=True)
 
+    def list_projects(self) -> list[str]:
+        if not self.projects_dir.is_dir():
+            return []
+        return sorted(
+            path.name
+            for path in self.projects_dir.iterdir()
+            if path.is_dir() and (path / "project.yaml").is_file()
+        )
+
     def read_spec(self, name: str) -> dict[str, Any]:
         project = self.require_project(name)
         merged: dict[str, Any] = {"project": read_yaml(project / "project.yaml")}
