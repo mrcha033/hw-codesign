@@ -1,0 +1,8 @@
+firmware:
+  framework: zephyr
+  target: nrf52840dk
+  outputs:
+  - devicetree_overlay
+  - pinmap
+  - driver_stubs
+  - bringup_tests

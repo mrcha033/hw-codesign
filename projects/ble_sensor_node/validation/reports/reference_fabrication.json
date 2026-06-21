@@ -1,0 +1,26 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/assembly_drawing.svg",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/ble_sensor_node-Edge_Cuts.gm1",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/ble_sensor_node-F_Cu.gtl",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/ble_sensor_node-board_outline.dxf",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/ble_sensor_node.drl",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/bom.csv",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/drill.zip",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/gerbers.zip",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/panelization.json",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/exports/candidates/reference-fabrication/fabrication/pick_and_place.csv"
+  ],
+  "backend": {
+    "candidate_only": true,
+    "name": "reference-fabrication",
+    "release_eligible": false
+  },
+  "failures": [],
+  "gate": "reference_fabrication",
+  "metrics": {
+    "artifact_count": 10,
+    "candidate_only": true
+  },
+  "status": "pass"
+}

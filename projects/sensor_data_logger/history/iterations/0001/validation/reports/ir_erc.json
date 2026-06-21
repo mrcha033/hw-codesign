@@ -1,0 +1,14 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-erc"
+  },
+  "failures": [],
+  "gate": "ir_erc",
+  "metrics": {
+    "components": 12,
+    "nets": 14
+  },
+  "status": "pass"
+}

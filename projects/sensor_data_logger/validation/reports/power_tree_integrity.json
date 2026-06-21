@@ -1,0 +1,17 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "power_tree_integrity",
+  "metrics": {
+    "errors": 0,
+    "power_loads_checked": 3,
+    "source_nets": [
+      "USB_VBUS",
+      "V3V3"
+    ],
+    "transfer_components": 1,
+    "warnings": 0
+  },
+  "status": "pass"
+}

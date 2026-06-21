@@ -1,0 +1,60 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "placement-proposal",
+    "release_authoritative": false
+  },
+  "failures": [
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U1",
+          "C2"
+        ]
+      },
+      "message": "U1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "decoupling_proximity_deferred",
+      "details": {
+        "ref": "C1"
+      },
+      "message": "C1 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "info"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "decoupling_proximity_deferred",
+      "details": {
+        "ref": "C2"
+      },
+      "message": "C2 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "info"
+    }
+  ],
+  "gate": "placement_constraints",
+  "metrics": {
+    "authoritative": false,
+    "constraints": 9,
+    "errors": 0,
+    "finding_counts": {
+      "decoupling_proximity_deferred": 2,
+      "estimated_courtyard_overlap": 1
+    },
+    "method": "constraint_driven_placement_proposal",
+    "placements": 12,
+    "warnings": 1
+  },
+  "status": "pass"
+}

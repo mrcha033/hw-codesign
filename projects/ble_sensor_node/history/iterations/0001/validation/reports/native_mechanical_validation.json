@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "external_gate_not_run",
+      "details": {},
+      "message": "Native CAD validation was not requested",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_mechanical_validation",
+  "metrics": {},
+  "status": "blocked"
+}

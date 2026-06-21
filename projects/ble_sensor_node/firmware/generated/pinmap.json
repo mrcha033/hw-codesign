@@ -1,0 +1,74 @@
+[
+  {
+    "graph_pin": "U1.5",
+    "mcu_pin": "P0.02",
+    "net_name": "I2C_SCL",
+    "signal": "I2C_SCL"
+  },
+  {
+    "graph_pin": "U1.6",
+    "mcu_pin": "P0.03",
+    "net_name": "I2C_SDA",
+    "signal": "I2C_SDA"
+  },
+  {
+    "graph_pin": "U1.7",
+    "mcu_pin": "P0.04",
+    "net_name": "CHG_STAT",
+    "signal": "CHG_STAT"
+  },
+  {
+    "graph_pin": "U1.8",
+    "mcu_pin": "P0.05",
+    "net_name": "TEMP_INT",
+    "signal": "TEMP_INT"
+  },
+  {
+    "graph_pin": "U1.9",
+    "mcu_pin": "P0.06",
+    "net_name": "FUEL_ALRT",
+    "signal": "FUEL_ALRT"
+  },
+  {
+    "graph_pin": "U1.10",
+    "mcu_pin": "P0.08",
+    "net_name": "LED_BLE",
+    "signal": "LED_BLE"
+  },
+  {
+    "graph_pin": "U1.12",
+    "mcu_pin": "P0.28",
+    "net_name": "UART_TX",
+    "signal": "UART_TX"
+  },
+  {
+    "graph_pin": "U1.13",
+    "mcu_pin": "P0.29",
+    "net_name": "UART_RX",
+    "signal": "UART_RX"
+  },
+  {
+    "graph_pin": "U1.14",
+    "mcu_pin": "SWDCLK",
+    "net_name": "SWDCLK",
+    "signal": "SWDCLK"
+  },
+  {
+    "graph_pin": "U1.16",
+    "mcu_pin": "SWO",
+    "net_name": "SWO",
+    "signal": "SWO"
+  },
+  {
+    "graph_pin": "U1.17",
+    "mcu_pin": "D-",
+    "net_name": "USB_DM",
+    "signal": "USB_DM"
+  },
+  {
+    "graph_pin": "U1.18",
+    "mcu_pin": "D+",
+    "net_name": "USB_DP",
+    "signal": "USB_DP"
+  }
+]

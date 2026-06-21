@@ -1,0 +1,14 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/reference/build/bringup_tests"
+  ],
+  "backend": {
+    "name": "reference-host-bsp",
+    "returncode": 0,
+    "stderr": ""
+  },
+  "failures": [],
+  "gate": "reference_firmware_build",
+  "metrics": {},
+  "status": "pass"
+}

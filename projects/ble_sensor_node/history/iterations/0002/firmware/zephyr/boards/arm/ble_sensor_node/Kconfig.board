@@ -1,0 +1,2 @@
+config BOARD_BLE_SENSOR_NODE
+  bool "nRF52840 BLE Sensor Node"

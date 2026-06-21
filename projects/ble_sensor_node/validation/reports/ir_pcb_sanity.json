@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/electronics/generated/kicad/ble_sensor_node.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "footprints": 17,
+    "layers": 2,
+    "pads": 83,
+    "segments": 45
+  },
+  "status": "pass"
+}

@@ -1,0 +1,199 @@
+{
+  "artifact_type": "physical_qualification_plan",
+  "evidence_directory": "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/validation/physical_evidence",
+  "oracle_boundary": [
+    "Digital validators cannot certify thermal load behavior, EMI/EMC, SI/PI, vibration, ingress, connector fatigue, assembly quality, or board bring-up.",
+    "Each required test needs approved external evidence before the physical_qualification gate can pass."
+  ],
+  "project": "ble_sensor_node",
+  "release_gate": "physical_qualification",
+  "revision": "r1",
+  "status": "generated",
+  "tests": [
+    {
+      "acceptance_criteria": [
+        "No reversed polarized parts",
+        "Connector orientation matches assembly drawing",
+        "No visible solder bridges or tombstoning"
+      ],
+      "category": "assembly_quality",
+      "conditions": {},
+      "evidence_required": [
+        "photos",
+        "assembly_checklist",
+        "bom_lot_trace"
+      ],
+      "id": "assembly_inspection",
+      "linked_artifacts": [
+        "fabrication/bom.csv",
+        "docs/assembly_drawing.pdf",
+        "manifest.json"
+      ],
+      "objective": "Verify fabricated board and assembly match the released BOM, orientation, polarity, and connector plan.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "No input current runaway",
+        "All required rails within tolerance",
+        "No component exceeds safe touch temperature during idle bring-up"
+      ],
+      "category": "bringup",
+      "conditions": {
+        "pack_current_peak_a": 0.3,
+        "pack_voltage_max": 4.2
+      },
+      "evidence_required": [
+        "bench_supply_log",
+        "rail_voltage_measurements",
+        "thermal_image_optional"
+      ],
+      "id": "current_limited_power_up",
+      "linked_artifacts": [
+        "docs/bringup_guide.md",
+        "firmware/pinmap.h"
+      ],
+      "objective": "Power the board with current limiting and verify expected rails before enabling loads.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "Firmware image matches released source hash",
+        "Pinmap self-test passes",
+        "Required buses enumerate expected devices"
+      ],
+      "category": "firmware_co_design",
+      "conditions": {
+        "target": "nrf52840dk"
+      },
+      "evidence_required": [
+        "flash_log",
+        "interface_probe_log",
+        "firmware_revision_hash"
+      ],
+      "id": "firmware_interface_bringup",
+      "linked_artifacts": [
+        "firmware/source.zip",
+        "firmware/devicetree.overlay",
+        "firmware/pinmap.h"
+      ],
+      "objective": "Flash firmware and verify pinmap-controlled interfaces against the assembled board.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "No component exceeds datasheet or enclosure thermal limit",
+        "Board remains stable for the required dwell time"
+      ],
+      "category": "thermal",
+      "conditions": {
+        "motor_channel_peak_current_a": 0.0,
+        "motor_channels": 0
+      },
+      "evidence_required": [
+        "thermal_camera_capture",
+        "load_profile_log",
+        "ambient_temperature_log"
+      ],
+      "id": "thermal_load_profile",
+      "linked_artifacts": [
+        "docs/known_risks.md",
+        "validation/reports/placement_constraints.json"
+      ],
+      "objective": "Measure thermal behavior under representative load and ambient assumptions.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "No unmitigated emissions finding in intended operating mode",
+        "Cable and enclosure configuration matches release use case"
+      ],
+      "category": "emi_emc",
+      "conditions": {},
+      "evidence_required": [
+        "emi_prescan_report",
+        "test_setup_photos",
+        "cable_configuration"
+      ],
+      "id": "emi_emc_prescan",
+      "linked_artifacts": [
+        "fabrication/gerbers.zip",
+        "mechanical/assembly.step"
+      ],
+      "objective": "Run conducted/radiated emissions pre-scan or document certified exemption scope.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "No excessive rail droop or ringing on required rails",
+        "Digital bus eye/timing margin is acceptable for the selected interfaces"
+      ],
+      "category": "si_pi",
+      "conditions": {
+        "can": false,
+        "motor_outputs": false,
+        "usb": true
+      },
+      "evidence_required": [
+        "oscilloscope_captures",
+        "probe_points",
+        "load_state_log"
+      ],
+      "id": "signal_power_integrity_probe",
+      "linked_artifacts": [
+        "electronics/generated/electrical_graph.json",
+        "docs/layout_preview.pdf"
+      ],
+      "objective": "Probe high-risk signal and power nets under representative switching and load conditions.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "No connector disengagement",
+        "No mounting hardware loosening",
+        "No enclosure or PCB crack"
+      ],
+      "category": "mechanical_reliability",
+      "conditions": {
+        "connectors_exposed": true,
+        "high_vibration": false,
+        "vibration_environment": "low"
+      },
+      "evidence_required": [
+        "vibration_test_log",
+        "post_test_inspection_photos",
+        "connector_retention_measurements"
+      ],
+      "id": "vibration_connector_retention",
+      "linked_artifacts": [
+        "mechanical/assembly.step",
+        "docs/assembly_drawing.pdf"
+      ],
+      "objective": "Verify connectors, mounts, and enclosure remain secure under expected vibration and handling.",
+      "required_for_release": true
+    },
+    {
+      "acceptance_criteria": [
+        "No unreviewed exposed conductor path",
+        "Ingress/IP assumption is tested or explicitly waived",
+        "ESD handling risk is documented"
+      ],
+      "category": "environmental_safety",
+      "conditions": {
+        "connectors_exposed": true
+      },
+      "evidence_required": [
+        "ingress_test_report_or_waiver",
+        "esd_test_log_or_waiver",
+        "enclosure_photos"
+      ],
+      "id": "ingress_esd_abuse_check",
+      "linked_artifacts": [
+        "mechanical/enclosure.step",
+        "docs/known_risks.md"
+      ],
+      "objective": "Verify exposed connectors and enclosure openings match the intended ingress, ESD, and abuse assumptions.",
+      "required_for_release": true
+    }
+  ]
+}

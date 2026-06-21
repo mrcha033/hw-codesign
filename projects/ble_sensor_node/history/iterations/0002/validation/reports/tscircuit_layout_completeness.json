@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "compile_prerequisite_failed",
+      "details": {},
+      "message": "Prerequisite compile gate did not pass",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "tscircuit_layout_completeness",
+  "metrics": {},
+  "status": "blocked"
+}

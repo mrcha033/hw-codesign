@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+  ],
+  "backend": {
+    "mutates_database": false,
+    "name": "ComponentResolver"
+  },
+  "failures": [],
+  "gate": "component_resolution",
+  "metrics": {
+    "critical_roles": 7,
+    "requested": 17,
+    "resolved": 17,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}

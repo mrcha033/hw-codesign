@@ -1,0 +1,20 @@
+{
+  "artifacts": [],
+  "backend": {
+    "name": "tscircuit"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "gate_not_run",
+      "details": {},
+      "message": "Backend contract gate was not run: tscircuit_manufacturing_export",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "tscircuit_manufacturing_export",
+  "metrics": {},
+  "status": "blocked"
+}

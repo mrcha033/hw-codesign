@@ -1,0 +1,22 @@
+{
+  "artifacts": [],
+  "backend": {
+    "name": "tscircuit",
+    "offline": true,
+    "version": "0.1.1491"
+  },
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "tool_timeout",
+      "details": {},
+      "message": "tscircuit CLI did not complete within 600 s",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "tscircuit_compile",
+  "metrics": {},
+  "status": "blocked"
+}

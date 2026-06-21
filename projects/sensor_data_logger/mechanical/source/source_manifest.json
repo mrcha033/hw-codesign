@@ -1,0 +1,36 @@
+{
+  "artifact_type": "mechanical_source",
+  "backend": "opencascade",
+  "release_eligible": false,
+  "selected_variant": "desktop",
+  "source_spec_hash": "256b56fe3c0ae23be1efe33d1ab3daf334d478ec482dd50e22d3f4cbbee8a591",
+  "sources": [
+    {
+      "path": "assembly.py",
+      "sha256": "a9e2bed413dd52387f093e1ef018c71c164d39f8643ea07cc3d13692b1abd7a8"
+    },
+    {
+      "path": "connector_cutouts.py",
+      "sha256": "4c4142ede839ef00d1fe4f289e0f001535d2d844ac3f8f2ea53b1cbed6258d36"
+    },
+    {
+      "path": "enclosure.py",
+      "sha256": "ad3ad2ebfd5fb3deb16fdec0b61bb30c76dffea18267c4c0d06fab59c1579fdc"
+    },
+    {
+      "path": "enclosure_variants.py",
+      "sha256": "91ce5880cfb3aa05f84fe010b88182744d7314b11441dc3304e68018a82a709f"
+    },
+    {
+      "path": "fixtures.py",
+      "sha256": "44138a6740383d2a8a92a5f1caf1686ff9a8ba7b36df420566de428960a656f5"
+    },
+    {
+      "path": "mechanical_contract.json",
+      "sha256": "78cbb3c77a4b80398bd9eca8edd5d571c07084d35b6b1f0a51fd971567ca9637"
+    }
+  ],
+  "variants": [
+    "desktop"
+  ]
+}

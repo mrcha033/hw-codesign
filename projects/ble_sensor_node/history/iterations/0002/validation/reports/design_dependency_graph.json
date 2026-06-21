@@ -1,0 +1,67 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "structural_dependency_graph"
+  },
+  "failures": [
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "sourcing_resilience",
+        "prerequisite": "component_provenance",
+        "prerequisite_status": "fail"
+      },
+      "message": "sourcing_resilience passed before prerequisite component_provenance passed",
+      "path": "gates.sourcing_resilience",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "pin_symbol_footprint",
+        "prerequisite": "component_provenance",
+        "prerequisite_status": "fail"
+      },
+      "message": "pin_symbol_footprint passed before prerequisite component_provenance passed",
+      "path": "gates.pin_symbol_footprint",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "power_tree_integrity",
+        "prerequisite": "component_provenance",
+        "prerequisite_status": "fail"
+      },
+      "message": "power_tree_integrity passed before prerequisite component_provenance passed",
+      "path": "gates.power_tree_integrity",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "design_dependency_graph",
+  "metrics": {
+    "blocked_or_unpassed_nodes": [
+      "autoroute",
+      "component_provenance",
+      "kicad_library_crosscheck",
+      "native_drc",
+      "native_erc",
+      "native_mechanical_validation",
+      "native_zephyr_build",
+      "physical_qualification",
+      "supplier_availability",
+      "support_circuit_completeness"
+    ],
+    "declared_edges": 76,
+    "evaluated_edges": 48,
+    "nodes": 40
+  },
+  "status": "fail"
+}

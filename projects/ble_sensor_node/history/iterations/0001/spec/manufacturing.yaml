@@ -1,0 +1,15 @@
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports:
+  - gerber
+  - drill
+  - bom
+  - pick_and_place
+  - schematic_pdf
