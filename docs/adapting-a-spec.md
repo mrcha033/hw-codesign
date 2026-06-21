@@ -1,7 +1,9 @@
-# Adapting the specification
+# Adapting the design system
 
-The included template is a robotics controller, not a generic board generator.
-There are two different levels of adaptation.
+The included templates are maintained design families, not a fully generic board
+generator. hw-cli is built for AI agents to author and revise candidates inside
+those families, then promote only evidence-backed candidates. There are two
+different levels of adaptation.
 
 ## Parameter adaptation
 
@@ -71,7 +73,10 @@ A board with materially different topology is extension work. At minimum:
 1. Add component definitions under `parts/components/` with pin, footprint,
    supplier, and datasheet evidence.
 2. Add a role set under `parts/role_sets/` describing the required functional
-   roles and allowed component choices.
+   roles and allowed component choices. Use the `alternatives` section only for
+   explicitly curated options, with compatibility notes and required engineering
+   reviews so `design-space` can rank them without treating them as automatic
+   drop-in replacements.
 3. Add or extend a project template under `src/hw_codesign/templates/`.
 4. Update generators where the new topology cannot be expressed by the existing
    robotics-controller assumptions.
@@ -79,8 +84,9 @@ A board with materially different topology is extension work. At minimum:
    manufacturing export, mechanical fit, and firmware parity for the new family.
 
 The project does not currently offer a plugin API that makes all five steps
-configuration-only. A second maintained template is the clearest milestone for
-demonstrating that the architecture generalizes beyond the current reference.
+configuration-only. More divergent maintained templates are the clearest
+milestone for demonstrating that the architecture generalizes beyond the current
+families.
 
 ## Choosing a backend
 
@@ -91,10 +97,11 @@ demonstrating that the architecture generalizes beyond the current reference.
 - Use `python_netlist` when a netlist-tier release (compiled_netlist.json +
   firmware) is sufficient; it is release-eligible at that tier but produces no
   Gerbers or PCB layout.
-- Do not select `atopile` expecting fabrication release output. It emits `.ato`
-  source, runs `ato build`, and resolves `netlist_extract` and `graph_parity` via
-  source-AST parity. Footprint parity, layout, and manufacturing remain blocked
-  until a KiCad plugin path is configured.
+- Use `atopile` only when an HDL-source-tier release is sufficient. It emits
+  `.ato` source, runs `ato build`, and resolves `netlist_extract` and
+  `graph_parity` via source-AST parity. It is not a fabrication release path:
+  footprint parity, layout, and manufacturing remain blocked until a KiCad
+  plugin path is configured.
 
 Every backend reports missing support as `blocked` or `fail`. Do not replace those
 statuses with manual green checks unless the missing evidence is represented by a

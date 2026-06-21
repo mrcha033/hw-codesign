@@ -1,4 +1,4 @@
-# hw-codesign: verifiable hardware co-design release pipeline
+# hw-codesign: agentic hardware design system
 
 [![CI](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/hw-codesign-platform)](https://pypi.org/project/hw-codesign-platform/)
@@ -6,16 +6,24 @@
 [![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey)](#run-it)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP%203.4-purple)](#mcp-server)
 
-An agent-facing CLI and MCP server for generating hardware design candidates and
-proving which release checks actually ran. It is currently strongest for
-**tscircuit/KiCad-backed robotics-controller flows**, not arbitrary board
-topologies.
+An agent-facing CLI and MCP server that lets AI coding agents, such as Codex or
+Claude Code, design PCB electronics, mechanical parts, firmware interfaces,
+sourcing choices, manufacturing outputs, and reviewable release artifacts. It
+generates cross-domain candidates, records provenance and gate evidence, then
+promotes only evidence-backed candidates through tiered release gates.
 
-The reusable part today is the gated pipeline: typed specs, deterministic
-artifacts, structured failures, provenance, and release policy. The included
-component catalog, role set, and end-to-end example are centered on one STM32H7
-robotics controller. Supporting a materially different board family currently
-requires extending those inputs and, potentially, the generators.
+The product thesis is agentic hardware design with promotion discipline: AI
+agents author and revise hardware candidates across electronics, mechanical,
+firmware, sourcing, and manufacturing domains, while typed specs, deterministic
+artifacts, structured failures, provenance, and release policy decide what can
+advance. Maintained templates today cover three constrained board families.
+Supporting a materially different family currently requires extending role sets,
+component catalogs, templates, and sometimes generators.
+
+The north star is for your AI agent to produce better reviewable hardware
+candidates than today's disconnected EDA, CAD, firmware, sourcing, and release
+tools by keeping generation, cross-domain consistency, and promotion evidence in
+one loop. The implementation limits below describe what is proven today.
 
 > **Evidence status:** the repository includes generated Gerbers, STEP files,
 > BOM, firmware, reports, and a downloadable candidate bundle. It does not yet
@@ -52,10 +60,11 @@ requires extending those inputs and, potentially, the generators.
   declarations parsed from the `.ato` file and compared against the electrical
   graph). The three remaining post-compile gates (footprint parity, layout,
   manufacturing export) are `blocked` pending a configured KiCad plugin path.
-- The `reference` and `atopile` backends are candidate-only. `tscircuit` and
-  `kicad` are fabrication-release-eligible; `python_netlist` is
-  netlist-release-eligible (produces `compiled_netlist.json` + firmware rather
-  than Gerbers). All release paths require every configured gate to pass.
+- The `reference` backend is candidate-only. `tscircuit` and `kicad` are
+  fabrication-release-eligible; `python_netlist` is netlist-release-eligible
+  (produces `compiled_netlist.json` + firmware rather than Gerbers); `atopile`
+  is HDL-source-release-eligible (`design.ato` + project metadata, no Gerbers).
+  All release paths require every configured gate to pass.
 - The complete cross-domain flow depends on native KiCad, OpenCASCADE,
   Freerouting, tscircuit, and Zephyr tooling. Validated paths: Linux container
   (CI, `ubuntu-latest`), macOS (`make toolchains`), and Windows (Python test
@@ -109,7 +118,7 @@ docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest \
 New here? Follow [Zero to first candidate report](docs/first-run.md). Before
 interpreting a green or blocked result, read the
 [validation contract](docs/validation-contract.md). To change the included
-design safely, read [Adapting the specification](docs/adapting-a-spec.md).
+design safely, read [Adapting the design system](docs/adapting-a-spec.md).
 
 Missing `kicad-cli` returns `blocked`. Missing OpenCASCADE returns `blocked`.
 A compiled error element in tscircuit returns `fail`. An unresolved critical
@@ -140,13 +149,19 @@ The difference is observable in JSON and enforced by the release gate.
 
 ## Current scope
 
-A command-line and MCP-server platform that takes a structured YAML spec and
-produces a release bundle — Gerbers, STEP, BOM, firmware source, Zephyr
-devicetree — only after every configured gate reaches `pass`. Reference
-designs produce `candidate` artifacts and are explicitly blocked from release.
-Physical qualification risks (load thermals, EMI/EMC, vibration, abuse) are
-stated as explicit gaps in every generated report and cannot be closed by
-software.
+A command-line and MCP-server design system for AI agents. From a structured
+YAML spec plus agent-authored design actions, it generates PCB topology and
+layout artifacts, parametric mechanical source, firmware pinmaps and interfaces,
+sourcing decisions, manufacturing outputs, and review bundles. Release bundles
+— Gerbers, STEP, BOM, firmware source, Zephyr devicetree — are produced only
+after every configured gate reaches `pass`. Reference designs produce
+`candidate` artifacts and are explicitly blocked from release. Physical
+qualification risks (load thermals, EMI/EMC, vibration, abuse) are stated as
+explicit gaps in every generated report and cannot be closed by software.
+The primary authoring surface is semantic-first: requirements, electrical
+graph, executable pin-name semantic schematic DSL, relative placement
+constraints, mechanical contract, and firmware pinmap remain machine-readable
+before native EDA/CAD outputs are emitted.
 
 Three reference designs are included:
 
@@ -162,44 +177,64 @@ Three reference designs are included:
 | tscircuit | Pinned offline compile, Circuit JSON, graph/footprint parity, placement and routing checks | Fabrication-release-eligible with the KiCad manufacturing bridge and native gates |
 | python_netlist | Deterministic netlist and parity checks; produces `compiled_netlist.json` + firmware | Netlist-release-eligible; layout and manufacturing gates are N/A (not blocking) |
 | reference | Generates the included design intent and candidate artifacts | Candidate-only; used for tutorials and pipeline inspection |
-| Atopile | Generates real `.ato` source; compile, netlist_extract, and graph_parity gates active; source-AST parity checks declared signals vs graph | Candidate-only; footprint/layout/manufacturing blocked pending KiCad plugin path |
+| Atopile | Generates real `.ato` source; compile, netlist_extract, and graph_parity gates active; source-AST parity checks declared signals vs graph | HDL-source-release-eligible; not a fabrication release path |
 
-This is not yet universal hardware design automation. Within the included
-robotics-controller family, users can change supported electrical, mechanical,
-firmware, sourcing, and manufacturing parameters. A new topology requires a new
-role set/component catalog and may require generator changes; see the adaptation
-guide.
+This is not yet universal hardware design automation. Within the included board
+families, users and agents can change supported electrical, mechanical,
+firmware, sourcing, and manufacturing parameters, then generate and compare
+candidate designs. A new topology requires a new role set/component catalog and
+may require generator changes; see the adaptation guide.
 
 ---
 
 ## First workflow
 
-The shortest useful workflow intentionally ends in a `blocked` result while
-still producing a reviewable candidate:
+The shortest useful workflow creates a cross-domain hardware candidate, runs the
+available gates, writes a review bundle, and leaves promotion blocked when
+release evidence is missing. The returned candidate includes the semantic-first
+representation agents should reason over: requirements, electrical graph,
+executable pin-name semantic schematic/code, relative placement source, mechanical
+contract, and firmware pinmap.
 
 ```bash
 uvx --from hw-codesign-platform hw --root . create-project first_board
-uvx --from hw-codesign-platform hw --root . iterate first_board --no-external
-uvx --from hw-codesign-platform hw --root . export-review first_board
+uvx --from hw-codesign-platform hw --root . design-candidate first_board \
+  --brief "16 channel 24V battery, peak 6A, STM32H7, IMU, emergency stop, Zephyr, 6-layer"
 ```
 
 Expected result:
 
 ```json
 {
-  "status": "blocked",
+  "status": "candidate",
   "iteration_id": "0001",
+  "release_eligible": false,
+  "requirements_update": {
+    "status": "generated",
+    "changed_paths": ["actuation.motor_channels", "..."]
+  },
   "candidate": {
     "status": "candidate",
     "candidate_only": true
+  },
+  "semantic_representation": {
+    "authoring_model": "semantic-first",
+    "layers": {
+      "electronics_graph": ".../electronics/generated/electrical_graph.json",
+      "semantic_schematic": ".../electronics/generated/semantic/semantic_schematic.json",
+      "semantic_schematic_code": ".../electronics/generated/semantic/semantic_schematic.py",
+      "mechanical_contract": ".../mechanical/source/mechanical_contract.json",
+      "firmware_pinmap": ".../firmware/generated/pinmap.json"
+    }
   }
 }
 ```
 
-`blocked` means the system preserved the candidate but refused to call it a
-release. The command writes specs, generated intent and source, gate reports,
-an iteration snapshot, and a candidate ZIP under `projects/first_board/`. The
-full file map and interpretation are in the first-run guide.
+`release_eligible: false` means the design system preserved the generated
+candidate but refused to promote it to release. The command writes specs,
+generated intent and source, gate reports, an iteration snapshot, a review
+bundle, and a candidate ZIP under `projects/first_board/`. The full file map and
+interpretation are in the first-run guide.
 
 ---
 
@@ -302,7 +337,12 @@ passed.
   `state_machine`, `sensor_poll`); each emits a `.c` file under
   `firmware/modules/` with matching Zephyr config entries
 - `firmware_module_check` gate validates that every referenced signal exists in
-  the pinmap; unknown signals return `fail` with specific signal names
+  the pinmap and that motor/e-stop specs include a timeout_shutdown behavior
+  that disables motor outputs; missing or misdirected safety behavior returns
+  `fail`
+- `firmware_interface_contract` verifies generated Zephyr config and bring-up
+  stubs cover required board interfaces such as I2C, CAN, USB, e-stop fail-safe,
+  motor PWM, and BLE before firmware build gates can promote the candidate
 - Signal-level cross-domain consistency checked by
   `hw_check_cross_domain_consistency`: placement constraint refs verified against
   BOM, firmware module signals verified against pinmap
@@ -313,6 +353,8 @@ passed.
 - Release checks consume only in-repository snapshots under `parts/suppliers`;
   no implicit network lookup at release time
 - Known out-of-stock or discontinued parts fail; missing or stale evidence blocks
+- Critical roles must have a curated alternate or an explicit single-source
+  mitigation in the role set
 - Manufacturer datasheet review evidence hashed into resolved component provenance
 
 ### Release
@@ -321,7 +363,8 @@ passed.
   hash
 - Fabrication release: `tscircuit` and `kicad` backends (Gerber + drill + STEP);
   netlist release: `python_netlist` backend (`compiled_netlist.json` + firmware);
-  `reference` and `atopile` are candidate-only
+  HDL source release: `atopile` backend (`design.ato` + project metadata);
+  `reference` is candidate-only
 
 ---
 
@@ -389,6 +432,11 @@ hw_design_firmware_module    ← author a firmware behavior (timeout_shutdown, p
 hw_record_design_decision    ← log a decision + rationale to history/decisions.jsonl
 hw_check_cross_domain_consistency ← validate placement refs against BOM, firmware signals against pinmap
 
+hw_design_candidate          ← primary design workflow: generate semantic hardware candidate + gates + review bundle
+hw_explore_design_space      ← rank backend, component, mechanical variant, and supplier-provider alternatives with evidence and blockers
+hw_run_grounding_benchmark   ← adversarial check: wrong pinout/footprint/support/power/layout USB/RF/sourcing/net/firmware bring-up/dependencies must be caught
+hw_generate_physical_qualification_plan ← define thermal/EMI/SI/PI/vibration/ingress/bring-up evidence contract
+hw_record_physical_evidence  ← attach approved external test evidence to the physical_qualification gate
 hw_generate_all              ← always candidate_only=true, release_eligible=false
 hw_run_all_checks            ← include_external=true for full gate matrix
 hw_review_release_readiness  ← non-authoritative summary: blocking gates, requirements, assumptions
@@ -457,7 +505,14 @@ Every tool response carries a consistent envelope that enforces the core invaria
 - `hw_record_design_decision` — log a decision + rationale to `history/decisions.jsonl`
 - `hw_check_cross_domain_consistency` — validate placement constraint refs against BOM and firmware signal refs against pinmap; returns a GateReport
 
-**Generation** (all emit `release_eligible: false`, `candidate_only: true`)
+**Primary design workflow**
+- `hw_design_candidate` — optionally lower a natural-language hardware brief into the typed spec, then generate electronics, mechanical, firmware, sourcing, and manufacturing candidate artifacts; run available gates; return concrete sourcing choices, the semantic-first graph/executable-semantic-code/contract/pinmap representation, structural dependency evidence, hardware-grounding risk coverage, and reviewable artifact paths; snapshot a candidate bundle; optionally emit a review bundle; always returns `release_eligible=false` until promotion gates pass
+- `hw_explore_design_space` — regenerate the current candidate, run digital gates, then rank deterministic alternatives across current baseline, electronics backend paths, curated component alternatives, mechanical enclosure variants, and supplier-provider evidence; returns patch suggestions, scores, tradeoffs, blockers, and a persisted `history/design_space/exploration.json`; always candidate-only
+- `hw_run_grounding_benchmark` — run deterministic adversarial grounding cases against generated artifacts: wrong pinout, wrong footprint, missing or miswired support circuit, bad power budget, unreachable rail, regulator voltage-order violation, missing I2C pull-up, missing CAN termination, missing USB ESD bridge, misplaced USB ESD placement, hot block near sensitive logic, misplaced RF antenna/keepout, under-rated connector current, missing critical-role sourcing resilience, unavailable part, invalid net endpoint, component pin/net mismatch, firmware pinmap mismatch, missing e-stop shutdown behavior, missing firmware interface bring-up, and dependency-order violation must all be detected by gates
+- `hw_generate_physical_qualification_plan` — write the machine-readable external evidence contract for thermal, EMI/EMC, SI/PI, vibration, ingress, connector fatigue, assembly, and bring-up checks
+- `hw_record_physical_evidence` — record approved external qualification evidence; the `physical_qualification` gate remains blocked until every required test has approved passing evidence
+
+**Generation** (lower-level tools; all emit `release_eligible: false`, `candidate_only: true`)
 - `hw_generate_all` — generate electronics, mechanical, and firmware sources in one step
 - `hw_generate_reference_intent` — generate reference-backend intent artifacts only
 - `hw_generate_electronics_source` — generate electronics source for the configured backend
@@ -478,7 +533,7 @@ Every tool response carries a consistent envelope that enforces the core invaria
 - `hw_build_firmware` — invoke `west build` for the Zephyr target; returns structured build result
 
 **Iteration / repair**
-- `hw_run_design_iteration` — single supervised generate→check→repair cycle
+- `hw_run_design_iteration` — single supervised repair-oriented generate→check→repair cycle
 - `hw_generate_repair_plan` — propose spec patches for current gate failures; includes `agent_actions` list of specific tool calls to address each failure code
 - `hw_apply_repair_plan` — apply safe patches automatically; proposals requiring approval are returned, not applied
 - `hw_design_until_release` — autonomous generate→check→repair loop; requires `user_approved_autonomous_iteration=true` or returns `blocked`

@@ -1,9 +1,13 @@
-# Validation contract
+# Promotion and validation contract
 
-The platform's primary contract is refusal: an artifact may be generated and
-reviewed without being represented as a release. This document defines the
-statuses, adapter obligations, artifact integrity rules, and evidence boundary
-used by the current implementation.
+hw-cli is an agentic hardware design system: AI agents generate electronics,
+mechanical, firmware, sourcing, manufacturing, and review candidates, then the
+platform promotes only evidence-backed candidates through tiered release gates.
+This document defines the statuses, adapter obligations, artifact integrity
+rules, and evidence boundary used by the current implementation.
+
+Generation and review are useful states, but they are not release claims. A
+candidate may be generated and reviewed without being represented as a release.
 
 ## Gate statuses
 
@@ -22,10 +26,11 @@ skipped. A required adapter stage that did not run is injected as a blocked
 
 ## Release eligibility
 
-A release is eligible only when all of the following are true:
+A generated candidate is promoted to a release only when all of the following
+are true:
 
-1. The electronics backend is release-capable (`tscircuit`, `kicad`, or
-   `python_netlist`).
+1. The electronics backend is release-capable (`tscircuit`, `kicad`,
+   `python_netlist`, or `atopile`).
 2. Every supplied and required gate report has status `pass`.
 3. Every critical assumption marked `requires_user_review` has been resolved.
 4. Every required release artifact exists.
@@ -43,8 +48,11 @@ Three release tiers are defined:
 - **Netlist** (`python_netlist`): `compiled_netlist.json` + firmware.
   Compile, netlist_extract, graph_parity, and footprint_parity must pass;
   layout_completeness and manufacturing_export are N/A for this tier.
-- **Candidate-only** (`reference`, `atopile`): no release path exists.
-  These backends cannot become release-eligible through a manual status override.
+- **HDL source** (`atopile`): `.ato` source + project metadata. Compile,
+  netlist_extract, and graph_parity must pass; footprint, layout, and
+  manufacturing export are not fabrication evidence at this tier.
+- **Candidate-only** (`reference`): no release path exists. This backend cannot
+  become release-eligible through a manual status override.
 
 ## Adapter contract
 
@@ -83,6 +91,48 @@ Review bundles are separately canonicalized. `bundle_hash` is the SHA-256 of
 the stable JSON fields with sorted keys and compact separators;
 `generated_at` is excluded so identical evidence has an identical hash.
 Review comments are stored separately and do not mutate `bundle.json`.
+
+## Semantic schematic round-trip gate
+
+`semantic_schematic_roundtrip` checks the LLM-facing schematic representation.
+It executes `electronics/generated/semantic/semantic_schematic.py`, compares the
+resulting `semantic_schematic` object byte-for-byte against
+`semantic_schematic.json`, then verifies component refs, footprints, net names,
+pin numbers, and pin-name connections against `electrical_graph.json`.
+
+The gate is `blocked` when generated semantic artifacts are missing and `fail`
+when executable code, JSON, or graph parity drifts. Downstream PCB, firmware,
+placement, and backend gates depend on this gate through
+`design_dependency_graph`.
+
+## Grounding benchmark
+
+`hw_run_grounding_benchmark` is an adversarial digital benchmark over generated
+artifacts. It mutates in-memory copies of the electrical graph, pin/footprint
+contracts, support-role resolution and wiring, component pin/net consistency,
+power budget, power-tree reachability, regulator voltage ordering, bus-interface
+support subgraphs, layout/thermal precheck risks, connector current assumptions,
+sourcing metadata and critical-role resilience, USB ESD placement, RF
+antenna/keepout placement, firmware pinmap, firmware e-stop shutdown behavior,
+firmware interface bring-up coverage, and dependency reports, then verifies that
+the relevant gates catch each plausible-but-wrong candidate.
+
+The benchmark passes only when all injected cases are detected. It is evidence
+that the current digital validators catch those classes of false positives; it
+is not evidence that thermal, EMI/EMC, SI/PI, vibration, ingress, connector
+fatigue, assembly quality, or board bring-up has passed.
+
+## Physical qualification gate
+
+`hw_generate_physical_qualification_plan` writes the external evidence contract
+under `validation/physical/qualification_plan.json` and `.md`. The plan is also
+included in release docs when release packaging is prepared.
+
+`physical_qualification` is a required gate. It remains `blocked` until every
+required test in the plan has an approved evidence record with `status: pass`
+under `validation/physical_evidence/`. A failed approved record fails the gate.
+An unapproved or missing record blocks it. Evidence records can reference lab
+files; file hashes and byte counts are recorded when the file is available.
 
 ## Evidence boundary
 
