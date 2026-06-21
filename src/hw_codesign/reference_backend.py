@@ -184,9 +184,9 @@ def _kicad_stackup(spec: dict[str, Any]) -> tuple[str, tuple[str, ...], dict[str
 def internal_erc(graph: dict[str, Any]) -> GateReport:
     architecture = graph.get("design_basis", {}).get("architecture")
     if architecture == "nrf52840_ble_sensor":
-        required = {"power_input", "tvs", "charger", "regulator", "fuel_gauge", "mcu", "env_sensor", "debug"}
+        required = {"power_input", "fuse", "reverse_polarity", "tvs", "charger", "regulator", "fuel_gauge", "mcu", "env_sensor", "debug"}
     elif architecture == "esp32s3_usb_i2c_sensor_data_logger":
-        required = {"power_input", "tvs", "regulator", "mcu", "imu", "debug"}
+        required = {"power_input", "fuse", "reverse_polarity", "tvs", "regulator", "mcu", "imu", "debug"}
     else:
         required = {"mcu", "imu", "regulator", "can", "motor_io", "fuse", "reverse_polarity", "tvs", "efuse", "safety_gate"}
     present = {item["category"] for item in graph["components"]}

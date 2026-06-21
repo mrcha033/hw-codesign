@@ -86,6 +86,15 @@ def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(3, "D+", "USB_DP_RAW", "bidirectional"),
             pin(4, "D-", "USB_DM_RAW", "bidirectional"),
         ], manufacturer="GCT"),
+        component("F1", "fuse", "500mA Fuse", "Littelfuse-0498080.M", "MIDI", [
+            pin(1, "IN", "USB_VBUS", "passive"),
+            pin(2, "OUT", "USB_FUSED", "passive"),
+        ], manufacturer="Littelfuse"),
+        component("Q1", "reverse_polarity", "Ideal Diode", "LM74700QDBVRQ1", "SOT23-6", [
+            pin(1, "ANODE", "USB_FUSED", "power_in"),
+            pin(2, "CATHODE", "USB_PROT", "power_out"),
+            pin(3, "GND", "GND", "ground"),
+        ], manufacturer="Texas Instruments"),
         component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", [
             pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
             pin(2, "DP_OUT", "USB_DP", "bidirectional"),
@@ -94,7 +103,7 @@ def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(5, "GND", "GND", "ground"),
         ], manufacturer="STMicroelectronics"),
         component("U3", "regulator", "3V3 Buck", "TPS62133RGTR", "VQFN16", [
-            pin(1, "VIN", "USB_VBUS", "power_in"),
+            pin(1, "VIN", "USB_PROT", "power_in"),
             pin(2, "VOUT", "V3V3", "power_out"),
             pin(3, "GND", "GND", "ground"),
         ], manufacturer="Texas Instruments"),
@@ -134,7 +143,7 @@ def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C2", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
         component("C9", "bulk_cap", "22uF", "GRM31CR61E226ME15L", "C1206", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
     ]
-    net_classes = {"GND": "ground", "USB_VBUS": "power", "V3V3": "power", "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb"}
+    net_classes = {"GND": "ground", "USB_VBUS": "power", "USB_FUSED": "power", "USB_PROT": "power", "V3V3": "power", "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb"}
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
@@ -191,8 +200,17 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(3, "D+", "USB_DP_RAW", "bidirectional"),
             pin(4, "D-", "USB_DM_RAW", "bidirectional"),
         ], manufacturer="GCT"),
+        component("F1", "fuse", "500mA Fuse", "Littelfuse-0498080.M", "MIDI", [
+            pin(1, "IN", "USB_VBUS", "passive"),
+            pin(2, "OUT", "USB_FUSED", "passive"),
+        ], manufacturer="Littelfuse"),
+        component("Q1", "reverse_polarity", "Ideal Diode", "LM74700QDBVRQ1", "SOT23-6", [
+            pin(1, "ANODE", "USB_FUSED", "power_in"),
+            pin(2, "CATHODE", "USB_PROT", "power_out"),
+            pin(3, "GND", "GND", "ground"),
+        ], manufacturer="Texas Instruments"),
         component("U2", "charger", "LiPo Charger", "BQ24079RGTT", "SOT-23-8", [
-            pin(1, "IN", "USB_VBUS", "power_in"),
+            pin(1, "IN", "USB_PROT", "power_in"),
             pin(2, "VSS", "GND", "ground"),
             pin(3, "EN1", "V3V3", "input"),
             pin(4, "EN2", "GND", "input"),
@@ -261,7 +279,8 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
         ], manufacturer="STMicroelectronics"),
     ]
     net_classes = {
-        "GND": "ground", "USB_VBUS": "power", "VBAT": "power", "V3V3": "power",
+        "GND": "ground", "USB_VBUS": "power", "USB_FUSED": "power", "USB_PROT": "power",
+        "VBAT": "power", "V3V3": "power",
         "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
         "I2C_SCL": "i2c", "I2C_SDA": "i2c",
     }

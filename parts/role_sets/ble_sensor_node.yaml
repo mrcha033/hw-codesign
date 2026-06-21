@@ -1,7 +1,9 @@
 name: ble_sensor_node
-critical_roles: [power_input, tvs, charger, regulator_3v3, mcu, env_sensor, fuel_gauge]
+critical_roles: [power_input, fuse, reverse_polarity, tvs, charger, regulator_3v3, mcu, env_sensor, fuel_gauge]
 roles:
   power_input: {component_id: usb4105_gf_a, resolution: curated}
+  fuse: {component_id: littelfuse_0498080, resolution: curated}
+  reverse_polarity: {component_id: lm74700qdbvrq1, resolution: curated}
   tvs: {component_id: usblc6_2sc6, resolution: curated}
   charger: {component_id: bq24079rgtt, resolution: curated}
   battery: {component_id: jst_ph_2pin, resolution: curated}
@@ -36,6 +38,8 @@ alternatives:
       compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
 single_source_justifications:
   power_input: {reason: USB-C connector substitution changes shell footprint, ESD geometry, and enclosure cutout, mitigation: Add a curated USB-C connector alternative with footprint and mechanical-cutout evidence before substitution, required_reviews: [usb_mechanical_fit, connector_footprint]}
+  fuse: {reason: Fuse substitution changes package geometry and fault-current rating, mitigation: Add a curated fuse alternative with footprint and interruption-rating evidence before substitution, required_reviews: [fault_current_rating, footprint_contract]}
+  reverse_polarity: {reason: Ideal-diode controller alternatives change pinout and protection-loop behavior, mitigation: Add a curated controller alternative with pin/package and protection-threshold evidence before substitution, required_reviews: [protection_thresholds, pinout_contract]}
   tvs: {reason: USB ESD substitution changes capacitance, clamp behavior, and USB signal-integrity margin, mitigation: Add a curated ESD alternative with capacitance and footprint evidence before substitution, required_reviews: [usb_signal_integrity, footprint_contract]}
   charger: {reason: Charger substitution changes charge profile, thermal behavior, battery safety, and firmware-visible status pins, mitigation: Add a curated charger alternative with charge-profile and pinmap evidence before substitution, required_reviews: [battery_safety, firmware_pinmap]}
   regulator_3v3: {reason: LDO substitution changes dropout, thermal margin, and quiescent current, mitigation: Add a curated regulator alternative with thermal and battery-life evidence before substitution, required_reviews: [thermal_review, battery_life]}

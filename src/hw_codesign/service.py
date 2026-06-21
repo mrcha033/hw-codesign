@@ -1891,15 +1891,19 @@ class HardwareService:
             },
             "sensor_data_logger": {
                 "power_input": {"required_nets": {"USB_VBUS", "GND", "USB_DP_RAW", "USB_DM_RAW"}},
+                "fuse": {"required_nets": {"USB_VBUS", "USB_FUSED"}},
+                "reverse_polarity": {"required_nets": {"USB_FUSED", "USB_PROT", "GND"}},
                 "tvs": {"required_nets": {"USB_DP_RAW", "USB_DM_RAW", "USB_DP", "USB_DM", "GND"}},
-                "regulator_3v3": {"required_nets": {"USB_VBUS", "V3V3", "GND"}},
+                "regulator_3v3": {"required_nets": {"USB_PROT", "V3V3", "GND"}},
                 "mcu": {"required_nets": {"V3V3", "GND", "USB_DP", "USB_DM", "I2C_IMU_SCL", "I2C_IMU_SDA"}},
                 "imu": {"required_nets": {"V3V3", "GND", "I2C_IMU_SCL", "I2C_IMU_SDA", "IMU_INT"}},
             },
             "ble_sensor_node": {
                 "power_input": {"required_nets": {"USB_VBUS", "GND", "USB_DP_RAW", "USB_DM_RAW"}},
+                "fuse": {"required_nets": {"USB_VBUS", "USB_FUSED"}},
+                "reverse_polarity": {"required_nets": {"USB_FUSED", "USB_PROT", "GND"}},
                 "tvs": {"required_nets": {"USB_DP_RAW", "USB_DM_RAW", "USB_DP", "USB_DM", "GND"}},
-                "charger": {"required_nets": {"USB_VBUS", "VBAT", "GND", "CHG_STAT", "CHG_ISET"}},
+                "charger": {"required_nets": {"USB_PROT", "VBAT", "GND", "CHG_STAT", "CHG_ISET"}},
                 "regulator_3v3": {"required_nets": {"VBAT", "V3V3", "GND"}},
                 "mcu": {"required_nets": {"V3V3", "GND", "I2C_SCL", "I2C_SDA", "USB_DP", "USB_DM"}},
                 "env_sensor": {"required_nets": {"V3V3", "GND", "I2C_SCL", "I2C_SDA", "TEMP_INT"}},
@@ -3130,7 +3134,7 @@ class HardwareService:
                             last = json.loads(result_json.read_text(encoding="utf-8"))
                             passed_gates = last.get("passed_gates", [])
                             failed_gates = last.get("failed_gates", [])
-                sw_fail = [g for g in failed_gates if g not in _EXTERNAL_GATES]
+                sw_fail = [g for g in failed_gates if g not in _STRUCTURAL_BLOCKED_GATES]
                 sw_total = len(passed_gates) + len(sw_fail)
                 sw_pass_rate = len(passed_gates) / sw_total if sw_total else 1.0
                 gate_summary = {

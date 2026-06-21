@@ -17,6 +17,8 @@ _ANCHORS: dict[str, tuple[float, float]] = {
 
 _SENSOR_DATA_LOGGER_ANCHORS: dict[str, tuple[float, float]] = {
     "J1": (18.0, 4.0),
+    "F1": (26.0, 4.0),   # fuse, between USB-C and ideal-diode on power path
+    "Q1": (34.0, 4.0),   # reverse-polarity ideal-diode, before regulator
     "D1": (30.0, 10.0),
     "U3": (44.0, 12.0),
     "U1": (44.0, 44.0),
@@ -93,6 +95,8 @@ def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
 
 _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {
     "J1":  (12.0, 4.0),   # USB-C, front edge
+    "F1":  (18.0, 4.0),   # fuse, on power path from USB-C
+    "Q1":  (22.0, 4.0),   # reverse-polarity, before charger
     "U2":  (25.0, 8.0),   # BQ24079 charger, near USB
     "BT1": (42.0, 4.0),   # JST LiPo connector, front edge
     "LD1": (22.0, 18.0),  # AP2112K LDO, between charger and MCU

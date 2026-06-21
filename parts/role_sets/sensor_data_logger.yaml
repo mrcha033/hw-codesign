@@ -1,7 +1,9 @@
 name: sensor_data_logger
-critical_roles: [power_input, tvs, regulator_3v3, mcu, imu]
+critical_roles: [power_input, fuse, reverse_polarity, tvs, regulator_3v3, mcu, imu]
 roles:
   power_input: {component_id: usb4105_gf_a, resolution: curated}
+  fuse: {component_id: littelfuse_0498080, resolution: curated}
+  reverse_polarity: {component_id: lm74700qdbvrq1, resolution: curated}
   tvs: {component_id: usblc6_2sc6, resolution: curated}
   regulator_3v3: {component_id: tps62133rgtr, resolution: curated}
   mcu: {component_id: esp32s3_wroom_1, resolution: curated}
@@ -24,6 +26,8 @@ alternatives:
       compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
 single_source_justifications:
   power_input: {reason: USB-C connector substitution changes shell footprint, ESD geometry, and enclosure cutout, mitigation: Add a curated USB-C connector alternative with footprint and mechanical-cutout evidence before substitution, required_reviews: [usb_mechanical_fit, connector_footprint]}
+  fuse: {reason: Fuse substitution changes package geometry and fault-current rating, mitigation: Add a curated fuse alternative with footprint and interruption-rating evidence before substitution, required_reviews: [fault_current_rating, footprint_contract]}
+  reverse_polarity: {reason: Ideal-diode controller alternatives change pinout and protection-loop behavior, mitigation: Add a curated controller alternative with pin/package and protection-threshold evidence before substitution, required_reviews: [protection_thresholds, pinout_contract]}
   tvs: {reason: USB ESD substitution changes capacitance, clamp behavior, and high-speed routing geometry, mitigation: Add a curated USB ESD alternative with capacitance and footprint evidence before substitution, required_reviews: [usb_signal_integrity, footprint_contract]}
   regulator_3v3: {reason: 3V3-regulator substitution changes dropout, stability, and thermal behavior, mitigation: Add a curated regulator alternative with stability and package evidence before substitution, required_reviews: [load_transient, stability_review]}
   mcu: {reason: ESP32 module substitution changes RF keepout, pinmap, firmware target, and footprint, mitigation: Add a curated module alternative with RF layout and firmware evidence before substitution, required_reviews: [rf_keepout, firmware_pinmap]}
