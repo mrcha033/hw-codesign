@@ -15,7 +15,7 @@ def _emit(value: Any) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="hw", description="Agent-native hardware co-design CLI")
+    parser = argparse.ArgumentParser(prog="hw", description="Agentic hardware design CLI")
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Platform repository root")
     commands = parser.add_subparsers(dest="command", required=True)
     create = commands.add_parser("create-project")
@@ -33,6 +33,22 @@ def build_parser() -> argparse.ArgumentParser:
     for name in ("generate-reference-intent", "generate-electronics-source", "generate-mechanical-source", "generate-firmware-source"):
         command = commands.add_parser(name)
         command.add_argument("project")
+    design_candidate = commands.add_parser("design-candidate")
+    design_candidate.add_argument("project")
+    design_candidate.add_argument("--brief", default=None, help="Natural-language hardware requirements to lower before designing")
+    design_candidate.add_argument("--external", action="store_true", help="Include native toolchain-dependent gates")
+    design_candidate.add_argument("--no-review-bundle", action="store_true", help="Skip review bundle generation")
+    design_space = commands.add_parser("design-space")
+    design_space.add_argument("project")
+    design_space.add_argument("--max-candidates", type=int, default=8, help="Maximum ranked alternatives to return")
+    grounding = commands.add_parser("grounding-benchmark")
+    grounding.add_argument("project")
+    physical_plan = commands.add_parser("physical-qualification-plan")
+    physical_plan.add_argument("project")
+    physical_evidence = commands.add_parser("record-physical-evidence")
+    physical_evidence.add_argument("project")
+    physical_evidence.add_argument("--evidence", required=True, help="JSON evidence record with test_id, status, summary, and optional evidence_files")
+    physical_evidence.add_argument("--approved", action="store_true", help="Mark this physical evidence record as approved")
     check = commands.add_parser("check")
     check.add_argument("project")
     check.add_argument("--no-external", action="store_true")
@@ -140,6 +156,22 @@ def main() -> int:
             result = service.generate_mechanical_source(args.project)
         elif args.command == "generate-firmware-source":
             result = service.generate_firmware_source(args.project)
+        elif args.command == "design-candidate":
+            result = service.design_candidate(
+                args.project,
+                include_external=args.external,
+                with_review_bundle=not args.no_review_bundle,
+                requirements_text=args.brief,
+            )
+        elif args.command == "design-space":
+            result = service.explore_design_space(args.project, max_candidates=args.max_candidates)
+        elif args.command == "grounding-benchmark":
+            result = service.run_grounding_benchmark(args.project)
+        elif args.command == "physical-qualification-plan":
+            result = service.generate_physical_qualification_plan(args.project)
+        elif args.command == "record-physical-evidence":
+            import json as _json
+            result = service.record_physical_evidence(args.project, _json.loads(args.evidence), approved=args.approved)
         elif args.command == "check":
             result = service.run_all_checks(args.project, include_external=not args.no_external)
         elif args.command == "iterate":

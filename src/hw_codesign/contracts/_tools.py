@@ -548,14 +548,122 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
     # -------------------------------------------------------------------
     # Design iteration
     # -------------------------------------------------------------------
+    "hw_design_candidate": ToolDef(
+        name="hw_design_candidate",
+        description=(
+            "Primary agentic hardware design workflow: optionally lower a natural-language brief, "
+            "then generate electronics, mechanical, firmware, sourcing, and manufacturing candidate "
+            "artifacts; run available gates; snapshot a candidate bundle; return concrete sourcing "
+            "choices, the semantic-first graph/executable-semantic-code/contract/pinmap representation, structural dependency evidence, "
+            "hardware-grounding risk coverage, and reviewable artifact paths; and optionally emit a review bundle. Always returns "
+            "candidate_only=true and release_eligible=false — use hw_check_release_gate to promote."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project":            {"type": "string"},
+                "requirements_text":  {"type": ["string", "null"], "default": None, "description": "Optional natural-language requirements brief to lower into the typed spec before generation"},
+                "include_external":   {"type": "boolean", "default": False, "description": "Include native toolchain-dependent gates"},
+                "with_review_bundle": {"type": "boolean", "default": True, "description": "Generate the review bundle alongside the candidate"},
+            },
+            "required": ["project"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("design_candidate_result"),
+        execution_mode="async",
+    ),
+
+    "hw_explore_design_space": ToolDef(
+        name="hw_explore_design_space",
+        description=(
+            "Generate and rank deterministic design-space alternatives from current project evidence. "
+            "Compares the current baseline with electronics backend paths, component alternatives, mechanical enclosure variants, and supplier-provider "
+            "scenarios; returns scores, tradeoffs, blockers, patch suggestions, and evidence paths. "
+            "This is candidate exploration only, not release approval."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string"},
+                "max_candidates": {"type": "integer", "default": 8, "minimum": 1},
+            },
+            "required": ["project"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("design_space_exploration_result"),
+        execution_mode="async",
+    ),
+
+    "hw_run_grounding_benchmark": ToolDef(
+        name="hw_run_grounding_benchmark",
+        description=(
+            "Run the deterministic hardware-grounding benchmark against generated artifacts. "
+            "Injects in-memory wrong pinout, wrong footprint, missing or miswired support circuit, bad power budget, "
+            "unreachable power rail, regulator voltage-order violation, missing I2C pull-up, missing CAN termination, "
+            "missing USB ESD bridge, misplaced USB ESD placement, hot-block placement near sensitive logic, "
+            "misplaced RF antenna/keepout, under-rated connector current, missing critical-role sourcing resilience, "
+            "unavailable part, invalid net endpoint, component pin/net mismatch, firmware pinmap mismatch, "
+            "missing e-stop shutdown behavior, missing firmware interface bring-up, and dependency-graph "
+            "violations, then verifies the gates catch "
+            "each plausible-but-wrong candidate."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("grounding_benchmark_result"),
+        execution_mode="local",
+    ),
+
+    "hw_generate_physical_qualification_plan": ToolDef(
+        name="hw_generate_physical_qualification_plan",
+        description=(
+            "Generate a machine-readable physical qualification plan for thermal, EMI/EMC, SI/PI, "
+            "vibration, ingress, connector fatigue, assembly, and bring-up evidence. This creates "
+            "the physical_qualification gate contract but does not claim the tests passed."
+        ),
+        input_schema=_project_only(),
+        output_schema=ref("physical_qualification_plan_result"),
+        execution_mode="local",
+    ),
+
+    "hw_record_physical_evidence": ToolDef(
+        name="hw_record_physical_evidence",
+        description=(
+            "Record external physical qualification evidence for a plan test. The physical_qualification "
+            "gate only counts approved records whose status is pass."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string"},
+                "evidence": {
+                    "type": "object",
+                    "additionalProperties": True,
+                    "properties": {
+                        "test_id": {"type": "string"},
+                        "status": {"type": "string", "enum": ["pass", "fail", "blocked"]},
+                        "summary": {"type": "string"},
+                        "operator": {"type": ["string", "null"]},
+                        "instrumentation": {"type": "array", "items": {"type": "string"}},
+                        "measurements": {"type": "object", "additionalProperties": True},
+                        "evidence_files": {"type": "array", "items": {"type": "string"}},
+                    },
+                },
+                "approved": {"type": "boolean", "default": False},
+            },
+            "required": ["project", "evidence"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("physical_evidence_result"),
+        execution_mode="local",
+    ),
+
     "hw_run_design_iteration": ToolDef(
         name="hw_run_design_iteration",
-        description="Run one full design iteration: generate → check → repair. Returns the iteration result.",
+        description="Run one repair-oriented design iteration: generate → check → repair. Returns the iteration result.",
         input_schema={
             "type": "object",
             "properties": {
                 "project":          {"type": "string"},
-                "goal":             {"type": "string", "default": "make all release gates pass"},
+                "goal":             {"type": "string", "default": "improve this hardware candidate toward release promotion"},
                 "include_external": {"type": "boolean", "default": True},
             },
             "required": ["project"],

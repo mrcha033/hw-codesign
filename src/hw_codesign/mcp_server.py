@@ -104,7 +104,7 @@ def create_server(root: Path | str | None = None):
         return _enrich(result,
             release_eligible=False,
             candidate_only=True,
-            release_blocking_failures=["reference backend is candidate-only — switch to tscircuit, kicad, or python_netlist for a release-eligible backend"],
+            release_blocking_failures=["reference backend is candidate-only — switch to tscircuit, kicad, python_netlist, or atopile for a release-eligible backend"],
         )
 
     @server.tool(name=_TR["hw_generate_electronics_source"].name)
@@ -234,8 +234,28 @@ def create_server(root: Path | str | None = None):
     # Design iteration
     # ------------------------------------------------------------------
 
+    @server.tool(name=_TR["hw_design_candidate"].name)
+    def design_candidate(project: str, include_external: bool = False, with_review_bundle: bool = True, requirements_text: str | None = None) -> dict[str, Any]:
+        return service.design_candidate(project, include_external=include_external, with_review_bundle=with_review_bundle, requirements_text=requirements_text)
+
+    @server.tool(name=_TR["hw_explore_design_space"].name)
+    def explore_design_space(project: str, max_candidates: int = 8) -> dict[str, Any]:
+        return service.explore_design_space(project, max_candidates=max_candidates)
+
+    @server.tool(name=_TR["hw_run_grounding_benchmark"].name)
+    def run_grounding_benchmark(project: str) -> dict[str, Any]:
+        return service.run_grounding_benchmark(project)
+
+    @server.tool(name=_TR["hw_generate_physical_qualification_plan"].name)
+    def generate_physical_qualification_plan(project: str) -> dict[str, Any]:
+        return service.generate_physical_qualification_plan(project)
+
+    @server.tool(name=_TR["hw_record_physical_evidence"].name)
+    def record_physical_evidence(project: str, evidence: dict[str, Any], approved: bool = False) -> dict[str, Any]:
+        return service.record_physical_evidence(project, evidence, approved=approved)
+
     @server.tool(name=_TR["hw_run_design_iteration"].name)
-    def run_design_iteration(project: str, goal: str = "make all release gates pass", include_external: bool = True) -> dict[str, Any]:
+    def run_design_iteration(project: str, goal: str = "improve this hardware candidate toward release promotion", include_external: bool = True) -> dict[str, Any]:
         result = service.run_design_iteration(project, include_external)
         result["goal"] = goal
         return result
