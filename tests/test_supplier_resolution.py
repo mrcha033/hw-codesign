@@ -6,6 +6,7 @@ from pathlib import Path
 
 import yaml
 
+from hw_codesign.io import read_yaml, write_yaml
 from hw_codesign.reference_backend import build_graph
 from hw_codesign.resolver import ComponentResolver
 from hw_codesign.supplier_adapters import DistributorMetadataAdapter, LcscJlcpcbAdapter
@@ -137,9 +138,66 @@ def test_generated_graph_contains_supplier_and_datasheet_provenance(service, pro
     by_gate = {item["gate"]: item for item in checks["reports"]}
     assert by_gate["supplier_availability"]["status"] == "blocked"
     assert by_gate["datasheet_evidence"]["status"] == "pass"
+    assert by_gate["sourcing_resilience"]["status"] == "pass"
     graph = yaml.safe_load((service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     assert all(component["resolution_provenance"]["database_file_sha256"] for component in graph["components"])
     assert all(component["datasheet_evidence"] for component in graph["components"])
+
+
+def test_sourcing_resilience_rejects_unjustified_critical_roles(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = yaml.safe_load((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    role_data = read_yaml(service.parts_root / "role_sets" / "robotics_controller.yaml")
+    role_data["alternatives"] = {}
+    role_data["single_source_justifications"] = {}
+
+    report = service._sourcing_resilience_report(service.read_spec(project), graph, role_data_override=role_data)
+
+    assert report.status == "fail"
+    assert "critical_role_resilience_missing" in {failure.code for failure in report.failures}
+
+
+def test_project_role_override_selects_curated_alternative(service, project):
+    spec_path = service.workspace.require_project(project) / "spec" / "system.yaml"
+    system = read_yaml(spec_path)
+    system["electronics"].setdefault("role_overrides", {})["resistor_4k7"] = {
+        "component_id": "rc0603_10k",
+        "resolution": "curated",
+        "reason": "Lower pull-up current candidate selected from curated alternatives.",
+    }
+    write_yaml(spec_path, system)
+
+    result = service.generate_electronics_only(project)
+    graph_path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
+    graph = yaml.safe_load(graph_path.read_text(encoding="utf-8"))
+    pullups = [component for component in graph["components"] if component.get("category") == "pullup"]
+
+    assert result["resolution_report"]["status"] == "pass"
+    assert pullups
+    assert {component["component_id"] for component in pullups} == {"rc0603_10k"}
+    assert {item["component_id"] for item in graph["component_resolution"] if item["role"] == "resistor_4k7"} == {"rc0603_10k"}
+    provenance = pullups[0]["resolution_provenance"]["role_override"]
+    assert provenance["source"] == "project_spec.electronics.role_overrides.resistor_4k7"
+    assert provenance["base_component_id"] == "rc0603_4k7"
+    assert provenance["required_reviews"] == ["i2c_rise_time"]
+
+
+def test_project_role_override_rejects_unlisted_component(service, project):
+    spec_path = service.workspace.require_project(project) / "spec" / "system.yaml"
+    system = read_yaml(spec_path)
+    system["electronics"].setdefault("role_overrides", {})["mcu"] = {
+        "component_id": "rc0603_10k",
+        "resolution": "curated",
+        "reason": "Invalid component substitution.",
+    }
+    write_yaml(spec_path, system)
+
+    result = service.generate_electronics_only(project)
+    failures = result["resolution_report"]["failures"]
+
+    assert result["resolution_report"]["status"] == "fail"
+    assert "role_override_not_allowed" in {failure["code"] for failure in failures}
 
 
 def test_esp32s3_library_metadata_is_verified():

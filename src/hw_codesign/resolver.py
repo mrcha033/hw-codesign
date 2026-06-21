@@ -121,12 +121,34 @@ class ComponentResolver:
         failures: list[Failure] = []
         resolved: list[ResolvedComponent] = []
         critical = set(role_data.get("critical_roles", []))
+        role_overrides = spec.get("electronics", {}).get("role_overrides") or {}
+        if not isinstance(role_overrides, dict):
+            role_overrides = {}
         for instance in components:
             role = role_for_component(instance)
-            selection = role_data.get("roles", {}).get(role)
-            if not selection:
+            base_selection = role_data.get("roles", {}).get(role)
+            if not base_selection:
                 failures.append(Failure(FailureCategory.BOM_ERROR, "role_unresolved", f"No component selection for role {role}", path=instance["ref"]))
                 continue
+            selection = dict(base_selection)
+            override = role_overrides.get(role)
+            override_rule: dict[str, Any] | None = None
+            if override:
+                if not isinstance(override, dict) or not override.get("component_id"):
+                    failures.append(Failure(FailureCategory.BOM_ERROR, "role_override_invalid", f"Role override for {role} must provide component_id", path=f"electronics.role_overrides.{role}"))
+                    continue
+                override_id = override["component_id"]
+                alternate_rules = {item.get("component_id"): item for item in role_data.get("alternatives", {}).get(role, []) if item.get("component_id")}
+                if override_id != base_selection.get("component_id") and override_id not in alternate_rules:
+                    failures.append(Failure(FailureCategory.BOM_ERROR, "role_override_not_allowed", f"Role override for {role} selects {override_id}, which is not a listed alternative", path=f"electronics.role_overrides.{role}"))
+                    continue
+                override_rule = alternate_rules.get(override_id)
+                rule_resolution = (override_rule or base_selection).get("resolution", "unresolved")
+                requested_resolution = override.get("resolution")
+                if requested_resolution and requested_resolution != rule_resolution:
+                    failures.append(Failure(FailureCategory.BOM_ERROR, "role_override_resolution_mismatch", f"Role override for {role} requests {requested_resolution}, but the role set allows {rule_resolution}", path=f"electronics.role_overrides.{role}"))
+                    continue
+                selection = {**selection, "component_id": override_id, "resolution": rule_resolution}
             resolution = selection.get("resolution", "unresolved")
             stored_part = database.get(selection.get("component_id"))
             part = dict(stored_part) if stored_part else None
@@ -157,6 +179,15 @@ class ComponentResolver:
                 "datasheet_catalog_sha256": self._file_hash(evidence_path) if evidence_path else None,
                 "datasheet_evidence_ids": [item["id"] for item in evidence],
             }
+            if override:
+                provenance["role_override"] = {
+                    "source": f"project_spec.electronics.role_overrides.{role}",
+                    "component_id": selection["component_id"],
+                    "base_component_id": base_selection.get("component_id"),
+                    "allowed_by_role_set": str(role_path),
+                    "required_reviews": list((override_rule or {}).get("required_reviews") or []),
+                    "reason": override.get("reason"),
+                }
             resolved.append(ResolvedComponent(instance["ref"], role, part["id"], resolution, part, provenance))
         availability_failures = list(supplier_failures)
         availability_blocked = any(failure.code == "supplier_catalog_missing" for failure in supplier_failures)
