@@ -1,0 +1,120 @@
+components:
+  - id: esp32_wroom_32e
+    mpn: ESP32-WROOM-32E
+    manufacturer: Espressif Systems
+    package: SMD-38-Module
+    symbol: {library_id: RF_Module:ESP32-WROOM-32, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38']}
+    footprint: {library_id: RF_Module:ESP32-WROOM-32, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38']}
+    pins:
+      - {number: '1', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '2', name: '3V3', electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '3', name: EN, electrical_type: input}
+      - {number: '4', name: IO36, electrical_type: bidirectional}
+      - {number: '5', name: IO39, electrical_type: bidirectional}
+      - {number: '6', name: IO34, electrical_type: bidirectional}
+      - {number: '7', name: IO35, electrical_type: bidirectional}
+      - {number: '8', name: IO32, electrical_type: bidirectional}
+      - {number: '9', name: IO33, electrical_type: bidirectional}
+      - {number: '10', name: IO25, electrical_type: bidirectional}
+      - {number: '11', name: IO26, electrical_type: bidirectional}
+      - {number: '12', name: IO27, electrical_type: bidirectional}
+      - {number: '13', name: IO14, electrical_type: bidirectional}
+      - {number: '14', name: IO12, electrical_type: bidirectional}
+      - {number: '15', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '16', name: IO13, electrical_type: bidirectional}
+      - {number: '17', name: SD2, electrical_type: bidirectional}
+      - {number: '18', name: SD3, electrical_type: bidirectional}
+      - {number: '19', name: CMD, electrical_type: bidirectional}
+      - {number: '20', name: CLK, electrical_type: bidirectional}
+      - {number: '21', name: SD0, electrical_type: bidirectional}
+      - {number: '22', name: SD1, electrical_type: bidirectional}
+      - {number: '23', name: IO15, electrical_type: bidirectional}
+      - {number: '24', name: IO2, electrical_type: bidirectional}
+      - {number: '25', name: IO0, electrical_type: bidirectional}
+      - {number: '26', name: IO4, electrical_type: bidirectional}
+      - {number: '27', name: IO16, electrical_type: bidirectional}
+      - {number: '28', name: IO17, electrical_type: bidirectional}
+      - {number: '29', name: IO5, electrical_type: bidirectional}
+      - {number: '30', name: IO18, electrical_type: bidirectional}
+      - {number: '31', name: IO19, electrical_type: bidirectional}
+      - {number: '32', name: NC, electrical_type: no_connect}
+      - {number: '33', name: IO21, electrical_type: bidirectional}
+      - {number: '34', name: RXD0, electrical_type: input}
+      - {number: '35', name: TXD0, electrical_type: output}
+      - {number: '36', name: IO22, electrical_type: bidirectional}
+      - {number: '37', name: IO23, electrical_type: bidirectional}
+      - {number: '38', name: GND, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ESP32-WROOM-32E]}
+    constraints: [wifi_802_11bgn, bluetooth_42_ble, integrated_pcb_antenna, 3v3_only, 40mhz_xtal_module]
+    resolution_provenance: {source: espressif_datasheet_v3_2, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: w5500
+    mpn: W5500
+    manufacturer: WIZnet
+    package: LQFP-48
+    symbol: {library_id: Interface_Ethernet:W5500, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48']}
+    footprint: {library_id: Package_QFP:LQFP-48_7x7mm_P0.5mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48']}
+    pins:
+      - {number: '1', name: MOSI, electrical_type: input}
+      - {number: '2', name: MISO, electrical_type: output}
+      - {number: '3', name: SCLK, electrical_type: input}
+      - {number: '4', name: SCSn, electrical_type: input}
+      - {number: '5', name: INTn, electrical_type: output}
+      - {number: '6', name: RSTn, electrical_type: input}
+      - {number: '7', name: RXDP, electrical_type: bidirectional}
+      - {number: '8', name: RXDM, electrical_type: bidirectional}
+      - {number: '9', name: TXDP, electrical_type: bidirectional}
+      - {number: '10', name: TXDM, electrical_type: bidirectional}
+      - {number: '48', name: VCC, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '47', name: GND, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [W5500]}
+    constraints: [hardwired_tcpip, spi_80mhz_max, 100base_t, 8_sockets]
+    resolution_provenance: {source: wiznet_w5500_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: ch340n
+    mpn: CH340N
+    manufacturer: WCH (Nanjing QinHeng Electronics)
+    package: SOP-8
+    symbol: {library_id: Interface_USB:CH340N, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOP-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: UD_PLUS, electrical_type: bidirectional}
+      - {number: '2', name: UD_MINUS, electrical_type: bidirectional}
+      - {number: '3', name: V3, electrical_type: passive}
+      - {number: '4', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '5', name: VCC, electrical_type: power_in}
+      - {number: '6', name: VCCIO, electrical_type: power_in}
+      - {number: '7', name: TXD, electrical_type: output}
+      - {number: '8', name: RXD, electrical_type: input}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [CH340N]}
+    constraints: [usb_fullspeed_uart, 2mbaud_max, no_external_crystal_required, vccio_level_select]
+    resolution_provenance: {source: wch_ch340ds1_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: hr911105a
+    mpn: HR911105A
+    manufacturer: Hanrun
+    package: RJ45-integrated-magnetics
+    symbol: {library_id: Connector:RJ45, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10']}
+    footprint: {library_id: Connector_RJ45:RJ45_Hanrun_HR911105A, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10']}
+    pins:
+      - {number: '1', name: TRD0P, electrical_type: bidirectional}
+      - {number: '2', name: TRD0M, electrical_type: bidirectional}
+      - {number: '3', name: TRD1P, electrical_type: bidirectional}
+      - {number: '4', name: TRD2P, electrical_type: bidirectional}
+      - {number: '5', name: TRD2M, electrical_type: bidirectional}
+      - {number: '6', name: TRD1M, electrical_type: bidirectional}
+      - {number: '7', name: TRD3P, electrical_type: bidirectional}
+      - {number: '8', name: TRD3M, electrical_type: bidirectional}
+      - {number: '9', name: LED_A, electrical_type: passive}
+      - {number: '10', name: LED_B, electrical_type: passive}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [HR911105A]}
+    constraints: [integrated_magnetics_1000base_t, dual_led_activity_link, through_hole]
+    resolution_provenance: {source: hanrun_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved

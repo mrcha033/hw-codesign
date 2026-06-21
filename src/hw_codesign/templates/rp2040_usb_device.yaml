@@ -1,0 +1,130 @@
+project:
+  name: rp2040_usb_device
+  description: Raspberry Pi RP2040 USB device — HID/CDC with external 2MB QSPI flash and USB-C
+  version: 0.1.0
+  template: rp2040_usb_device
+  created_at: '2026-06-21'
+
+system:
+  target_application: USB HID device, USB CDC-ACM adapter, embedded USB peripheral, RP2040 custom board
+
+compute:
+  mcu:
+    family: RP2040
+    variant: RP2040
+    clock_mhz: 133
+    cores: 2
+    flash_mb: 2
+    sram_kb: 264
+    fpu: false
+    connectivity: [usb_fullspeed_native, spi, i2c, uart, pio]
+    hard_realtime_required: false
+  debug_interface: SWD
+
+actuation:
+  motor_channels: 0
+  gpio_outputs: 26
+  pwm_channels: 16
+
+sensing:
+  adc_channels: 4
+  adc_bits: 12
+
+assumptions:
+  - id: ASM-01
+    text: External QSPI flash required — RP2040 has no on-chip flash
+    rationale: RP2040 XIP (execute-in-place) boots from external SPI flash via QSPI; W25Q16JV selected for 2MB capacity
+  - id: ASM-02
+    text: USB-C connector bus-powers the board at 5V; AP2112K LDO provides 3.3V
+    rationale: RP2040 core voltage 1.1V generated internally via VREG; only 3.3V IO rail needs external LDO
+  - id: ASM-03
+    text: 12MHz crystal optional — RP2040 ROSC can run USB PLL; crystal improves frequency accuracy
+    rationale: RP2040 USB PLL can lock to 48MHz from ROSC, but USB spec requires ±2500ppm; crystal locks within ±20ppm
+  - id: ASM-04
+    text: PIO state machines can implement additional protocols (WS2812, UART, SPI, I2S) in firmware
+    rationale: RP2040 has two PIO blocks with 8 state machines; eliminates need for external protocol ICs
+
+electronics:
+  backend: tscircuit
+  role_set: rp2040_usb_device
+  compiled_backend_required: false
+  power:
+    input_voltage_min_v: 4.5
+    input_voltage_max_v: 5.5
+    input_connector: USB-C
+    bus_voltages_v: [5.0, 3.3]
+    max_current_ma: 500
+  pcb:
+    layers: 2
+    width_mm: 51
+    height_mm: 21
+    min_trace_mm: 0.127
+    min_space_mm: 0.127
+    controlled_impedance: false
+
+mechanical:
+  enclosure: none
+  selected_variant: bare_pcb
+  variants:
+    - {name: bare_pcb, lid_style: none, ventilation: none, gasket: false}
+  mounting: host_product
+  connectors_exposed: true
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 51.0
+    board_height_mm: 21.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 3.5
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm: [51.0, 21.0, 5.0]
+
+firmware:
+  rtos: bare_metal
+  rp2040_sdk: pico-sdk
+  toolchain: arm-none-eabi-gcc
+  modules:
+    - id: usb_hid_stack
+      description: TinyUSB HID stack implementing keyboard + mouse composite device
+    - id: usb_cdc_stack
+      description: TinyUSB CDC-ACM UART-over-USB for debug console
+    - id: flash_xip
+      description: XIP boot loader stub for W25Q16JV QSPI flash
+    - id: pio_ws2812
+      description: PIO state machine driver for WS2812 RGB LED (optional)
+  ota: false
+
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.127
+    min_track_width_mm: 0.127
+
+safety:
+  regulatory: [CE, FCC_B]
+  isolation_required: false
+  esd_protection: required
+
+sourcing:
+  provider: curated
+  target_unit_cost_usd: 4.50
+  volume: 500
+  lead_time_weeks: 2
+
+test_plan:
+  gate_checks:
+    - usb_enumeration_hid
+    - usb_cdc_enumeration
+    - flash_xip_boot
+    - swd_debug_attach
+
+requirements:
+  performance:
+    - id: REQ-01
+      text: USB HID report rate ≥ 1000 Hz (1 ms polling)
+    - id: REQ-02
+      text: USB enumeration within 500 ms of power-on
+  reliability:
+    - id: REQ-03
+      text: No USB disconnect events under sustained HID traffic

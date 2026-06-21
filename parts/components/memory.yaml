@@ -1,0 +1,65 @@
+components:
+  # --- NOR Flash (SPI) ---
+  - id: w25q128jvsiq
+    mpn: W25Q128JVSIQ
+    manufacturer: Winbond Electronics
+    package: SOIC-8
+    symbol: {library_id: Memory_Flash:W25Q128JV, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: ~CS, electrical_type: input}
+      - {number: '2', name: DO/IO1, electrical_type: bidirectional}
+      - {number: '3', name: ~WP/IO2, electrical_type: bidirectional}
+      - {number: '4', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '5', name: DI/IO0, electrical_type: bidirectional}
+      - {number: '6', name: CLK, electrical_type: input}
+      - {number: '7', name: ~HOLD/IO3, electrical_type: bidirectional}
+      - {number: '8', name: VCC, electrical_type: power_in}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [W25Q128JVSIQ]}
+    constraints: [nor_flash_128mb, spi_qspi_dual_quad, 133mhz_max, 2v7_to_3v6v, 100k_erase_cycles, jedec_compliant]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: W25Q128JV, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: is25lp128f_jkle
+    mpn: IS25LP128F-JKLE-TR
+    manufacturer: ISSI
+    package: SOIC-8
+    symbol: {library_id: Memory_Flash:IS25LP128F, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: ~CS, electrical_type: input}
+      - {number: '2', name: SO/IO1, electrical_type: bidirectional}
+      - {number: '3', name: ~WP/IO2, electrical_type: bidirectional}
+      - {number: '4', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '5', name: SI/IO0, electrical_type: bidirectional}
+      - {number: '6', name: SCK, electrical_type: input}
+      - {number: '7', name: ~HOLD/RESET/IO3, electrical_type: bidirectional}
+      - {number: '8', name: VCC, electrical_type: power_in}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [IS25LP128F-JKLE-TR]}
+    constraints: [nor_flash_128mb, spi_qspi, 133mhz_max, 2v3_to_3v6v, low_power_standby_8ua, alternative_to_w25q128]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: IS25LP128F, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- EEPROM (I2C) ---
+  - id: at24c256c_sshl
+    mpn: AT24C256C-SSHL-T
+    manufacturer: Microchip Technology
+    package: SOIC-8
+    symbol: {library_id: Memory_EEPROM:AT24C256C, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: A0, electrical_type: input}
+      - {number: '2', name: A1, electrical_type: input}
+      - {number: '3', name: A2, electrical_type: input}
+      - {number: '4', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '5', name: SDA, electrical_type: bidirectional}
+      - {number: '6', name: SCL, electrical_type: input}
+      - {number: '7', name: WP, electrical_type: input}
+      - {number: '8', name: VCC, electrical_type: power_in}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [AT24C256C-SSHL-T]}
+    constraints: [eeprom_256kbit, i2c_400khz, address_configurable, 1m_write_cycles, 200_year_retention, 1v7_to_5v5]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: DS20006031, reviewed_at: '2026-06-21'}
+    review_status: approved

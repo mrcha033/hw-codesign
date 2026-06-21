@@ -1,0 +1,123 @@
+project:
+  target_use: lpwan_iot_sensor
+  revision: r1
+  template: lora_sensor_node
+electronics:
+  backend: tscircuit
+  role_set: lora_sensor_node
+  compiled_backend_required: true
+sourcing:
+  provider: curated
+system:
+  supply:
+    battery:
+      type: lisocl2_primary_cell
+      pack_voltage_nominal: 3.6
+      pack_voltage_max: 3.7
+      pack_voltage_min: 2.8
+      pack_current_peak_a: 0.15
+    rails:
+      - {name: VBAT, voltage: 3.6, current_peak_a: 0.15}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.12}
+compute:
+  mcu:
+    family: STM32L071
+    hard_realtime_required: false
+actuation:
+  motor_channels: 0
+  motor_channel_peak_current_a: 0.0
+sensing:
+  imu: not_required
+  battery_monitor: required
+  current_monitor: not_required
+  temperature_monitor: required
+  humidity_monitor: required
+  pressure_monitor: required
+  e_stop: not_required
+mechanical:
+  enclosure: optional
+  selected_variant: outdoor
+  variants:
+    - {name: outdoor, lid_style: screw, ventilation: none, gasket: true}
+    - {name: indoor, lid_style: snap, ventilation: none, gasket: false}
+  mounting: wall_mount
+  connectors_exposed: false
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 60.0
+    board_height_mm: 40.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 8.0
+    max_component_height_bottom_mm: 1.5
+  enclosure_internal_mm: [66.0, 46.0, 16.0]
+  wall_thickness_mm: 2.5
+  insertion_clearance_mm: 1.5
+  assembly_clearance_mm: 0.8
+  tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 5.0
+  default_component_height_mm: 2.5
+  component_heights_mm: {J1: 5.0, J2: 5.0, U3: 1.1}
+  board_origin_mm: [3.0, 3.0, 5.6]
+  mounting_holes:
+    - {x_mm: 3.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 56.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 3.5, y_mm: 36.5, diameter_mm: 3.2}
+    - {x_mm: 56.5, y_mm: 36.5, diameter_mm: 3.2}
+  fixtures:
+    mounting_plate: {enabled: false}
+    frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: right, opening_mm: [7.0, 5.0], center_z_mm: 7.0, position_tolerance_mm: 0.5}
+    - {ref: J2, side: right, opening_mm: [7.0, 5.0], center_z_mm: 7.0, position_tolerance_mm: 0.5}
+firmware:
+  framework: zephyr
+  target: stm32l071xx
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
+  modules:
+    - id: sensor_read_transmit
+      behavior: sensor_poll
+      trigger: {signal: I2C_SCL, interval_ms: 60000}
+      action: {read: [bme280_temp, bme280_humidity, bme280_pressure, vbat_adc]}
+    - id: lorawan_uplink
+      behavior: periodic_transmit
+      trigger: {signal: LORA_DIO0, interval_ms: 300000}
+      action: {transmit: lorawan_unconfirmed_uplink}
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 2.0
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
+safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [watchdog]
+assumptions:
+  lora_frequency_band:
+    value: eu868_or_us915
+    confidence: medium
+    reason: SX1276 supports both EU 868 MHz and US 915 MHz bands via firmware configuration; hardware antenna must match the deployed band. Default firmware targets EU868.
+    critical: true
+    requires_user_review: true
+  battery_lifetime:
+    value: two_years_at_5min_interval
+    confidence: medium
+    reason: Estimated from STM32L071 stop mode at 1.2 µA + SX1276 sleep at 200 nA; actual lifetime depends on TX power, LoRa SF, and environmental temperature.
+    critical: false
+    requires_user_review: false
+  rf_antenna_match:
+    value: external_868mhz_monopole
+    confidence: medium
+    reason: U.FL connector routes to an external 868 MHz monopole or PCB trace antenna; impedance matching network may be required depending on antenna type.
+    critical: true
+    requires_user_review: true
+requirements:
+  raw_inputs: []
+  active_lowered: []
+  active_unresolved: []

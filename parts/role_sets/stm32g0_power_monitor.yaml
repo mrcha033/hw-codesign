@@ -1,0 +1,40 @@
+name: stm32g0_power_monitor
+critical_roles:
+  - power_input
+  - regulator_3v3
+  - mcu
+  - power_monitor_ic
+  - display_ic
+
+roles:
+  power_input: {component_id: usb4105_gf_a, resolution: curated}
+  tvs: {component_id: usblc6_2sc6, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  mcu: {component_id: stm32g030c8t6, resolution: curated}
+  power_monitor_ic: {component_id: ina226aidt, resolution: curated}
+  shunt_resistor: {component_id: rl1206fr_01, resolution: curated}
+  display_ic: {component_id: ssd1306_oled_128x64, resolution: curated}
+  usb_uart_bridge: {component_id: ch340n, resolution: curated}
+  debug_header: {component_id: samtec_ftsh_105, resolution: curated}
+  i2c_pullup: {component_id: rc0603_4k7, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
+
+alternatives:
+  power_monitor_ic:
+    - component_id: ina219aidr
+      resolution: registry_candidate
+      rationale: Lower-cost 12-bit I2C power monitor; sufficient for ≤3.2A measurement with 100mV shunt full-scale; loses 16-bit precision and programmable alert
+      required_reviews: [measurement_accuracy_review, driver_update]
+      compatibility: {pin_numbers: different, footprint: different, electrical_value: changed}
+  display_ic:
+    - component_id: ssd1306_oled_128x32
+      resolution: registry_candidate
+      rationale: Narrower 128×32 OLED for space-constrained enclosures; reduces display to 2 rows (V and I); energy accumulator requires scroll
+      required_reviews: [display_layout_review]
+      compatibility: {pin_numbers: exact, footprint: different, electrical_value: same}
+
+single_source_justifications:
+  mcu: {reason: STM32G030 substitution changes pinmap, I2C peripheral count, and available timers, mitigation: Add curated STM32G0 alternative with matching I2C and peripheral count, required_reviews: [peripheral_review, pinmap_review]}
+  power_monitor_ic: {reason: INA226 substitution changes I2C address, register map, and calibration procedure, mitigation: Add curated alternative with I2C address and register compatibility evidence, required_reviews: [driver_compatibility, calibration_review]}

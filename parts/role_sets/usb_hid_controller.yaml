@@ -1,0 +1,30 @@
+name: usb_hid_controller
+critical_roles: [power_input, tvs, regulator_3v3, mcu, flash]
+roles:
+  power_input: {component_id: usb4105_gf_a, resolution: curated}
+  tvs: {component_id: usblc6_2sc6, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  mcu: {component_id: rp2040, resolution: curated}
+  flash: {component_id: w25q16jv, resolution: curated}
+  crystal: {component_id: abm8_12m, resolution: curated}
+  debug: {component_id: samtec_ftsh_105, resolution: curated}
+  led_resistor: {component_id: rc0603_1k, resolution: curated}
+  boot_resistor: {component_id: rc0603_10k, resolution: curated}
+  pullup: {component_id: rc0603_10k, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  capacitor_100n: {component_id: grm188_100n, resolution: curated}
+  capacitor_22u: {component_id: grm31_22u, resolution: curated}
+  capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}
+alternatives:
+  flash:
+    - component_id: w25q32jv
+      resolution: registry_candidate
+      rationale: Same SOIC-8 footprint and SPI command set; doubles flash to 4 MB for CircuitPython or large UF2 bootloader filesystems.
+      required_reviews: [flash_firmware_compatibility]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+single_source_justifications:
+  power_input: {reason: USB-C connector substitution changes shell footprint, ESD geometry, and enclosure cutout, mitigation: Add a curated USB-C connector alternative with footprint and mechanical-cutout evidence before substitution, required_reviews: [usb_mechanical_fit, connector_footprint]}
+  tvs: {reason: USB ESD substitution changes capacitance, clamp behavior, and high-speed routing geometry, mitigation: Add a curated USB ESD alternative with capacitance and footprint evidence before substitution, required_reviews: [usb_signal_integrity, footprint_contract]}
+  regulator_3v3: {reason: LDO substitution changes dropout, quiescent current, and thermal margin for USB-powered operation, mitigation: Add a curated LDO alternative with dropout and thermal evidence, required_reviews: [load_regulation, thermal_review]}
+  mcu: {reason: RP2040 substitution changes native USB PHY, QSPI flash interface, PIO peripheral, pinmap, and firmware toolchain, mitigation: Add a curated RP2040-series alternative with USB and PIO compatibility evidence, required_reviews: [usb_phy, firmware_migration]}
+  flash: {reason: QSPI flash substitution changes command set, timing, and XIP behavior with RP2040 bootloader, mitigation: Add a curated flash alternative confirmed compatible with RP2040 XIP and W25Q-family command set, required_reviews: [flash_xip_compatibility]}

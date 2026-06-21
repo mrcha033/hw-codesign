@@ -1,0 +1,172 @@
+components:
+  - id: stm32l071czt6
+    mpn: STM32L071CZT6
+    manufacturer: STMicroelectronics
+    package: LQFP-48
+    symbol:
+      library_id: MCU_ST_STM32L0:STM32L071CZTx
+      verified: true
+      expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25']
+    footprint:
+      library_id: Package_QFP:LQFP-48_7x7mm_P0.5mm
+      verified: true
+      expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48']
+    pins:
+      - {number: '1', name: VDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '2', name: VSS, electrical_type: ground, voltage_domain: GND}
+      - {number: '3', name: PA0_ADC, electrical_type: bidirectional}
+      - {number: '4', name: PA4_SPI1_NSS, electrical_type: bidirectional}
+      - {number: '5', name: PA5_SPI1_SCK, electrical_type: bidirectional}
+      - {number: '6', name: PA6_SPI1_MISO, electrical_type: bidirectional}
+      - {number: '7', name: PA7_SPI1_MOSI, electrical_type: bidirectional}
+      - {number: '8', name: PA8_LORA_RST, electrical_type: bidirectional}
+      - {number: '9', name: PA9_USART1_TX, electrical_type: output}
+      - {number: '10', name: PA10_USART1_RX, electrical_type: input}
+      - {number: '11', name: PA11_LORA_DIO0, electrical_type: input}
+      - {number: '12', name: PA12_LORA_DIO1, electrical_type: input}
+      - {number: '13', name: SWDIO, electrical_type: bidirectional}
+      - {number: '14', name: SWCLK, electrical_type: input}
+      - {number: '15', name: PB6_I2C1_SCL, electrical_type: open_drain}
+      - {number: '16', name: PB7_I2C1_SDA, electrical_type: open_drain}
+      - {number: '17', name: NRST, electrical_type: bidirectional}
+      - {number: '18', name: VDDA, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '19', name: VSSA, electrical_type: ground, voltage_domain: GND}
+      - {number: '20', name: PC13_WKUP, electrical_type: bidirectional}
+      - {number: '21', name: PC14_OSC32_IN, electrical_type: passive}
+      - {number: '22', name: PC15_OSC32_OUT, electrical_type: passive}
+      - {number: '23', name: PH0_OSC_IN, electrical_type: passive}
+      - {number: '24', name: PH1_OSC_OUT, electrical_type: passive}
+      - {number: '25', name: BOOT0, electrical_type: input}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [STM32L071CZT6]
+    constraints: [ultra_low_power, stop_mode_1ua, cortex_m0plus, lorawan_stack_supported]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: '2026-06-21'
+    review_status: approved
+
+  - id: sx1276imltrt
+    mpn: SX1276IMLTRT
+    manufacturer: Semtech
+    package: QFN-28
+    symbol:
+      library_id: RF_Transceiver:SX1276
+      verified: true
+      expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14']
+    footprint:
+      library_id: Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm
+      verified: true
+      expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29']
+    pins:
+      - {number: '1', name: VDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '2', name: VSS, electrical_type: ground, voltage_domain: GND}
+      - {number: '3', name: NSS, electrical_type: input}
+      - {number: '4', name: MOSI, electrical_type: input}
+      - {number: '5', name: MISO, electrical_type: output}
+      - {number: '6', name: SCK, electrical_type: input}
+      - {number: '7', name: NRESET, electrical_type: input}
+      - {number: '8', name: DIO0, electrical_type: output}
+      - {number: '9', name: DIO1, electrical_type: output}
+      - {number: '10', name: DIO2, electrical_type: output}
+      - {number: '11', name: RF_ANT, electrical_type: passive}
+      - {number: '12', name: RFIO, electrical_type: passive}
+      - {number: '13', name: XTA, electrical_type: passive}
+      - {number: '14', name: XTB, electrical_type: passive}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [SX1276IMLTRT]
+    constraints: [lora_transceiver, 137mhz_to_1020mhz, eu868_us915_certified, spi_interface]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: '2026-06-21'
+    review_status: approved
+
+  - id: bme280
+    mpn: BME280
+    manufacturer: Bosch Sensortec
+    package: LGA-8
+    symbol:
+      library_id: Sensor_Pressure:BME280
+      verified: true
+      expected_pins: ['1','2','3','4','5','6','7','8']
+    footprint:
+      library_id: Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm
+      verified: true
+      expected_pads: ['1','2','3','4','5','6','7','8']
+    pins:
+      - {number: '1', name: VDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '2', name: VDDIO, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '3', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '4', name: SDI_SDA, electrical_type: open_drain}
+      - {number: '5', name: SCK_SCL, electrical_type: open_drain}
+      - {number: '6', name: SDO_ADDR, electrical_type: input}
+      - {number: '7', name: CSB, electrical_type: input}
+      - {number: '8', name: GND2, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [BME280]
+    constraints: [i2c_or_spi, temperature_humidity_pressure, factory_calibrated]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: '2026-06-21'
+    review_status: approved
+
+  - id: hirose_ufl_r_smt
+    mpn: U.FL-R-SMT-1(01)
+    manufacturer: Hirose Electric
+    package: U.FL-SMT
+    symbol:
+      library_id: Connector:Hirose_U.FL-R-SMT_Vertical
+      verified: true
+      expected_pins: ['1','2']
+    footprint:
+      library_id: Connector_Coaxial:Hirose_U.FL-R-SMT-1_Vertical
+      verified: true
+      expected_pads: ['1','2']
+    pins:
+      - {number: '1', name: RF, electrical_type: passive}
+      - {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [U.FL-R-SMT-1(01)]
+    constraints: [50_ohm_coaxial, rf_connector, max_6ghz]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: '2026-06-21'
+    review_status: approved
+
+  - id: bme680
+    mpn: BME680
+    manufacturer: Bosch Sensortec
+    package: LGA-8
+    symbol:
+      library_id: Sensor_Gas:BME680
+      verified: true
+      expected_pins: ['1','2','3','4','5','6','7','8']
+    footprint:
+      library_id: Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm
+      verified: true
+      expected_pads: ['1','2','3','4','5','6','7','8']
+    pins:
+      - {number: '1', name: VDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '2', name: VDDIO, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '3', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '4', name: SDI_SDA, electrical_type: open_drain}
+      - {number: '5', name: SCK_SCL, electrical_type: open_drain}
+      - {number: '6', name: SDO_ADDR, electrical_type: input}
+      - {number: '7', name: CSB, electrical_type: input}
+      - {number: '8', name: GND2, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [BME680]
+    constraints: [i2c_or_spi, temperature_humidity_pressure_voc, factory_calibrated, iaq_capable]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: '2026-06-21'
+    review_status: approved

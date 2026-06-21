@@ -1,0 +1,36 @@
+name: rp2040_usb_device
+critical_roles:
+  - power_input
+  - tvs
+  - regulator_3v3
+  - mcu
+  - flash
+
+roles:
+  power_input: {component_id: usb4105_gf_a, resolution: curated}
+  tvs: {component_id: usblc6_2sc6, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  mcu: {component_id: rp2040, resolution: curated}
+  flash: {component_id: w25q16jv, resolution: curated}
+  crystal_12m: {component_id: abm8_12m, resolution: curated}
+  capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  debug_header: {component_id: conn_2x05_2p54, resolution: curated}
+
+alternatives:
+  flash:
+    - component_id: w25q32jv
+      resolution: registry_candidate
+      rationale: 4MB variant — same pinout and electrical interface as W25Q16JV; doubles storage capacity for larger firmware images at minimal cost delta
+      required_reviews: [flash_capacity_review, xip_timing_validation]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: same}
+  mcu:
+    - component_id: rp2040
+      resolution: curated
+      rationale: No pin-compatible alternatives exist; RP2040 is the only option for this template family
+      required_reviews: [sourcing_lead_time]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: same}
+
+single_source_justifications:
+  rp2040: {reason: RP2040 is a unique Raspberry Pi silicon with no pin-compatible alternatives; substitution requires complete board redesign, mitigation: Maintain 6-month safety stock; qualify RP2350 as next-generation upgrade path, required_reviews: [supply_chain_review, rp2350_migration_assessment]}

@@ -1,0 +1,39 @@
+name: samd21_sensor_hub
+critical_roles:
+  - power_input
+  - tvs
+  - regulator_3v3
+  - mcu
+  - imu
+  - env_sensor
+
+roles:
+  power_input: {component_id: usb4105_gf_a, resolution: curated}
+  tvs: {component_id: usblc6_2sc6, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  mcu: {component_id: atsamd21g18a_au, resolution: curated}
+  rtc_crystal: {component_id: mc_306_32khz, resolution: curated}
+  imu: {component_id: lsm6dsoxtr, resolution: curated}
+  env_sensor: {component_id: bme280, resolution: curated}
+  capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  debug_header: {component_id: conn_2x05_2p54, resolution: curated}
+
+alternatives:
+  imu:
+    - component_id: mpu6050c
+      resolution: registry_candidate
+      rationale: Older but very well-supported 6-axis IMU with extensive Arduino/Python library ecosystem; I2C only, no embedded functions or machine-learning core; sufficient for basic motion logging
+      required_reviews: [firmware_driver_update, i2c_address_conflict_check]
+      compatibility: {pin_numbers: different, footprint: different, electrical_value: changed}
+  env_sensor:
+    - component_id: bme680
+      resolution: registry_candidate
+      rationale: Adds VOC gas sensing to temperature/humidity/pressure; same footprint and I2C bus; higher cost but richer environmental data
+      required_reviews: [bsec_library_licensing, firmware_update]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+
+single_source_justifications:
+  atsamd21g18a_au: {reason: SAMD21 substitution changes USB PHY, SERCOM count, DMA, and boot ROM behavior; pin count differs from compatible parts, mitigation: SAMD21E18 (32-pin) or SAMD51 as smaller/larger migration paths; firmware changes required, required_reviews: [peripheral_mapping_review, usb_phy_compatibility]}
+  lsm6dsoxtr: {reason: LSM6DSOX machine-learning core and embedded functions differ significantly between IMU families; firmware drivers not interchangeable, mitigation: Qualify MPU-6050 as fallback for basic 6DOF without embedded features, required_reviews: [driver_compatibility_review, feature_delta_analysis]}

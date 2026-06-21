@@ -1,0 +1,130 @@
+project:
+  name: esp32_wifi_gateway
+  description: ESP32-WROOM-32E WiFi gateway with W5500 Ethernet and CH340N USB-UART bridge
+  version: 0.1.0
+  template: esp32_wifi_gateway
+  created_at: '2026-06-21'
+
+system:
+  target_application: WiFi/Ethernet bridge, IoT gateway, data aggregator
+
+compute:
+  mcu:
+    family: ESP32
+    variant: ESP32-WROOM-32E
+    clock_mhz: 240
+    cores: 2
+    flash_mb: 4
+    sram_kb: 520
+    fpu: false
+    connectivity: [wifi_802_11_bgn, bluetooth_42_ble]
+    hard_realtime_required: false
+  debug_interface: UART
+
+actuation:
+  motor_channels: 0
+
+sensing:
+  ethernet:
+    controller: W5500
+    interface: SPI
+    speed: 100BASE-T
+  usb_uart:
+    bridge: CH340N
+    baud_max: 2000000
+
+assumptions:
+  - id: ASM-01
+    text: USB-UART bridge requires host-side CH340 driver (included in Linux kernel ≥4.x, Windows needs vendor driver)
+    rationale: CH340N is lowest-cost option; CP2102 would be driver-free but costs 3× more
+  - id: ASM-02
+    text: W5500 SPI runs at 33 MHz max; ESP32 SPI master clocked at 26 MHz for margin
+    rationale: keep MCLK ≤ 80% of W5500 SCLK max to allow PCB trace capacitance
+  - id: ASM-03
+    text: 3.3V I/O throughout; CH340N VCCIO tied to 3V3 for direct ESP32 compatibility
+    rationale: eliminates level-shifter BOM cost
+
+electronics:
+  backend: tscircuit
+  role_set: esp32_wifi_gateway
+  compiled_backend_required: false
+  power:
+    input_voltage_min_v: 4.5
+    input_voltage_max_v: 5.5
+    input_connector: USB-C
+    bus_voltages_v: [5.0, 3.3]
+    max_current_ma: 800
+  pcb:
+    layers: 2
+    width_mm: 70
+    height_mm: 50
+    min_trace_mm: 0.127
+    min_space_mm: 0.127
+    controlled_impedance: false
+
+mechanical:
+  enclosure: optional
+  selected_variant: desktop
+  variants:
+    - {name: desktop, lid_style: snap, ventilation: none, gasket: false}
+  mounting: desktop
+  connectors_exposed: true
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 70.0
+    board_height_mm: 50.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 5.0
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm: [80.0, 60.0, 25.0]
+
+firmware:
+  rtos: esp-idf-freertos
+  zephyr_target: null
+  esp_idf_target: esp32
+  modules:
+    - id: wifi_sta
+      description: WiFi station mode with WPA2 auth and reconnect loop
+    - id: eth_spi
+      description: W5500 SPI Ethernet driver via esp_eth_mac_spi
+    - id: tcp_bridge
+      description: TCP socket bridge forwarding Ethernet frames to WiFi AP
+    - id: uart_console
+      description: Console UART for OTA configuration and status reporting via CH340N
+  ota: true
+
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.127
+    min_track_width_mm: 0.127
+
+safety:
+  regulatory: [CE, FCC_mod]
+  isolation_required: false
+  esd_protection: required
+
+sourcing:
+  provider: curated
+  target_unit_cost_usd: 12.00
+  volume: 100
+  lead_time_weeks: 4
+
+test_plan:
+  gate_checks:
+    - ping_eth_gateway
+    - ping_wifi_gateway
+    - uart_loopback_at_2mbps
+    - ota_update_cycle
+
+requirements:
+  performance:
+    - id: REQ-01
+      text: TCP bridge throughput ≥ 5 Mbps sustained
+    - id: REQ-02
+      text: UART baud ≥ 921600 error-free
+  reliability:
+    - id: REQ-03
+      text: WiFi reconnect within 10 s of AP drop

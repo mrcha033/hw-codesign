@@ -1,0 +1,61 @@
+components:
+  - id: atsamd21g18a_au
+    mpn: ATSAMD21G18A-AU
+    manufacturer: Microchip Technology
+    package: TQFP-48
+    symbol: {library_id: MCU_Microchip_SAMD:ATSAMD21G18A-AU, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48']}
+    footprint: {library_id: Package_QFP:TQFP-48_7x7mm_P0.5mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48']}
+    pins:
+      - {number: '1', name: PA00_XIN32, electrical_type: bidirectional}
+      - {number: '2', name: PA01_XOUT32, electrical_type: bidirectional}
+      - {number: '3', name: PB08_ADC0_2_AIN2, electrical_type: bidirectional}
+      - {number: '4', name: PB09_ADC0_3_AIN3, electrical_type: bidirectional}
+      - {number: '5', name: PA04_SERCOM0_0, electrical_type: bidirectional}
+      - {number: '6', name: PA05_SERCOM0_1, electrical_type: bidirectional}
+      - {number: '7', name: PA06_SERCOM0_2, electrical_type: bidirectional}
+      - {number: '8', name: PA07_SERCOM0_3, electrical_type: bidirectional}
+      - {number: '9', name: VDDANA, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '10', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '11', name: PB02_SERCOM5_0, electrical_type: bidirectional}
+      - {number: '12', name: PB03_SERCOM5_1, electrical_type: bidirectional}
+      - {number: '13', name: PA08_SERCOM2_0, electrical_type: bidirectional}
+      - {number: '14', name: PA09_SERCOM2_1, electrical_type: bidirectional}
+      - {number: '15', name: PA10_SERCOM2_2, electrical_type: bidirectional}
+      - {number: '16', name: PA11_SERCOM2_3, electrical_type: bidirectional}
+      - {number: '17', name: VDDIO, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '18', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '19', name: PB10_SERCOM4_2, electrical_type: bidirectional}
+      - {number: '20', name: PB11_SERCOM4_3, electrical_type: bidirectional}
+      - {number: '21', name: PA12_SERCOM4_0, electrical_type: bidirectional}
+      - {number: '22', name: PA13_SERCOM4_1, electrical_type: bidirectional}
+      - {number: '23', name: PA14, electrical_type: bidirectional}
+      - {number: '24', name: PA15, electrical_type: bidirectional}
+      - {number: '25', name: PA16_SERCOM3_0, electrical_type: bidirectional}
+      - {number: '26', name: PA17_SERCOM3_1, electrical_type: bidirectional}
+      - {number: '27', name: PA18_SERCOM3_2, electrical_type: bidirectional}
+      - {number: '28', name: PA19_SERCOM3_3, electrical_type: bidirectional}
+      - {number: '29', name: PA20_SERCOM5_2, electrical_type: bidirectional}
+      - {number: '30', name: PA21_SERCOM5_3, electrical_type: bidirectional}
+      - {number: '31', name: PA22_SERCOM3_SDA, electrical_type: bidirectional}
+      - {number: '32', name: PA23_SERCOM3_SCL, electrical_type: bidirectional}
+      - {number: '33', name: PA24_USBDM, electrical_type: bidirectional}
+      - {number: '34', name: PA25_USBDP, electrical_type: bidirectional}
+      - {number: '35', name: VDDIO, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '36', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '37', name: PB22_SERCOM5_2, electrical_type: bidirectional}
+      - {number: '38', name: PB23_SERCOM5_3, electrical_type: bidirectional}
+      - {number: '39', name: PA27, electrical_type: bidirectional}
+      - {number: '40', name: ~RESETN, electrical_type: input}
+      - {number: '41', name: PA28, electrical_type: bidirectional}
+      - {number: '42', name: VDDCORE, electrical_type: power_out}
+      - {number: '43', name: VDDIN, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '44', name: PB02_ADC, electrical_type: bidirectional}
+      - {number: '45', name: PB03_ADC, electrical_type: bidirectional}
+      - {number: '46', name: PA30_SWCLK, electrical_type: bidirectional}
+      - {number: '47', name: PA31_SWDIO, electrical_type: bidirectional}
+      - {number: '48', name: PB30, electrical_type: bidirectional}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ATSAMD21G18A-AU]}
+    constraints: [cortex_m0plus_48mhz, 256kb_flash, 32kb_sram, usb_fullspeed_native, 6x_sercom, 12bit_adc, dfll_from_32khz_for_usb, 1v62_to_3v63v]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: DS60001507, reviewed_at: '2026-06-21'}
+    review_status: approved

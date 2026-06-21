@@ -1,0 +1,95 @@
+components:
+  # --- LiPo/Li-Ion Charger ICs ---
+  - id: mcp73831_2_ot
+    mpn: MCP73831T-2ATI/OT
+    manufacturer: Microchip Technology
+    package: SOT-23-5
+    symbol: {library_id: Battery_Management:MCP73831, verified: true, expected_pins: ['1','2','3','4','5']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23-5, verified: true, expected_pads: ['1','2','3','4','5']}
+    pins:
+      - {number: '1', name: STAT, electrical_type: output}
+      - {number: '2', name: VSS, electrical_type: ground, voltage_domain: GND}
+      - {number: '3', name: VDD, electrical_type: power_in}
+      - {number: '4', name: VBAT, electrical_type: power_out}
+      - {number: '5', name: PROG, electrical_type: input}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [MCP73831T-2ATI/OT]}
+    constraints: [lipo_charger, 500ma_max, 4v2_charge_voltage, prog_resistor_sets_current, usb_powered]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: DS22057, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- LDO Regulators ---
+  - id: mcp1700t_3302
+    mpn: MCP1700T-3302E/TT
+    manufacturer: Microchip Technology
+    package: SOT-23-3
+    symbol: {library_id: Regulator_Linear:MCP1700, verified: true, expected_pins: ['1','2','3']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23, verified: true, expected_pads: ['1','2','3']}
+    pins:
+      - {number: '1', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '2', name: VOUT, electrical_type: power_out, voltage_domain: V3V3}
+      - {number: '3', name: VIN, electrical_type: power_in}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [MCP1700T-3302E/TT]}
+    constraints: [ldo_3v3, 250ma_rated, 178mv_dropout_at_250ma, low_quiescent_1ua, battery_powered]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: DS20001826, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: ncp1117st33t3g
+    mpn: NCP1117ST33T3G
+    manufacturer: ON Semiconductor
+    package: SOT-223
+    symbol: {library_id: Regulator_Linear:NCP1117-Fixed, verified: true, expected_pins: ['1','2','3','4']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-223-3_TabPin2, verified: true, expected_pads: ['1','2','3','4']}
+    pins:
+      - {number: '1', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '2', name: OUTPUT, electrical_type: power_out, voltage_domain: V3V3}
+      - {number: '3', name: INPUT, electrical_type: power_in}
+      - {number: '4', name: OUTPUT, electrical_type: power_out, voltage_domain: V3V3}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [NCP1117ST33T3G]}
+    constraints: [ldo_3v3, 1a_rated, 1v2_dropout_max, industrial_temp, sot223_heatsink_pad]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: NCP1117-D, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Buck Converters ---
+  - id: tps54331dr
+    mpn: TPS54331DR
+    manufacturer: Texas Instruments
+    package: SOIC-8
+    symbol: {library_id: Regulator_Switching:TPS54331, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: BOOT, electrical_type: passive}
+      - {number: '2', name: VIN, electrical_type: power_in}
+      - {number: '3', name: EN, electrical_type: input}
+      - {number: '4', name: SS/TR, electrical_type: input}
+      - {number: '5', name: VSENSE, electrical_type: input}
+      - {number: '6', name: COMP, electrical_type: passive}
+      - {number: '7', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '8', name: PH, electrical_type: output}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [TPS54331DR]}
+    constraints: [buck_converter, 3a_rated, 28v_vin_max, 500khz_switching, adjustable_output, eco_mode]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: SLVS794, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Power Path / Load Switch ---
+  - id: tps22918tbvr
+    mpn: TPS22918TBVR
+    manufacturer: Texas Instruments
+    package: SOT-23-6
+    symbol: {library_id: Power_Management:TPS22918, verified: true, expected_pins: ['1','2','3','4','5','6']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23-6, verified: true, expected_pads: ['1','2','3','4','5','6']}
+    pins:
+      - {number: '1', name: ON, electrical_type: input}
+      - {number: '2', name: VIN, electrical_type: power_in}
+      - {number: '3', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '4', name: CT, electrical_type: passive}
+      - {number: '5', name: VOUT, electrical_type: power_out}
+      - {number: '6', name: NC, electrical_type: no_connect}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [TPS22918TBVR]}
+    constraints: [load_switch, 6a_rated, 5v5_max, adjustable_rise_time, low_ron_18mohm]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: SLVSCK4, reviewed_at: '2026-06-21'}
+    review_status: approved

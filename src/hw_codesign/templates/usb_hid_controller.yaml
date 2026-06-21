@@ -1,0 +1,114 @@
+project:
+  target_use: custom_usb_hid_device
+  revision: r1
+  template: usb_hid_controller
+electronics:
+  backend: tscircuit
+  role_set: usb_hid_controller
+  compiled_backend_required: true
+sourcing:
+  provider: curated
+system:
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.5
+    rails:
+      - {name: USB_5V, voltage: 5.0, current_peak_a: 0.5}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.3}
+compute:
+  mcu:
+    family: RP2040
+    hard_realtime_required: false
+actuation:
+  motor_channels: 0
+  motor_channel_peak_current_a: 0.0
+sensing:
+  imu: not_required
+  battery_monitor: not_required
+  current_monitor: not_required
+  temperature_monitor: not_required
+  e_stop: not_required
+mechanical:
+  enclosure: optional
+  selected_variant: desktop
+  variants:
+    - {name: desktop, lid_style: snap, ventilation: none, gasket: false}
+  mounting: desktop
+  connectors_exposed: true
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 55.0
+    board_height_mm: 21.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 4.0
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm: [61.0, 27.0, 10.0]
+  wall_thickness_mm: 2.0
+  insertion_clearance_mm: 1.5
+  assembly_clearance_mm: 0.8
+  tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 5.0
+  default_component_height_mm: 2.0
+  component_heights_mm: {J1: 3.3, U1: 1.0, U3: 2.0}
+  board_origin_mm: [3.0, 3.0, 3.2]
+  mounting_holes:
+    - {x_mm: 2.0, y_mm: 2.0, diameter_mm: 2.2}
+    - {x_mm: 53.0, y_mm: 2.0, diameter_mm: 2.2}
+    - {x_mm: 2.0, y_mm: 19.0, diameter_mm: 2.2}
+    - {x_mm: 53.0, y_mm: 19.0, diameter_mm: 2.2}
+  fixtures:
+    mounting_plate: {enabled: false}
+    frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: bottom, opening_mm: [9.0, 3.3], center_z_mm: 3.2, position_tolerance_mm: 0.3}
+firmware:
+  framework: zephyr
+  target: rp2040
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
+  modules:
+    - id: hid_report_task
+      behavior: periodic_transmit
+      trigger: {signal: STATUS_LED, interval_ms: 1}
+      action: {transmit: usb_hid_report}
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.1
+    min_track_width_mm: 0.1
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
+safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog]
+assumptions:
+  usb_enumeration:
+    value: full_speed_hid_device
+    confidence: high
+    reason: RP2040 native USB PHY enumerates as USB 2.0 Full Speed (12 Mbit/s); no USB bridge IC required. TinyUSB or Zephyr USB stack handles HID descriptor.
+    critical: true
+    requires_user_review: false
+  crystal_accuracy:
+    value: 12mhz_abracon_10ppm
+    confidence: high
+    reason: USB Full Speed timing requires better than ±2500 ppm; ABM8-12.000MHZ-B2-T is 10 ppm and exceeds this requirement.
+    critical: false
+    requires_user_review: false
+  qspi_flash_size:
+    value: 2mb_w25q16
+    confidence: medium
+    reason: 2 MB flash comfortably holds a typical HID firmware image plus TinyUSB. Expand to W25Q32 (4 MB) if CircuitPython or a UF2 bootloader is used with a large filesystem.
+    critical: false
+    requires_user_review: false
+requirements:
+  raw_inputs: []
+  active_lowered: []
+  active_unresolved: []

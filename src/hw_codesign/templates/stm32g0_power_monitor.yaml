@@ -1,0 +1,142 @@
+project:
+  name: stm32g0_power_monitor
+  description: STM32G030 power monitor with INA226 current/voltage sensing and SSD1306 OLED display
+  version: 0.1.0
+  template: stm32g0_power_monitor
+  created_at: '2026-06-21'
+
+system:
+  target_application: Bench power monitor, battery analyzer, current logger
+
+compute:
+  mcu:
+    family: STM32G0
+    variant: STM32G030C8T6
+    clock_mhz: 64
+    cores: 1
+    flash_kb: 64
+    sram_kb: 8
+    fpu: false
+    connectivity: [i2c, spi, uart, usb_cdc_optional]
+    hard_realtime_required: false
+  debug_interface: SWD
+
+actuation:
+  motor_channels: 0
+  gpio_outputs: 4
+
+sensing:
+  power_monitor:
+    ic: INA226
+    interface: I2C
+    shunt_ohms: 0.01
+    max_current_a: 8.0
+    resolution_uv: 2.5
+  display:
+    ic: SSD1306
+    interface: I2C
+    resolution: 128x64
+    type: OLED
+
+assumptions:
+  - id: ASM-01
+    text: INA226 shunt resistor 10 mΩ (1206 package) for ≤8A measurement with 80 mV full-scale
+    rationale: balances power dissipation (640 mW at 8A) vs resolution; 2.5 µV LSB gives 0.25 mA resolution
+  - id: ASM-02
+    text: SSD1306 and INA226 share I2C bus; INA226 at 0x40, SSD1306 at 0x3C by default
+    rationale: both devices have fixed addresses; no address collision on default config
+  - id: ASM-03
+    text: USB-C for power input and optional CDC-ACM data logging; no USB bootloader
+    rationale: STM32G030 lacks native USB FS; CH340N USB-UART bridge used for CDC serial
+  - id: ASM-04
+    text: Measured bus voltage range 0–36V (3.3V I/O isolated from high-voltage bus)
+    rationale: INA226 VBUS input rated to 36V; STM32 I2C pins see only INA226 I2C lines at 3.3V
+
+electronics:
+  backend: tscircuit
+  role_set: stm32g0_power_monitor
+  compiled_backend_required: false
+  power:
+    input_voltage_min_v: 4.5
+    input_voltage_max_v: 5.5
+    input_connector: USB-C
+    bus_voltages_v: [5.0, 3.3]
+    max_current_ma: 150
+  pcb:
+    layers: 2
+    width_mm: 65
+    height_mm: 35
+    min_trace_mm: 0.2
+    min_space_mm: 0.2
+    controlled_impedance: false
+    high_current_trace_mm: 2.0
+
+mechanical:
+  enclosure: optional
+  selected_variant: desktop
+  variants:
+    - {name: desktop, lid_style: snap, ventilation: none, gasket: false}
+  mounting: desktop
+  connectors_exposed: true
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 65.0
+    board_height_mm: 35.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 10.0
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm: [80.0, 50.0, 30.0]
+
+firmware:
+  rtos: bare_metal
+  zephyr_target: stm32g030xx
+  modules:
+    - id: ina226_driver
+      description: I2C driver for INA226 with continuous conversion mode and alert pin ISR
+    - id: ssd1306_driver
+      description: I2C SSD1306 OLED framebuffer with 4-row display layout (V/I/P/energy)
+    - id: data_logger
+      description: UART CDC data logger outputting CSV at configurable interval (100ms default)
+    - id: energy_integrator
+      description: Software energy accumulator tracking Wh consumed since last reset
+  ota: false
+
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.2
+    min_track_width_mm: 0.2
+
+safety:
+  regulatory: [CE]
+  isolation_required: false
+  esd_protection: required
+  high_voltage_bus: true
+  operator_warning: "Bus input rated to 36V — do not connect to mains voltage"
+
+sourcing:
+  provider: curated
+  target_unit_cost_usd: 9.00
+  volume: 100
+  lead_time_weeks: 3
+
+test_plan:
+  gate_checks:
+    - ina226_i2c_comms
+    - ssd1306_display_init
+    - shunt_accuracy_1pct
+    - uart_csv_output
+
+requirements:
+  performance:
+    - id: REQ-01
+      text: Current measurement accuracy ≤ 1% of full scale (80 mA at 8A FS)
+    - id: REQ-02
+      text: Display refresh rate ≥ 4 Hz
+    - id: REQ-03
+      text: Bus voltage measurement range 0–36V
+  reliability:
+    - id: REQ-04
+      text: Continuous operation ≥ 72 hours without reset

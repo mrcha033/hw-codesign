@@ -1,0 +1,30 @@
+name: esp32_wifi_gateway
+critical_roles:
+  - power_input
+  - regulator_3v3
+  - mcu
+  - eth_controller
+  - usb_uart_bridge
+
+roles:
+  power_input: {component_id: usb4105_gf_a, resolution: curated}
+  tvs: {component_id: usblc6_2sc6, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  mcu: {component_id: esp32_wroom_32e, resolution: curated}
+  eth_controller: {component_id: w5500, resolution: curated}
+  usb_uart_bridge: {component_id: ch340n, resolution: curated}
+  eth_connector: {component_id: hr911105a, resolution: curated}
+  capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
+
+alternatives:
+  eth_controller:
+    - component_id: enc28j60
+      resolution: registry_candidate
+      rationale: Lower-cost SPI Ethernet controller; requires software TCP/IP stack but eliminates external LAN transformer by using split-plane design
+      required_reviews: [tcpip_stack_selection, ethernet_layout]
+      compatibility: {pin_numbers: different, footprint: different, electrical_value: changed}
+
+single_source_justifications:
+  esp32_wroom_32e: {reason: ESP32-WROOM-32E substitution requires RF re-certification, antenna validation, and firmware toolchain change, mitigation: Validate any alternative module with FCC/CE module certificate and RF performance test, required_reviews: [rf_certification, module_footprint]}
+  eth_controller: {reason: W5500 substitution changes register map and hardware TCP/IP offload interface, mitigation: Add curated alternative with SPI register compatibility evidence, required_reviews: [driver_compatibility, tcpip_stack]}

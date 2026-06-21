@@ -1,0 +1,129 @@
+project:
+  target_use: brushless_motor_controller
+  revision: r1
+  template: bldc_esc
+electronics:
+  backend: reference
+  role_set: bldc_esc
+  compiled_backend_required: true
+sourcing:
+  provider: curated
+system:
+  supply:
+    battery:
+      type: li_ion_or_lipo
+      pack_voltage_nominal: 24.0
+      pack_voltage_max: 29.4
+      pack_current_peak_a: 60.0
+    rails:
+      - {name: VBAT, voltage_min: 12.0, voltage_max: 29.4, current_peak_a: 60.0}
+      - {name: V5, voltage: 5.0, current_peak_a: 2.0}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.5}
+compute:
+  mcu:
+    family: STM32G474
+    hard_realtime_required: true
+actuation:
+  motor_channels: 3
+  motor_type: bldc_3phase
+  motor_channel_peak_current_a: 20.0
+  feedback: {current_sense: required, back_emf: required}
+sensing:
+  imu: not_required
+  battery_monitor: required
+  current_monitor: required
+  temperature_monitor: not_required
+  e_stop: not_required
+mechanical:
+  enclosure: optional
+  selected_variant: open_frame
+  variants:
+    - {name: open_frame, lid_style: none, ventilation: open, gasket: false}
+    - {name: heatsink, lid_style: none, ventilation: open, gasket: false}
+  mounting: panel_mount
+  connectors_exposed: true
+  vibration_environment: medium
+  cooling: passive
+  envelope:
+    board_width_mm: 60.0
+    board_height_mm: 50.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 8.0
+    max_component_height_bottom_mm: 3.0
+  enclosure_internal_mm: [66.0, 56.0, 14.0]
+  wall_thickness_mm: 2.0
+  insertion_clearance_mm: 2.0
+  assembly_clearance_mm: 1.0
+  tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 6.0
+  default_component_height_mm: 3.0
+  component_heights_mm: {J1: 7.0, J2: 6.0, J3: 7.0, U1: 1.0, U2: 0.9, Q1: 1.1, Q2: 1.1, Q3: 1.1}
+  board_origin_mm: [3.0, 3.0, 4.6]
+  mounting_holes:
+    - {x_mm: 3.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 56.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 3.5, y_mm: 46.5, diameter_mm: 3.2}
+    - {x_mm: 56.5, y_mm: 46.5, diameter_mm: 3.2}
+  fixtures:
+    mounting_plate: {enabled: false}
+    frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: rear, opening_mm: [10.0, 8.0], center_z_mm: 8.0, position_tolerance_mm: 0.5}
+    - {ref: J2, side: front, opening_mm: [12.0, 8.0], center_z_mm: 8.0, position_tolerance_mm: 0.5}
+    - {ref: J3, side: rear, opening_mm: [10.0, 7.0], center_z_mm: 7.0, position_tolerance_mm: 0.5}
+firmware:
+  framework: zephyr
+  target: stm32g474xx
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
+  modules:
+    - id: foc_watchdog
+      behavior: timeout_shutdown
+      trigger: {signal: DRV_CS, timeout_ms: 50}
+      action: {disable_all: [PWM_AH, PWM_AL, PWM_BH, PWM_BL, PWM_CH, PWM_CL], assert: NSLEEP}
+    - id: current_telemetry
+      behavior: periodic_transmit
+      trigger: {signal: CAN_TX, interval_ms: 10}
+      action: {transmit: can_esc_telemetry}
+    - id: foc_state_machine
+      behavior: state_machine
+      states: [idle, align, open_loop_ramp, closed_loop_foc, fault]
+      trigger: {signal: NFAULT}
+      action: {on_fault: transition_to_fault}
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.2
+    min_track_width_mm: 0.3
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, step, schematic_pdf, assembly_drawing]
+safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [reverse_polarity, tvs, watchdog, overcurrent_gate_driver]
+assumptions:
+  motor_type:
+    value: 3phase_bldc_external_coils
+    confidence: medium
+    reason: Gate driver and FET sizing target gimbal/drone class BLDC motors (12–24V, 10–20A continuous). High-pole-count motors at low RPM are best served with sensored FOC; back-EMF detection is unreliable below ~5% rated speed.
+    critical: true
+    requires_user_review: true
+  thermal_derating:
+    value: ambient_40c_with_heatsink
+    confidence: low
+    reason: CSD18540Q5B Rds(on) 1.4 mΩ yields ~560 mW per FET at 20 A. Without a heatsink the PCB copper pours must dissipate this; a heatsink or forced-air cooling is recommended above 10 A continuous.
+    critical: true
+    requires_user_review: true
+  can_topology:
+    value: single_termination_at_far_end
+    confidence: medium
+    reason: CAN bus termination (120 Ω) should be placed at the far end of the bus stub; this ESC does not include a termination jumper. Add a 120 Ω resistor across J3 CANH/CANL if this node is a bus endpoint.
+    critical: false
+    requires_user_review: false
+requirements:
+  raw_inputs: []
+  active_lowered: []
+  active_unresolved: []

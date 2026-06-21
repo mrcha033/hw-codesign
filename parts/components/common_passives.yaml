@@ -1,0 +1,1195 @@
+components:
+  # --- Resistors ---
+  - id: rc0603_0r
+    mpn: RC0603JR-070RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603JR-070RL]}
+    constraints: [solder_jumper_equivalent]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_27r
+    mpn: RC0603FR-0727RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0727RL]}
+    constraints: [usb_series_termination]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_33r
+    mpn: RC0603FR-0733RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0733RL]}
+    constraints: [usb_series_termination, crt_termination]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_47r
+    mpn: RC0603FR-0747RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0747RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_100r
+    mpn: RC0603FR-07100RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07100RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_470r
+    mpn: RC0603FR-07470RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07470RL]}
+    constraints: [led_series_5v, uart_series_protection]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_2k2
+    mpn: RC0603FR-072K2L
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-072K2L]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_100r
+    mpn: RC0402FR-07100RL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-07100RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Capacitors ---
+  - id: grm155_100n
+    mpn: GRM155R71C104KA88D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM155R71C104KA88D]}
+    constraints: [decoupling]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm188_1uf
+    mpn: GRM188R61C105KA93D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM188R61C105KA93D]}
+    constraints: [decoupling, bypass]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm188_4u7
+    mpn: GRM188R60J475KE47D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM188R60J475KE47D]}
+    constraints: [bulk_capacitor]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm188_10u
+    mpn: GRM188R60J106ME47D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM188R60J106ME47D]}
+    constraints: [bulk_capacitor]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm216_22p
+    mpn: GRM2165C1H220JA01D
+    manufacturer: Murata
+    package: '0805'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0805_2012Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM2165C1H220JA01D]}
+    constraints: [crystal_load_cap, usb_filter_cap]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm216_12p
+    mpn: GRM2165C1H120JA01D
+    manufacturer: Murata
+    package: '0805'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0805_2012Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM2165C1H120JA01D]}
+    constraints: [crystal_load_cap]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Crystals ---
+  - id: abm8_8m
+    mpn: ABM8-8.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-8.000MHZ-B2-T]}
+    constraints: [8mhz_xosc]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: abm8_16m
+    mpn: ABM8-16.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-16.000MHZ-B2-T]}
+    constraints: [16mhz_xosc, usb_timing_qualified]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: mc_306_32khz
+    mpn: MC-306 32.768KHZ
+    manufacturer: Epson
+    package: SMD-2Pin-Crystal
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_Epson_MC-306_3.2x1.5mm, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [MC-306 32.768KHZ]}
+    constraints: [32khz_rtc_crystal]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- LEDs ---
+  - id: led_red_0603
+    mpn: LTST-C193KRKT-5A
+    manufacturer: Lite-On
+    package: '0603'
+    symbol: {library_id: Device:LED, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: LED_SMD:LED_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: K, electrical_type: passive}, {number: '2', name: A, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [LTST-C193KRKT-5A]}
+    constraints: [status_led, 2v0_forward_voltage_typ, 20ma_max]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: led_green_0603
+    mpn: LTST-C193KGKT-5A
+    manufacturer: Lite-On
+    package: '0603'
+    symbol: {library_id: Device:LED, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: LED_SMD:LED_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: K, electrical_type: passive}, {number: '2', name: A, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [LTST-C193KGKT-5A]}
+    constraints: [status_led, 2v2_forward_voltage_typ, 20ma_max]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: led_yellow_0603
+    mpn: LTST-C193YKKT-5A
+    manufacturer: Lite-On
+    package: '0603'
+    symbol: {library_id: Device:LED, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: LED_SMD:LED_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: K, electrical_type: passive}, {number: '2', name: A, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [LTST-C193YKKT-5A]}
+    constraints: [status_led, 2v1_forward_voltage_typ, 20ma_max]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Ferrite Bead ---
+  - id: blm18bg601sn1d
+    mpn: BLM18BG601SN1D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:Ferrite_Bead, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [BLM18BG601SN1D]}
+    constraints: [600_ohm_at_100mhz, power_line_emi_filter, 3a_rated]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Inductors ---
+  - id: wuerth_744043680
+    mpn: '744043680'
+    manufacturer: Würth Elektronik
+    package: L1210-SMD
+    symbol: {library_id: Device:L, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_1210_3225Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['744043680']}
+    constraints: [4u7_henry, 4a_rated, dcr_35mohm, buck_output_inductor]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: wuerth_744043100
+    mpn: '744043100'
+    manufacturer: Würth Elektronik
+    package: L1210-SMD
+    symbol: {library_id: Device:L, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_1210_3225Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['744043100']}
+    constraints: [10u_henry, 2a_rated, dcr_120mohm, buck_output_inductor]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Diodes ---
+  - id: bat54cw
+    mpn: BAT54CW-7-F
+    manufacturer: Diodes Inc
+    package: SOT-323
+    symbol: {library_id: Device:D_Schottky, verified: true, expected_pins: ['1','2','3']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-323_SC-70, verified: true, expected_pads: ['1','2','3']}
+    pins: [{number: '1', name: A1, electrical_type: passive}, {number: '2', name: K, electrical_type: passive}, {number: '3', name: A2, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [BAT54CW-7-F]}
+    constraints: [dual_schottky_common_cathode, 200ma_rated, 30v_vr]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: bss138
+    mpn: BSS138
+    manufacturer: Nexperia
+    package: SOT-23-3
+    symbol: {library_id: Device:Q_NMOS_GDS, verified: true, expected_pins: ['1','2','3']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23, verified: true, expected_pads: ['1','2','3']}
+    pins: [{number: '1', name: G, electrical_type: input}, {number: '2', name: S, electrical_type: passive}, {number: '3', name: D, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [BSS138]}
+    constraints: [small_signal_nmos, level_shifter, 50v_200ma]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Connectors (generic) ---
+  - id: conn_1x04_2p54
+    mpn: '61300411021'
+    manufacturer: Würth Elektronik
+    package: PinHeader-1x4-2.54mm
+    symbol: {library_id: Connector_Generic:Conn_01x04, verified: true, expected_pins: ['1','2','3','4']}
+    footprint: {library_id: Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical, verified: true, expected_pads: ['1','2','3','4']}
+    pins:
+      - {number: '1', name: P1, electrical_type: passive}
+      - {number: '2', name: P2, electrical_type: passive}
+      - {number: '3', name: P3, electrical_type: passive}
+      - {number: '4', name: P4, electrical_type: passive}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['61300411021']}
+    constraints: [generic_header, 2p54mm_pitch]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: conn_1x06_2p54
+    mpn: '61300611021'
+    manufacturer: Würth Elektronik
+    package: PinHeader-1x6-2.54mm
+    symbol: {library_id: Connector_Generic:Conn_01x06, verified: true, expected_pins: ['1','2','3','4','5','6']}
+    footprint: {library_id: Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical, verified: true, expected_pads: ['1','2','3','4','5','6']}
+    pins:
+      - {number: '1', name: P1, electrical_type: passive}
+      - {number: '2', name: P2, electrical_type: passive}
+      - {number: '3', name: P3, electrical_type: passive}
+      - {number: '4', name: P4, electrical_type: passive}
+      - {number: '5', name: P5, electrical_type: passive}
+      - {number: '6', name: P6, electrical_type: passive}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['61300611021']}
+    constraints: [icsp_header, generic_header, 2p54mm_pitch]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: conn_1x02_2p54
+    mpn: '61300211021'
+    manufacturer: Würth Elektronik
+    package: PinHeader-1x2-2.54mm
+    symbol: {library_id: Connector_Generic:Conn_01x02, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: P1, electrical_type: passive}, {number: '2', name: P2, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['61300211021']}
+    constraints: [generic_header, 2p54mm_pitch, power_connector]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: conn_1x08_2p54
+    mpn: '61300811021'
+    manufacturer: Würth Elektronik
+    package: PinHeader-1x8-2.54mm
+    symbol: {library_id: Connector_Generic:Conn_01x08, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: P1, electrical_type: passive}
+      - {number: '2', name: P2, electrical_type: passive}
+      - {number: '3', name: P3, electrical_type: passive}
+      - {number: '4', name: P4, electrical_type: passive}
+      - {number: '5', name: P5, electrical_type: passive}
+      - {number: '6', name: P6, electrical_type: passive}
+      - {number: '7', name: P7, electrical_type: passive}
+      - {number: '8', name: P8, electrical_type: passive}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['61300811021']}
+    constraints: [generic_header, 2p54mm_pitch, gpio_breakout]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: conn_2x05_2p54
+    mpn: '61201021621'
+    manufacturer: Würth Elektronik
+    package: PinHeader-2x5-2.54mm
+    symbol: {library_id: Connector_Generic:Conn_02x05_Odd_Even, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10']}
+    footprint: {library_id: Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10']}
+    pins:
+      - {number: '1', name: VCC, electrical_type: power_in}
+      - {number: '2', name: SWDIO, electrical_type: bidirectional}
+      - {number: '3', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '4', name: SWDCLK, electrical_type: input}
+      - {number: '5', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '6', name: SWO, electrical_type: output}
+      - {number: '7', name: KEY, electrical_type: no_connect}
+      - {number: '8', name: NC, electrical_type: no_connect}
+      - {number: '9', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '10', name: RESET, electrical_type: input}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['61201021621']}
+    constraints: [swd_10pin_cortex_debug, jtag_compatible]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Resistors — E24 complete (0603, Yageo RC series 1%) ---
+  - id: rc0603_1r
+    mpn: RC0603FR-071RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-071RL]}
+    constraints: [current_sense_shunt, low_ohm]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_2r2
+    mpn: RC0603FR-072R2L
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-072R2L]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_4r7
+    mpn: RC0603FR-074R7L
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-074R7L]}
+    constraints: [mosfet_gate_stopper, output_impedance]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_10r
+    mpn: RC0603FR-0710RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0710RL]}
+    constraints: [mosfet_gate_stopper, current_limit]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_15r
+    mpn: RC0603FR-0715RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0715RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_22r
+    mpn: RC0603FR-0722RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0722RL]}
+    constraints: [can_split_termination]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_68r
+    mpn: RC0603FR-0768RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0768RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_150r
+    mpn: RC0603FR-07150RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07150RL]}
+    constraints: [led_series_3v3, uart_current_limit]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_220r
+    mpn: RC0603FR-07220RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07220RL]}
+    constraints: [led_series_5v]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_330r
+    mpn: RC0603FR-07330RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07330RL]}
+    constraints: [led_series_5v, current_limit]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_680r
+    mpn: RC0603FR-07680RL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07680RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_1k5
+    mpn: RC0603FR-071K5L
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-071K5L]}
+    constraints: [voltage_divider, bias]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_3k3
+    mpn: RC0603FR-073K3L
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-073K3L]}
+    constraints: [i2c_pullup, voltage_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_6k8
+    mpn: RC0603FR-076K8L
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-076K8L]}
+    constraints: [voltage_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_22k
+    mpn: RC0603FR-0722KL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0722KL]}
+    constraints: [pulldown, voltage_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_33k
+    mpn: RC0603FR-0733KL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0733KL]}
+    constraints: [voltage_divider, feedback_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_47k
+    mpn: RC0603FR-0747KL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0747KL]}
+    constraints: [voltage_divider, feedback_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_68k
+    mpn: RC0603FR-0768KL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-0768KL]}
+    constraints: [voltage_divider, feedback_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_220k
+    mpn: RC0603FR-07220KL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07220KL]}
+    constraints: [voltage_divider, high_impedance_sense]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_470k
+    mpn: RC0603FR-07470KL
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-07470KL]}
+    constraints: [voltage_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0603_1m
+    mpn: RC0603FR-071ML
+    manufacturer: Yageo
+    package: '0603'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0603FR-071ML]}
+    constraints: [high_impedance, voltage_sense]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Resistors — 0402 (Yageo RC series 1%) ---
+  - id: rc0402_0r
+    mpn: RC0402JR-070RL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402JR-070RL]}
+    constraints: [solder_jumper_equivalent, dnp_option]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_27r
+    mpn: RC0402FR-0727RL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-0727RL]}
+    constraints: [usb_series_termination]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_33r
+    mpn: RC0402FR-0733RL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-0733RL]}
+    constraints: [usb_series_termination]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_47r
+    mpn: RC0402FR-0747RL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-0747RL]}
+    constraints: []
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_1k
+    mpn: RC0402FR-071KL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-071KL]}
+    constraints: [pullup, current_limit]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_4k7
+    mpn: RC0402FR-074K7L
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-074K7L]}
+    constraints: [i2c_pullup, pullup]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: rc0402_10k
+    mpn: RC0402FR-0710KL
+    manufacturer: Yageo
+    package: '0402'
+    symbol: {library_id: Device:R, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Resistor_SMD:R_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [RC0402FR-0710KL]}
+    constraints: [pullup, pulldown, voltage_divider]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Capacitors — 0402 NP0/C0G (Murata GRM1555 series) ---
+  - id: grm1555_10p
+    mpn: GRM1555C1H100JA01D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM1555C1H100JA01D]}
+    constraints: [np0_c0g, 50v_rated, crystal_load_cap]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm1555_15p
+    mpn: GRM1555C1H150JA01D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM1555C1H150JA01D]}
+    constraints: [np0_c0g, 50v_rated, crystal_load_cap]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm1555_22p
+    mpn: GRM1555C1H220JA01D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM1555C1H220JA01D]}
+    constraints: [np0_c0g, 50v_rated, crystal_load_cap, usb_filter]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm1555_33p
+    mpn: GRM1555C1H330JA01D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM1555C1H330JA01D]}
+    constraints: [np0_c0g, 50v_rated, crystal_load_cap]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Capacitors — 0402 X7R (Murata GRM155 series) ---
+  - id: grm155_10n
+    mpn: GRM155R71A103KA88D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM155R71A103KA88D]}
+    constraints: [decoupling, x7r, 10v_rated]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm155_1uf
+    mpn: GRM155R61A105KE01D
+    manufacturer: Murata
+    package: '0402'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0402_1005Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM155R61A105KE01D]}
+    constraints: [decoupling, x5r, 10v_rated, compact_bypass]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Capacitors — 0603 X7R/X5R (Murata GRM188 series) ---
+  # grm188_100n is defined in robotics_controller.yaml — not repeated here
+  - id: grm188_10n
+    mpn: GRM188R71A103KA01D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM188R71A103KA01D]}
+    constraints: [decoupling, x7r, 10v_rated, rf_bypass]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm188_47n
+    mpn: GRM188R71A473KA01D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM188R71A473KA01D]}
+    constraints: [decoupling, x7r, 10v_rated]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm188_2u2
+    mpn: GRM188R60J225KE47D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM188R60J225KE47D]}
+    constraints: [bulk_capacitor, x5r, 6v3_rated, output_filter]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Capacitors — 0805 (Murata GRM21B series) ---
+  - id: grm21b_4u7
+    mpn: GRM21BR60J475KE19L
+    manufacturer: Murata
+    package: '0805'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0805_2012Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM21BR60J475KE19L]}
+    constraints: [bulk_capacitor, x5r, 6v3_rated, power_rail_bypass]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm21b_10u
+    mpn: GRM21BR61A106KE18L
+    manufacturer: Murata
+    package: '0805'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0805_2012Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM21BR61A106KE18L]}
+    constraints: [bulk_capacitor, x5r, 10v_rated, power_rail_bypass]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm21b_22u
+    mpn: GRM21BR61A226ME51L
+    manufacturer: Murata
+    package: '0805'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_0805_2012Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM21BR61A226ME51L]}
+    constraints: [bulk_capacitor, x5r, 10v_rated, input_filter]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Capacitors — 1206 (Murata GRM31C series) ---
+  - id: grm31c_22u
+    mpn: GRM31CR61A226ME15L
+    manufacturer: Murata
+    package: '1206'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_1206_3216Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM31CR61A226ME15L]}
+    constraints: [bulk_capacitor, x5r, 10v_rated, input_bulk_filter]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: grm31c_47u
+    mpn: GRM31CR61A476ME15L
+    manufacturer: Murata
+    package: '1206'
+    symbol: {library_id: Device:C, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Capacitor_SMD:C_1206_3216Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: VCC, electrical_type: passive}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [GRM31CR61A476ME15L]}
+    constraints: [bulk_capacitor, x5r, 10v_rated, input_bulk_filter, motor_drive_bypass]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Crystals — Abracon ABM8 series (HC-49S-SMD, ±20ppm) ---
+  - id: abm8_4m
+    mpn: ABM8-4.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-4.000MHZ-B2-T]}
+    constraints: [4mhz_xosc]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: abm8_24m
+    mpn: ABM8-24.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-24.000MHZ-B2-T]}
+    constraints: [24mhz_xosc, ethernet_phy_clock]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: abm8_25m
+    mpn: ABM8-25.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-25.000MHZ-B2-T]}
+    constraints: [25mhz_xosc, ethernet_phy_ref_clock, w5500_clock]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: abm8_32m
+    mpn: ABM8-32.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-32.000MHZ-B2-T]}
+    constraints: [32mhz_xosc, samd21_usb_dfll_source]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: abm8_48m
+    mpn: ABM8-48.000MHZ-B2-T
+    manufacturer: Abracon
+    package: HC-49S-SMD
+    symbol: {library_id: Device:Crystal, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Crystal:Crystal_SMD_HC-49S, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: XIN, electrical_type: passive}, {number: '2', name: XOUT, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ABM8-48.000MHZ-B2-T]}
+    constraints: [48mhz_xosc, usb_fullspeed_clock_direct]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- LEDs — Würth WL-SMCW 0603 ---
+  - id: led_blue_0603
+    mpn: '150080BS75000'
+    manufacturer: Würth Elektronik
+    package: '0603'
+    symbol: {library_id: Device:LED, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: LED_SMD:LED_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: K, electrical_type: passive}, {number: '2', name: A, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['150080BS75000']}
+    constraints: [status_led, 3v0_forward_voltage_typ, 20ma_max, 465nm_blue]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: led_white_0603
+    mpn: '150080WS75000'
+    manufacturer: Würth Elektronik
+    package: '0603'
+    symbol: {library_id: Device:LED, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: LED_SMD:LED_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: K, electrical_type: passive}, {number: '2', name: A, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['150080WS75000']}
+    constraints: [status_led, 3v1_forward_voltage_typ, 20ma_max, 6500k_white]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Schottky Diodes ---
+  - id: mbr0520lt1g
+    mpn: MBR0520LT1G
+    manufacturer: ON Semiconductor
+    package: SOT-23-3
+    symbol: {library_id: Device:D_Schottky, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23, verified: true, expected_pads: ['1','2','3']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: NC, electrical_type: no_connect}, {number: '3', name: K, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [MBR0520LT1G]}
+    constraints: [schottky, 500ma_rated, 20v_vr, power_oring, reverse_polarity]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- ESD / TVS Protection ---
+  - id: nup2105lt1g
+    mpn: NUP2105LT1G
+    manufacturer: ON Semiconductor
+    package: SOT-23-3
+    symbol: {library_id: Device:D_TVS, verified: true, expected_pins: ['1','2','3']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23, verified: true, expected_pads: ['1','2','3']}
+    pins: [{number: '1', name: A1, electrical_type: bidirectional}, {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}, {number: '3', name: A2, electrical_type: bidirectional}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [NUP2105LT1G]}
+    constraints: [usb_esd_protection, dual_line_tvs, 5v_clamping]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: pesd1can
+    mpn: 'PESD1CAN,215'
+    manufacturer: Nexperia
+    package: SOD-323
+    symbol: {library_id: Device:D_TVS, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOD-323, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: bidirectional}, {number: '2', name: K, electrical_type: bidirectional}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['PESD1CAN,215']}
+    constraints: [can_bus_esd_protection, 24v_standoff, single_line_tvs]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- MOSFETs ---
+  - id: dmg3415u
+    mpn: DMG3415U-7
+    manufacturer: Diodes Inc
+    package: SOT-23-3
+    symbol: {library_id: Device:Q_PMOS_GSD, verified: true, expected_pins: ['1','2','3']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23, verified: true, expected_pads: ['1','2','3']}
+    pins: [{number: '1', name: G, electrical_type: input}, {number: '2', name: S, electrical_type: passive}, {number: '3', name: D, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [DMG3415U-7]}
+    constraints: [pmos, 20v_vds, 4a_rated, power_switch, load_switch, reverse_polarity_protection]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: si2302cds
+    mpn: SI2302CDS-T1-GE3
+    manufacturer: Vishay
+    package: SOT-23-3
+    symbol: {library_id: Device:Q_NMOS_GDS, verified: true, expected_pins: ['1','2','3']}
+    footprint: {library_id: Package_TO_SOT_SMD:SOT-23, verified: true, expected_pads: ['1','2','3']}
+    pins: [{number: '1', name: G, electrical_type: input}, {number: '2', name: S, electrical_type: passive}, {number: '3', name: D, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [SI2302CDS-T1-GE3]}
+    constraints: [nmos, 20v_vds, 3a_rated, load_switch, level_shifter, 3v3_logic_compatible]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Inductors — Bourns SRR6038 power inductors ---
+  - id: bourns_srr6038_4r7
+    mpn: SRR6038-4R7Y
+    manufacturer: Bourns
+    package: SRR6038
+    symbol: {library_id: Device:L, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_6.0x6.0mm_SRR6038, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [SRR6038-4R7Y]}
+    constraints: [4u7_henry, 2a1_rated, dcr_97mohm, buck_output_inductor, shielded]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: bourns_srr6038_100
+    mpn: SRR6038-100Y
+    manufacturer: Bourns
+    package: SRR6038
+    symbol: {library_id: Device:L, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_6.0x6.0mm_SRR6038, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [SRR6038-100Y]}
+    constraints: [10u_henry, 1a4_rated, dcr_280mohm, buck_output_inductor, shielded]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- Ferrite Beads — Murata BLM series ---
+  - id: blm21pg300sn1d
+    mpn: BLM21PG300SN1D
+    manufacturer: Murata
+    package: '0805'
+    symbol: {library_id: Device:Ferrite_Bead, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_0805_2012Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [BLM21PG300SN1D]}
+    constraints: [300_ohm_at_100mhz, 6a_rated, power_line_emi_filter, vdd_line_decoupling]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: blm18bg221sn1d
+    mpn: BLM18BG221SN1D
+    manufacturer: Murata
+    package: '0603'
+    symbol: {library_id: Device:Ferrite_Bead, verified: true, expected_pins: ['1','2']}
+    footprint: {library_id: Inductor_SMD:L_0603_1608Metric, verified: true, expected_pads: ['1','2']}
+    pins: [{number: '1', name: A, electrical_type: passive}, {number: '2', name: B, electrical_type: passive}]
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [BLM18BG221SN1D]}
+    constraints: [220_ohm_at_100mhz, 1a5_rated, signal_line_emi_filter, usb_data_line_filter]
+    resolution_provenance: {source: manufacturer_datasheet, reviewed_at: '2026-06-21'}
+    review_status: approved

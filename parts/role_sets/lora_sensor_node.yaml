@@ -1,0 +1,33 @@
+name: lora_sensor_node
+critical_roles: [power_input, regulator_3v3, mcu, lora_radio, env_sensor]
+roles:
+  power_input: {component_id: jst_ph_2pin, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  mcu: {component_id: stm32l071czt6, resolution: curated}
+  lora_radio: {component_id: sx1276imltrt, resolution: curated}
+  env_sensor: {component_id: bme280, resolution: curated}
+  rf_connector: {component_id: hirose_ufl_r_smt, resolution: curated}
+  debug: {component_id: samtec_ftsh_105, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  resistor_100k: {component_id: rc0603_100k, resolution: curated}
+  capacitor_100n: {component_id: grm188_100n, resolution: curated}
+  capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}
+alternatives:
+  env_sensor:
+    - component_id: bme680
+      resolution: registry_candidate
+      rationale: Same LGA-8 footprint; adds VOC gas sensing and higher accuracy temperature; firmware driver change required for IAQ feature.
+      required_reviews: [sensor_driver_update, footprint_contract]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+  lora_radio:
+    - component_id: rak3172
+      resolution: registry_candidate
+      rationale: UART-based LoRaWAN module with STM32WLE5 SoC; replaces SX1276 + MCU with a certified module but changes firmware architecture to AT-command model.
+      required_reviews: [firmware_architecture_change, rf_certification]
+      compatibility: {pin_numbers: different, footprint: different, electrical_value: different}
+single_source_justifications:
+  power_input: {reason: JST PH connector substitution changes pitch, shell, and mating connector; swap only if battery connector is also changed, mitigation: Add a curated alternative with matching battery harness evidence, required_reviews: [connector_mating, battery_harness]}
+  regulator_3v3: {reason: LDO substitution changes dropout, quiescent current — critical for multi-year battery life, mitigation: Add a curated LDO alternative with quiescent current and dropout evidence at end-of-life battery voltage, required_reviews: [battery_life_impact, dropout_review]}
+  mcu: {reason: STM32L071 substitution changes stop-mode current, pinmap, HAL, and LoRaWAN stack support, mitigation: Add a curated MCU alternative with stop-mode current and LoRaWAN stack evidence, required_reviews: [low_power_modes, firmware_migration]}
+  lora_radio: {reason: SX1276 substitution changes RF performance, register map, frequency support, and firmware driver, mitigation: Add a curated LoRa transceiver alternative with frequency band and register-map evidence, required_reviews: [rf_performance, firmware_driver]}
+  env_sensor: {reason: BME280 substitution changes calibration, I2C protocol behavior, and firmware driver, mitigation: Add a curated sensor alternative with calibration accuracy and driver evidence, required_reviews: [sensor_calibration, firmware_driver]}

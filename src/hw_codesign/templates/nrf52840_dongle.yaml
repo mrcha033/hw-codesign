@@ -1,0 +1,129 @@
+project:
+  name: nrf52840_dongle
+  description: nRF52840 USB dongle — BLE 5.3 + 802.15.4 + USB-C, bare PCB with U.FL antenna connector
+  version: 0.1.0
+  template: nrf52840_dongle
+  created_at: '2026-06-21'
+
+system:
+  target_application: BLE sniffer, Zigbee/Thread coordinator, USB-BLE bridge, nRF52840 development dongle
+
+compute:
+  mcu:
+    family: nRF52840
+    variant: nRF52840-QIAA
+    clock_mhz: 64
+    cores: 1
+    flash_mb: 1
+    sram_kb: 256
+    fpu: true
+    connectivity: [ble_53, ieee_802154_thread_zigbee, usb_fullspeed_native]
+    hard_realtime_required: false
+  debug_interface: SWD
+
+actuation:
+  motor_channels: 0
+  gpio_outputs: 32
+
+sensing:
+  adc_channels: 8
+  adc_bits: 12
+
+assumptions:
+  - id: ASM-01
+    text: nRF52840 DC/DC regulator (REG0) used in USB mode; no external 3.3V LDO required for core
+    rationale: nRF52840 DCDC_EN fuse enables internal 1.8V/3.0V DCDC converter; VDDUSB at 5V, VDDMAIN at 3.0V from internal regulator
+  - id: ASM-02
+    text: External AP2112K LDO provides 3.3V for GPIO IO compatibility with external peripherals
+    rationale: nRF52840 GPIO can drive 3V (VDD), not 3.3V; external 3.3V rail for I2C/SPI peripheral compatibility
+  - id: ASM-03
+    text: U.FL antenna connector for external antenna; no PCB trace antenna used
+    rationale: Dongle form factor (plug-in to USB port) requires flexible antenna positioning; U.FL to SMA pigtail for benchtop use
+  - id: ASM-04
+    text: REGOUT0 pin sets internal regulator output; nRF52840 runs from VDDUSB (5V) in USB device mode
+    rationale: USB device spec requires 5V VBUS; nRF52840 VDDUSB pin accepts 4.0–5.5V and powers internal regulator
+
+electronics:
+  backend: tscircuit
+  role_set: nrf52840_dongle
+  compiled_backend_required: false
+  power:
+    input_voltage_min_v: 4.5
+    input_voltage_max_v: 5.5
+    input_connector: USB-C
+    bus_voltages_v: [5.0, 3.3]
+    max_current_ma: 250
+  pcb:
+    layers: 4
+    width_mm: 35
+    height_mm: 18
+    min_trace_mm: 0.1
+    min_space_mm: 0.1
+    controlled_impedance: true
+
+mechanical:
+  enclosure: none
+  selected_variant: bare_pcb
+  variants:
+    - {name: bare_pcb, lid_style: none, ventilation: none, gasket: false}
+  mounting: usb_plug_in
+  connectors_exposed: true
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 35.0
+    board_height_mm: 18.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 2.0
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm: [35.0, 18.0, 4.0]
+
+firmware:
+  rtos: zephyr
+  zephyr_target: nrf52840dk_nrf52840
+  modules:
+    - id: ble_observer
+      description: BLE observer role — passive scanning and HCI event forwarding to USB CDC
+    - id: ieee_802154_sniffer
+      description: IEEE 802.15.4 sniffer with Wireshark USB extcap interface
+    - id: usb_hci_bridge
+      description: USB HCI transport — Nordic USB HCI implementation for BlueZ integration
+    - id: nrf_bootloader
+      description: Nordic USB DFU bootloader for field firmware updates without SWD
+  ota: true
+
+manufacturing:
+  pcb:
+    profile: jlcpcb_4layer
+    layers: 4
+    min_clearance_mm: 0.1
+    min_track_width_mm: 0.1
+
+safety:
+  regulatory: [CE, FCC_mod]
+  isolation_required: false
+  esd_protection: required
+
+sourcing:
+  provider: curated
+  target_unit_cost_usd: 11.00
+  volume: 100
+  lead_time_weeks: 4
+
+test_plan:
+  gate_checks:
+    - ble_advertising_detected
+    - usb_hci_enumeration
+    - ieee_802154_scan
+    - swd_debug_attach
+    - dfu_firmware_update
+
+requirements:
+  performance:
+    - id: REQ-01
+      text: BLE scan rate ≥ 100 events/second
+    - id: REQ-02
+      text: USB HCI latency ≤ 5 ms
+  reliability:
+    - id: REQ-03
+      text: Continuous BLE scan operation ≥ 72 hours without USB disconnect

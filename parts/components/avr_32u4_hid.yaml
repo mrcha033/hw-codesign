@@ -1,0 +1,76 @@
+components:
+  - id: atmega32u4_au
+    mpn: ATMEGA32U4-AU
+    manufacturer: Microchip Technology
+    package: TQFP-44
+    symbol: {library_id: MCU_Microchip_ATmega:ATmega32U4-AU, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44']}
+    footprint: {library_id: Package_QFP:TQFP-44_10x10mm_P0.8mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44']}
+    pins:
+      - {number: '1', name: PD3, electrical_type: bidirectional}
+      - {number: '2', name: PD2, electrical_type: bidirectional}
+      - {number: '3', name: PD1, electrical_type: bidirectional}
+      - {number: '4', name: PD0, electrical_type: bidirectional}
+      - {number: '5', name: PD4, electrical_type: bidirectional}
+      - {number: '6', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '7', name: VCC, electrical_type: power_in, voltage_domain: V5V0}
+      - {number: '8', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '9', name: VCC, electrical_type: power_in, voltage_domain: V5V0}
+      - {number: '10', name: PC6, electrical_type: bidirectional}
+      - {number: '11', name: PC7, electrical_type: bidirectional}
+      - {number: '12', name: PE6, electrical_type: bidirectional}
+      - {number: '13', name: AREF, electrical_type: passive}
+      - {number: '14', name: PF0, electrical_type: bidirectional}
+      - {number: '15', name: PF1, electrical_type: bidirectional}
+      - {number: '16', name: PF4, electrical_type: bidirectional}
+      - {number: '17', name: PF5, electrical_type: bidirectional}
+      - {number: '18', name: PF6, electrical_type: bidirectional}
+      - {number: '19', name: PF7, electrical_type: bidirectional}
+      - {number: '20', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '21', name: AVCC, electrical_type: power_in, voltage_domain: V5V0}
+      - {number: '22', name: PB0, electrical_type: bidirectional}
+      - {number: '23', name: PB1, electrical_type: bidirectional}
+      - {number: '24', name: PB2, electrical_type: bidirectional}
+      - {number: '25', name: PB3, electrical_type: bidirectional}
+      - {number: '26', name: PB7, electrical_type: bidirectional}
+      - {number: '27', name: RESET, electrical_type: input}
+      - {number: '28', name: VCC, electrical_type: power_in, voltage_domain: V5V0}
+      - {number: '29', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '30', name: XTAL2, electrical_type: passive}
+      - {number: '31', name: XTAL1, electrical_type: passive}
+      - {number: '32', name: PD5, electrical_type: bidirectional}
+      - {number: '33', name: PD6, electrical_type: bidirectional}
+      - {number: '34', name: PD7, electrical_type: bidirectional}
+      - {number: '35', name: PB4, electrical_type: bidirectional}
+      - {number: '36', name: PB5, electrical_type: bidirectional}
+      - {number: '37', name: PB6, electrical_type: bidirectional}
+      - {number: '38', name: PC4, electrical_type: bidirectional}
+      - {number: '39', name: PC5, electrical_type: bidirectional}
+      - {number: '40', name: UVCC, electrical_type: power_in, voltage_domain: UVCC}
+      - {number: '41', name: D_MINUS, electrical_type: bidirectional}
+      - {number: '42', name: D_PLUS, electrical_type: bidirectional}
+      - {number: '43', name: UGND, electrical_type: ground, voltage_domain: GND}
+      - {number: '44', name: UCap, electrical_type: passive}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ATMEGA32U4-AU]}
+    constraints: [native_usb_fullspeed, 5v_operation, qmk_supported, lufa_supported, 16mhz_crystal_required_for_usb]
+    resolution_provenance: {source: microchip_atmega32u4_ds_7766, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: atmega32u4_mu
+    mpn: ATMEGA32U4-MU
+    manufacturer: Microchip Technology
+    package: QFN-44
+    symbol: {library_id: MCU_Microchip_ATmega:ATmega32U4-MU, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44']}
+    footprint: {library_id: Package_DFN_QFN:QFN-44-1EP_7x7mm_P0.5mm_EP5.5x5.5mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45']}
+    pins:
+      - {number: '1', name: PD3, electrical_type: bidirectional}
+      - {number: '41', name: D_MINUS, electrical_type: bidirectional}
+      - {number: '42', name: D_PLUS, electrical_type: bidirectional}
+      - {number: '45', name: EP, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [ATMEGA32U4-MU]}
+    constraints: [native_usb_fullspeed, 5v_operation, qfn_44_smaller_footprint, qmk_supported]
+    resolution_provenance: {source: microchip_atmega32u4_ds_7766, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # rc0603_10k is defined in ble_sensor_node.yaml — no duplicate here

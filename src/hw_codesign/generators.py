@@ -219,7 +219,7 @@ def _semantic_schematic_code(semantic: dict[str, Any]) -> str:
 
 
 def _electronics_intent_files(spec: dict[str, Any], header: str) -> dict[str, str]:
-    channels = int(spec["actuation"]["motor_channels"])
+    channels = int(spec.get("actuation", {}).get("motor_channels", 0))
     mcu_family = spec["compute"]["mcu"]["family"]
     role_set = spec.get("electronics", {}).get("role_set", "")
     supply_type = spec.get("system", {}).get("supply", {}).get("battery", {}).get("type", "battery")

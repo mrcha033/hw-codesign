@@ -1,0 +1,40 @@
+name: bldc_esc
+critical_roles: [power_input, tvs, mcu, gate_driver, half_bridge, regulator_5v, regulator_3v3]
+roles:
+  power_input: {component_id: molex_42820_2212, resolution: curated}
+  tvs: {component_id: smcj33a, resolution: curated}
+  mcu: {component_id: stm32g474ret6, resolution: curated}
+  gate_driver: {component_id: drv8323rsrgzt, resolution: curated}
+  half_bridge: {component_id: csd18540q5b, resolution: curated}
+  regulator_5v: {component_id: lm22678tj_5v0, resolution: curated}
+  regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
+  can: {component_id: tcan1042hgvdrq1, resolution: curated}
+  motor_connector: {component_id: phoenix_1935174, resolution: curated}
+  can_connector: {component_id: molex_43650_0300, resolution: curated}
+  debug: {component_id: samtec_ftsh_105, resolution: curated}
+  led_resistor: {component_id: rc0603_1k, resolution: curated}
+  pullup: {component_id: rc0603_10k, resolution: curated}
+  resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
+  capacitor_100n: {component_id: grm188_100n, resolution: curated}
+  capacitor_22u: {component_id: grm31_22u, resolution: curated}
+  capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}
+alternatives:
+  half_bridge:
+    - component_id: csd18532q5b
+      resolution: registry_candidate
+      rationale: Same VSON-8 footprint, 60V rating (vs 40V) for 6S LiPo; Rds(on) is slightly higher at 1.7 mΩ.
+      required_reviews: [gate_drive_review, thermal_margin]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+  gate_driver:
+    - component_id: drv8323hrsgzt
+      resolution: registry_candidate
+      rationale: Hardware-version variant with hardware-pin current limit threshold instead of SPI-configurable; eliminates SPI dependency for protections at the cost of configurability.
+      required_reviews: [current_limit_programming, firmware_impact]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+single_source_justifications:
+  power_input: {reason: Micro-Fit 2-pin substitution changes shell, current rating, and mating connector; upgrade to XT60 or equivalent for currents above 13 A, mitigation: Add a curated high-current connector alternative with current rating and mating evidence, required_reviews: [current_rating, mating_connector]}
+  tvs: {reason: TVS substitution changes clamp voltage, capacitance, and energy absorption; must remain above VBAT_MAX (29.4 V) and below FET breakdown (40 V), mitigation: Add a curated TVS alternative with clamping voltage evidence, required_reviews: [clamping_voltage, energy_rating]}
+  mcu: {reason: STM32G474 substitution changes HRTIM availability, CORDIC/FMAC acceleration, pinmap, and FOC firmware, mitigation: Add a curated MCU alternative with advanced-timer and FOC-library evidence, required_reviews: [timer_resolution, firmware_migration]}
+  gate_driver: {reason: DRV8323RS substitution changes gate drive strength, SPI configuration protocol, integrated current sense behavior, and protection thresholds, mitigation: Add a curated gate driver alternative with SPI map and current-sense evidence, required_reviews: [gate_drive_strength, spi_register_map]}
+  half_bridge: {reason: CSD18540Q5B substitution changes Rds(on), gate charge, and thermal model — all affect FOC current control loop tuning, mitigation: Add a curated MOSFET alternative with Rds(on) and gate charge evidence for control loop re-tuning, required_reviews: [control_loop_tuning, thermal_model]}
+  regulator_5v: {reason: LM22678 substitution changes inductor sizing, efficiency curve, and EMC behavior near gate drive switching frequencies, mitigation: Add a curated buck alternative with switching-frequency and EMC evidence, required_reviews: [inductor_design, emi_review]}

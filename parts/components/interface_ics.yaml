@@ -1,0 +1,196 @@
+components:
+  # --- USB-UART Bridge ---
+  - id: ft232rl_reel
+    mpn: FT232RL-REEL
+    manufacturer: FTDI Chip
+    package: SSOP-28
+    symbol: {library_id: Interface_USB:FT232RL, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28']}
+    footprint: {library_id: Package_SO:SSOP-28_5.3x10.2mm_P0.65mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28']}
+    pins:
+      - {number: '1', name: TXD, electrical_type: output}
+      - {number: '2', name: DTR#, electrical_type: output}
+      - {number: '3', name: RTS#, electrical_type: output}
+      - {number: '4', name: VCCIO, electrical_type: power_in}
+      - {number: '5', name: RXD, electrical_type: input}
+      - {number: '6', name: RI#, electrical_type: input}
+      - {number: '7', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '8', name: DSR#, electrical_type: input}
+      - {number: '9', name: DCD#, electrical_type: input}
+      - {number: '10', name: CTS#, electrical_type: input}
+      - {number: '11', name: CBUS4, electrical_type: bidirectional}
+      - {number: '12', name: CBUS2, electrical_type: bidirectional}
+      - {number: '13', name: CBUS3, electrical_type: bidirectional}
+      - {number: '14', name: USBDM, electrical_type: bidirectional}
+      - {number: '15', name: USBDP, electrical_type: bidirectional}
+      - {number: '16', name: 3V3OUT, electrical_type: power_out}
+      - {number: '17', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '18', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '19', name: VCC, electrical_type: power_in}
+      - {number: '20', name: VCC, electrical_type: power_in}
+      - {number: '21', name: CBUS1, electrical_type: bidirectional}
+      - {number: '22', name: CBUS0, electrical_type: bidirectional}
+      - {number: '23', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '24', name: AGND, electrical_type: ground, voltage_domain: GND}
+      - {number: '25', name: TEST, electrical_type: input}
+      - {number: '26', name: OSCI, electrical_type: passive}
+      - {number: '27', name: OSCO, electrical_type: passive}
+      - {number: '28', name: RESET#, electrical_type: input}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [FT232RL-REEL]}
+    constraints: [usb_uart_bridge, full_handshake_modem_signals, internal_eeprom, 3v3_or_5v_io, driver_free_linux_mac]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: DS_FT232R, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  - id: cp2102n_a02_gqfn28
+    mpn: CP2102N-A02-GQFN28R
+    manufacturer: Silicon Labs
+    package: QFN-28
+    symbol: {library_id: Interface_USB:CP2102N, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28']}
+    footprint: {library_id: Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29']}
+    pins:
+      - {number: '1', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '2', name: VBUS, electrical_type: power_in}
+      - {number: '3', name: D+, electrical_type: bidirectional}
+      - {number: '4', name: D-, electrical_type: bidirectional}
+      - {number: '5', name: VDD, electrical_type: power_out}
+      - {number: '6', name: REGIN, electrical_type: power_in}
+      - {number: '7', name: RSTb, electrical_type: input}
+      - {number: '8', name: WAKEUP, electrical_type: input}
+      - {number: '9', name: GPIO.0/SPICS, electrical_type: bidirectional}
+      - {number: '10', name: GPIO.1/CLKOUT, electrical_type: bidirectional}
+      - {number: '11', name: GPIO.2/RS485, electrical_type: bidirectional}
+      - {number: '12', name: GPIO.3, electrical_type: bidirectional}
+      - {number: '13', name: GPIO.4, electrical_type: bidirectional}
+      - {number: '14', name: GPIO.5/RTS, electrical_type: bidirectional}
+      - {number: '15', name: GPIO.6/CTS, electrical_type: bidirectional}
+      - {number: '16', name: GPIO.7/DSR, electrical_type: bidirectional}
+      - {number: '17', name: GPIO.8/DCD, electrical_type: bidirectional}
+      - {number: '18', name: GPIO.9/DTR, electrical_type: bidirectional}
+      - {number: '19', name: GPIO.10/RI, electrical_type: bidirectional}
+      - {number: '20', name: TXD, electrical_type: output}
+      - {number: '21', name: RXD, electrical_type: input}
+      - {number: '22', name: NC, electrical_type: no_connect}
+      - {number: '23', name: NC, electrical_type: no_connect}
+      - {number: '24', name: NC, electrical_type: no_connect}
+      - {number: '25', name: NC, electrical_type: no_connect}
+      - {number: '26', name: NC, electrical_type: no_connect}
+      - {number: '27', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '28', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '29', name: PAD, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [CP2102N-A02-GQFN28R]}
+    constraints: [usb_uart_bridge, driver_free_windows10, internal_regulator, gpio_configurable, rs485_mode]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: CP2102N, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- RS-232 Transceiver ---
+  - id: max3232ecwe
+    mpn: MAX3232ECWE+T
+    manufacturer: Maxim Integrated
+    package: SOIC-16
+    symbol: {library_id: Interface_UART:MAX3232, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']}
+    footprint: {library_id: Package_SO:SOIC-16_3.9x9.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']}
+    pins:
+      - {number: '1', name: C1+, electrical_type: passive}
+      - {number: '2', name: V+, electrical_type: power_out}
+      - {number: '3', name: C1-, electrical_type: passive}
+      - {number: '4', name: C2+, electrical_type: passive}
+      - {number: '5', name: C2-, electrical_type: passive}
+      - {number: '6', name: V-, electrical_type: power_out}
+      - {number: '7', name: T2OUT, electrical_type: output}
+      - {number: '8', name: R2IN, electrical_type: input}
+      - {number: '9', name: R2OUT, electrical_type: output}
+      - {number: '10', name: T2IN, electrical_type: input}
+      - {number: '11', name: T1IN, electrical_type: input}
+      - {number: '12', name: R1OUT, electrical_type: output}
+      - {number: '13', name: R1IN, electrical_type: input}
+      - {number: '14', name: T1OUT, electrical_type: output}
+      - {number: '15', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '16', name: VCC, electrical_type: power_in}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['MAX3232ECWE+T']}
+    constraints: [rs232_transceiver, dual_channel, 3v_to_5v5_supply, 0v1uf_charge_pump_caps, -40_to_85c]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: MAX3222-MAX3241, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- CAN Bus Transceiver ---
+  - id: sn65hvd230dr
+    mpn: SN65HVD230DR
+    manufacturer: Texas Instruments
+    package: SOIC-8
+    symbol: {library_id: Interface_CAN_LIN:SN65HVD230, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: D, electrical_type: input}
+      - {number: '2', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '3', name: VCC, electrical_type: power_in}
+      - {number: '4', name: R, electrical_type: output}
+      - {number: '5', name: CANL, electrical_type: bidirectional}
+      - {number: '6', name: CANH, electrical_type: bidirectional}
+      - {number: '7', name: RS, electrical_type: input}
+      - {number: '8', name: VREF, electrical_type: output}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [SN65HVD230DR]}
+    constraints: [can_transceiver, iso11898_compliant, 3v3_supply, 1mbps_signaling, slope_control, standby_mode]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: SLLSE50, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- RS-485 Transceiver ---
+  - id: max485ecsa
+    mpn: MAX485ECSA+T
+    manufacturer: Maxim Integrated
+    package: SOIC-8
+    symbol: {library_id: Interface_UART:MAX485, verified: true, expected_pins: ['1','2','3','4','5','6','7','8']}
+    footprint: {library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8']}
+    pins:
+      - {number: '1', name: RO, electrical_type: output}
+      - {number: '2', name: ~RE, electrical_type: input}
+      - {number: '3', name: DE, electrical_type: input}
+      - {number: '4', name: DI, electrical_type: input}
+      - {number: '5', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '6', name: A, electrical_type: bidirectional}
+      - {number: '7', name: B, electrical_type: bidirectional}
+      - {number: '8', name: VCC, electrical_type: power_in}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: ['MAX485ECSA+T']}
+    constraints: [rs485_transceiver, half_duplex, 5mbps_signaling, 5v_supply, modbus_compatible, -40_to_85c]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: MAX481-MAX491, reviewed_at: '2026-06-21'}
+    review_status: approved
+
+  # --- I2C Multiplexer ---
+  - id: pca9548adwr
+    mpn: PCA9548ADWR
+    manufacturer: Texas Instruments
+    package: SOIC-24W
+    symbol: {library_id: Interface_Multiplexer:PCA9548A, verified: true, expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']}
+    footprint: {library_id: Package_SO:SOIC-24W_7.5x15.4mm_P1.27mm, verified: true, expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']}
+    pins:
+      - {number: '1', name: A0, electrical_type: input}
+      - {number: '2', name: A1, electrical_type: input}
+      - {number: '3', name: A2, electrical_type: input}
+      - {number: '4', name: SC0, electrical_type: bidirectional}
+      - {number: '5', name: SD0, electrical_type: bidirectional}
+      - {number: '6', name: SC1, electrical_type: bidirectional}
+      - {number: '7', name: SD1, electrical_type: bidirectional}
+      - {number: '8', name: SC2, electrical_type: bidirectional}
+      - {number: '9', name: SD2, electrical_type: bidirectional}
+      - {number: '10', name: SC3, electrical_type: bidirectional}
+      - {number: '11', name: SD3, electrical_type: bidirectional}
+      - {number: '12', name: GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '13', name: SC4, electrical_type: bidirectional}
+      - {number: '14', name: SD4, electrical_type: bidirectional}
+      - {number: '15', name: SC5, electrical_type: bidirectional}
+      - {number: '16', name: SD5, electrical_type: bidirectional}
+      - {number: '17', name: SC6, electrical_type: bidirectional}
+      - {number: '18', name: SD6, electrical_type: bidirectional}
+      - {number: '19', name: SC7, electrical_type: bidirectional}
+      - {number: '20', name: SD7, electrical_type: bidirectional}
+      - {number: '21', name: VCC, electrical_type: power_in}
+      - {number: '22', name: ~RESET, electrical_type: input}
+      - {number: '23', name: SCL, electrical_type: bidirectional}
+      - {number: '24', name: SDA, electrical_type: bidirectional}
+    lifecycle: active
+    sourcing: {status: resolved, supplier_skus: [PCA9548ADWR]}
+    constraints: [i2c_mux_8ch, address_configurable_0x70_to_0x77, 1v8_to_5v5_supply, i2c_400khz, channel_isolation]
+    resolution_provenance: {source: manufacturer_datasheet, datasheet_locator: SCPS028, reviewed_at: '2026-06-21'}
+    review_status: approved
