@@ -34,7 +34,27 @@
     "manufacturing": {"type": "object", "required": ["pcb", "exports"]},
     "safety": {"type": "object", "required": ["emergency_stop", "required_protections"]},
     "assumptions": {"type": "object"},
-    "electronics": {"type": "object", "properties": {"backend": {"enum": ["reference", "tscircuit", "kicad", "python_netlist", "atopile"]}, "role_set": {"type": "string"}}},
+    "electronics": {
+      "type": "object",
+      "properties": {
+        "backend": {"enum": ["reference", "tscircuit", "kicad", "python_netlist", "atopile"]},
+        "role_set": {"type": "string"},
+        "role_overrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["component_id"],
+            "properties": {
+              "component_id": {"type": "string"},
+              "resolution": {"type": "string"},
+              "reason": {"type": "string"},
+              "approved": {"type": "boolean"}
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    },
     "sourcing": {
       "type": "object",
       "properties": {

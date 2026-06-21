@@ -5,6 +5,43 @@
   "properties": {
     "name": {"type": "string"},
     "roles": {"type": "object", "additionalProperties": {"type": "object", "required": ["component_id", "resolution"]}},
+    "alternatives": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["component_id", "resolution", "rationale"],
+          "properties": {
+            "component_id": {"type": "string"},
+            "resolution": {"type": "string"},
+            "rationale": {"type": "string"},
+            "required_reviews": {"type": "array", "items": {"type": "string"}},
+            "compatibility": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "pin_numbers": {"type": "string"},
+                "footprint": {"type": "string"},
+                "electrical_value": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "single_source_justifications": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["reason", "mitigation"],
+        "properties": {
+          "reason": {"type": "string"},
+          "mitigation": {"type": "string"},
+          "required_reviews": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
     "critical_roles": {"type": "array", "items": {"type": "string"}}
   }
 }
