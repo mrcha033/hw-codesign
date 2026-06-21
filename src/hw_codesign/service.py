@@ -872,11 +872,11 @@ class HardwareService:
         review_bundle = self.export_review(project) if with_review_bundle else None
         reviewable_artifacts = {
             "candidate_bundle": candidate.get("bundle"),
-            "candidate_manifest": str(Path(candidate["path"]) / "manifest.json"),
+            "candidate_manifest": (Path(candidate["path"]) / "manifest.json").as_posix(),
             "review_bundle": review_bundle.get("file") if review_bundle else None,
             "review_html": review_bundle.get("html") if review_bundle else None,
-            "physical_qualification_plan": str(self.workspace.require_project(project) / "validation" / "physical" / "qualification_plan.json"),
-            "physical_qualification_plan_markdown": str(self.workspace.require_project(project) / "validation" / "physical" / "qualification_plan.md"),
+            "physical_qualification_plan": (self.workspace.require_project(project) / "validation" / "physical" / "qualification_plan.json").as_posix(),
+            "physical_qualification_plan_markdown": (self.workspace.require_project(project) / "validation" / "physical" / "qualification_plan.md").as_posix(),
             "electronics": files.get("electronics", []),
             "mechanical": files.get("mechanical", []),
             "firmware": files.get("firmware", []),
@@ -1456,17 +1456,17 @@ class HardwareService:
                 "than treated as the primary prompt surface."
             ),
             "layers": {
-                "requirements": [str(item) for item in sorted((project_path / "spec").glob("*.yaml"))],
-                "electronics_graph": str(electrical_graph) if electrical_graph.is_file() else None,
-                "semantic_schematic": str(semantic_schematic) if semantic_schematic.is_file() else None,
-                "semantic_schematic_code": str(semantic_code) if semantic_code.is_file() else None,
+                "requirements": [item.as_posix() for item in sorted((project_path / "spec").glob("*.yaml"))],
+                "electronics_graph": electrical_graph.as_posix() if electrical_graph.is_file() else None,
+                "semantic_schematic": semantic_schematic.as_posix() if semantic_schematic.is_file() else None,
+                "semantic_schematic_code": semantic_code.as_posix() if semantic_code.is_file() else None,
                 "electronics_intent": files.get("electronics", []),
                 "relative_placement": {
-                    "source": str(semantic_schematic) if semantic_schematic.is_file() else (str(electrical_graph) if electrical_graph.is_file() else None),
+                    "source": semantic_schematic.as_posix() if semantic_schematic.is_file() else (electrical_graph.as_posix() if electrical_graph.is_file() else None),
                     "style": "constraint-derived component positions with provenance, not raw native PCB geometry",
                 },
-                "mechanical_contract": str(mechanical_contract) if mechanical_contract.is_file() else None,
-                "firmware_pinmap": str(firmware_pinmap) if firmware_pinmap.is_file() else None,
+                "mechanical_contract": mechanical_contract.as_posix() if mechanical_contract.is_file() else None,
+                "firmware_pinmap": firmware_pinmap.as_posix() if firmware_pinmap.is_file() else None,
             },
             "native_outputs": {
                 "kicad_and_fabrication": "generated evidence artifacts; not the primary authoring representation",
