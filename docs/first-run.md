@@ -143,9 +143,9 @@ misplaced USB ESD placement, misplaced RF antenna/keepout, under-rated connector
 current, missing critical-role sourcing resilience, unavailable part, invalid net
 endpoint, component pin/net mismatch, firmware pinmap mismatch, missing e-stop
 shutdown behavior, missing firmware interface bring-up, and a dependency-order
-violation. It proves those digital
-grounding failures are caught; it does not replace thermal, EMI/EMC, SI/PI,
-vibration, ingress, connector-fatigue, or bring-up evidence.
+violation. It proves those digital grounding failures are caught; it does not
+replace thermal, EMI/EMC, SI/PI, vibration, ingress, connector-fatigue, or
+bring-up evidence.
 
 Generate the physical qualification contract:
 
@@ -172,15 +172,18 @@ The workflow creates:
 
 ```text
 projects/first_board/
-  project.yaml                    project identity and revision
-  spec/*.yaml                     editable design requirements
-  electronics/intent/             generated design intent
-  electronics/generated/          typed graph, executable semantic schematic/code, and BOM
-  mechanical/source/              parameterized CAD source
-  firmware/generated/             pin map and devicetree inputs
-  validation/reports/*.json       one structured result per gate
-  history/iterations/0001/        immutable iteration snapshot
-  exports/candidates/0001/        candidate metadata and ZIP
+  project.yaml                          project identity and revision
+  spec/*.yaml                           editable design requirements
+  electronics/intent/                   generated design intent
+  electronics/generated/                typed graph and BOM
+    semantic/                           executable semantic schematic JSON and Python code
+  mechanical/source/                    parameterized CAD source
+  firmware/generated/                   pin map and devicetree inputs
+  validation/reports/*.json             one structured result per gate
+  validation/physical/                  physical qualification plan and evidence records
+  history/iterations/0001/              immutable iteration snapshot
+  history/design_space/exploration.json design-space exploration result
+  exports/candidates/0001/              candidate metadata and ZIP
 ```
 
 Start with these files:

@@ -92,7 +92,7 @@ the stable JSON fields with sorted keys and compact separators;
 `generated_at` is excluded so identical evidence has an identical hash.
 Review comments are stored separately and do not mutate `bundle.json`.
 
-## Semantic schematic round-trip gate
+## Semantic schematic roundtrip gate
 
 `semantic_schematic_roundtrip` checks the LLM-facing schematic representation.
 It executes `electronics/generated/semantic/semantic_schematic.py`, compares the
