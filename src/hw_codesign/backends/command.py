@@ -55,8 +55,11 @@ def run_tool(executable: str, arguments: list[str], cwd: Path, timeout: int = 30
     command = [executable, *arguments]
     if resolved is None:
         return ToolResult(command, None, "", f"Executable not found: {executable}", False)
-    completed = subprocess.run([resolved, *arguments], cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False, env={**os.environ, **(env or {})})
-    return ToolResult(command, completed.returncode, completed.stdout, completed.stderr, True)
+    try:
+        completed = subprocess.run([resolved, *arguments], cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False, env={**os.environ, **(env or {})})
+        return ToolResult(command, completed.returncode, completed.stdout, completed.stderr, True)
+    except subprocess.TimeoutExpired:
+        return ToolResult(command, None, "", f"{executable} timed out after {timeout}s", False)
 
 
 def tool_report(gate: str, result: ToolResult, artifacts: list[str] | None = None) -> GateReport:
