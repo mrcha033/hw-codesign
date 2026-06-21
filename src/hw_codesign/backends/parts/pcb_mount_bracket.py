@@ -5,8 +5,12 @@ from pathlib import Path
 from typing import Any
 
 from ._base import (
-    _EXTRUSION_SPECS, _MIN_WALL_MM, fastener_clearance,
-    import_ocp, printability_report, write_step, write_stl,
+    _EXTRUSION_SPECS,
+    fastener_clearance,
+    import_ocp,
+    printability_report,
+    write_step,
+    write_stl,
 )
 
 # Schema describing the intent this part accepts

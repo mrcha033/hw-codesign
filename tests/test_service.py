@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from hw_codesign.errors import UnsafeChangeError
 from hw_codesign.backends.freerouting import FreeroutingBackend
+from hw_codesign.errors import UnsafeChangeError
 
 
 def test_generation_is_deterministic_and_cross_domain(service, project):
@@ -138,7 +138,7 @@ def test_update_requirements_replaces_active_unresolved_constraints(service, pro
     r1 = service.update_requirements(project, "IP67 impedance-controlled")
     assert r1["mode"] == "replace_active_requirements"
     assert service.read_spec(project).get("requirements", {}).get("active_unresolved")
-    r2 = service.update_requirements(project, "16 channel 24V battery, Zephyr")
+    service.update_requirements(project, "16 channel 24V battery, Zephyr")
     spec = service.read_spec(project)
     assert spec.get("requirements", {}).get("active_unresolved", []) == []
     assert len(spec["requirements"]["raw_inputs"]) == 2, "raw_inputs must accumulate across calls"

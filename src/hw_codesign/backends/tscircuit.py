@@ -44,7 +44,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             x = -board_width / 2 + 8 + (index % 7) * max(8, (board_width - 16) / 6)
             y = -board_height / 2 + 8 + (index // 7) * max(8, (board_height - 16) / 6)
             placement_prop = f" pcbX={{{x:.3f}}} pcbY={{{y:.3f}}}"
-            mpn_prop = f" supplierPartNumbers={{{{lcsc: []}}}}"
+            mpn_prop = " supplierPartNumbers={{lcsc: []}}"
             components.append(
                 f'      <chip name={json.dumps(item["ref"])}{footprint_prop}{placement_prop}{mpn_prop} pinLabels={{{labels_js}}} connections={{{conn_js}}} />'
             )

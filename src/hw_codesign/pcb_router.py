@@ -5,7 +5,6 @@ import math
 from collections import defaultdict
 from typing import Any
 
-
 GRID_MM = 0.25
 LAYERS = ("F.Cu", "In1.Cu", "In2.Cu", "B.Cu")
 

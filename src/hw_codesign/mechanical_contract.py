@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-
 CONNECTOR_CATEGORIES = {"power_input", "can_connector", "usb", "estop", "motor_io"}
 
 

@@ -5,8 +5,10 @@ from pathlib import Path
 from typing import Any
 
 from ._base import (
-    fastener_clearance,
-    import_ocp, printability_report, write_step, write_stl,
+    import_ocp,
+    printability_report,
+    write_step,
+    write_stl,
 )
 
 INTENT_SCHEMA: dict[str, Any] = {
@@ -101,16 +103,16 @@ class CustomEnclosureVariant:
         MakeBox  = ocp["BRepPrimAPI_MakeBox"]
         MakeCyl  = ocp["BRepPrimAPI_MakeCylinder"]
         Cut      = ocp["BRepAlgoAPI_Cut"]
-        Fuse     = ocp["BRepAlgoAPI_Fuse"]
+        _Fuse    = ocp["BRepAlgoAPI_Fuse"]
         BRepCheck = ocp["BRepCheck_Analyzer"]
         BRep_Builder = ocp["BRep_Builder"]
         TopoDS_Compound = ocp["TopoDS_Compound"]
         gp_Pnt   = ocp["gp_Pnt"]
         gp_Ax2   = ocp["gp_Ax2"]
         gp_Dir   = ocp["gp_Dir"]
-        IFSelect_RetDone = ocp["IFSelect_RetDone"]
-        STEPControl_Writer = ocp["STEPControl_Writer"]
-        STEPControl_AsIs   = ocp["STEPControl_AsIs"]
+        _IFSelect_RetDone  = ocp["IFSelect_RetDone"]
+        _STEPControl_Writer = ocp["STEPControl_Writer"]
+        _STEPControl_AsIs   = ocp["STEPControl_AsIs"]
 
         # Base box
         outer = MakeBox(gp_Pnt(0, 0, 0), ow, od, body_h).Shape()
@@ -164,7 +166,7 @@ class CustomEnclosureVariant:
             lid = MakeBox(gp_Pnt(0, 0, body_h), ow, od, wall).Shape()
             if vents_cfg:
                 slot_w   = float(vents_cfg.get("slot_width_mm", 2.5))
-                slot_h   = float(vents_cfg.get("slot_height_mm", 15.0))
+                _slot_h  = float(vents_cfg.get("slot_height_mm", 15.0))
                 count    = int(vents_cfg.get("count", 5))
                 spacing  = float(vents_cfg.get("spacing_mm", 5.0))
                 total_w  = count * slot_w + (count - 1) * spacing

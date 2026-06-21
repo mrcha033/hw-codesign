@@ -8,7 +8,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-
 _FASTENER_SPECS: dict[str, dict[str, float]] = {
     "M2":   {"clearance_mm": 2.4,  "bore_mm": 1.6},
     "M2.5": {"clearance_mm": 2.9,  "bore_mm": 2.05},

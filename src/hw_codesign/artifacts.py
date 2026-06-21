@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import math
-import struct
 import zipfile
 from pathlib import Path
 from typing import Any, Iterable

@@ -403,7 +403,7 @@ def create_server(root: Path | str | None = None):
     @server.tool(name=_TR["hw_get_firmware_behavior_library"].name)
     def get_firmware_behavior_library() -> dict[str, Any]:
         """Return available firmware behavior types with descriptions and intent schemas."""
-        from .backends.firmware_modules import BEHAVIOR_DESCRIPTIONS, BEHAVIOR_SCHEMAS, _RENDERERS
+        from .backends.firmware_modules import _RENDERERS, BEHAVIOR_DESCRIPTIONS, BEHAVIOR_SCHEMAS
         behaviors = {
             name: {
                 "description": BEHAVIOR_DESCRIPTIONS.get(name, ""),

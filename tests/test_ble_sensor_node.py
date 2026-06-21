@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 
 from hw_codesign.io import read_yaml, write_yaml
-from hw_codesign.models import Status
 
 
 def _set_backend(service, project: str, backend: str) -> None:
@@ -169,8 +168,8 @@ def test_ble_sensor_node_hw_sw_parity_requires_i2c_firmware_assignment(service):
     pinmap = json.loads(pinmap_path.read_text(encoding="utf-8"))
     pinmap_trimmed = [p for p in pinmap if p["signal"] != "I2C_SCL"]
 
-    from hw_codesign.validation import Validator
     from hw_codesign.resources import resource_root
+    from hw_codesign.validation import Validator
     validator = Validator(resource_root(service.workspace.root) / "schemas")
     report = validator.check_hw_sw_parity(graph, pinmap_trimmed)
     assert report.status.value == "fail"
@@ -232,8 +231,8 @@ def test_ble_sensor_node_release_docs_are_ble_specific(service, monkeypatch):
     service.generate_firmware_only(project)
     service.generate_mechanical_only(project)
 
+
     from hw_codesign.models import GateReport, Status
-    import json as _json
 
     all_reports = []
     for gate in [
@@ -252,7 +251,7 @@ def test_ble_sensor_node_release_docs_are_ble_specific(service, monkeypatch):
 
     project_path = service.workspace.require_project(project)
 
-    from hw_codesign.io import read_yaml, write_yaml
+    from hw_codesign.io import read_yaml
     spec_path = project_path / "spec" / "system.yaml"
     spec = read_yaml(spec_path)
     for name in list(spec.get("assumptions", {}).keys()):

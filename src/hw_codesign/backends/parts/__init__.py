@@ -3,16 +3,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from .cable_clip import CableClip
 from .cable_clip import INTENT_SCHEMA as _CABLE_CLIP_SCHEMA
-from .custom_enclosure_variant import CustomEnclosureVariant
+from .cable_clip import CableClip
 from .custom_enclosure_variant import INTENT_SCHEMA as _ENCLOSURE_SCHEMA
-from .din_rail_adapter import DinRailAdapter
+from .custom_enclosure_variant import CustomEnclosureVariant
 from .din_rail_adapter import INTENT_SCHEMA as _DIN_SCHEMA
-from .pcb_mount_bracket import PcbMountBracket
+from .din_rail_adapter import DinRailAdapter
 from .pcb_mount_bracket import INTENT_SCHEMA as _BRACKET_SCHEMA
-from .standoff_tower import StandoffTower
+from .pcb_mount_bracket import PcbMountBracket
 from .standoff_tower import INTENT_SCHEMA as _STANDOFF_SCHEMA
+from .standoff_tower import StandoffTower
 
 PART_REGISTRY: dict[str, type] = {
     "pcb_mount_bracket":       PcbMountBracket,

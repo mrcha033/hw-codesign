@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from copy import deepcopy
 import json
+from copy import deepcopy
 
 
 def test_template_schema_is_valid_but_semantic_budget_fails(service, project):

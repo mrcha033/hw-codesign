@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 
 from .errors import UnsafeChangeError
 
-
 PROTECTED_PREFIXES = ("safety.", "manufacturing.", "system.supply.", "actuation.motor_channel_peak_current_a", "mechanical.cooling", "mechanical.connectors", "release.")
 
 

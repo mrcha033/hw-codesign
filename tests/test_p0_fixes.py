@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from hw_codesign.models import Failure, FailureCategory, GateReport, Status
 from hw_codesign.io import read_yaml, write_yaml
-
+from hw_codesign.models import Failure, FailureCategory, GateReport, Status
 
 # ── Fix 1: BLOCKED → PASS masquerade ─────────────────────────────────────────
 

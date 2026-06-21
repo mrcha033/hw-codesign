@@ -7,7 +7,6 @@ from typing import Any
 
 import kicad_sch_api as ksa
 
-
 UUID_PATTERN = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 
 

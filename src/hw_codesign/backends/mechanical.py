@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import struct
 import shutil
+import struct
+from collections import Counter
 from datetime import UTC, datetime
 from importlib.metadata import PackageNotFoundError, version
-from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -32,8 +32,8 @@ class OpenCascadeMechanicalBackend:
             from OCP.BRepAlgoAPI import BRepAlgoAPI_Common, BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse
             from OCP.BRepBuilderAPI import BRepBuilderAPI_Transform
             from OCP.BRepCheck import BRepCheck_Analyzer
-            from OCP.BRepMesh import BRepMesh_IncrementalMesh
             from OCP.BRepGProp import BRepGProp
+            from OCP.BRepMesh import BRepMesh_IncrementalMesh
             from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox, BRepPrimAPI_MakeCylinder
             from OCP.gp import gp_Ax2, gp_Dir, gp_Pnt, gp_Trsf, gp_Vec
             from OCP.GProp import GProp_GProps

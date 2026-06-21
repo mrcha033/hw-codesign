@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from pathlib import Path
 import os
 import shutil
 import sys
+from pathlib import Path
 
-from .command import run_tool, tool_report
 from ..models import GateReport
+from .command import run_tool, tool_report
 
 
 class ZephyrBackend:

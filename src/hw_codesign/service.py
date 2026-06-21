@@ -5,36 +5,36 @@ import json
 import math
 import os
 import re
-import runpy
 import shutil
+import subprocess
+import sys
 import zipfile
 from copy import deepcopy
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from .backends.kicad import KiCadBackend
-from .backends.freerouting import FreeroutingBackend
-from .backends.mechanical import OpenCascadeMechanicalBackend
-from .backends.zephyr import ZephyrBackend
-from .backends.tscircuit import TSCircuitBackend
-from .backends.python_netlist import PythonNetlistBackend
+from .artifacts import deterministic_zip, sha256, simple_pdf, write_manifest
 from .backends.atopile import AtopileBackend
 from .backends.electronics import CONTRACT_STAGES
-from .artifacts import deterministic_zip, sha256, simple_pdf, write_manifest
+from .backends.freerouting import FreeroutingBackend
+from .backends.kicad import KiCadBackend
+from .backends.mechanical import OpenCascadeMechanicalBackend
+from .backends.python_netlist import PythonNetlistBackend
+from .backends.tscircuit import TSCircuitBackend
+from .backends.zephyr import ZephyrBackend
 from .generators import firmware_profile, generate_bom, generate_electronics, generate_firmware, generate_mechanical
 from .io import atomic_write_text, read_yaml, write_json, write_yaml
 from .models import Failure, FailureCategory, GateReport, RepairPatch, Status
+from .placement import check_layout_signal_integrity, check_layout_thermal_integrity, check_placement, propose_placement
 from .policy import ChangePolicy
 from .provenance import artifact_provenance
-from .resources import resource_root
+from .reference_backend import build_firmware_reference, export_fabrication, internal_drc, internal_erc
 from .resolver import role_for_component
-from .placement import check_layout_signal_integrity, check_layout_thermal_integrity, check_placement, propose_placement
-from .reference_backend import build_firmware_reference, export_fabrication, export_mechanical, internal_drc, internal_erc
+from .resources import resource_root
 from .supplier_adapters import supplier_adapter
 from .validation import Validator, persist_report
 from .workspace import Workspace
-
 
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
 _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
@@ -63,7 +63,7 @@ def _derive_agent_actions(actions: list[dict[str, Any]], spec: dict[str, Any]) -
     agent_actions: list[dict[str, Any]] = []
     for action in actions:
         code = action["failure_code"]
-        gate = action.get("gate", "")
+        _gate = action.get("gate", "")
         if code == "missing_required_block":
             msg = action["action"]
             # Extract category from message like "Missing schematic block: can"
@@ -187,27 +187,43 @@ class HardwareService:
         firmware_path = self.workspace.require_project(project) / "spec" / "firmware.yaml"
         manufacturing_path = self.workspace.require_project(project) / "spec" / "manufacturing.yaml"
         req_path = self.workspace.require_project(project) / "spec" / "requirements.yaml"
-        system_file = read_yaml(system_path); firmware_file = read_yaml(firmware_path); manufacturing_file = read_yaml(manufacturing_path)
+        system_file = read_yaml(system_path)
+        firmware_file = read_yaml(firmware_path)
+        manufacturing_file = read_yaml(manufacturing_path)
         changed: list[str] = []
-        patterns = [
-            (r"(\d+)\s*(?:채널|channel)", lambda value: (system_file["actuation"].__setitem__("motor_channels", int(value)), "actuation.motor_channels")),
-            (r"(?:각\s*채널\s*)?(?:피크\s*)?(\d+(?:\.\d+)?)\s*A", lambda value: (system_file["actuation"].__setitem__("motor_channel_peak_current_a", float(value)), "actuation.motor_channel_peak_current_a")),
-            (r"(\d+(?:\.\d+)?)\s*V\s*(?:배터리|battery)", lambda value: (system_file["system"]["supply"]["battery"].__setitem__("pack_voltage_nominal", float(value)), "system.supply.battery.pack_voltage_nominal")),
-            (r"(STM32H7\w*|ESP32S3|RP2040)", lambda value: (system_file["compute"]["mcu"].__setitem__("family", value.upper()), "compute.mcu.family")),
-            (r"(\d+)\s*[- ]?layer", lambda value: (manufacturing_file["manufacturing"]["pcb"].__setitem__("layers", int(value)), "manufacturing.pcb.layers")),
+
+        _PATTERNS: list[tuple[str, list[str], Any]] = [
+            (r"(\d+)\s*(?:채널|channel)",               ["actuation", "motor_channels"],                                  int),
+            (r"(?:각\s*채널\s*)?(?:피크\s*)?(\d+(?:\.\d+)?)\s*A", ["actuation", "motor_channel_peak_current_a"],          float),
+            (r"(\d+(?:\.\d+)?)\s*V\s*(?:배터리|battery)", ["system", "supply", "battery", "pack_voltage_nominal"],         float),
+            (r"(STM32H7\w*|ESP32S3|RP2040)",              ["compute", "mcu", "family"],                                    str.upper),
+            (r"(\d+)\s*[- ]?layer",                       ["manufacturing", "pcb", "layers"],                              int),
         ]
-        for pattern, setter in patterns:
+        _ROOTS = {
+            "actuation": system_file, "system": system_file, "compute": system_file,
+            "manufacturing": manufacturing_file,
+        }
+        for pattern, keys, convert in _PATTERNS:
             match = re.search(pattern, requirements_text, flags=re.IGNORECASE)
             if match:
-                _, path = setter(match.group(1)); changed.append(path)
+                target = _ROOTS[keys[0]]
+                for key in keys[:-1]:
+                    target = target[key]
+                target[keys[-1]] = convert(match.group(1))
+                changed.append(".".join(keys))
+
         lowered_text = requirements_text.lower()
         if "zephyr" in lowered_text:
-            firmware_file["firmware"]["framework"] = "zephyr"; changed.append("firmware.framework")
+            firmware_file["firmware"]["framework"] = "zephyr"
+            changed.append("firmware.framework")
         features = {"imu": "imu", "emergency stop": "e_stop", "e-stop": "e_stop", "비상 정지": "e_stop"}
         for token, key in features.items():
             if token in lowered_text:
-                system_file["sensing"][key] = "required"; changed.append(f"sensing.{key}")
-        write_yaml(system_path, system_file); write_yaml(firmware_path, firmware_file); write_yaml(manufacturing_path, manufacturing_file)
+                system_file["sensing"][key] = "required"
+                changed.append(f"sensing.{key}")
+        write_yaml(system_path, system_file)
+        write_yaml(firmware_path, firmware_file)
+        write_yaml(manufacturing_path, manufacturing_file)
         unresolved_ambiguous = []
         if not re.search(r"(?:external|onboard|외장|온보드).*(?:driver|드라이버)", requirements_text, re.IGNORECASE):
             unresolved_ambiguous.append("motor driver topology retained from documented assumption")
@@ -1544,12 +1560,26 @@ class HardwareService:
             failures.append(Failure(FailureCategory.EDA_ERROR, "semantic_schematic_json_invalid", f"Could not read semantic_schematic.json: {exc}", path="electronics.generated.semantic_schematic"))
 
         try:
-            namespace = runpy.run_path(str(code_path))
-            loaded = namespace.get("semantic_schematic")
+            # Run in a subprocess for process isolation: prevents modified/malicious
+            # file content from affecting the server's own memory or state.
+            wrapper = (
+                "import json, sys\n"
+                f"exec(open({str(code_path)!r}, encoding='utf-8').read())\n"
+                "sys.stdout.write(json.dumps(semantic_schematic))\n"
+            )
+            proc = subprocess.run(
+                [sys.executable, "-c", wrapper],
+                capture_output=True, text=True, timeout=15,
+            )
+            if proc.returncode != 0:
+                raise RuntimeError(proc.stderr.strip() or f"exited with status {proc.returncode}")
+            loaded = json.loads(proc.stdout)
             if isinstance(loaded, dict):
                 semantic_code = loaded
             else:
                 failures.append(Failure(FailureCategory.EDA_ERROR, "semantic_schematic_code_invalid", "semantic_schematic.py must define semantic_schematic as an object", path="electronics.generated.semantic_schematic_code"))
+        except subprocess.TimeoutExpired:
+            failures.append(Failure(FailureCategory.EDA_ERROR, "semantic_schematic_code_invalid", "semantic_schematic.py timed out after 15s", path="electronics.generated.semantic_schematic_code"))
         except Exception as exc:
             failures.append(Failure(FailureCategory.EDA_ERROR, "semantic_schematic_code_invalid", f"Could not execute semantic_schematic.py: {exc}", path="electronics.generated.semantic_schematic_code"))
 
@@ -3834,7 +3864,7 @@ class HardwareService:
 
     def design_firmware_module(self, project: str, module_spec: dict[str, Any]) -> dict[str, Any]:
         """Author a firmware module from a behavior spec and write it into the project."""
-        from .backends.firmware_modules import BEHAVIOR_SCHEMAS, _RENDERERS, render_module
+        from .backends.firmware_modules import _RENDERERS, render_module
         from .validation import persist_report
 
         path = self.workspace.require_project(project)
@@ -4301,7 +4331,17 @@ class HardwareService:
                 "bundle": str(bundle_path),
                 "bundle_hash": export_result["bundle_hash"],
             }
+        import urllib.parse as _urlparse
         import urllib.request as _urlreq
+        _parsed = _urlparse.urlparse(destination)
+        if _parsed.scheme not in {"http", "https"}:
+            return {
+                "status": "blocked",
+                "code": "invalid_destination",
+                "message": "destination must be an http:// or https:// URL",
+                "bundle": str(bundle_path),
+                "bundle_hash": export_result["bundle_hash"],
+            }
         bundle_bytes = bundle_path.read_bytes()
         req = _urlreq.Request(
             destination,
@@ -4343,6 +4383,7 @@ class HardwareService:
         bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
         comments_path = bundle_path.parent / "comments.jsonl"
         comments: list[dict] = []
+        malformed_comment_lines = 0
         if comments_path.is_file():
             for line in comments_path.read_text(encoding="utf-8").splitlines():
                 line = line.strip()
@@ -4350,18 +4391,21 @@ class HardwareService:
                     try:
                         comments.append(json.loads(line))
                     except Exception:
-                        pass
+                        malformed_comment_lines += 1
         from .review_viewer import build_standalone_html
         html = build_standalone_html({**bundle, "comments": comments})
         standalone_path = bundle_path.parent / "review_standalone.html"
         standalone_path.write_text(html, encoding="utf-8")
-        return {
+        result: dict[str, Any] = {
             "status": "generated",
             "file": str(standalone_path),
             "bundle_hash": export_result["bundle_hash"],
             "comment_count": len(comments),
             "note": "Self-contained HTML — share this file directly. No server required.",
         }
+        if malformed_comment_lines:
+            result["malformed_comment_lines"] = malformed_comment_lines
+        return result
 
     def list_project_summaries(self) -> dict[str, Any]:
         """Return a summary of all projects in the workspace with their latest bundle status."""
@@ -4382,8 +4426,8 @@ class HardwareService:
                         "blocked": summary.get("blocked", 0),
                         "total": summary.get("total", 0),
                     })
-                except Exception:
-                    summaries.append({"name": name, "has_bundle": False})
+                except Exception as exc:
+                    summaries.append({"name": name, "has_bundle": False, "bundle_error": str(exc)})
             else:
                 summaries.append({"name": name, "has_bundle": False})
         return {"status": "generated", "projects": summaries}
@@ -4430,6 +4474,7 @@ class HardwareService:
         path = self.workspace.require_project(project)
         comments_path = path / "exports" / "working" / "review" / "comments.jsonl"
         comments: list[dict] = []
+        malformed_lines = 0
         if comments_path.is_file():
             for line in comments_path.read_text(encoding="utf-8").splitlines():
                 line = line.strip()
@@ -4437,8 +4482,11 @@ class HardwareService:
                     try:
                         comments.append(json.loads(line))
                     except Exception:
-                        pass
-        return {"status": "generated", "comments": comments, "count": len(comments)}
+                        malformed_lines += 1
+        result: dict[str, Any] = {"status": "generated", "comments": comments, "count": len(comments)}
+        if malformed_lines:
+            result["malformed_lines"] = malformed_lines
+        return result
 
     @staticmethod
     def _report_set(reports: list[GateReport]) -> dict[str, Any]:

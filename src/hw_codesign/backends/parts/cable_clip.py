@@ -5,8 +5,11 @@ from pathlib import Path
 from typing import Any
 
 from ._base import (
-    _MIN_WALL_MM, fastener_clearance,
-    import_ocp, printability_report, write_step, write_stl,
+    fastener_clearance,
+    import_ocp,
+    printability_report,
+    write_step,
+    write_stl,
 )
 
 INTENT_SCHEMA: dict[str, Any] = {

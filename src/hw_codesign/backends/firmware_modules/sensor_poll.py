@@ -31,7 +31,7 @@ def render(module: dict[str, Any]) -> ModuleOutput:
         ring_buf_put(&{mid}_ring, (uint8_t *)&sample, sizeof(sample));
     }}"""
         extra_includes = "#include <zephyr/drivers/i2c.h>\n\nstatic const struct device *i2c_dev;"
-        extra_init = f"    i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));"
+        extra_init = "    i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));"
         dts_fragment = (
             f"/* {mid}: {sensor} on I2C addr {addr} polled every {poll_interval_ms} ms */\n"
         )

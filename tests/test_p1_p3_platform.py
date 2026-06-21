@@ -297,9 +297,7 @@ def test_prepare_release_blocked_on_unresolved_critical_assumption(service, proj
 def test_footprint_parity_fails_on_missing_compiled_footprint_id():
     """Footprint parity gate must FAIL (not pass) when expected_fp exists but compiled circuit.json
     has no footprint_id for that component."""
-    import json
     from hw_codesign.backends.tscircuit import TSCircuitBackend
-    from hw_codesign.models import Status
 
     graph = {
         "components": [{"ref": "U1", "footprint": "Package_SO:SOIC-8", "pins": []}],
@@ -310,7 +308,7 @@ def test_footprint_parity_fails_on_missing_compiled_footprint_id():
         {"type": "source_component", "source_component_id": "U1", "name": "U1"},
         {"type": "pcb_component", "source_component_id": "U1"},  # no footprint_id
     ]
-    backend = TSCircuitBackend.__new__(TSCircuitBackend)
+    _backend = TSCircuitBackend.__new__(TSCircuitBackend)
     source_components = {
         item.get("source_component_id"): item
         for item in compiled
@@ -343,8 +341,9 @@ def test_manifest_must_cover_all_required_release_artifacts(tmp_path):
     """_artifact_integrity_report must fail with required_artifact_uncovered_by_manifest
     when a required artifact exists on disk but is absent from the manifest."""
     import json
-    from hw_codesign.service import HardwareService
+
     from hw_codesign.artifacts import write_manifest
+    from hw_codesign.service import HardwareService
 
     release = tmp_path / "release"
     release.mkdir()
@@ -369,8 +368,10 @@ def test_manifest_must_cover_all_required_release_artifacts(tmp_path):
 
 def test_source_manifest_marks_pcb_enabled_source_release_eligible(tmp_path):
     import json
-    import yaml
     from pathlib import Path
+
+    import yaml
+
     from hw_codesign.backends.tscircuit import TSCircuitBackend
 
     root = Path(__file__).parents[1]

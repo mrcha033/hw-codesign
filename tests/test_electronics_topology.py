@@ -3,10 +3,6 @@ Phase D (firmware modules), and Phase E (unified workflow)."""
 from __future__ import annotations
 
 import json
-from pathlib import Path
-
-import pytest
-
 
 # ---------------------------------------------------------------------------
 # Phase B — Electronics Topology Authoring

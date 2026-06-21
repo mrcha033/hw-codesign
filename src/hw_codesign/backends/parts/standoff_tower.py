@@ -1,13 +1,16 @@
 """Parametric standoff tower — hex or round, M2.5–M4, with threaded bore and through hole."""
 from __future__ import annotations
 
-import math
 from pathlib import Path
 from typing import Any
 
 from ._base import (
-    _MIN_WALL_MM, fastener_bore, fastener_clearance,
-    import_ocp, printability_report, write_step, write_stl,
+    fastener_bore,
+    fastener_clearance,
+    import_ocp,
+    printability_report,
+    write_step,
+    write_stl,
 )
 
 INTENT_SCHEMA: dict[str, Any] = {
@@ -60,7 +63,7 @@ class StandoffTower:
         bore_r  = fastener_bore(fastener) / 2        # threaded/clearance bore radius
         clear_r = fastener_clearance(fastener) / 2   # through-hole clearance radius
 
-        MakeBox = ocp["BRepPrimAPI_MakeBox"]
+        _MakeBox = ocp["BRepPrimAPI_MakeBox"]
         MakeCyl = ocp["BRepPrimAPI_MakeCylinder"]
         Cut     = ocp["BRepAlgoAPI_Cut"]
         Fuse    = ocp["BRepAlgoAPI_Fuse"]

@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-from pathlib import Path
 import json
 import re
 import shutil
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any
 
 from ..artifacts import deterministic_zip
-
-from .command import resolve_tool, run_tool, tool_report, tool_version
-from ..models import Failure, FailureCategory, GateReport, Status
 from ..io import write_json
+from ..models import Failure, FailureCategory, GateReport, Status
 from ..provenance import artifact_provenance
+from .command import resolve_tool, run_tool, tool_report, tool_version
 from .electronics import ElectronicsBackendAdapter
 
 

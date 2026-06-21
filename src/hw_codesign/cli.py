@@ -197,8 +197,9 @@ def main() -> int:
         elif args.command == "upload-review":
             result = service.upload_review(args.project, destination=args.destination)
         elif args.command == "serve-receiver":
-            from .review_viewer import serve_receiver
             from pathlib import Path as _Path
+
+            from .review_viewer import serve_receiver
             inbox = _Path(args.inbox_dir) if args.inbox_dir else args.root / ".review-inbox"
             serve_receiver(inbox, port=args.port, open_browser=not args.no_open)
             return 0

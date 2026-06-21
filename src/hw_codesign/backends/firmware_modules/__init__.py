@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ._base import ModuleOutput
 from . import periodic_transmit, sensor_poll, state_machine, timeout_shutdown
+from ._base import ModuleOutput
 
 _RENDERERS = {
     "timeout_shutdown": timeout_shutdown.render,

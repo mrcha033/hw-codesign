@@ -6,10 +6,7 @@ import socket
 import threading
 from pathlib import Path
 
-import pytest
-
-from hw_codesign.review_viewer import build_standalone_html, _merge_bundle
-
+from hw_codesign.review_viewer import _merge_bundle, build_standalone_html
 
 # ---------------------------------------------------------------------------
 # Standalone HTML export

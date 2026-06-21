@@ -9,13 +9,12 @@ from pathlib import Path
 from typing import Any
 
 from .artifacts import box_stl, deterministic_zip, step_box
-from .electronics_design import build_ble_sensor_node_graph, build_controller_graph, build_graph_from_spec, build_sensor_data_logger_graph
+from .board_layout import component_positions
+from .electronics_design import build_graph_from_spec
 from .io import atomic_write_text, write_json
 from .models import Failure, FailureCategory, GateReport, Status
 from .pcb_router import route_board
 from .schematic_generator import generate_kicad_schematic
-from .board_layout import component_positions
-
 
 PARTS = {
     "mcu": ("STM32H743VIT6", "LQFP-100_14x14mm_P0.5mm"),

@@ -453,7 +453,7 @@ class Validator:
         spec: dict[str, Any] | None = None,
         graph: dict[str, Any] | None = None,
     ) -> GateReport:
-        from .backends.firmware_modules import _RENDERERS, BEHAVIOR_SCHEMAS
+        from .backends.firmware_modules import _RENDERERS
         failures: list[Failure] = []
         known_signals = {item.get("signal") for item in pinmap if item.get("signal")}
         seen_ids: set[str] = set()

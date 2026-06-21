@@ -14,8 +14,8 @@ from hw_codesign.models import Status
 
 def _board_step(path: Path, width: float, height: float, thickness: float) -> Path:
     try:
-        from OCP.IFSelect import IFSelect_RetDone
         from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
+        from OCP.IFSelect import IFSelect_RetDone
         from OCP.STEPControl import STEPControl_AsIs, STEPControl_Writer
     except ImportError:
         pytest.skip("cadquery-ocp is unavailable")

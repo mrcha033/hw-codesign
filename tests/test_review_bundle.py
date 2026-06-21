@@ -258,3 +258,92 @@ def test_iterations_included_in_bundle(service, project):
     assert "iterations" in bundle
     for it in bundle["iterations"]:
         assert "iteration_id" in it
+
+
+def test_export_standalone_review_produces_html(service, project):
+    service.generate_all(project)
+    service.run_all_checks(project, include_external=False)
+    result = service.export_standalone_review(project)
+    assert result["status"] == "generated"
+    html_path = Path(result["file"])
+    assert html_path.name == "review_standalone.html"
+    assert html_path.is_file()
+    content = html_path.read_text(encoding="utf-8")
+    assert "<!DOCTYPE html>" in content or "<html" in content
+    assert result["comment_count"] == 0
+    assert "malformed_comment_lines" not in result
+
+
+def test_export_standalone_review_skips_malformed_comment_lines(service, project):
+    service.generate_all(project)
+    service.run_all_checks(project, include_external=False)
+    service.export_review(project)
+    comments_path = (
+        service.workspace.require_project(project)
+        / "exports" / "working" / "review" / "comments.jsonl"
+    )
+    comments_path.parent.mkdir(parents=True, exist_ok=True)
+    comments_path.write_text('{"id":"c1","text":"ok"}\nNOT_JSON\n{"id":"c2","text":"ok2"}\n', encoding="utf-8")
+    result = service.export_standalone_review(project)
+    assert result["comment_count"] == 2
+    assert result.get("malformed_comment_lines") == 1
+
+
+def test_add_and_list_review_comments(service, project):
+    add = service.add_review_comment(project, "first comment", target_type="gate", target_id="spec_schema")
+    assert add["status"] == "generated"
+    assert add["comment_id"]
+    service.add_review_comment(project, "second comment")
+    listing = service.list_review_comments(project)
+    assert listing["status"] == "generated"
+    assert listing["count"] == 2
+    assert listing["comments"][0]["text"] == "first comment"
+    assert listing["comments"][1]["text"] == "second comment"
+    assert "malformed_lines" not in listing
+
+
+def test_list_review_comments_skips_malformed_lines(service, project):
+    comments_path = (
+        service.workspace.require_project(project)
+        / "exports" / "working" / "review" / "comments.jsonl"
+    )
+    comments_path.parent.mkdir(parents=True, exist_ok=True)
+    comments_path.write_text('{"text":"good"}\nBAD\n', encoding="utf-8")
+    listing = service.list_review_comments(project)
+    assert listing["count"] == 1
+    assert listing["malformed_lines"] == 1
+
+
+def test_list_project_summaries_returns_all_projects(service, project):
+    service.generate_all(project)
+    service.run_all_checks(project, include_external=False)
+    service.export_review(project)
+    result = service.list_project_summaries()
+    assert result["status"] == "generated"
+    names = [item["name"] for item in result["projects"]]
+    assert project in names
+    entry = next(item for item in result["projects"] if item["name"] == project)
+    assert entry["has_bundle"] is True
+    assert entry["total"] > 0
+
+
+def test_list_project_summaries_handles_corrupt_bundle(service, project):
+    bundle_path = (
+        service.workspace.require_project(project)
+        / "exports" / "working" / "review" / "bundle.json"
+    )
+    bundle_path.parent.mkdir(parents=True, exist_ok=True)
+    bundle_path.write_text("NOT_JSON", encoding="utf-8")
+    result = service.list_project_summaries()
+    entry = next(item for item in result["projects"] if item["name"] == project)
+    assert entry["has_bundle"] is False
+    assert "bundle_error" in entry
+
+
+def test_upload_review_rejects_non_http_destination(service, project):
+    service.generate_all(project)
+    result = service.upload_review(project, destination="file:///tmp/out.json")
+    assert result["status"] == "blocked"
+    assert result["code"] == "invalid_destination"
+
+

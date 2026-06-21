@@ -11,7 +11,13 @@ import yaml
 
 from hw_codesign.board_layout import component_positions
 from hw_codesign.models import GateReport, Status
-from hw_codesign.placement import POWER_CATEGORIES, check_layout_signal_integrity, check_layout_thermal_integrity, check_placement, propose_placement
+from hw_codesign.placement import (
+    POWER_CATEGORIES,
+    check_layout_signal_integrity,
+    check_layout_thermal_integrity,
+    check_placement,
+    propose_placement,
+)
 from hw_codesign.reference_backend import build_graph
 from hw_codesign.validation import Validator
 

@@ -6,7 +6,10 @@ from typing import Any
 
 from ._base import (
     fastener_clearance,
-    import_ocp, printability_report, write_step, write_stl,
+    import_ocp,
+    printability_report,
+    write_step,
+    write_stl,
 )
 
 # TS-35 DIN rail standard dimensions (IEC 60715)
@@ -87,7 +90,7 @@ class DinRailAdapter:
         # DIN hooks — snap over top and/or bottom edge of TS-35 rail
         # Hook geometry: an L-shaped bracket that clips under the rail flange
         hook_w = pw  # full plate width
-        hook_h = _DIN_RAIL_HEIGHT_MM + _HOOK_WALL_MM
+        _hook_h = _DIN_RAIL_HEIGHT_MM + _HOOK_WALL_MM
 
         def make_hook(z_origin: float) -> Any:
             # Horizontal back (attaches to plate)

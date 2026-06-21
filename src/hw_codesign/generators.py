@@ -8,12 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from .io import atomic_write_text, write_json
+from .mechanical_contract import build_mechanical_contract
+from .placement import propose_placement
 from .provenance import artifact_provenance
 from .reference_backend import build_graph, generate_kicad
 from .resolver import ComponentResolver
-from .board_layout import component_positions
-from .placement import propose_placement
-from .mechanical_contract import build_mechanical_contract
 
 
 def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, backend: str = "reference") -> tuple[list[str], list[dict[str, Any]], dict[str, Any]]:

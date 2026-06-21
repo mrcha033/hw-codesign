@@ -4,7 +4,8 @@ import hashlib
 import json
 
 try:
-    from importlib.metadata import PackageNotFoundError, version as _pkg_version
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _pkg_version
     try:
         ENGINE_VERSION: str = _pkg_version("hw-codesign-platform")
     except PackageNotFoundError:

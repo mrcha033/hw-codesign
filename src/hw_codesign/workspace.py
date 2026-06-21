@@ -10,7 +10,6 @@ from typing import Any
 from .errors import InvalidProjectNameError, ProjectNotFoundError
 from .io import read_yaml, write_json, write_yaml
 
-
 PROJECT_NAME = re.compile(r"^[a-z][a-z0-9_]{1,63}$")
 SPEC_FILES = ("system", "electrical", "mechanical", "firmware", "manufacturing", "safety", "sourcing", "test_plan", "requirements")
 SUPPORTED_TEMPLATES = frozenset({

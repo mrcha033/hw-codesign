@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+
 import pytest
 
 from hw_codesign.backends.command import ToolResult
 from hw_codesign.backends.electronics import CONTRACT_STAGES
-from hw_codesign.models import GateReport, Status
 from hw_codesign.io import read_yaml, write_yaml
+from hw_codesign.models import GateReport, Status
 
 
 def _set_backend(service, project: str, backend: str) -> None:

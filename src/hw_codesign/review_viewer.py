@@ -220,8 +220,8 @@ class _Handler(http.server.BaseHTTPRequestHandler):
         if not text:
             self._respond(400, "text/plain", b"text required")
             return
-        from datetime import UTC, datetime
         import uuid
+        from datetime import UTC, datetime
         # Stamp with the bundle_hash so this comment is anchored to a specific evidence snapshot.
         bundle_hash = json.loads(self.bundle_path.read_bytes()).get("bundle_hash", "")
         entry = json.dumps({

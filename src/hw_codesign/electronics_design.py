@@ -313,7 +313,6 @@ _WELL_KNOWN_NET_CLASSES: dict[str, str] = {
     "ETH_CLK": "spi", "ETH_MOSI": "spi", "ETH_MISO": "spi", "ETH_CS": "signal",
     "ETH_TXDP": "differential", "ETH_TXDM": "differential",
     "ETH_RXDP": "differential", "ETH_RXDM": "differential",
-    "I2C_SCL": "i2c", "I2C_SDA": "i2c",
     "XTAL_XIN": "signal", "XTAL_XOUT": "signal",
     "SHUNT_HI": "signal", "SHUNT_LO": "signal",
 }
@@ -946,7 +945,7 @@ def build_avr_32u4_hid_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(2, "K",  "GND",         "ground"),
         pin(3, "A2", "USB_DM_RAW", "bidirectional"),
     ]
-    tvs_out_pins = [
+    _tvs_out_pins = [
         pin(1, "A",  "USB_DP",   "bidirectional"),
         pin(2, "K",  "GND",      "ground"),
         pin(3, "A2", "USB_DM",   "bidirectional"),
