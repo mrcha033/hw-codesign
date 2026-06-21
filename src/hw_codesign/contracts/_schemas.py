@@ -467,6 +467,61 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------
+    # design_benchmark_result — run_design_benchmark output
+    # -------------------------------------------------------------------
+    "design_benchmark_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("design_benchmark_result"),
+        "title": "DesignBenchmarkResult",
+        "description": "Result of the held-out design benchmark: one-line intent → design_until_release pass-rate.",
+        "type": "object",
+        "required": ["status", "benchmark", "summary", "specs"],
+        "additionalProperties": True,
+        "properties": {
+            "status":           {"type": "string", "enum": ["pass", "fail", "partial"]},
+            "benchmark":        {"type": "string"},
+            "include_external": {"type": "boolean"},
+            "summary": {
+                "type": "object",
+                "additionalProperties": True,
+                "properties": {
+                    "total":                      {"type": "integer"},
+                    "passed":                     {"type": "integer"},
+                    "software_gates_ready":        {"type": "integer",
+                                                   "description": "Specs where all software gates pass, pending native toolchain run"},
+                    "failed":                     {"type": "integer"},
+                    "pass_rate":                  {"type": "number",
+                                                   "description": "Fraction of specs that reached released status (requires native gates)"},
+                    "software_gates_ready_rate":   {"type": "number",
+                                                   "description": "Fraction of specs where software gates are ready; CI-measurable win-condition"},
+                    "mean_iterations":            {"type": "number"},
+                    "software_gate_pass_rate":    {"type": "number",
+                                                   "description": "Mean fraction of non-external gates that pass; CI-measurable without native toolchain"},
+                },
+            },
+            "specs": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["id", "template", "intent", "status"],
+                    "additionalProperties": True,
+                    "properties": {
+                        "id":                       {"type": "string"},
+                        "template":                 {"type": "string"},
+                        "intent":                   {"type": "string"},
+                        "status":                   {"type": "string", "enum": ["released", "software_gates_ready", "fail", "blocked", "error", "partial"]},
+                        "iterations":               {"type": "integer"},
+                        "gate_summary":             {"type": "object", "additionalProperties": True},
+                        "software_gate_pass_rate":  {"type": "number"},
+                        "error":                    {"type": "string"},
+                    },
+                },
+            },
+            "artifact": {"type": "string"},
+        },
+    },
+
+    # -------------------------------------------------------------------
     # repair_plan — generate_repair_plan output
     # -------------------------------------------------------------------
     "repair_plan": {

@@ -45,12 +45,14 @@ hw_check_cross_domain_consistency ← validate placement refs against BOM, firmw
 hw_design_candidate          ← primary design workflow: generate + gates + review bundle
 hw_explore_design_space      ← rank backend, component, mechanical, and supplier alternatives
 hw_run_grounding_benchmark   ← adversarial check: injected defects must be caught by gates
+hw_run_design_benchmark      ← held-out suite: one-line intent → design_until_release, measures pass-rate and software_gate_pass_rate
 hw_generate_physical_qualification_plan ← define the external evidence contract
 hw_record_physical_evidence  ← attach approved bench measurements to the qualification gate
 hw_generate_all              ← always candidate_only=true, release_eligible=false
 hw_run_all_checks            ← include_external=true for the full gate matrix
 hw_review_release_readiness  ← non-authoritative summary: blocking gates, requirements, assumptions
 hw_generate_repair_plan / hw_apply_repair_plan / hw_resolve_assumption
+hw_design_until_release      ← autonomous loop: returns 'released', 'software_gates_ready' (all SW gates pass; run with include_external=True for native gates), 'blocked', or 'fail'
 hw_check_release_gate        ← release_eligible=true when status==pass
 hw_export_candidate_bundle   ← archive checkpoint (candidate_only=true, release_eligible=false)
 hw_export_release_bundle     ← release_eligible=true when status==released

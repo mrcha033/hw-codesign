@@ -678,7 +678,10 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         description=(
             "Run up to max_iterations generate→check→repair cycles autonomously. "
             "Requires user_approved_autonomous_iteration=true — returns blocked otherwise. "
-            "Use hw_run_design_iteration for a single supervised iteration instead."
+            "Use hw_run_design_iteration for a single supervised iteration instead. "
+            "Possible return statuses: 'released' (all gates pass including native), "
+            "'software_gates_ready' (all software gates pass; run with include_external=True or install toolchain for native gate results), "
+            "'blocked' (user decision required), 'fail' (repair exhausted or max_iterations reached)."
         ),
         input_schema={
             "type": "object",
@@ -1242,6 +1245,39 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         description="Return all review comments for a project in chronological order.",
         input_schema=_project_only(),
         output_schema=ref("opaque_result"),
+    ),
+
+    # -------------------------------------------------------------------
+    # Design benchmark
+    # -------------------------------------------------------------------
+    "hw_run_design_benchmark": ToolDef(
+        name="hw_run_design_benchmark",
+        description=(
+            "Run the held-out design benchmark: for each reference spec in the built-in suite, "
+            "create a project, lower a one-line intent via hw_update_requirements, then run "
+            "design_until_release. Reports pass_rate, mean_iterations, and per-spec gate outcomes. "
+            "Use this to measure platform regression after every non-trivial change. "
+            "include_external=False by default (CI-safe); set True only when native toolchain is present. "
+            "Temporary projects are deleted after the run unless keep_projects=True."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "include_external": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "Run native ERC/DRC/autoroute gates (requires installed toolchain)",
+                },
+                "keep_projects": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "Preserve temporary benchmark projects for post-mortem inspection",
+                },
+            },
+            "additionalProperties": False,
+        },
+        output_schema=ref("design_benchmark_result"),
+        execution_mode="local",
     ),
 
     # -------------------------------------------------------------------

@@ -39,6 +39,46 @@ from .workspace import Workspace
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
 _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
 _RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist", "atopile"})
+# Gates that require native toolchain (ERC/DRC/autoroute/Zephyr). When include_external=False
+# these are BLOCKED-by-design; the benchmark excludes them from software_gate_pass_rate so CI
+# can track software-gate convergence without native tools.
+_EXTERNAL_GATES = frozenset({
+    "autoroute", "native_erc", "native_drc",
+    "kicad_library_crosscheck", "native_mechanical_validation", "native_zephyr_build",
+})
+# Extended set of structurally-BLOCKED gates that do not indicate a design defect:
+# external tool gates + physical-evidence gate (requires bench testing, not software-fixable) +
+# compiled_electronics_backend for the reference backend (candidate-only by design).
+# design_until_release emits "software_gates_ready" when only these are non-passing.
+_STRUCTURAL_BLOCKED_GATES = _EXTERNAL_GATES | frozenset({
+    "physical_qualification",
+    "compiled_electronics_backend",
+})
+
+# Held-out specs for the design benchmark (one-line intent → design_until_release).
+# Each entry must have a matching template in SUPPORTED_TEMPLATES.
+_BENCHMARK_SPECS: list[dict[str, str]] = [
+    {
+        "id": "sensor_logger_usb",
+        "template": "sensor_data_logger",
+        "intent": "ESP32-S3 data logger with USB-C power and ICM-42688-P 6-axis IMU",
+    },
+    {
+        "id": "ble_lipo_sensor",
+        "template": "ble_sensor_node",
+        "intent": "nRF52840 BLE sensor node with LiPo charging SHT31 temperature humidity 50x35 mm",
+    },
+    {
+        "id": "robotics_controller",
+        "template": "robotics_controller_full",
+        "intent": "STM32H7 motor controller 12 channels 24V CAN bus emergency stop 4-layer",
+    },
+    {
+        "id": "rp2040_usb_hid",
+        "template": "rp2040_usb_device",
+        "intent": "RP2040 USB HID device with 2 MB QSPI flash and USB-C connector",
+    },
+]
 
 
 def _module_summary(m: dict[str, Any]) -> str:
@@ -3040,8 +3080,125 @@ class HardwareService:
                 continue
             if repair.get("requires_user_decision"):
                 return {"status": "blocked", "iterations": iterations, "repair": repair, "release_gate": result["release_gate"]}
+            # No repair to apply and no user decision required. If the only failing gates are
+            # structural BLOCKED gates (external toolchain + physical evidence + backend limitation),
+            # the design is software-ready — the agent should rerun with include_external=True
+            # (or install the missing toolchain) to get native gate results.
+            software_failures = [g for g in result["failed_gates"] if g not in _STRUCTURAL_BLOCKED_GATES]
+            if not software_failures:
+                return {
+                    "status": "software_gates_ready",
+                    "iterations": iterations,
+                    "message": (
+                        "All software gates pass. Native toolchain gates (ERC, DRC, autoroute, Zephyr) "
+                        "are pending. Rerun with include_external=True when the toolchain is available, "
+                        "or install the missing tools (see hw_diagnose_environment)."
+                    ),
+                    "pending_external_gates": [g for g in result["failed_gates"] if g in _EXTERNAL_GATES],
+                    "release_gate": result["release_gate"],
+                }
             return {"status": "fail", "iterations": iterations, "repair": repair, "release_gate": result["release_gate"]}
         return {"status": "fail", "code": "max_iterations_exceeded", "iterations": iterations}
+
+    def run_design_benchmark(
+        self,
+        include_external: bool = False,
+        keep_projects: bool = False,
+    ) -> dict[str, Any]:
+        """End-to-end held-out benchmark: one-line intent → design_until_release, measures pass-rate."""
+        run_id = os.urandom(4).hex()
+        spec_results: list[dict[str, Any]] = []
+        benchmark_dir = self.workspace.root / "benchmarks"
+        benchmark_dir.mkdir(parents=True, exist_ok=True)
+
+        for spec in _BENCHMARK_SPECS:
+            project = f"bench_{spec['id']}_{run_id}"
+            try:
+                self.create_project(project, template=spec["template"])
+                self.update_requirements(project, spec["intent"])
+                result = self.design_until_release(project, include_external=include_external)
+                project_path = self.workspace.require_project(project)
+                gate_summary: dict[str, Any] = {}
+                iterations_dir = project_path / "history" / "iterations"
+                passed_gates: list[str] = []
+                failed_gates: list[str] = []
+                if iterations_dir.is_dir():
+                    iteration_dirs = sorted(iterations_dir.iterdir())
+                    if iteration_dirs:
+                        result_json = iteration_dirs[-1] / "result.json"
+                        if result_json.is_file():
+                            last = json.loads(result_json.read_text(encoding="utf-8"))
+                            passed_gates = last.get("passed_gates", [])
+                            failed_gates = last.get("failed_gates", [])
+                sw_fail = [g for g in failed_gates if g not in _EXTERNAL_GATES]
+                sw_total = len(passed_gates) + len(sw_fail)
+                sw_pass_rate = len(passed_gates) / sw_total if sw_total else 1.0
+                gate_summary = {
+                    "pass": len(passed_gates),
+                    "fail": len(failed_gates),
+                    "software_fail": len(sw_fail),
+                    "total": len(passed_gates) + len(failed_gates),
+                    "software_gate_pass_rate": round(sw_pass_rate, 4),
+                }
+                spec_results.append({
+                    "id": spec["id"],
+                    "template": spec["template"],
+                    "intent": spec["intent"],
+                    "status": result.get("status", "fail"),
+                    "iterations": len(result.get("iterations", [])),
+                    "gate_summary": gate_summary,
+                    "software_gate_pass_rate": round(sw_pass_rate, 4),
+                })
+            except Exception as exc:
+                spec_results.append({
+                    "id": spec["id"],
+                    "template": spec["template"],
+                    "intent": spec["intent"],
+                    "status": "error",
+                    "iterations": 0,
+                    "gate_summary": {},
+                    "error": str(exc),
+                })
+            finally:
+                if not keep_projects:
+                    try:
+                        project_path_cleanup = self.workspace.project_path(project)
+                        if project_path_cleanup.exists():
+                            shutil.rmtree(project_path_cleanup)
+                    except Exception:
+                        pass
+
+        passed = sum(1 for r in spec_results if r["status"] == "released")
+        sw_ready = sum(1 for r in spec_results if r["status"] in {"released", "software_gates_ready"})
+        total = len(spec_results)
+        pass_rate = passed / total if total else 0.0
+        sw_ready_rate = sw_ready / total if total else 0.0
+        iteration_counts = [r["iterations"] for r in spec_results if r["iterations"] > 0]
+        mean_iterations = sum(iteration_counts) / len(iteration_counts) if iteration_counts else 0.0
+        overall_status = "pass" if passed == total else ("partial" if passed > 0 else "fail")
+        sw_rates = [r["software_gate_pass_rate"] for r in spec_results if "software_gate_pass_rate" in r]
+        mean_sw_pass_rate = round(sum(sw_rates) / len(sw_rates), 4) if sw_rates else 0.0
+
+        benchmark_result: dict[str, Any] = {
+            "status": overall_status,
+            "benchmark": "design_benchmark_v0",
+            "include_external": include_external,
+            "summary": {
+                "total": total,
+                "passed": passed,
+                "software_gates_ready": sw_ready,
+                "failed": total - passed,
+                "pass_rate": round(pass_rate, 4),
+                "software_gates_ready_rate": round(sw_ready_rate, 4),
+                "mean_iterations": round(mean_iterations, 2),
+                "software_gate_pass_rate": mean_sw_pass_rate,
+            },
+            "specs": spec_results,
+        }
+        artifact_path = benchmark_dir / f"design_benchmark_{run_id}.json"
+        write_json(artifact_path, benchmark_result)
+        benchmark_result["artifact"] = artifact_path.as_posix()
+        return benchmark_result
 
     # ------------------------------------------------------------------
     # Candidate lifecycle

@@ -260,6 +260,10 @@ def create_server(root: Path | str | None = None):
         result["goal"] = goal
         return result
 
+    @server.tool(name=_TR["hw_run_design_benchmark"].name)
+    def run_design_benchmark(include_external: bool = False, keep_projects: bool = False) -> dict[str, Any]:
+        return service.run_design_benchmark(include_external=include_external, keep_projects=keep_projects)
+
     @server.tool(name=_TR["hw_design_until_release"].name)
     def design_until_release(
         project: str,
