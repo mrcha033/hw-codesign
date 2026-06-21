@@ -10,3 +10,21 @@ roles:
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
   capacitor_100n: {component_id: grm188_100n, resolution: curated}
   capacitor_22u: {component_id: grm31_22u, resolution: curated}
+alternatives:
+  resistor_4k7:
+    - component_id: rc0603_10k
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; can reduce sensor-bus pull-up current but needs I2C rise-time review.
+      required_reviews: [i2c_rise_time]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+    - component_id: rc0603_1k
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; can improve edge rate but increases sink current.
+      required_reviews: [i2c_sink_current]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+single_source_justifications:
+  power_input: {reason: USB-C connector substitution changes shell footprint, ESD geometry, and enclosure cutout, mitigation: Add a curated USB-C connector alternative with footprint and mechanical-cutout evidence before substitution, required_reviews: [usb_mechanical_fit, connector_footprint]}
+  tvs: {reason: USB ESD substitution changes capacitance, clamp behavior, and high-speed routing geometry, mitigation: Add a curated USB ESD alternative with capacitance and footprint evidence before substitution, required_reviews: [usb_signal_integrity, footprint_contract]}
+  regulator_3v3: {reason: 3V3-regulator substitution changes dropout, stability, and thermal behavior, mitigation: Add a curated regulator alternative with stability and package evidence before substitution, required_reviews: [load_transient, stability_review]}
+  mcu: {reason: ESP32 module substitution changes RF keepout, pinmap, firmware target, and footprint, mitigation: Add a curated module alternative with RF layout and firmware evidence before substitution, required_reviews: [rf_keepout, firmware_pinmap]}
+  imu: {reason: IMU substitution changes axis orientation, register behavior, driver support, and footprint, mitigation: Add a curated IMU alternative with orientation and firmware-driver evidence before substitution, required_reviews: [sensor_orientation, firmware_driver]}

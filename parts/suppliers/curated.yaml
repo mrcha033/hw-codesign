@@ -19,6 +19,8 @@ records:
   - {component_id: usblc6_2sc6, supplier_sku: USBLC6-2SC6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: rc0603_100k, supplier_sku: RC0603FR-07100KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: rc0603_4k7, supplier_sku: RC0603FR-074K7L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: rc0603_1k, supplier_sku: RC0603FR-071KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-16'}}
+  - {component_id: rc0603_10k, supplier_sku: RC0603FR-0710KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-16'}}
   - {component_id: molex_43045_0800, supplier_sku: Molex-43045-0800, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: grm188_100n, supplier_sku: GRM188R71C104KA01D, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: grm31_22u, supplier_sku: GRM31CR61E226ME15L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}

@@ -15,3 +15,30 @@ roles:
   charge_set: {component_id: rc0603_10k, resolution: curated}
   capacitor_100n: {component_id: grm188_100n, resolution: curated}
   capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}
+alternatives:
+  resistor_4k7:
+    - component_id: rc0603_10k
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; can reduce I2C pull-up current but needs rise-time review.
+      required_reviews: [i2c_rise_time]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+  led_resistor:
+    - component_id: rc0603_4k7
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; reduces LED current for lower power at the cost of brightness.
+      required_reviews: [led_brightness]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+  charge_set:
+    - component_id: rc0603_4k7
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; changes charger current-programming behavior and must be reviewed.
+      required_reviews: [charger_current_programming]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+single_source_justifications:
+  power_input: {reason: USB-C connector substitution changes shell footprint, ESD geometry, and enclosure cutout, mitigation: Add a curated USB-C connector alternative with footprint and mechanical-cutout evidence before substitution, required_reviews: [usb_mechanical_fit, connector_footprint]}
+  tvs: {reason: USB ESD substitution changes capacitance, clamp behavior, and USB signal-integrity margin, mitigation: Add a curated ESD alternative with capacitance and footprint evidence before substitution, required_reviews: [usb_signal_integrity, footprint_contract]}
+  charger: {reason: Charger substitution changes charge profile, thermal behavior, battery safety, and firmware-visible status pins, mitigation: Add a curated charger alternative with charge-profile and pinmap evidence before substitution, required_reviews: [battery_safety, firmware_pinmap]}
+  regulator_3v3: {reason: LDO substitution changes dropout, thermal margin, and quiescent current, mitigation: Add a curated regulator alternative with thermal and battery-life evidence before substitution, required_reviews: [thermal_review, battery_life]}
+  mcu: {reason: nRF52840 substitution changes RF layout, firmware target, package, and power modes, mitigation: Add a curated MCU/module alternative with RF and firmware migration evidence before substitution, required_reviews: [rf_keepout, firmware_pinmap]}
+  env_sensor: {reason: Environmental sensor substitution changes calibration, I2C behavior, footprint, and firmware driver, mitigation: Add a curated sensor alternative with calibration and driver evidence before substitution, required_reviews: [sensor_calibration, firmware_driver]}
+  fuel_gauge: {reason: Fuel-gauge substitution changes battery model, I2C protocol, package, and firmware driver, mitigation: Add a curated fuel-gauge alternative with battery-model and driver evidence before substitution, required_reviews: [battery_model, firmware_driver]}

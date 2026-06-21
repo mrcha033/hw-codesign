@@ -24,3 +24,29 @@ roles:
   capacitor_100n: {component_id: grm188_100n, resolution: curated}
   capacitor_22u: {component_id: grm31_22u, resolution: curated}
   capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}
+alternatives:
+  resistor_4k7:
+    - component_id: rc0603_10k
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; can reduce I2C pull-up current at the cost of rise-time margin.
+      required_reviews: [i2c_rise_time]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+    - component_id: rc0603_1k
+      resolution: curated
+      rationale: Same 0603 resistor footprint and pin-number contract; can strengthen pull-up edges but increases sink current.
+      required_reviews: [i2c_sink_current]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
+single_source_justifications:
+  power_input: {reason: High-current connector substitution changes current rating, mate family, and enclosure cutout, mitigation: Add a curated connector alternative with mating-system and mechanical-cutout evidence before substitution, required_reviews: [connector_current_rating, enclosure_cutout_alignment]}
+  fuse: {reason: Service-fuse substitution changes package geometry and fault-current behavior, mitigation: Add a curated fuse alternative with footprint and interruption-rating evidence before substitution, required_reviews: [fault_current_rating, footprint_contract]}
+  reverse_polarity: {reason: Ideal-diode controller alternatives change pinout and protection-loop behavior, mitigation: Add a curated controller alternative with pin/package and protection-threshold evidence before substitution, required_reviews: [protection_thresholds, pinout_contract]}
+  tvs: {reason: Battery TVS substitution changes standoff voltage and surge behavior, mitigation: Add a curated TVS alternative with voltage clamp and package evidence before substitution, required_reviews: [surge_rating, voltage_clamp]}
+  efuse: {reason: eFuse substitution changes protection thresholds, thermal pad, and fault handling, mitigation: Add a curated eFuse alternative with pinout, package, and protection-threshold evidence before substitution, required_reviews: [protection_thresholds, thermal_pad]}
+  regulator_5v: {reason: Buck-regulator substitution changes compensation, thermal pad, and inductor/current limits, mitigation: Add a curated regulator alternative with reference-design and footprint evidence before substitution, required_reviews: [power_stage_compensation, thermal_review]}
+  regulator_3v3: {reason: 3V3-regulator substitution changes stability and load-transient behavior, mitigation: Add a curated regulator alternative with stability, pinout, and package evidence before substitution, required_reviews: [load_transient, stability_review]}
+  mcu: {reason: MCU substitution changes pinmap, firmware target, package, and peripheral availability, mitigation: Add a curated MCU alternative with firmware target and pinmap migration evidence before substitution, required_reviews: [firmware_pinmap, package_contract]}
+  imu: {reason: IMU substitution changes register behavior, axis orientation, footprint, and firmware driver expectations, mitigation: Add a curated IMU alternative with driver and orientation evidence before substitution, required_reviews: [firmware_driver, sensor_orientation]}
+  can: {reason: CAN transceiver substitution changes bus fault behavior and package pinout, mitigation: Add a curated CAN PHY alternative with pinout and bus-protection evidence before substitution, required_reviews: [can_fault_behavior, pinout_contract]}
+  estop: {reason: E-stop connector substitution changes safety wiring, current rating, and panel cutout, mitigation: Add a curated connector alternative with safety wiring and mechanical evidence before substitution, required_reviews: [safety_wiring, enclosure_cutout_alignment]}
+  safety_gate: {reason: Safety-gate logic substitution changes truth table and IO thresholds, mitigation: Add a curated logic alternative with truth-table and voltage-domain evidence before substitution, required_reviews: [logic_truth_table, voltage_domain]}
+  motor_io: {reason: Motor connector substitution changes current rating, cable mate, and enclosure side geometry, mitigation: Add a curated connector alternative with current-rating and mechanical evidence before substitution, required_reviews: [connector_current_rating, enclosure_cutout_alignment]}
