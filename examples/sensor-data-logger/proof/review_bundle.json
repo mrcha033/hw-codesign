@@ -1,0 +1,1069 @@
+{
+  "artifacts": [],
+  "assumptions": {
+    "total": 2,
+    "unresolved_critical": 1,
+    "unresolved_critical_names": [
+      "rf_antenna_clearance"
+    ]
+  },
+  "bundle_hash": "033692421dfa846b6f7d0260fcaad048f110fd2e9659571f316285b7b17e1683",
+  "bundle_version": "1.0",
+  "candidates": [],
+  "comments": [],
+  "component_resolution": {
+    "requested": 12,
+    "resolved": 12,
+    "status": "pass",
+    "supplier_provider": "curated"
+  },
+  "gate_reports": [
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Freerouting was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "autoroute",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "bom",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "component_provenance",
+      "metrics": {
+        "components_checked": 12
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "parts/role_sets/sensor_data_logger.yaml"
+      ],
+      "backend": {
+        "mutates_database": false,
+        "name": "ComponentResolver"
+      },
+      "failures": [],
+      "gate": "component_resolution",
+      "metrics": {
+        "critical_roles": 5,
+        "requested": 12,
+        "resolved": 12,
+        "supplier_provider": "curated"
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "parts/evidence/datasheets.yaml"
+      ],
+      "backend": {},
+      "failures": [],
+      "gate": "datasheet_evidence",
+      "metrics": {
+        "components_checked": 12
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "deterministic": true,
+        "name": "structural_dependency_graph"
+      },
+      "failures": [],
+      "gate": "design_dependency_graph",
+      "metrics": {
+        "blocked_or_unpassed_nodes": [
+          "autoroute",
+          "kicad_library_crosscheck",
+          "native_drc",
+          "native_erc",
+          "native_mechanical_validation",
+          "native_zephyr_build",
+          "physical_qualification",
+          "supplier_availability",
+          "support_circuit_completeness"
+        ],
+        "declared_edges": 76,
+        "evaluated_edges": 50,
+        "nodes": 40
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/sensor_data_logger/firmware/zephyr/app/prj.conf",
+        "projects/sensor_data_logger/firmware/zephyr/tests/test_i2c_imu.c",
+        "projects/sensor_data_logger/firmware/zephyr/tests/test_usb_console.c"
+      ],
+      "backend": {
+        "deterministic": true,
+        "name": "firmware-interface-contract"
+      },
+      "failures": [],
+      "gate": "firmware_interface_contract",
+      "metrics": {
+        "config_options": [
+          "CONFIG_GPIO=y",
+          "CONFIG_I2C=y",
+          "CONFIG_UART_CONSOLE=y",
+          "CONFIG_USB_DEVICE_STACK=y"
+        ],
+        "pinmap_signals": [
+          "BOOT",
+          "ESP_EN",
+          "I2C_IMU_SCL",
+          "I2C_IMU_SDA",
+          "IMU_INT",
+          "UART_RX",
+          "UART_TX",
+          "USB_DM",
+          "USB_DP"
+        ],
+        "required_interfaces": [
+          "i2c",
+          "usb"
+        ],
+        "test_files": [
+          "test_i2c_imu.c",
+          "test_usb_console.c"
+        ]
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "firmware_modules",
+      "metrics": {
+        "isr_count": 0,
+        "module_count": 0,
+        "required_behaviors": [],
+        "total_stack_bytes": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "firmware_pinmap",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "hw_sw_parity",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "interface_integrity",
+      "metrics": {
+        "can_pair_present": false,
+        "errors": 0,
+        "i2c_nets_checked": 2,
+        "usb_bridge_present": true,
+        "usb_nets_checked": 4,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "deterministic": true,
+        "name": "reference-ir-erc"
+      },
+      "failures": [],
+      "gate": "ir_erc",
+      "metrics": {
+        "components": 12,
+        "nets": 14
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb"
+      ],
+      "backend": {
+        "deterministic": true,
+        "name": "reference-ir-drc"
+      },
+      "failures": [],
+      "gate": "ir_pcb_sanity",
+      "metrics": {
+        "footprints": 12,
+        "layers": 2,
+        "pads": 47,
+        "segments": 33
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad library cross-check was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "kicad_library_crosscheck",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "deterministic": true,
+        "name": "layout-signal-precheck",
+        "release_authoritative": false
+      },
+      "failures": [],
+      "gate": "layout_signal_integrity",
+      "metrics": {
+        "noisy_power_components": 1,
+        "rf_components": 1,
+        "rf_edge_distance_max_mm": 8.0,
+        "rf_noisy_keepout_mm": 10.0,
+        "usb_connectors": 1,
+        "usb_devices": 1,
+        "usb_esd_components": 1,
+        "usb_esd_max_connector_distance_mm": 15.0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "deterministic": true,
+        "name": "layout-thermal-precheck",
+        "release_authoritative": false
+      },
+      "failures": [],
+      "gate": "layout_thermal_integrity",
+      "metrics": {
+        "board_area_mm2": 3500.0,
+        "layers": 2,
+        "peak_current_a": 0.9,
+        "sensitive_components": 2,
+        "thermal_risk_components": 1
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "mechanical_fit",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad DRC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_drc",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad ERC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_erc",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Native CAD validation was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_mechanical_validation",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Native Zephyr build was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_zephyr_build",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [
+        "projects/sensor_data_logger/validation/physical/qualification_plan.json",
+        "projects/sensor_data_logger/validation/physical/qualification_plan.md"
+      ],
+      "backend": {
+        "digital_only": false,
+        "name": "physical-qualification-ledger"
+      },
+      "failures": [
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "assembly_quality",
+            "evidence_required": [
+              "photos",
+              "assembly_checklist",
+              "bom_lot_trace"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+          "path": "validation.physical_evidence.assembly_inspection",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "bringup",
+            "evidence_required": [
+              "bench_supply_log",
+              "rail_voltage_measurements",
+              "thermal_image_optional"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+          "path": "validation.physical_evidence.current_limited_power_up",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "firmware_co_design",
+            "evidence_required": [
+              "flash_log",
+              "interface_probe_log",
+              "firmware_revision_hash"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+          "path": "validation.physical_evidence.firmware_interface_bringup",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "thermal",
+            "evidence_required": [
+              "thermal_camera_capture",
+              "load_profile_log",
+              "ambient_temperature_log"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+          "path": "validation.physical_evidence.thermal_load_profile",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "emi_emc",
+            "evidence_required": [
+              "emi_prescan_report",
+              "test_setup_photos",
+              "cable_configuration"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+          "path": "validation.physical_evidence.emi_emc_prescan",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "si_pi",
+            "evidence_required": [
+              "oscilloscope_captures",
+              "probe_points",
+              "load_state_log"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+          "path": "validation.physical_evidence.signal_power_integrity_probe",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "mechanical_reliability",
+            "evidence_required": [
+              "vibration_test_log",
+              "post_test_inspection_photos",
+              "connector_retention_measurements"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+          "path": "validation.physical_evidence.vibration_connector_retention",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "environmental_safety",
+            "evidence_required": [
+              "ingress_test_report_or_waiver",
+              "esd_test_log_or_waiver",
+              "enclosure_photos"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+          "path": "validation.physical_evidence.ingress_esd_abuse_check",
+          "requires_user_decision": true,
+          "severity": "error"
+        }
+      ],
+      "gate": "physical_qualification",
+      "metrics": {
+        "approved_passed": 0,
+        "failed": 0,
+        "missing_or_unapproved": 8,
+        "required_tests": 8
+      },
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "pin_symbol_footprint",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "deterministic": true,
+        "name": "placement-proposal",
+        "release_authoritative": false
+      },
+      "failures": [
+        {
+          "category": "MECHANICAL_ERROR",
+          "code": "estimated_courtyard_overlap",
+          "details": {
+            "refs": [
+              "U1",
+              "C2"
+            ]
+          },
+          "message": "U1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "warning"
+        },
+        {
+          "category": "MECHANICAL_ERROR",
+          "code": "decoupling_proximity_deferred",
+          "details": {
+            "ref": "C1"
+          },
+          "message": "C1 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "info"
+        },
+        {
+          "category": "MECHANICAL_ERROR",
+          "code": "decoupling_proximity_deferred",
+          "details": {
+            "ref": "C2"
+          },
+          "message": "C2 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "info"
+        }
+      ],
+      "gate": "placement_constraints",
+      "metrics": {
+        "authoritative": false,
+        "constraints": 9,
+        "errors": 0,
+        "finding_counts": {
+          "decoupling_proximity_deferred": 2,
+          "estimated_courtyard_overlap": 1
+        },
+        "method": "constraint_driven_placement_proposal",
+        "placements": 12,
+        "warnings": 1
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "power_tree_integrity",
+      "metrics": {
+        "errors": 0,
+        "power_loads_checked": 3,
+        "source_nets": [
+          "USB_VBUS",
+          "V3V3"
+        ],
+        "transfer_components": 1,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/assembly_drawing.svg",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/bom.csv",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/drill.zip",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/gerbers.zip",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/panelization.json",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/pick_and_place.csv",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/sensor_data_logger-Edge_Cuts.gm1",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/sensor_data_logger-F_Cu.gtl",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/sensor_data_logger-board_outline.dxf",
+        "projects/sensor_data_logger/exports/candidates/reference-fabrication/fabrication/sensor_data_logger.drl"
+      ],
+      "backend": {
+        "candidate_only": true,
+        "name": "reference-fabrication",
+        "release_eligible": false
+      },
+      "failures": [],
+      "gate": "reference_fabrication",
+      "metrics": {
+        "artifact_count": 10,
+        "candidate_only": true
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/sensor_data_logger/firmware/reference/build/bringup_tests"
+      ],
+      "backend": {
+        "name": "reference-host-bsp",
+        "returncode": 0,
+        "stderr": ""
+      },
+      "failures": [],
+      "gate": "reference_firmware_build",
+      "metrics": {},
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "requirements_lowering",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "semantic_electrical",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+        "projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.py"
+      ],
+      "backend": {
+        "deterministic": true,
+        "name": "semantic_schematic_dsl"
+      },
+      "failures": [],
+      "gate": "semantic_schematic_roundtrip",
+      "metrics": {
+        "code_roundtrip_exact": true,
+        "components": 12,
+        "nets": 14,
+        "pin_name_connections": 47
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "sourcing",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "parts/role_sets/sensor_data_logger.yaml"
+      ],
+      "backend": {
+        "deterministic": true,
+        "name": "sourcing-resilience-contract"
+      },
+      "failures": [],
+      "gate": "sourcing_resilience",
+      "metrics": {
+        "alternate_roles": 0,
+        "checked_alternates": 0,
+        "critical_roles": 5,
+        "role_set": "sensor_data_logger",
+        "single_source_justified_roles": 5
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [],
+      "gate": "spec_schema",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "status": "pass"
+    },
+    {
+      "artifacts": [
+        "parts/suppliers/curated.yaml"
+      ],
+      "backend": {
+        "normalized_contract": "supplier_offer_v1",
+        "provider": "curated"
+      },
+      "failures": [
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for J1 at curated",
+          "path": "J1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for D1 at curated",
+          "path": "D1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for U3 at curated",
+          "path": "U3",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for U1 at curated",
+          "path": "U1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for U2 at curated",
+          "path": "U2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for J2 at curated",
+          "path": "J2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for R1 at curated",
+          "path": "R1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for R2 at curated",
+          "path": "R2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for R3 at curated",
+          "path": "R3",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C1 at curated",
+          "path": "C1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C2 at curated",
+          "path": "C2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C9 at curated",
+          "path": "C9",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "supplier_availability",
+      "metrics": {
+        "components_checked": 12,
+        "provider": "curated"
+      },
+      "status": "blocked"
+    },
+    {
+      "artifacts": [
+        "parts/role_sets/sensor_data_logger.yaml"
+      ],
+      "backend": {
+        "deterministic": true,
+        "name": "support-circuit-contract"
+      },
+      "failures": [
+        {
+          "category": "ELECTRICAL_SEMANTIC_ERROR",
+          "code": "missing_required_protection_role",
+          "details": {
+            "acceptable_roles": [
+              "reverse_polarity"
+            ],
+            "protection": "reverse_polarity"
+          },
+          "message": "Required protection lacks a resolved support block: reverse_polarity",
+          "path": "safety.required_protections",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "ELECTRICAL_SEMANTIC_ERROR",
+          "code": "missing_required_protection_role",
+          "details": {
+            "acceptable_roles": [
+              "fuse",
+              "efuse"
+            ],
+            "protection": "fuse_or_efuse"
+          },
+          "message": "Required protection lacks a resolved support block: fuse_or_efuse",
+          "path": "safety.required_protections",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "support_circuit_completeness",
+      "metrics": {
+        "components": 12,
+        "critical_roles": 5,
+        "net_contract_checks": 5,
+        "resolved_critical_roles": 5,
+        "role_set": "sensor_data_logger"
+      },
+      "status": "fail"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "name": "tscircuit",
+        "offline": true,
+        "version": "0.1.1491"
+      },
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "tool_timeout",
+          "details": {},
+          "message": "tscircuit CLI did not complete within 600 s",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_compile",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "compile_prerequisite_failed",
+          "details": {},
+          "message": "Prerequisite compile gate did not pass",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_footprint_parity",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "compile_prerequisite_failed",
+          "details": {},
+          "message": "Prerequisite compile gate did not pass",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_graph_parity",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "compile_prerequisite_failed",
+          "details": {},
+          "message": "Prerequisite compile gate did not pass",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_layout_completeness",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {
+        "name": "tscircuit"
+      },
+      "failures": [
+        {
+          "category": "EDA_ERROR",
+          "code": "gate_not_run",
+          "details": {},
+          "message": "Backend contract gate was not run: tscircuit_manufacturing_export",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_manufacturing_export",
+      "metrics": {},
+      "status": "blocked"
+    },
+    {
+      "artifacts": [],
+      "backend": {},
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "compile_prerequisite_failed",
+          "details": {},
+          "message": "Prerequisite compile gate did not pass",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_netlist_extract",
+      "metrics": {},
+      "status": "blocked"
+    }
+  ],
+  "generated_at": "2026-06-21T11:56:05.323881+00:00",
+  "iterations": [
+    {
+      "created_at": "2026-06-21T11:54:07.904256+00:00",
+      "failed_gates": [],
+      "goal": "design evidence-backed hardware candidate",
+      "iteration_id": "0001",
+      "passed_gates": [],
+      "status": "candidate"
+    }
+  ],
+  "placement": {
+    "board_height_mm": 50.0,
+    "board_width_mm": 70.0,
+    "constraint_count": 9,
+    "placement_count": 12,
+    "source_counts": {
+      "sensor_data_logger_anchor": 12
+    },
+    "unenforced_constraint_kinds": [
+      "decoupling_proximity",
+      "thermal_spacing"
+    ]
+  },
+  "project": {
+    "backend": "tscircuit",
+    "name": "sensor_data_logger",
+    "revision": "r1",
+    "target_use": "iot_sensor_gateway"
+  },
+  "release": null,
+  "requirements": {
+    "active_lowered_count": 0,
+    "active_unresolved": [],
+    "active_unresolved_count": 0
+  },
+  "summary": {
+    "blocked": 14,
+    "fail": 1,
+    "other": 0,
+    "pass": 26,
+    "total": 41
+  }
+}

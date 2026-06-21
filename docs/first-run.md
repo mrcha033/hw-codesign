@@ -15,9 +15,10 @@ uvx --from hw-codesign-platform hw --root . design-candidate first_board \
   --brief "16 channel 24V battery, peak 6A, STM32H7, IMU, emergency stop, Zephyr, 6-layer"
 ```
 
-`create-project` currently instantiates the `robotics_controller_full` template.
-The name changes the workspace identity; it does not select a different board
-topology.
+`create-project` defaults to the `robotics_controller_full` template. Use
+`--template <name>` to select a different family: `sensor_data_logger` or
+`ble_sensor_node`. The project name is the workspace identity and does not
+change the selected topology.
 
 The first design pass should return `status: candidate` and a candidate object
 similar to:

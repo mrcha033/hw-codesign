@@ -3,87 +3,121 @@
 [![CI](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/hw-codesign-platform)](https://pypi.org/project/hw-codesign-platform/)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://pypi.org/project/hw-codesign-platform/)
-[![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey)](#install)
+[![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey)](#development-setup)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP%203.4-purple)](docs/mcp-tools.md)
 
-An agent-facing CLI and MCP server that lets AI coding agents — such as Claude Code or Codex —
-design PCB electronics, mechanical parts, firmware interfaces, sourcing choices, manufacturing
-outputs, and reviewable release artifacts. It generates cross-domain hardware candidates backed
-by typed specs and deterministic gates, then promotes only evidence-backed candidates.
+An MCP server and CLI that lets AI agents — Claude Code, Claude Desktop, Codex, or any
+MCP-capable agent — design PCB electronics, mechanical parts, firmware interfaces, sourcing
+decisions, and manufacturing outputs. Agents author cross-domain hardware candidates through
+structured tool calls; the platform promotes only evidence-backed candidates through tiered
+release gates.
 
-Three maintained board families are included: an STM32H7 robotics motor controller, an
-ESP32-S3 IoT sensor data logger, and an nRF52840 BLE sensor node.
+Three board family templates ship ready to use: an STM32H7 robotics motor controller, an
+ESP32-S3 IoT sensor data logger, and an nRF52840 BLE sensor node. Each has a generated
+candidate bundle, review bundle, and digital gate report an agent can inspect without running
+a local toolchain.
 
-> **Evidence status:** the repository includes generated Gerbers, STEP files, BOM, firmware,
-> reports, and a downloadable candidate bundle. It does not yet claim a fabricated,
-> electrically brought-up, thermally qualified, or EMC-tested board.
-
----
-
-## Install
-
-**Standalone binary** — download from the [latest release](../../releases/latest), no Python needed:
-
-| Platform | File |
-|---|---|
-| Linux x86-64 | `hw-{version}-linux-x86_64.tar.gz` |
-| macOS arm64 | `hw-{version}-macos-arm64.tar.gz` |
-| Windows x86-64 | `hw-{version}-windows-x86_64.zip` |
-
-macOS: clear Gatekeeper quarantine after download with `xattr -d com.apple.quarantine ./hw ./hw-mcp`.
-
-**Run directly with uv** (no install):
-
-```bash
-uvx --from hw-codesign-platform hw --root . create-project my_board
-uvx --from 'hw-codesign-platform[mcp]' hw-mcp  # MCP server
-```
-
-**Full toolchain container** (KiCad, OpenCASCADE, Freerouting, Zephyr):
-
-```bash
-docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest \
-  design-until-release my_board --external
-```
+> **Evidence status:** generated Gerbers, STEP files, BOM, firmware, and digital gate reports
+> are included. These are not fabricated, electrically brought-up, thermally qualified, or
+> EMC-tested boards.
 
 ---
 
-## Quickstart
+## Connect an agent
 
-```bash
-uvx --from hw-codesign-platform hw --root . create-project first_board
-uvx --from hw-codesign-platform hw --root . design-candidate first_board \
-  --brief "16 channel 24V battery, peak 6A, STM32H7, IMU, emergency stop, Zephyr, 6-layer"
-```
+### Claude Desktop
 
-Expected result (abbreviated):
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
-  "status": "candidate",
-  "release_eligible": false,
-  "gate_summary": {"pass": 7, "fail": 2, "blocked": 5},
-  "semantic_representation": {
-    "layers": {
-      "requirements": ["…/spec/system.yaml"],
-      "electronics_graph": "…/electrical_graph.json",
-      "semantic_schematic": "…/semantic/semantic_schematic.json",
-      "semantic_schematic_code": "…/semantic/semantic_schematic.py",
-      "relative_placement": {"style": "constraint-derived positions with provenance"},
-      "mechanical_contract": "…/mechanical_contract.json",
-      "firmware_pinmap": "…/pinmap.json"
+  "mcpServers": {
+    "hw-codesign": {
+      "command": "uvx",
+      "args": ["--from", "hw-codesign-platform[mcp]", "hw-mcp"],
+      "env": {
+        "HW_PLATFORM_ROOT": "/absolute/path/to/hardware-workspace"
+      }
     }
-  },
-  "reviewable_artifacts": {
-    "candidate_bundle": "…/first_board-0001-candidate.zip",
-    "review_bundle": "…/review/bundle.json"
   }
 }
 ```
 
-`release_eligible: false` means the design system preserved the generated candidate but refused
-to promote it. Gate failures and blocked native tools are explicit in the report, never silently
-green. Read [Zero to first candidate report](docs/first-run.md) for the full walkthrough.
+### Claude Code
+
+```bash
+claude mcp add hw-codesign \
+  -e HW_PLATFORM_ROOT="$PWD" \
+  -- uvx --from 'hw-codesign-platform[mcp]' hw-mcp
+```
+
+### Full toolchain container (KiCad, OpenCASCADE, Freerouting, Zephyr)
+
+```bash
+docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest hw-mcp
+```
+
+Point the MCP client at `stdio` transport from the container. Toolchain-dependent gates
+(`native_erc`, `native_drc`, `autoroute`, `native_zephyr_build`) become available only when
+the corresponding native tool is reachable from the server process.
+
+The workspace path must be writable; the server creates projects, validation reports, review
+bundles, and release artifacts beneath it.
+
+---
+
+## What an agent does with this server
+
+The canonical agent workflow, from the [MCP tool reference](docs/mcp-tools.md):
+
+```
+hw_get_capabilities            ← which backends and native tools are installed
+hw_create_project              ← instantiate a board family template
+hw_update_requirements         ← lower natural-language requirements into typed spec fields
+
+# Author topology, placement, and firmware
+hw_propose_circuit_block       ← search the component catalog before committing
+hw_add_circuit_block           ← add a circuit block; ERC runs and result is returned immediately
+hw_set_placement_constraint    ← express adjacent_to / near_connector; placement gate runs on write
+hw_design_firmware_module      ← author a firmware behavior (timeout_shutdown, periodic_transmit, …)
+hw_check_cross_domain_consistency
+
+hw_design_candidate            ← generate all domains, run gates, return semantic representation
+                                  and review bundle; always release_eligible=false until gates pass
+hw_explore_design_space        ← score backend, component, mechanical, and supplier alternatives
+hw_run_grounding_benchmark     ← adversarial check: injected defects must be caught by gates
+hw_generate_physical_qualification_plan
+hw_record_physical_evidence    ← attach bench measurements; physical_qualification gate requires them
+
+hw_check_release_gate          ← the only tool that sets release_eligible=true
+hw_export_release_bundle       ← ZIP the release directory; release_eligible=true on status=released
+```
+
+Every tool response carries `release_eligible`, `candidate_only`, and
+`release_blocking_failures`. `release_eligible: true` is set only by `hw_check_release_gate`
+(status `pass`) and `hw_export_release_bundle` (status `released`). An agent cannot self-report
+a release. See [MCP tool reference](docs/mcp-tools.md) for the full response envelope.
+
+---
+
+## Board families
+
+Three templates are maintained and have generated candidate artifacts an agent can open
+immediately with `hw_open_project`:
+
+| Template | MCU | Layers | Generated artifacts |
+|---|---|---|---|
+| `robotics_controller_full` | STM32H743VIT6 LQFP-100 | 4 (6-layer option) | [proof index](examples/robotics-motor-controller/README.md) |
+| `sensor_data_logger` | ESP32-S3-WROOM-1 | 2 | [proof index](examples/sensor-data-logger/README.md) |
+| `ble_sensor_node` | nRF52840-QIAA | 2 | [proof index](examples/ble-sensor-node/README.md) |
+
+An agent starts a new project with:
+
+```
+hw_create_project(name="my_board", template="sensor_data_logger")
+```
+
+To use a materially different topology, see [Adapting the design system](docs/adapting-a-spec.md).
 
 ---
 
@@ -91,12 +125,12 @@ green. Read [Zero to first candidate report](docs/first-run.md) for the full wal
 
 | Doc | Contents |
 |---|---|
-| [Zero to first candidate report](docs/first-run.md) | Step-by-step walkthrough without native toolchains |
-| [Adapting the design system](docs/adapting-a-spec.md) | Spec parameters, topology extension, backend selection |
+| [MCP tool reference](docs/mcp-tools.md) | Setup, canonical agent workflow, all tools, response envelope, resources |
+| [Zero to first candidate report](docs/first-run.md) | CLI walkthrough: candidate generation without native toolchains |
 | [Capabilities reference](docs/capabilities.md) | Electronics, placement, mechanical, firmware, sourcing, release |
-| [MCP tool reference](docs/mcp-tools.md) | Agent workflow, all tools, response envelope, resources |
+| [Adapting the design system](docs/adapting-a-spec.md) | Spec parameters, topology extension, backend selection, new board families |
 | [Platform architecture](docs/architecture.md) | Board families, backend maturity, repo layout, module map |
-| [Validation contract](docs/validation-contract.md) | Gate statuses, release rules, physical evidence boundary |
+| [Validation contract](docs/validation-contract.md) | Gate statuses, release tiers, adapter contract, physical evidence boundary |
 
 ---
 
@@ -106,8 +140,7 @@ green. Read [Zero to first candidate report](docs/first-run.md) for the full wal
 python3 -m venv .venv
 .venv/bin/pip install '.[dev,mcp]'
 npm ci --ignore-scripts
-.venv/bin/hw --root . create-project quadruped_robot_controller
-.venv/bin/hw --root . iterate quadruped_robot_controller --no-external
+PYTHONPATH=src python3 -m hw_codesign.cli --root . design-candidate quadruped_robot_controller
 ```
 
 Without native toolchains all external gates return `blocked`. Install native macOS backends
@@ -115,7 +148,7 @@ and run the complete flow:
 
 ```bash
 make toolchains
-.venv/bin/hw --root . design-until-release quadruped_robot_controller --external
+PYTHONPATH=src python3 -m hw_codesign.cli --root . design-until-release quadruped_robot_controller --external
 ```
 
 ---
@@ -131,20 +164,4 @@ make toolchains
 - The complete cross-domain flow depends on native KiCad, OpenCASCADE, Freerouting, tscircuit,
   and Zephyr. Validated paths: Linux container (CI), macOS (`make toolchains`), and Windows
   (Python test suite — native toolchains not yet installed on Windows runners).
-- The tracked `r1` export is historical digital evidence. The current checked-in `reference`
-  configuration is candidate-only and its release gate is expected to remain blocked unless a
-  compiled backend is selected and all native gates pass.
-
----
-
-## Generated example
-
-The tracked robotics-controller example provides inspectable output without a local toolchain run:
-
-- [Example and proof index](examples/robotics-motor-controller/README.md)
-- [Complete generated bundle](projects/quadruped_robot_controller/exports/quadruped_robot_controller-r1.zip)
-- [Validation report](projects/quadruped_robot_controller/exports/r1/docs/validation_report.json)
-- [Known physical risks](projects/quadruped_robot_controller/exports/r1/docs/known_risks.md)
-
-These are generated design artifacts and digital evidence, not proof of fabrication or physical
-qualification.
+- MCP registry publication is deferred until the public tool interface and versioning policy are stable.

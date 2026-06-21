@@ -1,8 +1,9 @@
 # Robotics motor controller reference design
 
-This is the currently maintained end-to-end design family. Its source
-specification is under
-[`projects/quadruped_robot_controller/spec/`](../../projects/quadruped_robot_controller/spec/).
+STM32H743VIT6 LQFP-100, 12 motor channels, CAN, 24 V VBAT, four-layer PCB,
+enclosure, firmware, and manufacturing outputs.
+
+Source specification: [`projects/quadruped_robot_controller/spec/`](../../projects/quadruped_robot_controller/spec/)
 
 ## Inspect without installing
 
