@@ -112,7 +112,8 @@ artifacts. It mutates in-memory copies of the electrical graph, pin/footprint
 contracts, support-role resolution and wiring, component pin/net consistency,
 power budget, power-tree reachability, regulator voltage ordering, bus-interface
 support subgraphs, layout/thermal precheck risks, connector current assumptions,
-sourcing metadata and critical-role resilience, USB ESD placement, RF
+sourcing metadata and critical-role resilience, high-vibration connector
+retention contracts, USB ESD placement, RF
 antenna/keepout placement, firmware pinmap, firmware e-stop shutdown behavior,
 firmware interface bring-up coverage, and dependency reports, then verifies that
 the relevant gates catch each plausible-but-wrong candidate.

@@ -116,6 +116,21 @@ component(
 )
 
 component(
+    'F1',
+    role='fuse',
+    value='500mA Fuse',
+    component_id='littelfuse_0498080',
+    mpn='Littelfuse-0498080.M',
+    manufacturer='Littelfuse',
+    package='MIDI',
+    footprint='HW_Curated:MIDI_Fuse',
+    pins=[
+        pin('1', 'IN', net='USB_VBUS', role='passive', voltage_domain=None, mcu_pin=None),
+        pin('2', 'OUT', net='USB_FUSED', role='passive', voltage_domain=None, mcu_pin=None),
+    ],
+)
+
+component(
     'J1',
     role='power_input',
     value='USB-C CHARGE',
@@ -142,13 +157,13 @@ component(
     package='FTSH-10',
     footprint='Connector_Samtec:FTSH-105',
     pins=[
-        pin('1', 'VREF', net='V3V3', role='power_out', voltage_domain='V3V3', mcu_pin=None),
+        pin('1', 'GND_IN', net='GND', role='ground', voltage_domain='GND', mcu_pin=None),
         pin('2', 'SWDIO', net='SWDIO', role='bidirectional', voltage_domain=None, mcu_pin=None),
-        pin('3', 'GND', net='GND', role='ground', voltage_domain='GND', mcu_pin=None),
-        pin('4', 'SWDCLK', net='SWDCLK', role='input', voltage_domain=None, mcu_pin=None),
-        pin('5', 'NRST', net='NRST', role='bidirectional', voltage_domain=None, mcu_pin=None),
-        pin('6', 'SWO', net='SWO', role='output', voltage_domain=None, mcu_pin=None),
-        pin('7', 'TX', net='UART_TX', role='output', voltage_domain=None, mcu_pin=None),
+        pin('3', 'SWO', net='SWO', role='output', voltage_domain=None, mcu_pin=None),
+        pin('4', 'NRST', net='NRST', role='bidirectional', voltage_domain=None, mcu_pin=None),
+        pin('5', 'TX', net='UART_TX', role='output', voltage_domain=None, mcu_pin=None),
+        pin('6', 'VREF', net='V3V3', role='power_out', voltage_domain='V3V3', mcu_pin=None),
+        pin('7', 'SWDCLK', net='SWDCLK', role='input', voltage_domain=None, mcu_pin=None),
         pin('8', 'RX', net='UART_RX', role='input', voltage_domain=None, mcu_pin=None),
     ],
 )
@@ -168,6 +183,22 @@ component(
         pin('3', 'VIN', net='VBAT', role='power_in', voltage_domain='VBAT', mcu_pin=None),
         pin('4', 'NC', net='GND', role='ground', voltage_domain='GND', mcu_pin=None),
         pin('5', 'VOUT', net='V3V3', role='power_out', voltage_domain='V3V3', mcu_pin=None),
+    ],
+)
+
+component(
+    'Q1',
+    role='reverse_polarity',
+    value='Ideal Diode',
+    component_id='lm74700qdbvrq1',
+    mpn='LM74700QDBVRQ1',
+    manufacturer='Texas Instruments',
+    package='SOT-23-6',
+    footprint='Package_TO_SOT_SMD:SOT-23-6',
+    pins=[
+        pin('1', 'ANODE', net='USB_FUSED', role='power_in', voltage_domain='V3V3', mcu_pin=None),
+        pin('2', 'CATHODE', net='USB_PROT', role='power_out', voltage_domain='V3V3', mcu_pin=None),
+        pin('3', 'GND', net='GND', role='ground', voltage_domain='GND', mcu_pin=None),
     ],
 )
 
@@ -257,8 +288,8 @@ component(
         pin('14', 'SWDCLK', net='SWDCLK', role='input', voltage_domain=None, mcu_pin='SWDCLK'),
         pin('15', 'SWDIO', net='SWDIO', role='bidirectional', voltage_domain=None, mcu_pin='SWDIO'),
         pin('16', 'SWO', net='SWO', role='output', voltage_domain=None, mcu_pin='SWO'),
-        pin('17', 'USB_DM', net='USB_DM', role='bidirectional', voltage_domain=None, mcu_pin='D-'),
-        pin('18', 'USB_DP', net='USB_DP', role='bidirectional', voltage_domain=None, mcu_pin='D+'),
+        pin('17', 'USB_DP', net='USB_DP', role='bidirectional', voltage_domain=None, mcu_pin='D+'),
+        pin('18', 'USB_DM', net='USB_DM', role='bidirectional', voltage_domain=None, mcu_pin='D-'),
     ],
 )
 
@@ -272,7 +303,7 @@ component(
     package='SOT-23-8',
     footprint='Package_TO_SOT_SMD:SOT-23-8',
     pins=[
-        pin('1', 'IN', net='USB_VBUS', role='power_in', voltage_domain='USB_5V', mcu_pin=None),
+        pin('1', 'IN', net='USB_PROT', role='power_in', voltage_domain='V3V3', mcu_pin=None),
         pin('2', 'VSS', net='GND', role='ground', voltage_domain='GND', mcu_pin=None),
         pin('3', 'EN1', net='V3V3', role='input', voltage_domain=None, mcu_pin=None),
         pin('4', 'EN2', net='GND', role='input', voltage_domain=None, mcu_pin=None),
@@ -347,9 +378,10 @@ connect('C3', pin='GND', number='2', net='GND', role='ground', mcu_pin=None)
 connect('C4', pin='GND', number='2', net='GND', role='ground', mcu_pin=None)
 connect('D1', pin='GND', number='5', net='GND', role='ground', mcu_pin=None)
 connect('J1', pin='GND', number='2', net='GND', role='ground', mcu_pin=None)
-connect('J2', pin='GND', number='3', net='GND', role='ground', mcu_pin=None)
+connect('J2', pin='GND_IN', number='1', net='GND', role='ground', mcu_pin=None)
 connect('LD1', pin='GND', number='2', net='GND', role='ground', mcu_pin=None)
 connect('LD1', pin='NC', number='4', net='GND', role='ground', mcu_pin=None)
+connect('Q1', pin='GND', number='3', net='GND', role='ground', mcu_pin=None)
 connect('R4', pin='GND', number='2', net='GND', role='passive', mcu_pin=None)
 connect('U1', pin='VSS', number='2', net='GND', role='ground', mcu_pin=None)
 connect('U2', pin='VSS', number='2', net='GND', role='ground', mcu_pin=None)
@@ -376,11 +408,11 @@ connect('R3', pin='K', number='2', net='LED_BLE', role='passive', mcu_pin=None)
 connect('U1', pin='P0.08', number='10', net='LED_BLE', role='output', mcu_pin='P0.08')
 
 net('NRST', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
-connect('J2', pin='NRST', number='5', net='NRST', role='bidirectional', mcu_pin=None)
+connect('J2', pin='NRST', number='4', net='NRST', role='bidirectional', mcu_pin=None)
 connect('U1', pin='NRESET', number='11', net='NRST', role='bidirectional', mcu_pin='NRESET')
 
 net('SWDCLK', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
-connect('J2', pin='SWDCLK', number='4', net='SWDCLK', role='input', mcu_pin=None)
+connect('J2', pin='SWDCLK', number='7', net='SWDCLK', role='input', mcu_pin=None)
 connect('U1', pin='SWDCLK', number='14', net='SWDCLK', role='input', mcu_pin='SWDCLK')
 
 net('SWDIO', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
@@ -388,7 +420,7 @@ connect('J2', pin='SWDIO', number='2', net='SWDIO', role='bidirectional', mcu_pi
 connect('U1', pin='SWDIO', number='15', net='SWDIO', role='bidirectional', mcu_pin='SWDIO')
 
 net('SWO', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
-connect('J2', pin='SWO', number='6', net='SWO', role='output', mcu_pin=None)
+connect('J2', pin='SWO', number='3', net='SWO', role='output', mcu_pin=None)
 connect('U1', pin='SWO', number='16', net='SWO', role='output', mcu_pin='SWO')
 
 net('TEMP_INT', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
@@ -400,12 +432,12 @@ connect('J2', pin='RX', number='8', net='UART_RX', role='input', mcu_pin=None)
 connect('U1', pin='P0.29', number='13', net='UART_RX', role='input', mcu_pin='P0.29')
 
 net('UART_TX', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
-connect('J2', pin='TX', number='7', net='UART_TX', role='output', mcu_pin=None)
+connect('J2', pin='TX', number='5', net='UART_TX', role='output', mcu_pin=None)
 connect('U1', pin='P0.28', number='12', net='UART_TX', role='output', mcu_pin='P0.28')
 
 net('USB_DM', signal_class='usb', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('D1', pin='DM_OUT', number='4', net='USB_DM', role='bidirectional', mcu_pin=None)
-connect('U1', pin='USB_DM', number='17', net='USB_DM', role='bidirectional', mcu_pin='D-')
+connect('U1', pin='USB_DM', number='18', net='USB_DM', role='bidirectional', mcu_pin='D-')
 
 net('USB_DM_RAW', signal_class='usb', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('D1', pin='DM_IN', number='3', net='USB_DM_RAW', role='bidirectional', mcu_pin=None)
@@ -413,21 +445,29 @@ connect('J1', pin='D-', number='4', net='USB_DM_RAW', role='bidirectional', mcu_
 
 net('USB_DP', signal_class='usb', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('D1', pin='DP_OUT', number='2', net='USB_DP', role='bidirectional', mcu_pin=None)
-connect('U1', pin='USB_DP', number='18', net='USB_DP', role='bidirectional', mcu_pin='D+')
+connect('U1', pin='USB_DP', number='17', net='USB_DP', role='bidirectional', mcu_pin='D+')
 
 net('USB_DP_RAW', signal_class='usb', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('D1', pin='DP_IN', number='1', net='USB_DP_RAW', role='bidirectional', mcu_pin=None)
 connect('J1', pin='D+', number='3', net='USB_DP_RAW', role='bidirectional', mcu_pin=None)
 
+net('USB_FUSED', signal_class='power', voltage_domain='V3V3', required_track_width_mm=0.5)
+connect('F1', pin='OUT', number='2', net='USB_FUSED', role='passive', mcu_pin=None)
+connect('Q1', pin='ANODE', number='1', net='USB_FUSED', role='power_in', mcu_pin=None)
+
+net('USB_PROT', signal_class='power', voltage_domain='V3V3', required_track_width_mm=0.5)
+connect('Q1', pin='CATHODE', number='2', net='USB_PROT', role='power_out', mcu_pin=None)
+connect('U2', pin='IN', number='1', net='USB_PROT', role='power_in', mcu_pin=None)
+
 net('USB_VBUS', signal_class='power', voltage_domain='USB_5V', required_track_width_mm=0.5)
+connect('F1', pin='IN', number='1', net='USB_VBUS', role='passive', mcu_pin=None)
 connect('J1', pin='VBUS', number='1', net='USB_VBUS', role='power_in', mcu_pin=None)
-connect('U2', pin='IN', number='1', net='USB_VBUS', role='power_in', mcu_pin=None)
 
 net('V3V3', signal_class='power', voltage_domain='V3V3', required_track_width_mm=0.5)
 connect('C1', pin='VCC', number='1', net='V3V3', role='passive', mcu_pin=None)
 connect('C2', pin='VCC', number='1', net='V3V3', role='passive', mcu_pin=None)
 connect('C4', pin='VCC', number='1', net='V3V3', role='passive', mcu_pin=None)
-connect('J2', pin='VREF', number='1', net='V3V3', role='power_out', mcu_pin=None)
+connect('J2', pin='VREF', number='6', net='V3V3', role='power_out', mcu_pin=None)
 connect('LD1', pin='EN', number='1', net='V3V3', role='input', mcu_pin=None)
 connect('LD1', pin='VOUT', number='5', net='V3V3', role='power_out', mcu_pin=None)
 connect('R1', pin='VCC', number='1', net='V3V3', role='passive', mcu_pin=None)
@@ -453,23 +493,25 @@ connect('U3', pin='BAT', number='7', net='VBAT', role='power_in', mcu_pin=None)
 connect('U3', pin='REGIN', number='9', net='VBAT', role='passive', mcu_pin=None)
 
 
-place('BT1', data={'ref': 'BT1', 'x_mm': 42.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('C1', data={'ref': 'C1', 'x_mm': 28.0, 'y_mm': 18.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('C2', data={'ref': 'C2', 'x_mm': 32.0, 'y_mm': 18.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('C3', data={'ref': 'C3', 'x_mm': 20.0, 'y_mm': 12.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('C4', data={'ref': 'C4', 'x_mm': 35.0, 'y_mm': 27.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('D1', data={'ref': 'D1', 'x_mm': 12.0, 'y_mm': 12.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.708, 'courtyard_h_mm': 6.708, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('J1', data={'ref': 'J1', 'x_mm': 12.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.0, 'courtyard_h_mm': 6.0, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('J2', data={'ref': 'J2', 'x_mm': 43.0, 'y_mm': 30.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('LD1', data={'ref': 'LD1', 'x_mm': 22.0, 'y_mm': 18.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.708, 'courtyard_h_mm': 6.708, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('R1', data={'ref': 'R1', 'x_mm': 12.0, 'y_mm': 18.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('R2', data={'ref': 'R2', 'x_mm': 16.0, 'y_mm': 18.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('R3', data={'ref': 'R3', 'x_mm': 38.0, 'y_mm': 12.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('R4', data={'ref': 'R4', 'x_mm': 32.0, 'y_mm': 8.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('U1', data={'ref': 'U1', 'x_mm': 25.0, 'y_mm': 28.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 12.728, 'courtyard_h_mm': 12.728, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('U2', data={'ref': 'U2', 'x_mm': 25.0, 'y_mm': 8.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('U3', data={'ref': 'U3', 'x_mm': 38.0, 'y_mm': 20.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 9.0, 'courtyard_h_mm': 9.0, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
-place('U5', data={'ref': 'U5', 'x_mm': 10.0, 'y_mm': 24.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('BT1', data={'ref': 'BT1', 'x_mm': 43.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('C1', data={'ref': 'C1', 'x_mm': 25.0, 'y_mm': 12.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('C2', data={'ref': 'C2', 'x_mm': 26.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('C3', data={'ref': 'C3', 'x_mm': 44.0, 'y_mm': 10.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('C4', data={'ref': 'C4', 'x_mm': 19.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('D1', data={'ref': 'D1', 'x_mm': 12.0, 'y_mm': 10.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.708, 'courtyard_h_mm': 6.708, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('F1', data={'ref': 'F1', 'x_mm': 17.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('J1', data={'ref': 'J1', 'x_mm': 10.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.0, 'courtyard_h_mm': 6.0, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('J2', data={'ref': 'J2', 'x_mm': 33.0, 'y_mm': 28.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('LD1', data={'ref': 'LD1', 'x_mm': 32.0, 'y_mm': 11.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.708, 'courtyard_h_mm': 6.708, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('Q1', data={'ref': 'Q1', 'x_mm': 24.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 5.196, 'courtyard_h_mm': 5.196, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('R1', data={'ref': 'R1', 'x_mm': 10.0, 'y_mm': 13.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('R2', data={'ref': 'R2', 'x_mm': 15.0, 'y_mm': 13.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('R3', data={'ref': 'R3', 'x_mm': 38.0, 'y_mm': 25.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('R4', data={'ref': 'R4', 'x_mm': 37.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('U1', data={'ref': 'U1', 'x_mm': 25.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 12.728, 'courtyard_h_mm': 12.728, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('U2', data={'ref': 'U2', 'x_mm': 30.0, 'y_mm': 4.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('U3', data={'ref': 'U3', 'x_mm': 40.0, 'y_mm': 6.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 9.0, 'courtyard_h_mm': 9.0, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
+place('U5', data={'ref': 'U5', 'x_mm': 10.0, 'y_mm': 20.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'ble_sensor_node_anchor', 'rationale': ''})
 
 constraint(data={'kind': 'board_keepout', 'target_ref': None, 'params': {'width_mm': 50.0, 'height_mm': 35.0, 'edge_margin_mm': 0.15}, 'derived_from': 'mechanical.envelope + manufacturing.pcb.min_clearance_mm', 'enforced': True, 'rationale': ''})
 constraint(data={'kind': 'mounting_hole_keepout', 'target_ref': None, 'params': {'x_mm': 3.5, 'y_mm': 3.5, 'keepout_radius_mm': 2.4}, 'derived_from': 'mechanical.mounting_holes[0] + mechanical.assembly_clearance_mm', 'enforced': True, 'rationale': ''})
@@ -479,6 +521,7 @@ constraint(data={'kind': 'mounting_hole_keepout', 'target_ref': None, 'params': 
 constraint(data={'kind': 'connector_edge', 'target_ref': 'J1', 'params': {'side': 'front', 'max_edge_distance_mm': 5.0}, 'derived_from': 'mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm', 'enforced': True, 'rationale': ''})
 constraint(data={'kind': 'decoupling_proximity', 'target_ref': 'C1', 'params': {'power_nets': ['GND', 'V3V3']}, 'derived_from': 'graph decoupling component pins', 'enforced': False, 'rationale': 'Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.'})
 constraint(data={'kind': 'decoupling_proximity', 'target_ref': 'C2', 'params': {'power_nets': ['GND', 'V3V3']}, 'derived_from': 'graph decoupling component pins', 'enforced': False, 'rationale': 'Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.'})
+constraint(data={'kind': 'thermal_spacing', 'target_ref': 'Q1', 'params': {'min_spacing_mm': 8.0}, 'derived_from': 'graph power-category component', 'enforced': False, 'rationale': 'Advisory spacing only; thermal qualification requires load testing.'})
 constraint(data={'kind': 'thermal_spacing', 'target_ref': 'LD1', 'params': {'min_spacing_mm': 8.0}, 'derived_from': 'graph power-category component', 'enforced': False, 'rationale': 'Advisory spacing only; thermal qualification requires load testing.'})
 
 semantic_schematic = board.to_dict()

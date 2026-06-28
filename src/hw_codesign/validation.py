@@ -10,6 +10,9 @@ from .io import write_json
 from .models import Failure, FailureCategory, GateReport, Status
 
 
+CONNECTOR_CATEGORIES = {"power_input", "can_connector", "usb", "estop", "motor_io"}
+
+
 def _failure(category: FailureCategory, code: str, message: str, path: str | None = None, **details: Any) -> Failure:
     return Failure(category=category, code=code, message=message, path=path, details=details)
 
@@ -103,6 +106,72 @@ class Validator:
         if wall is not None and minimum_wall is not None and wall < minimum_wall:
             failures.append(_failure(FailureCategory.MECHANICAL_ERROR, "wall_too_thin", f"Wall thickness {wall} mm is below manufacturing minimum {minimum_wall} mm", "mechanical.wall_thickness_mm"))
         return self._report("mechanical_fit", failures)
+
+    def check_mechanical_connector_retention(self, spec: dict[str, Any], graph: dict[str, Any]) -> GateReport:
+        failures: list[Failure] = []
+        mechanical = spec.get("mechanical", {})
+        high_vibration = str(mechanical.get("vibration_environment", "")).lower() == "high"
+        connectors_exposed = bool(mechanical.get("connectors_exposed", True))
+        interface_refs = {
+            str(item.get("ref"))
+            for item in mechanical.get("connector_interfaces", [])
+            if item.get("ref")
+        }
+        electrical_connector_refs = {
+            str(item.get("ref"))
+            for item in graph.get("components", [])
+            if item.get("ref") and item.get("category") in CONNECTOR_CATEGORIES
+        }
+        required_refs = sorted(interface_refs | electrical_connector_refs)
+        retention = (
+            mechanical.get("fixtures", {}).get("cable_retention")
+            or mechanical.get("fixtures", {}).get("connector_retention")
+            or {}
+        )
+        retained_refs = {str(ref) for ref in retention.get("connector_refs", [])}
+        wildcard_retention = "*" in retained_refs
+        retention_method = str(retention.get("retention", retention.get("method", ""))).strip()
+        required = high_vibration and connectors_exposed and bool(required_refs)
+        missing_refs = [] if wildcard_retention else sorted(set(required_refs) - retained_refs)
+
+        if required and not retention.get("enabled"):
+            failures.append(_failure(
+                FailureCategory.MECHANICAL_ERROR,
+                "connector_retention_missing",
+                "High-vibration exposed connectors require a cable or connector retention fixture contract",
+                "mechanical.fixtures.cable_retention",
+                connector_refs=required_refs,
+            ))
+        elif required:
+            if missing_refs:
+                failures.append(_failure(
+                    FailureCategory.MECHANICAL_ERROR,
+                    "connector_retention_incomplete",
+                    "Connector retention fixture does not cover every exposed connector",
+                    "mechanical.fixtures.cable_retention.connector_refs",
+                    missing_refs=missing_refs,
+                    retained_refs=sorted(retained_refs),
+                ))
+            if not retention_method or retention_method == "none":
+                failures.append(_failure(
+                    FailureCategory.MECHANICAL_ERROR,
+                    "connector_retention_method_missing",
+                    "Connector retention fixture must declare the retention method for review",
+                    "mechanical.fixtures.cable_retention.retention",
+                ))
+
+        report = self._report("mechanical_connector_retention", failures)
+        report.metrics = {
+            **report.metrics,
+            "required": required,
+            "high_vibration": high_vibration,
+            "connectors_exposed": connectors_exposed,
+            "required_connector_refs": required_refs,
+            "retained_connector_refs": sorted(retained_refs),
+            "missing_connector_refs": missing_refs if required else [],
+            "retention_method": retention_method,
+        }
+        return report
 
     def check_pinmap(self, assignments: Iterable[dict[str, Any]]) -> GateReport:
         assignments = list(assignments)

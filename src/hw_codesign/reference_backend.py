@@ -119,13 +119,24 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
 {chr(10).join(pads)})''')
     segments, vias, routing_failures = route_board(routed_nets, pad_positions, width, height, route_signals=False, layers=copper_layers, plane_layer_by_net=plane_layers)
     zones = []
+    emitted_zone_layers: set[tuple[str, str]] = set()
     for net_name, layer in plane_layers.items():
         if net_name not in net_ids:
             continue
-        zones.append(f'''  (zone (net {net_ids[net_name]}) (net_name "{net_name}") (layer "{layer}") (hatch edge 0.5)
+        zone_layers = [layer]
+        # On 2-layer boards with the GND plane on B.Cu, mirror it to F.Cu as well.
+        # This ensures F.Cu SMD GND pads connect to the fill without needing explicit vias.
+        if layer == "B.Cu" and len(copper_layers) == 2:
+            zone_layers.append("F.Cu")
+        for zl in zone_layers:
+            key = (net_name, zl)
+            if key in emitted_zone_layers:
+                continue
+            emitted_zone_layers.add(key)
+            zones.append(f'''  (zone (net {net_ids[net_name]}) (net_name "{net_name}") (layer "{zl}") (hatch edge 0.5)
     (connect_pads (clearance 0.25))
     (min_thickness 0.25)
-    (fill yes (thermal_gap 0.3) (thermal_bridge_width 0.3))
+    (fill yes (thermal_gap 0.3) (thermal_bridge_width 0.3) (island_removal_mode 0))
     (polygon (pts (xy 1 1) (xy {width - 1} 1) (xy {width - 1} {height - 1}) (xy 1 {height - 1}))))''')
     return f'''(kicad_pcb (version 20240108) (generator hw_codesign)
   (general (thickness {env['board_thickness_mm']}))
@@ -145,10 +156,13 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
 def _kicad_npth_holes(spec: dict[str, Any]) -> str:
     holes = spec.get("mechanical", {}).get("mounting_holes", [])
     lines = []
-    for hole in holes:
+    for index, hole in enumerate(holes, 1):
         d = hole["diameter_mm"]
+        ref = f"H{index}"
         lines.append(
             f'  (footprint "MountingHole:MountingHole_{d:.1f}mm_Pad" (layer "F.Cu") (at {hole["x_mm"]} {hole["y_mm"]})'
+            f'\n    (property "Reference" "{ref}" (at 0 -3 0) (layer "F.Fab"))'
+            f'\n    (property "Value" "MountingHole" (at 0 3 0) (layer "F.Fab"))'
             f'\n    (pad "" np_thru_hole circle (at 0 0) (size {d:.2f} {d:.2f}) (drill {d:.2f}) (layers "*.Cu" "*.Mask")))'
         )
     return "\n".join(lines) + "\n" if lines else ""

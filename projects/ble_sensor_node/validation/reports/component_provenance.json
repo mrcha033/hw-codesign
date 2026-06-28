@@ -32,7 +32,7 @@
   ],
   "gate": "component_provenance",
   "metrics": {
-    "components_checked": 17
+    "components_checked": 19
   },
   "status": "fail"
 }

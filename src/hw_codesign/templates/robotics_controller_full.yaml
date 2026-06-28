@@ -71,6 +71,12 @@ mechanical:
   fixtures:
     mounting_plate: {enabled: true, thickness_mm: 3.0, edge_margin_mm: 8.0}
     frame_brackets: {enabled: true, thickness_mm: 3.0, width_mm: 18.0, height_mm: 20.0}
+    cable_retention:
+      enabled: true
+      retention: tie_bar
+      connector_refs: [J1, J2, J3, J5, J11, J12, J13, J14, J15, J16, J17, J18, J19, J20, J21, J22]
+      anchor: frame_brackets
+      pull_test_n: 30.0
   connector_interfaces:
     - {ref: J1, side: front, opening_mm: [14.0, 10.0], center_z_mm: 11.0, position_tolerance_mm: 0.5}
     - {ref: J3, side: front, opening_mm: [12.0, 9.0], center_z_mm: 10.5, position_tolerance_mm: 0.5}

@@ -61,14 +61,14 @@
   },
   {
     "graph_pin": "U1.17",
-    "mcu_pin": "D-",
-    "net_name": "USB_DM",
-    "signal": "USB_DM"
-  },
-  {
-    "graph_pin": "U1.18",
     "mcu_pin": "D+",
     "net_name": "USB_DP",
     "signal": "USB_DP"
+  },
+  {
+    "graph_pin": "U1.18",
+    "mcu_pin": "D-",
+    "net_name": "USB_DM",
+    "signal": "USB_DM"
   }
 ]

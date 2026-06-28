@@ -118,3 +118,5 @@ def test_contract_builder_exposes_tolerance_and_height_map(service, project):
     contract = build_mechanical_contract(spec, graph)
     assert contract["clearances"]["tolerance_mm"] > 0
     assert len(contract["board"]["component_height_map"]) == len(graph["components"])
+    assert contract["connector_retention"]["enabled"] is True
+    assert set(contract["connector_retention"]["connector_refs"]) >= {item["ref"] for item in contract["connector_cutouts"]}

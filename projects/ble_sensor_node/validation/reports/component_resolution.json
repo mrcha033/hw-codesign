@@ -9,9 +9,9 @@
   "failures": [],
   "gate": "component_resolution",
   "metrics": {
-    "critical_roles": 7,
-    "requested": 17,
-    "resolved": 17,
+    "critical_roles": 9,
+    "requested": 19,
+    "resolved": 19,
     "supplier_provider": "curated"
   },
   "status": "pass"

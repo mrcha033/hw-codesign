@@ -11,9 +11,9 @@
   "metrics": {
     "alternate_roles": 0,
     "checked_alternates": 0,
-    "critical_roles": 7,
+    "critical_roles": 9,
     "role_set": "ble_sensor_node",
-    "single_source_justified_roles": 7
+    "single_source_justified_roles": 9
   },
   "status": "pass"
 }

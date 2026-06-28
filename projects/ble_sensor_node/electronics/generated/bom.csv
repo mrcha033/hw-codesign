@@ -1,5 +1,7 @@
 reference,category,mpn,quantity,risk
 J1,power_input,USB4105-GF-A,1,normal
+F1,fuse,Littelfuse-0498080.M,1,normal
+Q1,reverse_polarity,LM74700QDBVRQ1,1,normal
 U2,charger,BQ24079RGTT,1,normal
 BT1,battery,S2B-PH-K-S,1,normal
 U3,fuel_gauge,BQ27441DRZR-G1A,1,normal

@@ -12,7 +12,7 @@
     "layers": 2,
     "peak_current_a": 0.3,
     "sensitive_components": 3,
-    "thermal_risk_components": 2
+    "thermal_risk_components": 3
   },
   "status": "pass"
 }

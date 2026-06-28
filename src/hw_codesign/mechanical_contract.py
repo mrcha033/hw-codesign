@@ -62,6 +62,7 @@ def build_mechanical_contract(spec: dict[str, Any], graph: dict[str, Any]) -> di
         },
         "mounting_holes": mechanical["mounting_holes"],
         "fixtures": mechanical.get("fixtures", {}),
+        "connector_retention": mechanical.get("fixtures", {}).get("cable_retention") or mechanical.get("fixtures", {}).get("connector_retention") or {},
         "connector_cutouts": cutouts,
         "connector_component_refs": sorted(item["ref"] for item in graph.get("components", []) if item.get("category") in CONNECTOR_CATEGORIES),
     }

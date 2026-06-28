@@ -7,8 +7,8 @@
   "failures": [],
   "gate": "ir_erc",
   "metrics": {
-    "components": 17,
-    "nets": 21
+    "components": 19,
+    "nets": 23
   },
   "status": "pass"
 }

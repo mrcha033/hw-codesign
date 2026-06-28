@@ -190,8 +190,8 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
         {**pin(14, "SWDCLK",  "SWDCLK",   "input"),       "mcu_pin": "SWDCLK"},
         {**pin(15, "SWDIO",   "SWDIO",    "bidirectional"),"mcu_pin": "SWDIO"},
         {**pin(16, "SWO",     "SWO",      "output"),      "mcu_pin": "SWO"},
-        {**pin(17, "USB_DM",  "USB_DM",   "bidirectional"),"mcu_pin": "D-"},
-        {**pin(18, "USB_DP",  "USB_DP",   "bidirectional"),"mcu_pin": "D+"},
+        {**pin(17, "USB_DP",  "USB_DP",   "bidirectional"),"mcu_pin": "D+"},
+        {**pin(18, "USB_DM",  "USB_DM",   "bidirectional"),"mcu_pin": "D-"},
     ]
     components = [
         component("J1", "power_input", "USB-C CHARGE", "USB4105-GF-A", "USB_C_16Pin", [
@@ -253,13 +253,15 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(8, "VSS", "GND", "ground"),
         ], manufacturer="Sensirion"),
         component("J2", "debug", "SWD DEBUG", "Samtec-FTSH-105-01-L-DV-K", "Cortex_Debug_10Pin", [
-            pin(1, "VREF", "V3V3", "power_out"),
+            # GND on pin-1 (leftmost pad, x=33): spanning-tree routes LEFT toward C2 instead of RIGHT
+            # through the signal channel. Signals in U1 left-to-right x-order → zero route crossings.
+            pin(1, "GND_IN", "GND", "ground"),
             pin(2, "SWDIO", "SWDIO", "bidirectional"),
-            pin(3, "GND", "GND", "ground"),
-            pin(4, "SWDCLK", "SWDCLK", "input"),
-            pin(5, "NRST", "NRST", "bidirectional"),
-            pin(6, "SWO", "SWO", "output"),
-            pin(7, "TX", "UART_TX", "output"),
+            pin(3, "SWO", "SWO", "output"),
+            pin(4, "NRST", "NRST", "bidirectional"),
+            pin(5, "TX", "UART_TX", "output"),
+            pin(6, "VREF", "V3V3", "power_out"),
+            pin(7, "SWDCLK", "SWDCLK", "input"),
             pin(8, "RX", "UART_RX", "input"),
         ], manufacturer="Samtec"),
         component("R1", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SCL", "I2C_SCL", "passive")], manufacturer="Yageo"),

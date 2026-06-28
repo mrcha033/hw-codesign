@@ -144,6 +144,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "usb_esd_far_from_connector",
         "hot_block_near_sensitive_logic",
         "connector_current_rating_violation",
+        "missing_connector_retention",
         "missing_sourcing_resilience_strategy",
         "unavailable_or_obsolete_part",
         "schematic_unknown_pin_endpoint",

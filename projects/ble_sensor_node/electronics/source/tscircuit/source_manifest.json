@@ -23,8 +23,8 @@
     ],
     "compiler_version": "0.1.1491",
     "component_db_hash": "5a97ac71f96574a18a58a6ad3b1b878b9858cb069286457b0c411a425bf7fbd1",
-    "release_eligible": true,
-    "role_set_hash": "12f791f2a56fc48998a700da01ee4e644cbc681c641524a61b53390d28f896fb",
+    "release_eligible": false,
+    "role_set_hash": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
     "source_spec_hash": "c14be211a6048f557b3c31f02aa12d4dd69b87c8949a07ead642a2061be1f72a",
     "timestamp": "1970-01-01T00:00:00+00:00",
     "tool_versions": {
@@ -40,16 +40,21 @@
     "tscircuit_manufacturing_export"
   ],
   "routing_disabled": false,
-  "source_release_eligible": true,
+  "source_release_eligible": false,
   "sources": [
     {
       "path": "board.compiler.mjs",
-      "sha256": "617f721b1439962b33695ab00b62732a6aaca23bac8641ac5db9d8d79da915e2"
+      "sha256": "31a2aa50f012db4b59b3a064a92cb04859c07f9559ce2da2e7f133e73a99a07f"
     },
     {
       "path": "board.tsx",
-      "sha256": "3be6dbfbe4be007007506b5833c04894673192a0415f0a415e65f8d887f5b956"
+      "sha256": "2e9cfe7c5bf9a57666cbfc88a247f5c348fe68fac81f48f6d6e02103a582dfaa"
     }
   ],
-  "unsupported_footprints": []
+  "unsupported_footprints": [
+    {
+      "footprint": "HW_Curated:MIDI_Fuse",
+      "ref": "F1"
+    }
+  ]
 }

@@ -34,6 +34,7 @@ def generate_kicad_schematic(name: str, graph: dict[str, Any], output: Path) -> 
             Supplier_SKU=item["supplier_sku"],
         )
         local_pins = {pin["number"]: pin["position"] for pin in symbol.list_pins()}
+        connected_numbers: set[str] = set()
         for pin in pins:
             local = local_pins.get(str(pin["number"]))
             if local is None:
@@ -42,6 +43,11 @@ def generate_kicad_schematic(name: str, graph: dict[str, Any], output: Path) -> 
             label_point = (point[0] - 5.08, point[1])
             schematic.add_wire(start=point, end=label_point)
             schematic.add_label(pin["net"], position=label_point)
+            connected_numbers.add(str(pin["number"]))
+        for pin_number, local_pos in local_pins.items():
+            if pin_number not in connected_numbers:
+                point = (symbol.position.x + local_pos.x, symbol.position.y - local_pos.y)
+                schematic.no_connects.add(point)
 
     schematic.add_text(
         f"{name}: generated typed electrical graph ({len(components)} components, {len(graph['nets'])} nets)",

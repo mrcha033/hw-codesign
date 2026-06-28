@@ -94,25 +94,37 @@ def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
 
 
 _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {
-    "J1":  (12.0, 4.0),   # USB-C, front edge
-    "F1":  (18.0, 4.0),   # fuse, on power path from USB-C
-    "Q1":  (22.0, 4.0),   # reverse-polarity, before charger
-    "U2":  (25.0, 8.0),   # BQ24079 charger, near USB
-    "BT1": (42.0, 4.0),   # JST LiPo connector, front edge
-    "LD1": (22.0, 18.0),  # AP2112K LDO, between charger and MCU
-    "U3":  (38.0, 20.0),  # BQ27441 fuel gauge, near battery rail
-    "U1":  (25.0, 28.0),  # nRF52840 MCU, centre
-    "U5":  (10.0, 24.0),  # SHT31 env sensor, away from RF area
-    "J2":  (43.0, 30.0),  # SWD debug header, rear edge
-    "D1":  (12.0, 12.0),  # USB ESD TVS, near J1
-    "R1":  (12.0, 18.0),  # I2C SCL pullup
-    "R2":  (16.0, 18.0),  # I2C SDA pullup
-    "R3":  (38.0, 12.0),  # LED resistor
-    "R4":  (32.0, 8.0),   # Charge set resistor
-    "C1":  (28.0, 18.0),  # 100nF decoupling
-    "C2":  (32.0, 18.0),  # 100nF decoupling
-    "C3":  (20.0, 12.0),  # 10uF VBAT cap
-    "C4":  (35.0, 27.0),  # 10uF V3V3 cap
+    # Power path: left edge top → right edge top
+    "J1":  (10.0, 4.0),   # USB-C, top-left edge
+    "F1":  (17.0, 4.0),   # fuse, next in power path
+    "Q1":  (24.0, 4.0),   # reverse-polarity mosfet
+    "U2":  (30.0, 4.0),   # LiPo charger, near power path
+    "BT1": (43.0, 4.0),   # JST LiPo connector, top-right
+    "R4":  (37.0, 4.0),   # Charge-set resistor, beside charger
+    "C3":  (44.0, 10.0),  # 10uF VBAT bulk cap, near BT1 (was (14,10) — collided with D1-2 USB_DP pad)
+    # LDO between charger rail and MCU
+    "LD1": (32.0, 11.0),  # AP2112K LDO, between charger (top) and MCU (centre)
+    # Centralised MCU + close decoupling
+    "U1":  (25.0, 19.0),  # nRF52840 MCU, true board centre
+    "C1":  (25.0, 12.0),  # 100nF decoupling, directly above MCU V3V3 pin
+    # C2 was at (31,19): C2-2 GND landed at (33,19) = U1-5 I2C_SCL (same cell),
+    # blocking freerouting from accessing the I2C_SCL pad. Moved to (26,19) so
+    # C2-2 GND lands at (28,19) — 1mm from U1-2 GND, not on any signal pad.
+    "C2":  (26.0, 19.0),  # 100nF decoupling, beside MCU GND cluster (avoids I2C_SCL pad)
+    "C4":  (19.0, 19.0),  # 10uF V3V3 bulk cap, left of MCU
+    # Sensors on left, away from nRF52840 RF antenna (top-right)
+    "U5":  (10.0, 20.0),  # SHT31 temp/humidity, left of MCU
+    "R1":  (10.0, 13.0),  # I2C SCL pull-up, near sensors
+    "R2":  (15.0, 13.0),  # I2C SDA pull-up, near sensors
+    # Fuel gauge and USB ESD on right; U3 moved UP to (40,6) so that U3-4 GND (index 3,
+    # pitch=3 high-current layout) lands at y=15 instead of y=27, clearing the y=24-28
+    # signal routing channel between U1 and J2.
+    "U3":  (40.0, 6.0),   # BQ27441 fuel gauge; GND pad at y=6+3*3=15, above signal channel
+    "D1":  (12.0, 10.0),  # USB ESD TVS, between USB-C and MCU USB pins
+    "R3":  (38.0, 25.0),  # LED resistor, lower-right
+    # Debug header: GND at pin-1 (leftmost) routes its spanning-tree wire LEFT/UP instead of
+    # through the signal channel. Signals ordered to match U1's left-to-right x-positions → 0 crossings.
+    "J2":  (33.0, 28.0),  # SWD header, pads x=33..45mm, y=28..30mm
 }
 
 

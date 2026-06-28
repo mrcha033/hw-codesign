@@ -10,5 +10,5 @@
 #define PIN_UART_RX "P0.29"
 #define PIN_SWDCLK "SWDCLK"
 #define PIN_SWO "SWO"
-#define PIN_USB_DM "D-"
 #define PIN_USB_DP "D+"
+#define PIN_USB_DM "D-"

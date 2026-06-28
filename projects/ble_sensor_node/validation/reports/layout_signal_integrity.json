@@ -5,10 +5,24 @@
     "name": "layout-signal-precheck",
     "release_authoritative": false
   },
-  "failures": [],
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "rf_antenna_not_edge_aligned",
+      "details": {
+        "edge_distance_mm": 16.0,
+        "maximum_edge_distance_mm": 8.0,
+        "ref": "U1"
+      },
+      "message": "U1 has an integral antenna constraint but is 16.000 mm from the nearest board edge",
+      "path": "placement",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
   "gate": "layout_signal_integrity",
   "metrics": {
-    "noisy_power_components": 2,
+    "noisy_power_components": 3,
     "rf_components": 1,
     "rf_edge_distance_max_mm": 8.0,
     "rf_noisy_keepout_mm": 10.0,
@@ -17,5 +31,5 @@
     "usb_esd_components": 1,
     "usb_esd_max_connector_distance_mm": 15.0
   },
-  "status": "pass"
+  "status": "fail"
 }

@@ -9,10 +9,10 @@
   "failures": [],
   "gate": "ir_pcb_sanity",
   "metrics": {
-    "footprints": 17,
+    "footprints": 19,
     "layers": 2,
-    "pads": 83,
-    "segments": 45
+    "pads": 88,
+    "segments": 51
   },
   "status": "pass"
 }

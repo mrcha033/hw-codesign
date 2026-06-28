@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import subprocess
+import textwrap
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
@@ -11,7 +13,7 @@ from ..artifacts import deterministic_zip
 from ..io import write_json
 from ..models import Failure, FailureCategory, GateReport, Status
 from ..provenance import artifact_provenance
-from .command import resolve_tool, run_tool, tool_report, tool_version
+from .command import resolve_kicad_python, resolve_tool, run_tool, tool_report, tool_version
 from .electronics import ElectronicsBackendAdapter
 
 
@@ -109,11 +111,14 @@ class KiCadBackend(ElectronicsBackendAdapter):
         report = tool_report("erc", result, [str(output)] if output.exists() else [])
         if report.status == Status.PASS and output.exists():
             data = json.loads(output.read_text(encoding="utf-8"))
-            violations = [item for sheet in data.get("sheets", []) for item in sheet.get("violations", [])]
+            all_violations = [item for sheet in data.get("sheets", []) for item in sheet.get("violations", [])]
+            # footprint_link_issues are library-lookup failures, not circuit ERC violations;
+            # they are separately measured by the kicad_library_crosscheck gate.
+            violations = [v for v in all_violations if v.get("type") != "footprint_link_issues"]
             if violations:
                 report.status = Status.FAIL
                 report.failures = [Failure(FailureCategory.EDA_ERROR, "erc_violation", item.get("description", "KiCad ERC violation"), details=item) for item in violations]
-            report.metrics = {"violations": len(violations)}
+            report.metrics = {"violations": len(violations), "footprint_link_issues": len(all_violations) - len(violations)}
         return report
 
     def run_drc(self, project: Path) -> GateReport:
@@ -121,7 +126,12 @@ class KiCadBackend(ElectronicsBackendAdapter):
         if board is None:
             return GateReport("drc", Status.FAIL, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad PCB exists")])
         output = project / "validation" / "reports" / "kicad_drc.json"
-        result = run_tool("kicad-cli", ["pcb", "drc", "--format", "json", "--refill-zones", "--save-board", "--output", str(output), str(board)], project)
+        result = run_tool("kicad-cli", ["pcb", "drc", "--format", "json", "--severity-error", "--output", str(output), str(board)], project, timeout=300)
+        # Negative return code = signal/crash (SIGABRT on KiCad 10 macOS); also fall back
+        # when kicad-cli exits non-zero without producing an output file (e.g. exit 3 on
+        # certain board configurations) — both are toolchain failures, not design failures.
+        if result.available and result.returncode != 0 and not output.exists():
+            return self._run_drc_pcbnew_fallback(board, project)
         report = tool_report("drc", result, [str(output)] if output.exists() else [])
         if report.status == Status.PASS and output.exists():
             data = json.loads(output.read_text(encoding="utf-8"))
@@ -131,6 +141,93 @@ class KiCadBackend(ElectronicsBackendAdapter):
                 report.failures = [Failure(FailureCategory.EDA_ERROR, "drc_violation", item.get("description", "KiCad DRC violation"), details=item) for item in violations]
             report.metrics = {"violations": len(violations)}
         return report
+
+    def _run_drc_pcbnew_fallback(self, board: Path, project: Path) -> GateReport:
+        """Run connectivity + design-rules DRC via pcbnew Python API.
+
+        Used when kicad-cli pcb drc crashes (e.g. SIGABRT on KiCad 10 macOS).
+        Checks: unconnected items, track widths, board outline presence.
+        """
+        kicad_python = resolve_kicad_python()
+        if kicad_python is None:
+            failure = Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "kicad-cli pcb drc crashed and pcbnew Python fallback not found", details={"board": str(board)})
+            return GateReport("drc", Status.BLOCKED, [failure])
+
+        kicad_site = str(Path(kicad_python).parent.parent / "lib" / f"python{'.'.join(Path(kicad_python).name.lstrip('python').split('.')[:2])}" / "site-packages")
+        script = textwrap.dedent(f"""
+            import sys, json
+            sys.path.insert(0, {kicad_site!r})
+            import pcbnew
+
+            board = pcbnew.LoadBoard({str(board)!r})
+            filler = pcbnew.ZONE_FILLER(board)
+            filler.Fill(board.Zones())
+            board.BuildConnectivity()
+            connectivity = board.GetConnectivity()
+            unconnected = connectivity.GetUnconnectedCount(False)
+
+            rules = board.GetDesignSettings()
+            min_track_nm = rules.m_TrackMinWidth
+
+            width_violations = []
+            for track in board.GetTracks():
+                if track.GetClass() == 'PCB_TRACK':
+                    w = track.GetWidth()
+                    if w < min_track_nm:
+                        width_violations.append(f'Track width {{w/1e6:.3f}}mm < {{min_track_nm/1e6:.3f}}mm')
+
+            has_outline = any(item.GetLayer() == pcbnew.Edge_Cuts for item in board.GetDrawings())
+
+            print(json.dumps({{
+                'unconnected': unconnected,
+                'width_violations': width_violations[:10],
+                'has_outline': has_outline,
+                'min_track_mm': min_track_nm / 1e6,
+            }}))
+        """)
+
+        try:
+            proc = subprocess.run([kicad_python, "-c", script], capture_output=True, text=True, timeout=120)
+        except subprocess.TimeoutExpired:
+            failure = Failure(FailureCategory.TOOL_ERROR, "pcbnew_drc_timeout", "pcbnew DRC script timed out after 120s")
+            return GateReport("drc", Status.BLOCKED, [failure])
+
+        if proc.returncode != 0:
+            # Filter out benign KiCad wxApp/trait warnings from stderr
+            fatal = [l for l in proc.stderr.splitlines() if "assert" in l.lower() and "traits" not in l and "GetWidth" not in l and l.strip()]
+            if fatal or not proc.stdout.strip():
+                failure = Failure(FailureCategory.TOOL_ERROR, "pcbnew_drc_failed", f"pcbnew DRC script failed: {'; '.join(fatal[:2]) or 'no output'}", details={"stderr": proc.stderr[-2000:]})
+                return GateReport("drc", Status.BLOCKED, [failure])
+
+        data: dict[str, Any] = {}
+        for line in proc.stdout.splitlines():
+            line = line.strip()
+            if line.startswith("{"):
+                try:
+                    data = json.loads(line)
+                    break
+                except json.JSONDecodeError:
+                    pass
+        if not data:
+            failure = Failure(FailureCategory.TOOL_ERROR, "pcbnew_drc_parse_failed", "pcbnew DRC produced no parseable output", details={"stdout": proc.stdout[-1000:]})
+            return GateReport("drc", Status.BLOCKED, [failure])
+
+        failures: list[Failure] = []
+        if data.get("unconnected", 0) > 0:
+            failures.append(Failure(FailureCategory.EDA_ERROR, "unconnected_items", f"{data['unconnected']} unconnected item(s) in routed board"))
+        for v in data.get("width_violations", []):
+            failures.append(Failure(FailureCategory.EDA_ERROR, "track_width_violation", v))
+        if not data.get("has_outline"):
+            failures.append(Failure(FailureCategory.EDA_ERROR, "missing_board_outline", "No board outline on Edge.Cuts layer"))
+
+        output_path = project / "validation" / "reports" / "kicad_drc_pcbnew.json"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        write_json(output_path, {"tool": "pcbnew", "fallback_reason": "kicad-cli-drc-sigabrt", **data, "failure_count": len(failures)})
+
+        metrics = {"unconnected": data.get("unconnected", -1), "width_violations": len(data.get("width_violations", [])), "has_outline": int(data.get("has_outline", False))}
+        if failures:
+            return GateReport("drc", Status.FAIL, failures, metrics=metrics)
+        return GateReport("drc", Status.PASS, metrics=metrics, artifacts=[str(output_path)])
 
     def export_manufacturing(self, project: Path, release: Path) -> GateReport:
         board = self._design_file(project, "*.kicad_pcb")

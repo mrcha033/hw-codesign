@@ -54,6 +54,8 @@
 - Gates: valid solid, manifold STL, tolerance-aware board/component clearance, connector
   alignment, mounting-hole alignment, and measured BRep interference volume — nonzero
   interference returns `fail`
+- `mechanical_connector_retention` requires high-vibration exposed connector designs to declare
+  a retention fixture, method, and covered connector refs before the candidate can promote
 - Mechanical release requires the board STEP exported by the electronics backend; missing
   evidence returns `blocked`, not a fabricated pass
 
@@ -88,8 +90,8 @@
 - `hw_explore_design_space` enumerates backend, component, mechanical variant, and supplier axes
   and scores each against the current gates; result written to `history/design_space/exploration.json`
 - `hw_run_grounding_benchmark` adversarially mutates generated artifacts (pinout, footprint,
-  power tree, interface wiring, layout, RF, sourcing, firmware) and confirms every relevant
-  gate catches the injected defect; a missed case fails the benchmark
+  power tree, interface wiring, layout, RF, connector retention, sourcing, firmware) and confirms
+  every relevant gate catches the injected defect; a missed case fails the benchmark
 - `hw_generate_physical_qualification_plan` writes a machine-readable evidence contract (thermal,
   EMI/EMC, SI/PI, vibration, ingress, connector fatigue, bring-up); `hw_record_physical_evidence`
   attaches approved test evidence; `physical_qualification` remains `blocked` until every

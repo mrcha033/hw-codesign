@@ -43,6 +43,32 @@
       "path": "gates.power_tree_integrity",
       "requires_user_decision": false,
       "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "ir_pcb_sanity",
+        "prerequisite": "layout_signal_integrity",
+        "prerequisite_status": "fail"
+      },
+      "message": "ir_pcb_sanity passed before prerequisite layout_signal_integrity passed",
+      "path": "gates.ir_pcb_sanity",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "reference_fabrication",
+        "prerequisite": "layout_signal_integrity",
+        "prerequisite_status": "fail"
+      },
+      "message": "reference_fabrication passed before prerequisite layout_signal_integrity passed",
+      "path": "gates.reference_fabrication",
+      "requires_user_decision": false,
+      "severity": "error"
     }
   ],
   "gate": "design_dependency_graph",
@@ -51,16 +77,16 @@
       "autoroute",
       "component_provenance",
       "kicad_library_crosscheck",
+      "layout_signal_integrity",
       "native_drc",
       "native_erc",
       "native_mechanical_validation",
       "native_zephyr_build",
       "physical_qualification",
-      "supplier_availability",
-      "support_circuit_completeness"
+      "supplier_availability"
     ],
     "declared_edges": 76,
-    "evaluated_edges": 48,
+    "evaluated_edges": 51,
     "nodes": 40
   },
   "status": "fail"

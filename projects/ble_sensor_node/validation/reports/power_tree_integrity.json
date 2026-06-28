@@ -5,13 +5,15 @@
   "gate": "power_tree_integrity",
   "metrics": {
     "errors": 0,
-    "power_loads_checked": 8,
+    "power_loads_checked": 9,
     "source_nets": [
+      "USB_FUSED",
+      "USB_PROT",
       "USB_VBUS",
       "V3V3",
       "VBAT"
     ],
-    "transfer_components": 2,
+    "transfer_components": 4,
     "warnings": 0
   },
   "status": "pass"

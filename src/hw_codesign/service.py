@@ -16,6 +16,7 @@ from typing import Any
 
 from .artifacts import deterministic_zip, sha256, simple_pdf, write_manifest
 from .backends.atopile import AtopileBackend
+from .backends.command import resolve_tool
 from .backends.electronics import CONTRACT_STAGES
 from .backends.freerouting import FreeroutingBackend
 from .backends.kicad import KiCadBackend
@@ -193,7 +194,7 @@ class HardwareService:
     def __init__(self, root: Path | str):
         self.root = Path(root).resolve()
         resources = resource_root(self.root)
-        toolchain_root = Path(os.environ.get("HW_TOOLCHAIN_ROOT", self.root)).resolve()
+        toolchain_root = Path(os.environ.get("HW_TOOLCHAIN_ROOT", resources)).resolve()
         self.parts_root = resources / "parts"
         self.workspace = Workspace(self.root)
         self.validator = Validator(resources / "schemas")
@@ -405,6 +406,7 @@ class HardwareService:
             reports.append(GateReport("firmware_pinmap", Status.FAIL, [Failure(FailureCategory.FIRMWARE_ERROR, "missing_pinmap", "Generate firmware before checking the pinmap")]))
         graph_path = path / "electronics" / "generated" / "electrical_graph.json"
         graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else {"components": [], "nets": []}
+        reports.append(self.validator.check_mechanical_connector_retention(spec, graph))
         fw_modules = spec.get("firmware", {}).get("modules", [])
         reports.append(self.validator.check_firmware_modules(fw_modules, pinmap, spec=spec, graph=graph))
         if graph_path.exists():
@@ -461,7 +463,7 @@ class HardwareService:
             autoroute = self.freerouting.route(path)
             erc = self.kicad.run_erc(path); erc.gate = "native_erc"
             drc = self.kicad.run_drc(path); drc.gate = "native_drc"
-            library_failures = [failure for failure in [*erc.failures, *drc.failures] if failure.details.get("type") in {"lib_footprint_issues", "lib_footprint_mismatch"}]
+            library_failures = [failure for failure in [*erc.failures, *drc.failures] if failure.details.get("type") in {"lib_footprint_issues", "lib_footprint_mismatch", "footprint_link_issues"}]
             library_status = Status.BLOCKED if Status.BLOCKED in {erc.status, drc.status} else (Status.FAIL if library_failures else Status.PASS)
             library_crosscheck = GateReport("kicad_library_crosscheck", library_status, library_failures, metrics={"method": "native_erc_drc_library_resolution", "issues": len(library_failures)}, backend={"name": "kicad-cli"})
             if backend == "tscircuit":
@@ -874,6 +876,7 @@ class HardwareService:
             "generated": generated,
             "passed_gates": [item["gate"] for item in checks["reports"] if item["status"] == "pass"],
             "failed_gates": [item["gate"] for item in checks["reports"] if item["status"] != "pass"],
+            "blocked_gates": [item["gate"] for item in checks["reports"] if item["status"] == "blocked"],
             "repair_plan": repair_plan,
             "candidate": candidate,
             "release_gate": {"status": "pass" if all_pass else ("blocked" if blocked else "fail")},
@@ -1783,7 +1786,7 @@ class HardwareService:
                 area("support_circuit_and_power_assumptions", ["requirements_lowering", "semantic_electrical", "power_tree_integrity", "interface_integrity", "support_circuit_completeness", "ir_erc", "bom"]),
                 area("long_horizon_dependency_integrity", ["design_dependency_graph"]),
                 area("layout_routing_manufacturability", ["placement_constraints", "layout_thermal_integrity", "layout_signal_integrity", "ir_pcb_sanity", "reference_fabrication", "compiled_electronics_backend"]),
-                area("mechanical_integration", ["mechanical_fit"]),
+                area("mechanical_integration", ["mechanical_fit", "mechanical_connector_retention"]),
                 area("firmware_interface", ["firmware_pinmap", "firmware_modules", "hw_sw_parity", "firmware_interface_contract", "reference_firmware_build"]),
                 area("physical_qualification_evidence", ["physical_qualification"]),
             ],
@@ -1824,9 +1827,9 @@ class HardwareService:
             "native_erc": ["pin_symbol_footprint"],
             "native_drc": ["ir_pcb_sanity"],
             "kicad_library_crosscheck": ["native_erc", "native_drc"],
-            "native_mechanical_validation": ["mechanical_fit", "reference_fabrication"],
+            "native_mechanical_validation": ["mechanical_fit", "mechanical_connector_retention", "reference_fabrication"],
             "native_zephyr_build": ["firmware_pinmap", "firmware_modules", "firmware_interface_contract", "reference_firmware_build"],
-            "physical_qualification": ["reference_fabrication", "reference_firmware_build", "firmware_modules", "firmware_interface_contract", "mechanical_fit", "layout_thermal_integrity", "layout_signal_integrity"],
+            "physical_qualification": ["reference_fabrication", "reference_firmware_build", "firmware_modules", "firmware_interface_contract", "mechanical_fit", "mechanical_connector_retention", "layout_thermal_integrity", "layout_signal_integrity"],
         }
         by_gate = {report.gate: report for report in reports}
         failures: list[Failure] = []
@@ -2636,6 +2639,20 @@ class HardwareService:
                 ["connector_current_rating_below_peak"],
             )
 
+        mechanical = spec.get("mechanical", {})
+        if mechanical.get("vibration_environment") == "high" and mechanical.get("connectors_exposed", True):
+            spec_missing_connector_retention = deepcopy(spec)
+            fixtures = spec_missing_connector_retention.setdefault("mechanical", {}).setdefault("fixtures", {})
+            fixtures.pop("cable_retention", None)
+            fixtures.pop("connector_retention", None)
+            record(
+                "missing_connector_retention",
+                "mechanical_connector_reliability",
+                "Removed the cable/connector retention fixture from a high-vibration exposed-connector design",
+                self.validator.check_mechanical_connector_retention(spec_missing_connector_retention, graph),
+                ["connector_retention_missing"],
+            )
+
         if role_data.get("critical_roles"):
             role_data_without_resilience = deepcopy(role_data)
             role_data_without_resilience["alternatives"] = {}
@@ -3134,15 +3151,26 @@ class HardwareService:
                             last = json.loads(result_json.read_text(encoding="utf-8"))
                             passed_gates = last.get("passed_gates", [])
                             failed_gates = last.get("failed_gates", [])
+                            blocked_gates = last.get("blocked_gates", [])
                 sw_fail = [g for g in failed_gates if g not in _STRUCTURAL_BLOCKED_GATES]
                 sw_total = len(passed_gates) + len(sw_fail)
                 sw_pass_rate = len(passed_gates) / sw_total if sw_total else 1.0
+                # Native gate rate: only gates that ACTUALLY RAN (not blocked). Blocked
+                # means the toolchain for that architecture is unavailable — it's not a
+                # design defect, so excluded from the denominator.
+                native_passed = [g for g in passed_gates if g in _EXTERNAL_GATES]
+                native_actually_failed = [g for g in failed_gates if g in _EXTERNAL_GATES and g not in blocked_gates]
+                native_total = len(native_passed) + len(native_actually_failed)
+                native_pass_rate = len(native_passed) / native_total if native_total else 0.0
                 gate_summary = {
                     "pass": len(passed_gates),
                     "fail": len(failed_gates),
                     "software_fail": len(sw_fail),
                     "total": len(passed_gates) + len(failed_gates),
                     "software_gate_pass_rate": round(sw_pass_rate, 4),
+                    "native_gate_pass_rate": round(native_pass_rate, 4),
+                    "native_passed": native_passed,
+                    "native_failed": native_actually_failed,
                 }
                 spec_results.append({
                     "id": spec["id"],
@@ -3152,6 +3180,9 @@ class HardwareService:
                     "iterations": len(result.get("iterations", [])),
                     "gate_summary": gate_summary,
                     "software_gate_pass_rate": round(sw_pass_rate, 4),
+                    "native_gate_pass_rate": round(native_pass_rate, 4),
+                    "gates_passed_count": len(passed_gates),
+                    "gates_failed_count": len(failed_gates),
                 })
             except Exception as exc:
                 spec_results.append({
@@ -3182,6 +3213,8 @@ class HardwareService:
         overall_status = "pass" if passed == total else ("partial" if passed > 0 else "fail")
         sw_rates = [r["software_gate_pass_rate"] for r in spec_results if "software_gate_pass_rate" in r]
         mean_sw_pass_rate = round(sum(sw_rates) / len(sw_rates), 4) if sw_rates else 0.0
+        native_rates = [r["native_gate_pass_rate"] for r in spec_results if "native_gate_pass_rate" in r]
+        mean_native_pass_rate = round(sum(native_rates) / len(native_rates), 4) if native_rates else 0.0
 
         benchmark_result: dict[str, Any] = {
             "status": overall_status,
@@ -3196,6 +3229,7 @@ class HardwareService:
                 "software_gates_ready_rate": round(sw_ready_rate, 4),
                 "mean_iterations": round(mean_iterations, 2),
                 "software_gate_pass_rate": mean_sw_pass_rate,
+                "native_gate_pass_rate": mean_native_pass_rate,
             },
             "specs": spec_results,
         }
@@ -3524,8 +3558,8 @@ class HardwareService:
             return {"status": "blocked", "code": "unknown_target", "target": target, "available_targets": sorted(_TARGETS)}
 
         tool_availability: dict[str, bool] = {
-            "kicad_cli":         bool(shutil.which("kicad-cli")),
-            "java":              bool(shutil.which("java")),
+            "kicad_cli":         bool(resolve_tool("kicad-cli")),
+            "java":              bool(self.freerouting._tools().get("java")),
             "node":              bool(shutil.which("node")),
             "arm_none_eabi_gcc": bool(shutil.which("arm-none-eabi-gcc")),
             "ato":               bool(shutil.which("ato")),
@@ -3608,8 +3642,8 @@ class HardwareService:
             "atopile":        {"name": "atopile",        "release_eligible": True,  "candidate_only": False, "description": "atopile backend — release-eligible HDL source; fabrication requires KiCad plugin", "requires_tool": "ato"},
         }
         tools: dict[str, Any] = {
-            "kicad_cli":         {"available": bool(shutil.which("kicad-cli")),          "description": "KiCad CLI — native ERC, DRC, and Gerber export",        "gates": ["native_erc", "native_drc", "kicad_library_crosscheck"]},
-            "java":              {"available": bool(shutil.which("java")),               "description": "Java runtime — Freerouting autorouter",                    "gates": ["autoroute"]},
+            "kicad_cli":         {"available": bool(resolve_tool("kicad-cli")),          "description": "KiCad CLI — native ERC, DRC, and Gerber export",        "gates": ["native_erc", "native_drc", "kicad_library_crosscheck"]},
+            "java":              {"available": bool(self.freerouting.tools().get("java")), "description": "Java runtime — Freerouting autorouter",                    "gates": ["autoroute"]},
             "node":              {"available": bool(shutil.which("node")),               "description": "Node.js runtime (required by tscircuit toolchain; does not verify tscircuit package installation)", "gates": ["tscircuit_compile", "tscircuit_manufacturing_export"]},
             "arm_none_eabi_gcc": {"available": bool(shutil.which("arm-none-eabi-gcc")), "description": "ARM cross-compiler — native Zephyr firmware build",        "gates": ["native_zephyr_build"]},
             "ato":               {"available": bool(shutil.which("ato")),               "description": "atopile CLI — atopile backend compilation",                "gates": ["atopile_compile"]},

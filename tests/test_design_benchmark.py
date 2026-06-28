@@ -205,3 +205,28 @@ def test_design_until_release_software_gates_ready_contract(service: HardwareSer
         assert "message" in result, "software_gates_ready must carry a message"
         assert isinstance(result["pending_external_gates"], list)
         assert len(result["pending_external_gates"]) > 0, "Must name at least one pending external gate"
+
+
+def test_run_design_benchmark_native_gate_pass_rate_in_summary(service: HardwareService):
+    result = service.run_design_benchmark(include_external=False)
+    summary = result["summary"]
+    assert "native_gate_pass_rate" in summary, "Summary must include native_gate_pass_rate"
+    assert 0.0 <= summary["native_gate_pass_rate"] <= 1.0
+
+
+def test_run_design_benchmark_native_gate_pass_rate_per_spec(service: HardwareService):
+    result = service.run_design_benchmark(include_external=False)
+    for spec_result in result["specs"]:
+        if spec_result["status"] != "error":
+            assert "native_gate_pass_rate" in spec_result, f"Spec {spec_result.get('id')!r} missing native_gate_pass_rate"
+            assert 0.0 <= spec_result["native_gate_pass_rate"] <= 1.0
+
+
+def test_run_design_benchmark_gate_counts_per_spec(service: HardwareService):
+    result = service.run_design_benchmark(include_external=False)
+    for spec_result in result["specs"]:
+        if spec_result["status"] != "error":
+            assert "gates_passed_count" in spec_result
+            assert "gates_failed_count" in spec_result
+            assert spec_result["gates_passed_count"] >= 0
+            assert spec_result["gates_failed_count"] >= 0

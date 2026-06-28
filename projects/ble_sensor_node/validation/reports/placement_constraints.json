@@ -11,11 +11,11 @@
       "code": "estimated_courtyard_overlap",
       "details": {
         "refs": [
-          "U2",
-          "C3"
+          "J1",
+          "D1"
         ]
       },
-      "message": "U2 and C3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "J1 and D1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -25,11 +25,67 @@
       "code": "estimated_courtyard_overlap",
       "details": {
         "refs": [
-          "U3",
+          "Q1",
+          "U2"
+        ]
+      },
+      "message": "Q1 and U2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U2",
+          "LD1"
+        ]
+      },
+      "message": "U2 and LD1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "LD1",
+          "U1"
+        ]
+      },
+      "message": "LD1 and U1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U1",
+          "C1"
+        ]
+      },
+      "message": "U1 and C1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U1",
           "C2"
         ]
       },
-      "message": "U3 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "U1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -39,11 +95,11 @@
       "code": "estimated_courtyard_overlap",
       "details": {
         "refs": [
-          "U5",
-          "R1"
+          "U1",
+          "C4"
         ]
       },
-      "message": "U5 and R1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "U1 and C4 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -53,11 +109,11 @@
       "code": "estimated_courtyard_overlap",
       "details": {
         "refs": [
-          "U5",
-          "R2"
+          "J2",
+          "R3"
         ]
       },
-      "message": "U5 and R2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "J2 and R3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -68,10 +124,10 @@
       "details": {
         "refs": [
           "R1",
-          "R2"
+          "D1"
         ]
       },
-      "message": "R1 and R2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "R1 and D1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -81,11 +137,11 @@
       "code": "estimated_courtyard_overlap",
       "details": {
         "refs": [
-          "C1",
-          "C2"
+          "R2",
+          "D1"
         ]
       },
-      "message": "C1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "R2 and D1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -116,15 +172,15 @@
   "gate": "placement_constraints",
   "metrics": {
     "authoritative": false,
-    "constraints": 9,
+    "constraints": 10,
     "errors": 0,
     "finding_counts": {
       "decoupling_proximity_deferred": 2,
-      "estimated_courtyard_overlap": 6
+      "estimated_courtyard_overlap": 10
     },
     "method": "constraint_driven_placement_proposal",
-    "placements": 17,
-    "warnings": 6
+    "placements": 19,
+    "warnings": 10
   },
   "status": "pass"
 }

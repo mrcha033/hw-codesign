@@ -56,12 +56,12 @@ class FreeroutingBackend:
             return self._failure("dsn_export_failed", "KiCad failed to export Specctra DSN", export, tools)
 
         command = [
-            str(tools["java"]), "-jar", str(tools["jar"]),
-            "-de", str(dsn), "-do", str(ses),
+            str(tools["java"]), "-Djava.awt.headless=true", "-jar", str(tools["jar"]),
+            "-de", str(dsn.resolve()), "-do", str(ses.resolve()),
             "-mp", str(max_passes), "-mt", str(threads), "-l", "en",
         ]
         try:
-            completed = subprocess.run(command, cwd=project, capture_output=True, text=True, timeout=600, check=False)
+            completed = subprocess.run(command, cwd=project.resolve(), capture_output=True, text=True, timeout=600, check=False)
         except subprocess.TimeoutExpired as exc:
             return GateReport(
                 "autoroute",
@@ -114,12 +114,12 @@ class FreeroutingBackend:
         java = os.environ.get("HW_JAVA")
         jar = os.environ.get("HW_FREEROUTING_JAR")
         kicad_python = os.environ.get("HW_KICAD_PYTHON")
-        java_path = Path(java) if java else self.root / ".toolchains" / "java25" / "Contents" / "Home" / "bin" / "java"
-        jar_path = Path(jar) if jar else self.root / ".toolchains" / "freerouting" / f"freerouting-{self.VERSION}.jar"
-        kicad_path = Path(kicad_python) if kicad_python else Path("/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9")
+        java_path = Path(java).resolve() if java else (self.root / ".toolchains" / "java25" / "Contents" / "Home" / "bin" / "java").resolve()
+        jar_path = Path(jar).resolve() if jar else (self.root / ".toolchains" / "freerouting" / f"freerouting-{self.VERSION}.jar").resolve()
+        kicad_path = Path(kicad_python).resolve() if kicad_python else Path("/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9")
         if not java_path.is_file():
             resolved = shutil.which("java")
-            java_path = Path(resolved) if resolved else None
+            java_path = Path(resolved).resolve() if resolved else None
         return {
             "java": java_path if java_path and java_path.is_file() else None,
             "jar": jar_path if jar_path.is_file() else None,
@@ -132,9 +132,12 @@ class FreeroutingBackend:
 
     @staticmethod
     def _final_unrouted(log: str) -> int | None:
-        match = re.search(r"final score:.*?(?:\((\d+) unrouted\))?\s*$", log, flags=re.MULTILINE)
-        if match:
-            return int(match.group(1)) if match.group(1) is not None else 0
+        # Parse the "session completed" line which has the authoritative final score.
+        # Format: "final score: S.SS (N unrouted)" or "final score: S.SS" (0 unrouted).
+        session = re.search(r"session completed:.*?final score:\s*[\d.]+\s*(?:\((\d+) unrouted\))?", log)
+        if session:
+            return int(session.group(1)) if session.group(1) is not None else 0
+        # Fallback: last "(N unrouted)" occurrence from pass lines.
         matches = re.findall(r"\((\d+) unrouted\)", log)
         return int(matches[-1]) if matches else None
 

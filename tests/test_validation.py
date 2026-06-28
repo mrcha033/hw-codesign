@@ -18,6 +18,31 @@ def test_mechanical_clearance_passes_template(service, project):
     assert report.status == "pass"
 
 
+def test_mechanical_connector_retention_passes_high_vibration_template(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_mechanical_connector_retention(service.read_spec(project), graph)
+
+    assert report.status == "pass"
+    assert report.metrics["required"] is True
+    assert not report.metrics["missing_connector_refs"]
+
+
+def test_high_vibration_exposed_connectors_require_retention_fixture(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    spec = deepcopy(service.read_spec(project))
+    spec["mechanical"]["fixtures"].pop("cable_retention", None)
+
+    report = service.validator.check_mechanical_connector_retention(spec, graph)
+
+    assert report.status == "fail"
+    assert {item.code for item in report.failures} == {"connector_retention_missing"}
+
+
 def test_pin_conflicts_and_net_mismatches_are_reported(service):
     report = service.validator.check_pinmap([
         {"signal": "I2C_SCL", "mcu_pin": "GPIO9", "net_name": "I2C_SCL"},
