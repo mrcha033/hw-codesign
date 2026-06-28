@@ -1903,29 +1903,33 @@
         "target_ref": "J1"
       },
       {
-        "derived_from": "graph decoupling component pins",
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": null
         },
         "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
         "target_ref": "C1"
       },
       {
-        "derived_from": "graph decoupling component pins",
-        "enforced": false,
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
+        "enforced": true,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": "U1"
         },
-        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "rationale": "",
         "target_ref": "C2"
       },
       {
@@ -1980,7 +1984,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "ble_sensor_node_anchor",
-        "x_mm": 26.0,
+        "x_mm": 27.0,
         "y_mm": 19.0
       },
       "C3": {
@@ -2035,7 +2039,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "ble_sensor_node_anchor",
-        "x_mm": 10.0,
+        "x_mm": 12.0,
         "y_mm": 4.0
       },
       "J2": {
@@ -2046,7 +2050,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "ble_sensor_node_anchor",
-        "x_mm": 33.0,
+        "x_mm": 6.0,
         "y_mm": 28.0
       },
       "LD1": {
@@ -2124,7 +2128,7 @@
         "side": "top",
         "source": "ble_sensor_node_anchor",
         "x_mm": 25.0,
-        "y_mm": 19.0
+        "y_mm": 28.0
       },
       "U2": {
         "courtyard_h_mm": 8.485,
@@ -2157,7 +2161,7 @@
         "side": "top",
         "source": "ble_sensor_node_anchor",
         "x_mm": 10.0,
-        "y_mm": 20.0
+        "y_mm": 24.0
       }
     }
   },

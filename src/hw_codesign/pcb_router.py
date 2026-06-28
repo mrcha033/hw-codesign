@@ -17,12 +17,25 @@ def route_board(
     route_signals: bool = True,
     layers: tuple[str, ...] = LAYERS,
     plane_layer_by_net: dict[str, str] | None = None,
+    npth_holes: list[tuple[float, float, float]] | None = None,
 ) -> tuple[list[str], list[str], list[dict[str, Any]]]:
     occupied: dict[tuple[int, int, int], str] = {}
     segments: list[str] = []
     vias: list[str] = []
     failures: list[dict[str, Any]] = []
     max_x, max_y = int(width_mm / GRID_MM), int(height_mm / GRID_MM)
+    # Pre-block cells around NPTH mounting holes.
+    # keepout = hole_radius + DRC hole_clearance rule; the A* clearance_cells adds the track-half-width margin.
+    _HOLE_CLEARANCE_MM = 0.25
+    for hx_mm, hy_mm, hd_mm in (npth_holes or []):
+        keepout_mm = hd_mm / 2 + _HOLE_CLEARANCE_MM
+        keepout_cells = math.ceil(keepout_mm / GRID_MM)
+        hx_c, hy_c = round(hx_mm / GRID_MM), round(hy_mm / GRID_MM)
+        for dx in range(-keepout_cells, keepout_cells + 1):
+            for dy in range(-keepout_cells, keepout_cells + 1):
+                if math.hypot(dx * GRID_MM, dy * GRID_MM) <= keepout_mm:
+                    for layer in range(len(layers)):
+                        occupied.setdefault((hx_c + dx, hy_c + dy, layer), "__NPTH__")
     pad_cells = {name: [_cell(point) for point in points] for name, points in pad_positions.items()}
     all_pads: dict[tuple[int, int], set[str]] = defaultdict(set)
     for name, cells in pad_cells.items():
@@ -159,12 +172,16 @@ def _astar(starts, goals, occupied, all_pads, net, max_x, max_y, clearance, pad_
 
 def _available(state, occupied, all_pads, net, clearance, pad_clearance, all_layers=False):
     x, y, layer = state
+    is_own_pad = net in all_pads.get((x, y), set())
     checked_layers = range(len(LAYERS)) if all_layers else (layer,)
     for checked_layer in checked_layers:
         for dx in range(-clearance, clearance + 1):
             for dy in range(-clearance, clearance + 1):
                 owner = occupied.get((x + dx, y + dy, checked_layer))
                 if owner is not None and owner != net:
+                    # Pads of the current net may neighbor NPTH keepout zones; only traces must clear holes.
+                    if is_own_pad and owner == "__NPTH__":
+                        continue
                     return False
     for dx in range(-pad_clearance, pad_clearance + 1):
         for dy in range(-pad_clearance, pad_clearance + 1):

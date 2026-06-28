@@ -117,7 +117,9 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
     (property "Substitute_MPN" "{item.get('substitute_mpn') or ''}")
     (fp_rect (start {body_start_x:.3f} -1) (end {body_end_x:.3f} {body_height:.3f}) (stroke (width 0.2) (type default)) (fill none) (layer "F.Fab"))
 {chr(10).join(pads)})''')
-    segments, vias, routing_failures = route_board(routed_nets, pad_positions, width, height, route_signals=False, layers=copper_layers, plane_layer_by_net=plane_layers)
+    mounting_hole_list = spec.get("mechanical", {}).get("mounting_holes", [])
+    npth = [(h["x_mm"], h["y_mm"], h["diameter_mm"]) for h in mounting_hole_list]
+    segments, vias, routing_failures = route_board(routed_nets, pad_positions, width, height, route_signals=False, layers=copper_layers, plane_layer_by_net=plane_layers, npth_holes=npth)
     zones = []
     emitted_zone_layers: set[tuple[str, str]] = set()
     for net_name, layer in plane_layers.items():

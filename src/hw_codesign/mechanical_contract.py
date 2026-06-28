@@ -52,7 +52,7 @@ def build_mechanical_contract(spec: dict[str, Any], graph: dict[str, Any]) -> di
         },
         "enclosure": {
             "internal_mm": list(map(float, mechanical["enclosure_internal_mm"])),
-            "wall_thickness_mm": float(mechanical["wall_thickness_mm"]),
+            "wall_thickness_mm": float(mechanical.get("wall_thickness_mm", 2.0)),
         },
         "clearances": {
             "insertion_mm": float(mechanical["insertion_clearance_mm"]),

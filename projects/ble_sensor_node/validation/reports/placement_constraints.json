@@ -12,6 +12,20 @@
       "details": {
         "refs": [
           "J1",
+          "F1"
+        ]
+      },
+      "message": "J1 and F1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "J1",
           "D1"
         ]
       },
@@ -53,11 +67,39 @@
       "code": "estimated_courtyard_overlap",
       "details": {
         "refs": [
-          "LD1",
-          "U1"
+          "BT1",
+          "U3"
         ]
       },
-      "message": "LD1 and U1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "BT1 and U3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U3",
+          "R4"
+        ]
+      },
+      "message": "U3 and R4 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U3",
+          "C3"
+        ]
+      },
+      "message": "U3 and C3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -68,38 +110,10 @@
       "details": {
         "refs": [
           "U1",
-          "C1"
+          "J2"
         ]
       },
-      "message": "U1 and C1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
-      "path": null,
-      "requires_user_decision": false,
-      "severity": "warning"
-    },
-    {
-      "category": "MECHANICAL_ERROR",
-      "code": "estimated_courtyard_overlap",
-      "details": {
-        "refs": [
-          "U1",
-          "C2"
-        ]
-      },
-      "message": "U1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
-      "path": null,
-      "requires_user_decision": false,
-      "severity": "warning"
-    },
-    {
-      "category": "MECHANICAL_ERROR",
-      "code": "estimated_courtyard_overlap",
-      "details": {
-        "refs": [
-          "U1",
-          "C4"
-        ]
-      },
-      "message": "U1 and C4 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "message": "U1 and J2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
       "path": null,
       "requires_user_decision": false,
       "severity": "warning"
@@ -156,17 +170,6 @@
       "path": null,
       "requires_user_decision": false,
       "severity": "info"
-    },
-    {
-      "category": "MECHANICAL_ERROR",
-      "code": "decoupling_proximity_deferred",
-      "details": {
-        "ref": "C2"
-      },
-      "message": "C2 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
-      "path": null,
-      "requires_user_decision": false,
-      "severity": "info"
     }
   ],
   "gate": "placement_constraints",
@@ -175,12 +178,12 @@
     "constraints": 10,
     "errors": 0,
     "finding_counts": {
-      "decoupling_proximity_deferred": 2,
-      "estimated_courtyard_overlap": 10
+      "decoupling_proximity_deferred": 1,
+      "estimated_courtyard_overlap": 11
     },
     "method": "constraint_driven_placement_proposal",
     "placements": 19,
-    "warnings": 10
+    "warnings": 11
   },
   "status": "pass"
 }

@@ -47,7 +47,7 @@ def _seed_table() -> dict[str, tuple[tuple[float, float], str]]:
         table[f"C{index + 1}"] = ((24.0 + (index % 5) * 22.0, 76.0 + (index // 5) * 13.0), "decoupling_row_seed")
     for index in range(1, 13):
         side_index = (index - 1) % 6
-        table[f"J{index + 10}"] = ((3.0 if index <= 6 else 157.0, 7.0 + side_index * 15.0), "connector_edge_seed")
+        table[f"J{index + 10}"] = ((9.0 if index <= 6 else 151.0, 7.0 + side_index * 15.0), "connector_edge_seed")
     return table
 
 
@@ -94,26 +94,26 @@ def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
 
 
 _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {
-    # Power path: left edge top → right edge top
-    "J1":  (10.0, 4.0),   # USB-C, top-left edge
+    # Power path: left edge top to right edge top
+    "J1":  (12.0, 4.0),   # USB-C, top-left edge
     "F1":  (17.0, 4.0),   # fuse, next in power path
     "Q1":  (24.0, 4.0),   # reverse-polarity mosfet
     "U2":  (30.0, 4.0),   # LiPo charger, near power path
     "BT1": (43.0, 4.0),   # JST LiPo connector, top-right
     "R4":  (37.0, 4.0),   # Charge-set resistor, beside charger
-    "C3":  (44.0, 10.0),  # 10uF VBAT bulk cap, near BT1 (was (14,10) — collided with D1-2 USB_DP pad)
+    "C3":  (44.0, 10.0),  # 10uF VBAT bulk cap, near BT1; avoids the D1-2 USB_DP pad
     # LDO between charger rail and MCU
     "LD1": (32.0, 11.0),  # AP2112K LDO, between charger (top) and MCU (centre)
     # Centralised MCU + close decoupling
-    "U1":  (25.0, 19.0),  # nRF52840 MCU, true board centre
+    "U1":  (25.0, 28.0),  # nRF52840 MCU, near rear edge for integral antenna clearance
     "C1":  (25.0, 12.0),  # 100nF decoupling, directly above MCU V3V3 pin
     # C2 was at (31,19): C2-2 GND landed at (33,19) = U1-5 I2C_SCL (same cell),
     # blocking freerouting from accessing the I2C_SCL pad. Moved to (26,19) so
-    # C2-2 GND lands at (28,19) — 1mm from U1-2 GND, not on any signal pad.
-    "C2":  (26.0, 19.0),  # 100nF decoupling, beside MCU GND cluster (avoids I2C_SCL pad)
+    # C2-2 GND lands near the MCU GND cluster without sharing the component center.
+    "C2":  (27.0, 19.0),  # 100nF decoupling, beside MCU GND cluster (avoids I2C_SCL pad)
     "C4":  (19.0, 19.0),  # 10uF V3V3 bulk cap, left of MCU
     # Sensors on left, away from nRF52840 RF antenna (top-right)
-    "U5":  (10.0, 20.0),  # SHT31 temp/humidity, left of MCU
+    "U5":  (10.0, 24.0),  # SHT31 temp/humidity, left of MCU and away from RF area
     "R1":  (10.0, 13.0),  # I2C SCL pull-up, near sensors
     "R2":  (15.0, 13.0),  # I2C SDA pull-up, near sensors
     # Fuel gauge and USB ESD on right; U3 moved UP to (40,6) so that U3-4 GND (index 3,
@@ -122,9 +122,9 @@ _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {
     "U3":  (40.0, 6.0),   # BQ27441 fuel gauge; GND pad at y=6+3*3=15, above signal channel
     "D1":  (12.0, 10.0),  # USB ESD TVS, between USB-C and MCU USB pins
     "R3":  (38.0, 25.0),  # LED resistor, lower-right
-    # Debug header: GND at pin-1 (leftmost) routes its spanning-tree wire LEFT/UP instead of
-    # through the signal channel. Signals ordered to match U1's left-to-right x-positions → 0 crossings.
-    "J2":  (33.0, 28.0),  # SWD header, pads x=33..45mm, y=28..30mm
+    # Debug header: placed at the left side of the board (x=6), clear of U1 which starts at x=25.
+    # J2 row-0 pads land at x=6..18, row-1 at (6,30). Nearest mounting hole H3(3.5,31.5) is 2.9mm away.
+    "J2":  (6.0, 28.0),   # SWD header, pads x=6..18mm row0 and (6,30) row1
 }
 
 

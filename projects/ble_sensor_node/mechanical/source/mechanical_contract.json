@@ -5,7 +5,7 @@
         "category": "power_input",
         "height_mm": 7.0,
         "ref": "J1",
-        "x_mm": 10.0,
+        "x_mm": 12.0,
         "y_mm": 4.0
       },
       {
@@ -55,20 +55,20 @@
         "height_mm": 0.9,
         "ref": "U1",
         "x_mm": 25.0,
-        "y_mm": 19.0
+        "y_mm": 28.0
       },
       {
         "category": "env_sensor",
         "height_mm": 2.0,
         "ref": "U5",
         "x_mm": 10.0,
-        "y_mm": 20.0
+        "y_mm": 24.0
       },
       {
         "category": "debug",
         "height_mm": 2.0,
         "ref": "J2",
-        "x_mm": 33.0,
+        "x_mm": 6.0,
         "y_mm": 28.0
       },
       {
@@ -110,7 +110,7 @@
         "category": "decoupling",
         "height_mm": 2.0,
         "ref": "C2",
-        "x_mm": 26.0,
+        "x_mm": 27.0,
         "y_mm": 19.0
       },
       {
@@ -161,7 +161,7 @@
       "component_present": true,
       "electrical_category": "power_input",
       "enclosure_position_mm": [
-        13.0,
+        15.0,
         7.0
       ],
       "opening_mm": [
@@ -169,7 +169,7 @@
         7.0
       ],
       "pcb_position_mm": [
-        10.0,
+        12.0,
         4.0
       ],
       "position_tolerance_mm": 0.5,
@@ -177,6 +177,7 @@
       "side": "front"
     }
   ],
+  "connector_retention": {},
   "contract_version": 1,
   "enclosure": {
     "internal_mm": [

@@ -1,12 +1,48 @@
 {
   "artifacts": [],
-  "backend": {},
+  "backend": {
+    "available": false,
+    "command": [
+      "cmake",
+      "-S",
+      "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/zephyr/app",
+      "-B",
+      "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/zephyr/build",
+      "-G",
+      "Ninja",
+      "-DBOARD=nrf52840dk",
+      "-DZEPHYR_MODULES=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+      "-DPython3_EXECUTABLE=/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-DBOARD_ROOT=/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/zephyr",
+      "-DZEPHYR_CMSIS_6_MODULE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+      "-DZEPHYR_CMSIS_6_CMAKE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/cmsis_6"
+    ],
+    "returncode": null,
+    "stderr": "cmake timed out after 600s",
+    "stdout": ""
+  },
   "failures": [
     {
       "category": "TOOL_ERROR",
-      "code": "external_gate_not_run",
-      "details": {},
-      "message": "Native Zephyr build was not requested",
+      "code": "tool_unavailable",
+      "details": {
+        "command": [
+          "cmake",
+          "-S",
+          "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/zephyr/app",
+          "-B",
+          "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/zephyr/build",
+          "-G",
+          "Ninja",
+          "-DBOARD=nrf52840dk",
+          "-DZEPHYR_MODULES=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+          "-DPython3_EXECUTABLE=/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-DBOARD_ROOT=/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/firmware/zephyr",
+          "-DZEPHYR_CMSIS_6_MODULE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+          "-DZEPHYR_CMSIS_6_CMAKE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/cmsis_6"
+        ]
+      },
+      "message": "cmake timed out after 600s",
       "path": null,
       "requires_user_decision": false,
       "severity": "error"

@@ -1,18 +1,52 @@
 {
-  "artifacts": [],
-  "backend": {},
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/electronics/generated/kicad/ble_sensor_node.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/electronics/generated/kicad/ble_sensor_node.ses"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/electronics/generated/kicad/ble_sensor_node.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/ble_sensor_node/electronics/generated/kicad/ble_sensor_node.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-06-28 15:00:37.726 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-06-28 15:00:37.904 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-06-28 15:00:39.723 INFO   New version available: v2.2.4\n2026-06-28 15:00:39.779 INFO   [942BE7\\D1E022] Job '942BE7\\D1E022' started at 2026-06-28T06:00:39.779184Z.\n2026-06-28 15:00:56.696 INFO   [942BE7\\D1E022] Auto-router pass #1 on board '04930b5a346a19613eb3c14f5f2ba115' was completed in 16.69 seconds with the score of 910.10 (11 unrouted), using 4.44 CPU seconds and the job allocated 1.18 GB of memory so far.\n2026-06-28 15:01:05.610 INFO   [942BE7\\D1E022] Auto-router pass #2 on board '78dd788964441b501fefa6ce1a49f09b' was completed in 8.84 seconds with the score of 944.36 (7 unrouted), using 7.46 CPU seconds and the job allocated 2.41 GB of memory so far.\n2026-06-28 15:01:14.668 INFO   [942BE7\\D1E022] Auto-router pass #3 on board '323ac10c3a206365f8951c3fd0098f06' was completed in 8.99 seconds with the score of 944.36 (7 unrouted), using 10.30 CPU seconds and the job allocated 3.53 GB of memory so far.\n2026-06-28 15:01:14.689 INFO   [942BE7\\D1E022] Board state has not changed since pass #3 (hash 323ac10c3a206365f8951c3fd0098f06). The auto-router cannot make further progress; stopping.\n2026-06-28 15:01:14.718 INFO   [942BE7\\D1E022] Auto-router session completed: started with 47 unrouted nets, completed in 34.87 seconds, final score: 944.36 (7 unrouted), using 10.30 total CPU seconds, 3.53 GB total allocated, and 357.82 MB peak heap usage.\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
   "failures": [
     {
-      "category": "TOOL_ERROR",
-      "code": "external_gate_not_run",
-      "details": {},
-      "message": "Freerouting was not requested",
+      "category": "EDA_ERROR",
+      "code": "routing_incomplete",
+      "details": {
+        "unrouted": 7
+      },
+      "message": "Freerouting left 7 connection(s) unrouted",
       "path": null,
       "requires_user_decision": false,
       "severity": "error"
     }
   ],
   "gate": "autoroute",
-  "metrics": {},
-  "status": "blocked"
+  "metrics": {
+    "max_passes": 20,
+    "unrouted": 7
+  },
+  "status": "fail"
 }

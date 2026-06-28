@@ -59,7 +59,7 @@ mechanical:
   insertion_clearance_mm: 2.0
   assembly_clearance_mm: 1.0
   tolerance_mm: 0.25
-  max_connector_edge_distance_mm: 6.0
+  max_connector_edge_distance_mm: 10.0
   default_component_height_mm: 4.0
   component_heights_mm: {J1: 12.0, J2: 13.0, J3: 11.0, J5: 8.0, J11: 12.0, J17: 12.0, U1: 2.0, U4: 4.0, U5: 4.0}
   board_origin_mm: [3.0, 3.0, 6.4]

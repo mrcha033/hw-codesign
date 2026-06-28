@@ -12,9 +12,27 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
-      "supplier_record": null
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "jst_ph_2pin",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "S2B-PH-K-S",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "jst_ph_2pin",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "S2B-PH-K-S"
+        },
+        "stock": null
+      }
     },
     "C1": {
       "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
@@ -28,7 +46,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -62,7 +80,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -96,7 +114,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -130,7 +148,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -164,7 +182,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -198,7 +216,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -232,7 +250,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -266,7 +284,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -300,7 +318,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -334,7 +352,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -368,7 +386,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -402,7 +420,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -436,7 +454,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -470,7 +488,7 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
       "supplier_record": {
         "availability": "unknown",
@@ -504,9 +522,27 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
-      "supplier_record": null
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "nrf52840_qiaa",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "nRF52840-QIAA",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "nrf52840_qiaa",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "nRF52840-QIAA"
+        },
+        "stock": null
+      }
     },
     "U2": {
       "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
@@ -520,9 +556,27 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
-      "supplier_record": null
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "bq24079rgtt",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "BQ24079RGTT",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "bq24079rgtt",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "BQ24079RGTT"
+        },
+        "stock": null
+      }
     },
     "U3": {
       "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
@@ -536,9 +590,27 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
-      "supplier_record": null
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "bq27441drzr_g1a",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "BQ27441DRZR-G1A",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "bq27441drzr_g1a",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "BQ27441DRZR-G1A"
+        },
+        "stock": null
+      }
     },
     "U5": {
       "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
@@ -552,9 +624,27 @@
       "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
       "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
       "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-      "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
       "supplier_provider": "curated",
-      "supplier_record": null
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "sht31_dis_b",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "SHT31-DIS-B2.5KS",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "sht31_dis_b",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "SHT31-DIS-B2.5KS"
+        },
+        "stock": null
+      }
     }
   },
   "component_resolution": [
@@ -676,7 +766,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -804,7 +894,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -943,7 +1033,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -1066,7 +1156,25 @@
             "BQ24079RGTT"
           ]
         },
-        "supplier_offer": null,
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "bq24079rgtt",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "BQ24079RGTT",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "bq24079rgtt",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "BQ24079RGTT"
+          },
+          "stock": null
+        },
         "symbol": {
           "expected_pins": [
             "1",
@@ -1094,9 +1202,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "bq24079rgtt",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "BQ24079RGTT",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "bq24079rgtt",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "BQ24079RGTT"
+          },
+          "stock": null
+        }
       },
       "ref": "U2",
       "resolution": "curated",
@@ -1163,7 +1289,25 @@
             "S2B-PH-K-S"
           ]
         },
-        "supplier_offer": null,
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "jst_ph_2pin",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "S2B-PH-K-S",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "jst_ph_2pin",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "S2B-PH-K-S"
+          },
+          "stock": null
+        },
         "symbol": {
           "expected_pins": [
             "1",
@@ -1185,9 +1329,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "jst_ph_2pin",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "S2B-PH-K-S",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "jst_ph_2pin",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "S2B-PH-K-S"
+          },
+          "stock": null
+        }
       },
       "ref": "BT1",
       "resolution": "curated",
@@ -1296,7 +1458,25 @@
             "BQ27441DRZR-G1A"
           ]
         },
-        "supplier_offer": null,
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "bq27441drzr_g1a",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "BQ27441DRZR-G1A",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "bq27441drzr_g1a",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "BQ27441DRZR-G1A"
+          },
+          "stock": null
+        },
         "symbol": {
           "expected_pins": [
             "1",
@@ -1325,9 +1505,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "bq27441drzr_g1a",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "BQ27441DRZR-G1A",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "bq27441drzr_g1a",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "BQ27441DRZR-G1A"
+          },
+          "stock": null
+        }
       },
       "ref": "U3",
       "resolution": "curated",
@@ -1455,7 +1653,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -1984,7 +2182,25 @@
             "nRF52840-QIAA"
           ]
         },
-        "supplier_offer": null,
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "nrf52840_qiaa",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "nRF52840-QIAA",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "nrf52840_qiaa",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "nRF52840-QIAA"
+          },
+          "stock": null
+        },
         "symbol": {
           "expected_pins": [
             "1",
@@ -2077,9 +2293,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "nrf52840_qiaa",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "nRF52840-QIAA",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "nrf52840_qiaa",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "nRF52840-QIAA"
+          },
+          "stock": null
+        }
       },
       "ref": "U1",
       "resolution": "curated",
@@ -2183,7 +2417,25 @@
             "SHT31-DIS-B2.5KS"
           ]
         },
-        "supplier_offer": null,
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "sht31_dis_b",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "SHT31-DIS-B2.5KS",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "sht31_dis_b",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "SHT31-DIS-B2.5KS"
+          },
+          "stock": null
+        },
         "symbol": {
           "expected_pins": [
             "1",
@@ -2211,9 +2463,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "sht31_dis_b",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "SHT31-DIS-B2.5KS",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "sht31_dis_b",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "SHT31-DIS-B2.5KS"
+          },
+          "stock": null
+        }
       },
       "ref": "U5",
       "resolution": "curated",
@@ -2349,7 +2619,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -2477,7 +2747,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -2605,7 +2875,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -2731,7 +3001,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -2857,7 +3127,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -2986,7 +3256,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3115,7 +3385,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3244,7 +3514,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3373,7 +3643,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3524,7 +3794,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3612,7 +3882,7 @@
       "mpn": "USB4105-GF-A",
       "package": "USB-C-16",
       "pcb_position_mm": [
-        10.0,
+        12.0,
         4.0
       ],
       "pins": [
@@ -3659,7 +3929,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3794,7 +4064,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -3938,7 +4208,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -4118,9 +4388,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "bq24079rgtt",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "BQ24079RGTT",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "bq24079rgtt",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "BQ24079RGTT"
+          },
+          "stock": null
+        }
       },
       "review_status": "approved",
       "sourcing": {
@@ -4130,7 +4418,25 @@
         ]
       },
       "substitute_mpn": null,
-      "supplier_offer": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "bq24079rgtt",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "BQ24079RGTT",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "bq24079rgtt",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "BQ24079RGTT"
+        },
+        "stock": null
+      },
       "supplier_sku": "BQ24079RGTT",
       "symbol": {
         "expected_pins": [
@@ -4219,9 +4525,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "jst_ph_2pin",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "S2B-PH-K-S",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "jst_ph_2pin",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "S2B-PH-K-S"
+          },
+          "stock": null
+        }
       },
       "review_status": "approved",
       "sourcing": {
@@ -4231,7 +4555,25 @@
         ]
       },
       "substitute_mpn": null,
-      "supplier_offer": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "jst_ph_2pin",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "S2B-PH-K-S",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "jst_ph_2pin",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "S2B-PH-K-S"
+        },
+        "stock": null
+      },
       "supplier_sku": "S2B-PH-K-S",
       "symbol": {
         "expected_pins": [
@@ -4370,9 +4712,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "bq27441drzr_g1a",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "BQ27441DRZR-G1A",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "bq27441drzr_g1a",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "BQ27441DRZR-G1A"
+          },
+          "stock": null
+        }
       },
       "review_status": "approved",
       "sourcing": {
@@ -4382,7 +4742,25 @@
         ]
       },
       "substitute_mpn": null,
-      "supplier_offer": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "bq27441drzr_g1a",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "BQ27441DRZR-G1A",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "bq27441drzr_g1a",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "BQ27441DRZR-G1A"
+        },
+        "stock": null
+      },
       "supplier_sku": "BQ27441DRZR-G1A",
       "symbol": {
         "expected_pins": [
@@ -4496,7 +4874,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -4673,7 +5051,7 @@
       "package": "aQFN-73",
       "pcb_position_mm": [
         25.0,
-        19.0
+        28.0
       ],
       "pins": [
         {
@@ -4831,9 +5209,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "nrf52840_qiaa",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "nRF52840-QIAA",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "nrf52840_qiaa",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "nRF52840-QIAA"
+          },
+          "stock": null
+        }
       },
       "review_status": "approved",
       "sourcing": {
@@ -4843,7 +5239,25 @@
         ]
       },
       "substitute_mpn": null,
-      "supplier_offer": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "nrf52840_qiaa",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "nRF52840-QIAA",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "nrf52840_qiaa",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "nRF52840-QIAA"
+        },
+        "stock": null
+      },
       "supplier_sku": "nRF52840-QIAA",
       "symbol": {
         "expected_pins": [
@@ -4971,7 +5385,7 @@
       "package": "DFN-8",
       "pcb_position_mm": [
         10.0,
-        20.0
+        24.0
       ],
       "pins": [
         {
@@ -5045,9 +5459,27 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
-        "supplier_record": null
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "sht31_dis_b",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "SHT31-DIS-B2.5KS",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "sht31_dis_b",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-28",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "SHT31-DIS-B2.5KS"
+          },
+          "stock": null
+        }
       },
       "review_status": "approved",
       "sourcing": {
@@ -5057,7 +5489,25 @@
         ]
       },
       "substitute_mpn": null,
-      "supplier_offer": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "sht31_dis_b",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "SHT31-DIS-B2.5KS",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "sht31_dis_b",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-28",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "SHT31-DIS-B2.5KS"
+        },
+        "stock": null
+      },
       "supplier_sku": "SHT31-DIS-B2.5KS",
       "symbol": {
         "expected_pins": [
@@ -5123,7 +5573,7 @@
       "mpn": "Samtec-FTSH-105-01-L-DV-K",
       "package": "FTSH-10",
       "pcb_position_mm": [
-        33.0,
+        6.0,
         28.0
       ],
       "pins": [
@@ -5198,7 +5648,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -5334,7 +5784,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -5467,7 +5917,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -5598,7 +6048,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -5729,7 +6179,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -5862,7 +6312,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -5948,6 +6398,7 @@
           "uri": null
         }
       ],
+      "decoupling_target_ref": "U1",
       "footprint": "Capacitor_SMD:C_0603_1608Metric",
       "footprint_metadata": {
         "expected_pads": [
@@ -5962,7 +6413,7 @@
       "mpn": "GRM188R71C104KA01D",
       "package": "0603",
       "pcb_position_mm": [
-        26.0,
+        27.0,
         19.0
       ],
       "pins": [
@@ -5995,7 +6446,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -6128,7 +6579,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -6261,7 +6712,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -6419,7 +6870,7 @@
         "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
         "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
         "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
-        "supplier_catalog_sha256": "449138f5a528af6faa2cd8a5ed3ab63f6a46fd8b4a97fb11c1644bbe4c6451fc",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
         "supplier_provider": "curated",
         "supplier_record": {
           "availability": "unknown",
@@ -6852,29 +7303,33 @@
         "target_ref": "J1"
       },
       {
-        "derived_from": "graph decoupling component pins",
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": null
         },
         "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
         "target_ref": "C1"
       },
       {
-        "derived_from": "graph decoupling component pins",
-        "enforced": false,
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
+        "enforced": true,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": "U1"
         },
-        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "rationale": "",
         "target_ref": "C2"
       },
       {
@@ -6929,7 +7384,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "ble_sensor_node_anchor",
-        "x_mm": 26.0,
+        "x_mm": 27.0,
         "y_mm": 19.0
       },
       "C3": {
@@ -6984,7 +7439,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "ble_sensor_node_anchor",
-        "x_mm": 10.0,
+        "x_mm": 12.0,
         "y_mm": 4.0
       },
       "J2": {
@@ -6995,7 +7450,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "ble_sensor_node_anchor",
-        "x_mm": 33.0,
+        "x_mm": 6.0,
         "y_mm": 28.0
       },
       "LD1": {
@@ -7073,7 +7528,7 @@
         "side": "top",
         "source": "ble_sensor_node_anchor",
         "x_mm": 25.0,
-        "y_mm": 19.0
+        "y_mm": 28.0
       },
       "U2": {
         "courtyard_h_mm": 8.485,
@@ -7106,7 +7561,7 @@
         "side": "top",
         "source": "ble_sensor_node_anchor",
         "x_mm": 10.0,
-        "y_mm": 20.0
+        "y_mm": 24.0
       }
     }
   },
@@ -7161,27 +7616,27 @@
       },
       {
         "category": "BOM_ERROR",
-        "code": "supplier_record_missing",
+        "code": "supplier_availability_unknown",
         "details": {},
-        "message": "No curated supplier record for bq24079rgtt",
+        "message": "Current availability is not evidenced for U2 at curated",
         "path": "U2",
         "requires_user_decision": false,
         "severity": "error"
       },
       {
         "category": "BOM_ERROR",
-        "code": "supplier_record_missing",
+        "code": "supplier_availability_unknown",
         "details": {},
-        "message": "No curated supplier record for jst_ph_2pin",
+        "message": "Current availability is not evidenced for BT1 at curated",
         "path": "BT1",
         "requires_user_decision": false,
         "severity": "error"
       },
       {
         "category": "BOM_ERROR",
-        "code": "supplier_record_missing",
+        "code": "supplier_availability_unknown",
         "details": {},
-        "message": "No curated supplier record for bq27441drzr_g1a",
+        "message": "Current availability is not evidenced for U3 at curated",
         "path": "U3",
         "requires_user_decision": false,
         "severity": "error"
@@ -7197,18 +7652,18 @@
       },
       {
         "category": "BOM_ERROR",
-        "code": "supplier_record_missing",
+        "code": "supplier_availability_unknown",
         "details": {},
-        "message": "No curated supplier record for nrf52840_qiaa",
+        "message": "Current availability is not evidenced for U1 at curated",
         "path": "U1",
         "requires_user_decision": false,
         "severity": "error"
       },
       {
         "category": "BOM_ERROR",
-        "code": "supplier_record_missing",
+        "code": "supplier_availability_unknown",
         "details": {},
-        "message": "No curated supplier record for sht31_dis_b",
+        "message": "Current availability is not evidenced for U5 at curated",
         "path": "U5",
         "requires_user_decision": false,
         "severity": "error"
