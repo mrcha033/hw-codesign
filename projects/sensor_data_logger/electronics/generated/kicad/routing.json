@@ -1,6 +1,9 @@
 {
   "failures": [],
-  "mode": "plane_preseeded",
-  "signal_routing": "deferred_to_freerouting",
-  "status": "generated"
+  "freerouting_version": "2.2.4",
+  "max_passes": 20,
+  "mode": "plane_preseeded_freerouting",
+  "signal_routing": "complete",
+  "status": "pass",
+  "unrouted": 0
 }

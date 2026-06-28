@@ -151,3 +151,9 @@ records:
   - {component_id: rc0402_1k, supplier_sku: RC0402FR-071KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: rc0402_4k7, supplier_sku: RC0402FR-074K7L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: rc0402_10k, supplier_sku: RC0402FR-0710KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
+  # --- ble_sensor_node components ---
+  - {component_id: nrf52840_qiaa, supplier_sku: nRF52840-QIAA, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-28'}}
+  - {component_id: bq24079rgtt, supplier_sku: BQ24079RGTT, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-28'}}
+  - {component_id: bq27441drzr_g1a, supplier_sku: BQ27441DRZR-G1A, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-28'}}
+  - {component_id: jst_ph_2pin, supplier_sku: S2B-PH-K-S, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-28'}}
+  - {component_id: sht31_dis_b, supplier_sku: SHT31-DIS-B2.5KS, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-28'}}
