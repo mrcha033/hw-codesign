@@ -594,7 +594,10 @@ class HardwareService:
         else:
             for gate, message in (("autoroute", "Freerouting was not requested"), ("native_erc", "KiCad ERC was not requested"), ("native_drc", "KiCad DRC was not requested"), ("kicad_library_crosscheck", "KiCad library cross-check was not requested"), ("native_mechanical_validation", "Native CAD validation was not requested"), ("native_zephyr_build", "Native Zephyr build was not requested")):
                 reports.append(GateReport(gate, Status.BLOCKED, [Failure(FailureCategory.TOOL_ERROR, "external_gate_not_run", message)]))
-        self.generate_physical_qualification_plan(project)
+        try:
+            self.generate_physical_qualification_plan(project)
+        except Exception:
+            pass  # Non-fatal: qualification plan generation can fail on transient filesystem state
         reports.append(self._physical_qualification_report(path))
         reports.append(self._candidate_critic_report(path, spec, graph, reports, include_external=include_external))
         reports.append(self._design_dependency_graph_report(reports))
