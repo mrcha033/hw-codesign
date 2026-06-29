@@ -44,7 +44,7 @@ class FreeroutingBackend:
                 backend={"name": "freerouting", "version": self.VERSION, "tools": {key: str(value) if value else None for key, value in tools.items()}},
             )
         if not board.is_file():
-            return GateReport("autoroute", Status.FAIL, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad PCB exists")])
+            return GateReport("autoroute", Status.BLOCKED, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad PCB exists — electronics compile gate must pass first")])
 
         export = self._pcbnew(
             tools["kicad_python"],
@@ -125,6 +125,9 @@ class FreeroutingBackend:
             "jar": jar_path if jar_path.is_file() else None,
             "kicad_python": kicad_path if kicad_path.is_file() else None,
         }
+
+    def tools(self) -> dict[str, Path | None]:
+        return self._tools()
 
     @staticmethod
     def _pcbnew(executable: Path, code: str, *arguments: Path) -> subprocess.CompletedProcess[str]:

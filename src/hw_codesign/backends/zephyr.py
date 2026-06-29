@@ -50,6 +50,15 @@ class ZephyrBackend:
         zephyr_base = platform_root / ".toolchains" / "zephyr"
         arm_gcc = shutil.which("arm-none-eabi-gcc")
 
+        # "unknown" means the project spec has no firmware.target → not a Zephyr project.
+        if board.lower() in {"unknown", "", "none"}:
+            return GateReport(
+                "native_zephyr_build",
+                Status.BLOCKED,
+                [Failure(FailureCategory.TOOL_ERROR, "no_zephyr_target",
+                         "Project spec has no firmware.target — project does not use Zephyr as its primary RTOS")],
+            )
+
         # Xtensa (ESP32) boards require a different toolchain — not currently bundled.
         board_lower = board.lower()
         if any(board_lower.startswith(x) or board_lower == x for x in _XTENSA_BOARDS):

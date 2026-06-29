@@ -105,7 +105,7 @@ class KiCadBackend(ElectronicsBackendAdapter):
     def run_erc(self, project: Path) -> GateReport:
         schematic = self._design_file(project, "*.kicad_sch")
         if schematic is None:
-            return GateReport("erc", Status.FAIL, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad schematic exists")])
+            return GateReport("erc", Status.BLOCKED, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad schematic exists — electronics compile gate must pass first")])
         output = project / "validation" / "reports" / "kicad_erc.json"
         result = run_tool("kicad-cli", ["sch", "erc", "--format", "json", "--output", str(output), str(schematic)], project)
         report = tool_report("erc", result, [str(output)] if output.exists() else [])
@@ -124,7 +124,7 @@ class KiCadBackend(ElectronicsBackendAdapter):
     def run_drc(self, project: Path) -> GateReport:
         board = self._design_file(project, "*.kicad_pcb")
         if board is None:
-            return GateReport("drc", Status.FAIL, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad PCB exists")])
+            return GateReport("drc", Status.BLOCKED, [Failure(FailureCategory.EDA_ERROR, "missing_design_source", "No generated KiCad PCB exists — electronics compile gate must pass first")])
         output = project / "validation" / "reports" / "kicad_drc.json"
         result = run_tool("kicad-cli", ["pcb", "drc", "--format", "json", "--severity-error", "--output", str(output), str(board)], project, timeout=300)
         # Negative return code = signal/crash (SIGABRT on KiCad 10 macOS); also fall back
