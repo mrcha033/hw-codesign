@@ -96,7 +96,24 @@ class ZephyrBackend:
                     "GNUARMEMB_TOOLCHAIN_PATH": str(Path(arm_gcc).parents[1]),
                 }
                 configure = run_tool("cmake", arguments, project, timeout=600, env=env)
-                if not configure.available or configure.returncode != 0:
+                if not configure.available:
+                    return tool_report("native_zephyr_build", configure)
+                if configure.returncode != 0:
+                    combined = configure.stdout + configure.stderr
+                    if (
+                        "No board named" in combined
+                        or "not found" in combined and "board" in combined.lower()
+                        or "Board qualifiers" in combined
+                        or "BOARD_NOT_FOUND" in combined
+                    ):
+                        return GateReport(
+                            "native_zephyr_build",
+                            Status.BLOCKED,
+                            [Failure(FailureCategory.TOOL_ERROR, "board_not_in_sdk",
+                                     f"Board {board!r} is not in the installed Zephyr SDK — install the matching board support package")],
+                            backend={"command": configure.command, "returncode": configure.returncode,
+                                     "stderr": configure.stderr[-4000:]},
+                        )
                     return tool_report("native_zephyr_build", configure)
                 result = run_tool("cmake", ["--build", str(build)], project, timeout=1200, env=env)
                 elf = build / "zephyr" / "zephyr.elf"
