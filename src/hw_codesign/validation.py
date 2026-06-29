@@ -1160,7 +1160,8 @@ class Validator:
                 blocked |= report.status == Status.BLOCKED
                 code = report.failures[0].code if report.gate == "backend_release_policy" and report.failures else "failed_gate"
                 failures.append(_failure(FailureCategory.RELEASE_ERROR, code, f"Required gate did not pass: {report.gate}", details={"status": report.status.value, "failure_codes": [failure.code for failure in report.failures]}))
-        for name, assumption in assumptions.items():
+        assumptions_dict = assumptions if isinstance(assumptions, dict) else {}
+        for name, assumption in assumptions_dict.items():
             if assumption.get("critical") and assumption.get("requires_user_review"):
                 blocked = True
                 failures.append(Failure(FailureCategory.RELEASE_ERROR, "unresolved_critical_assumption", f"Critical assumption requires review: {name}", path=f"assumptions.{name}", requires_user_decision=True))

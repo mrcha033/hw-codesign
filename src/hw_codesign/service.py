@@ -10,6 +10,7 @@ import subprocess
 import sys
 import zipfile
 from copy import deepcopy
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -31,7 +32,7 @@ from .placement import check_layout_signal_integrity, check_layout_thermal_integ
 from .policy import ChangePolicy
 from .provenance import artifact_provenance
 from .reference_backend import build_firmware_reference, export_fabrication, internal_drc, internal_erc
-from .resolver import role_for_component
+from .resolver import SUPPLIER_EVIDENCE_MAX_AGE_DAYS, _evidence_is_stale, role_for_component
 from .resources import resource_root
 from .supplier_adapters import supplier_adapter
 from .validation import Validator, persist_report
@@ -154,6 +155,17 @@ def _derive_agent_actions(actions: list[dict[str, Any]], spec: dict[str, Any]) -
     return agent_actions
 
 
+def _assumptions_as_dict(assumptions: Any) -> dict[str, Any]:
+    """Return assumptions as a dict, handling both dict and list formats.
+
+    Some templates (e.g. rp2040_usb_device) store assumptions as a list of
+    {id, text, rationale} items rather than the dict format used elsewhere.
+    List-format assumptions never carry critical/requires_user_review flags,
+    so returning an empty dict is always safe.
+    """
+    return assumptions if isinstance(assumptions, dict) else {}
+
+
 def _cadquery_available() -> bool:
     try:
         import cadquery  # noqa: F401
@@ -232,36 +244,72 @@ class HardwareService:
         firmware_file = read_yaml(firmware_path)
         manufacturing_file = read_yaml(manufacturing_path)
         changed: list[str] = []
+        lowered_fields: list[dict[str, Any]] = []
 
-        _PATTERNS: list[tuple[str, list[str], Any]] = [
-            (r"(\d+)\s*(?:채널|channel)",               ["actuation", "motor_channels"],                                  int),
-            (r"(?:각\s*채널\s*)?(?:피크\s*)?(\d+(?:\.\d+)?)\s*A", ["actuation", "motor_channel_peak_current_a"],          float),
-            (r"(\d+(?:\.\d+)?)\s*V\s*(?:배터리|battery)", ["system", "supply", "battery", "pack_voltage_nominal"],         float),
-            (r"(STM32H7\w*|ESP32S3|RP2040)",              ["compute", "mcu", "family"],                                    str.upper),
-            (r"(\d+)\s*[- ]?layer",                       ["manufacturing", "pcb", "layers"],                              int),
+        _PATTERNS: list[tuple[str, list[str], Any, str]] = [
+            (r"(\d+)\s*(?:채널|channel)", ["actuation", "motor_channels"], int, "integer"),
+            (r"(?:각\s*채널\s*)?(?:피크\s*)?(\d+(?:\.\d+)?)\s*A", ["actuation", "motor_channel_peak_current_a"], float, "number"),
+            (r"(\d+(?:\.\d+)?)\s*V\s*(?:배터리|battery)", ["system", "supply", "battery", "pack_voltage_nominal"], float, "number"),
+            (r"(STM32H7\w*|ESP32S3|RP2040)", ["compute", "mcu", "family"], str.upper, "string"),
+            (r"(\d+)\s*[- ]?layer", ["manufacturing", "pcb", "layers"], int, "integer"),
         ]
         _ROOTS = {
             "actuation": system_file, "system": system_file, "compute": system_file,
             "manufacturing": manufacturing_file,
         }
-        for pattern, keys, convert in _PATTERNS:
+        _AFFECTED_GATES_BY_ROOT = {
+            "actuation": ["electrical_semantics", "power_budget", "firmware_pinmap", "thermal_integrity"],
+            "system": ["electrical_semantics", "power_tree_integrity", "mechanical_fit"],
+            "compute": ["pin_symbol_footprint", "firmware_pinmap", "native_zephyr_build"],
+            "manufacturing": ["layout_signal_integrity", "native_drc", "manufacturing_export"],
+            "firmware": ["firmware_interface_contract", "firmware_pinmap", "native_zephyr_build"],
+            "sensing": ["electrical_semantics", "firmware_pinmap", "firmware_interface_contract"],
+        }
+        for pattern, keys, convert, field_type in _PATTERNS:
             match = re.search(pattern, requirements_text, flags=re.IGNORECASE)
             if match:
                 target = _ROOTS[keys[0]]
                 for key in keys[:-1]:
                     target = target[key]
-                target[keys[-1]] = convert(match.group(1))
-                changed.append(".".join(keys))
+                value = convert(match.group(1))
+                target[keys[-1]] = value
+                spec_path = ".".join(keys)
+                changed.append(spec_path)
+                lowered_fields.append({
+                    "spec_path": spec_path,
+                    "value": value,
+                    "field_type": field_type,
+                    "source_span": match.group(0),
+                    "affected_gates": _AFFECTED_GATES_BY_ROOT.get(keys[0], []),
+                    "status": "lowered",
+                })
 
         lowered_text = requirements_text.lower()
         if "zephyr" in lowered_text:
             firmware_file["firmware"]["framework"] = "zephyr"
             changed.append("firmware.framework")
+            lowered_fields.append({
+                "spec_path": "firmware.framework",
+                "value": "zephyr",
+                "field_type": "string",
+                "source_span": "zephyr",
+                "affected_gates": _AFFECTED_GATES_BY_ROOT["firmware"],
+                "status": "lowered",
+            })
         features = {"imu": "imu", "emergency stop": "e_stop", "e-stop": "e_stop", "비상 정지": "e_stop"}
         for token, key in features.items():
             if token in lowered_text:
                 system_file["sensing"][key] = "required"
-                changed.append(f"sensing.{key}")
+                spec_path = f"sensing.{key}"
+                changed.append(spec_path)
+                lowered_fields.append({
+                    "spec_path": spec_path,
+                    "value": "required",
+                    "field_type": "enum",
+                    "source_span": token,
+                    "affected_gates": _AFFECTED_GATES_BY_ROOT["sensing"],
+                    "status": "lowered",
+                })
         write_yaml(system_path, system_file)
         write_yaml(firmware_path, firmware_file)
         write_yaml(manufacturing_path, manufacturing_file)
@@ -286,21 +334,85 @@ class HardwareService:
             "manufacturing_service": "JLCPCB assembly service selection not modeled in typed spec",
             "pcb_stackup": "Impedance-controlled stackup not modeled in typed spec",
         }
+        _affected_gates_by_category: dict[str, list[str]] = {
+            "ip_protection": ["mechanical_fit", "physical_qualification"],
+            "bus_protocol": ["firmware_interface_contract", "firmware_pinmap", "native_zephyr_build"],
+            "functional_safety": ["safety_requirements", "firmware_interface_contract", "physical_qualification"],
+            "current_rating": ["electrical_semantics", "power_budget", "thermal_integrity", "physical_qualification"],
+            "manufacturing_service": ["component_provenance", "manufacturing_export", "artifact_integrity"],
+            "pcb_stackup": ["layout_signal_integrity", "native_drc", "manufacturing_export"],
+        }
         matched = [(cat, label) for pat, cat, label in _unsupported if re.search(pat, requirements_text, re.IGNORECASE)]
         unsupported_constraints = [label for _, label in matched]
+        unresolved_items = [
+            {
+                "source": label,
+                "category": cat,
+                "status": "unresolved",
+                "release_blocking": True,
+                "reason": _reasons[cat],
+                "required_human_approvals": [f"approve_or_lower_{cat}"],
+                "affected_gates": _affected_gates_by_category.get(cat, []),
+            }
+            for cat, label in matched
+        ]
         req_file = read_yaml(req_path)
         if "requirements" not in req_file:
             req_file["requirements"] = {"raw_inputs": [], "active_lowered": [], "active_unresolved": []}
         existing_inputs = req_file["requirements"].get("raw_inputs", [])
         input_id = f"req_input_{len(existing_inputs) + 1:04d}"
         req_file["requirements"]["raw_inputs"] = [*existing_inputs, {"id": input_id, "text": requirements_text, "created_by": "user"}]
-        req_file["requirements"]["active_lowered"] = [{"id": f"req_{i:04d}", "source": sp, "spec_path": sp, "status": "lowered"} for i, sp in enumerate(sorted(set(changed)), start=1)]
-        req_file["requirements"]["active_unresolved"] = [
-            {"id": f"req_unresolved_{i:04d}", "source": label, "category": cat, "status": "unresolved", "release_blocking": True, "reason": _reasons[cat]}
-            for i, (cat, label) in enumerate(matched, start=1)
+        lowered_by_path = {item["spec_path"]: item for item in lowered_fields}
+        req_file["requirements"]["active_lowered"] = [
+            {"id": f"req_{i:04d}", "source": sp, **lowered_by_path.get(sp, {"spec_path": sp, "status": "lowered"})}
+            for i, sp in enumerate(sorted(set(changed)), start=1)
         ]
+        req_file["requirements"]["active_unresolved"] = [
+            {"id": f"req_unresolved_{i:04d}", **item}
+            for i, item in enumerate(unresolved_items, start=1)
+        ]
+        affected_gates = sorted({
+            gate
+            for item in [*lowered_fields, *unresolved_items]
+            for gate in item.get("affected_gates", [])
+        })
+        required_human_approvals = sorted({
+            approval
+            for item in unresolved_items
+            for approval in item.get("required_human_approvals", [])
+        })
+        compiler_ir = {
+            "version": "requirements_ir_v1",
+            "input_id": input_id,
+            "lowered_fields": sorted(lowered_fields, key=lambda item: item["spec_path"]),
+            "unresolved_assumptions": [
+                {
+                    "source": item,
+                    "status": "retained_from_spec_assumption",
+                    "release_blocking": False,
+                    "required_human_approvals": [],
+                    "affected_gates": ["release_preparation"],
+                }
+                for item in unresolved_ambiguous
+            ],
+            "unsupported_constraints": unresolved_items,
+            "required_human_approvals": required_human_approvals,
+            "affected_gates": affected_gates,
+        }
+        req_file["requirements"]["compiler_ir"] = compiler_ir
         write_yaml(req_path, req_file)
-        return {"status": "generated", "has_unresolved_constraints": bool(unsupported_constraints), "mode": "replace_active_requirements", "changed_paths": sorted(set(changed)), "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)], "unresolved_requirements": unresolved_ambiguous, "unsupported_constraints": unsupported_constraints}
+        return {
+            "status": "generated",
+            "has_unresolved_constraints": bool(unsupported_constraints),
+            "mode": "replace_active_requirements",
+            "changed_paths": sorted(set(changed)),
+            "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)],
+            "unresolved_requirements": unresolved_ambiguous,
+            "unsupported_constraints": unsupported_constraints,
+            "compiler_ir": compiler_ir,
+            "required_human_approvals": required_human_approvals,
+            "affected_gates": affected_gates,
+        }
 
     def validate_spec(self, project: str) -> dict[str, Any]:
         path = self.workspace.require_project(project)
@@ -407,6 +519,8 @@ class HardwareService:
         graph_path = path / "electronics" / "generated" / "electrical_graph.json"
         graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else {"components": [], "nets": []}
         reports.append(self.validator.check_mechanical_connector_retention(spec, graph))
+        reports.append(self.validator.check_mechanical_connector_cutouts(spec, graph))
+        reports.append(self.validator.check_mechanical_mounting_integrity(spec, graph))
         fw_modules = spec.get("firmware", {}).get("modules", [])
         reports.append(self.validator.check_firmware_modules(fw_modules, pinmap, spec=spec, graph=graph))
         if graph_path.exists():
@@ -426,6 +540,7 @@ class HardwareService:
             reports.append(self.validator.check_component_metadata(graph["components"]))
             reports.append(self.validator.check_graph_pin_resolution(graph))
             reports.append(self.validator.check_power_tree(graph, spec))
+            reports.append(self.validator.check_power_integrity_estimate(graph, spec))
             reports.append(self.validator.check_interface_integrity(graph))
             reports.append(self._semantic_schematic_roundtrip_report(path, graph))
             reports.append(self._support_circuit_completeness_report(spec, graph))
@@ -481,6 +596,7 @@ class HardwareService:
                 reports.append(GateReport(gate, Status.BLOCKED, [Failure(FailureCategory.TOOL_ERROR, "external_gate_not_run", message)]))
         self.generate_physical_qualification_plan(project)
         reports.append(self._physical_qualification_report(path))
+        reports.append(self._candidate_critic_report(path, spec, graph, reports, include_external=include_external))
         reports.append(self._design_dependency_graph_report(reports))
         for report in reports:
             persist_report(path, report)
@@ -490,13 +606,14 @@ class HardwareService:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         backend = spec.get("electronics", {}).get("backend", "reference")
+        release_tier = self._release_tier_for_backend(backend)
         if backend not in _RELEASE_ELIGIBLE_BACKENDS:
             return {"status": "blocked", "code": "compiled_electronics_backend_required", "reports": [GateReport("release_preparation", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", "Release preparation requires a release-eligible electronics backend")]).to_dict()]}
         if not native_checks_confirmed:
             return {"status": "blocked", "code": "native_release_checks_required", "reports": checks["reports"]}
         if any(item["status"] != "pass" for item in checks["reports"]):
             return {"status": "blocked", "code": "release_gates_not_passed", "reports": checks["reports"]}
-        unresolved_assumptions = [name for name, a in spec.get("assumptions", {}).items() if a.get("critical") and a.get("requires_user_review")]
+        unresolved_assumptions = [name for name, a in _assumptions_as_dict(spec.get("assumptions", {})).items() if a.get("critical") and a.get("requires_user_review")]
         if unresolved_assumptions:
             return {"status": "blocked", "code": "unresolved_critical_assumptions", "unresolved": unresolved_assumptions, "reports": checks["reports"]}
         graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -509,23 +626,25 @@ class HardwareService:
         staging.mkdir(parents=True)
         files: list[str] = []
         if backend == "python_netlist":
-            fabrication_report = self.python_netlist.export_manufacturing(path, staging)
-            if fabrication_report.status == Status.BLOCKED:
-                fabrication_report = self._python_netlist_release_fabrication(path, staging)
+            tier_report = self._python_netlist_release_artifacts(path, staging)
         elif backend == "atopile":
-            fabrication_report = self._atopile_release_fabrication(path, staging)
+            tier_report = self._atopile_release_source_artifacts(path, staging)
         else:
-            fabrication_report = self.kicad.export_manufacturing(path, staging)
-        if fabrication_report.status == Status.PASS:
-            files.extend(fabrication_report.artifacts)
-        persist_report(path, fabrication_report)
-        mechanical_report = self.mechanical.generate(spec, staging, graph=graph, board_step=staging / "mechanical" / "board.step", release_eligible=True)
-        if mechanical_report.status == Status.PASS: files.extend(mechanical_report.artifacts)
-        persist_report(path, mechanical_report)
-        if mechanical_report.status != Status.PASS or fabrication_report.status != Status.PASS:
+            tier_report = self.kicad.export_manufacturing(path, staging)
+        if tier_report.status == Status.PASS:
+            files.extend(tier_report.artifacts)
+        persist_report(path, tier_report)
+        mechanical_reports: list[GateReport] = []
+        if release_tier == "fabrication":
+            mechanical_report = self.mechanical.generate(spec, staging, graph=graph, board_step=staging / "mechanical" / "board.step", release_eligible=True)
+            if mechanical_report.status == Status.PASS:
+                files.extend(mechanical_report.artifacts)
+            persist_report(path, mechanical_report)
+            mechanical_reports.append(mechanical_report)
+        if tier_report.status != Status.PASS or any(report.status != Status.PASS for report in mechanical_reports):
             shutil.rmtree(staging, ignore_errors=True)
-            return {"status": "blocked" if Status.BLOCKED in {mechanical_report.status, fabrication_report.status} else "fail", "release_path": str(release), "reports": [fabrication_report.to_dict(), mechanical_report.to_dict()]}
-        fabrication = staging / "fabrication"; fabrication.mkdir(parents=True, exist_ok=True)
+            statuses = {tier_report.status, *(report.status for report in mechanical_reports)}
+            return {"status": "blocked" if Status.BLOCKED in statuses else "fail", "release_path": str(release), "reports": [tier_report.to_dict(), *(report.to_dict() for report in mechanical_reports)]}
         firmware = staging / "firmware"; firmware.mkdir(parents=True, exist_ok=True)
         firmware_sources = [(item, item.relative_to(path / "firmware").as_posix()) for item in sorted((path / "firmware").rglob("*")) if item.is_file() and "build" not in item.parts]
         deterministic_zip(firmware / "source.zip", firmware_sources)
@@ -547,39 +666,56 @@ class HardwareService:
         if qualification_markdown.is_file():
             (docs / "physical_qualification_plan.md").write_bytes(qualification_markdown.read_bytes())
         simple_pdf(f"{profile['model']} Schematic", [f"Components: {len(graph['components'])}", f"Nets: {len(graph['nets'])}", "See KiCad project for editable source."], docs / "schematic.pdf")
-        simple_pdf("Assembly Drawing", ["Top-side placement is provided in fabrication/pick_and_place.csv.", "Verify connector orientation before assembly."], docs / "assembly_drawing.pdf")
+        assembly_lines = (
+            ["Top-side placement is provided in fabrication/pick_and_place.csv.", "Verify connector orientation before assembly."]
+            if release_tier == "fabrication"
+            else ["No PCB placement or fabrication package is included in this release tier.", "Use netlist evidence for electrical review; promote through a fabrication backend for Gerbers."]
+        )
+        simple_pdf("Assembly Drawing", assembly_lines, docs / "assembly_drawing.pdf")
         simple_pdf("Validation Report", statuses, docs / "validation_report.pdf")
         simple_pdf("Design Report", statuses + ["Physical qualification risks are listed in known_risks.md."], docs / "design_report.pdf")
         simple_pdf("Layout Preview", [f"Board envelope: {spec['mechanical']['envelope']['board_width_mm']} x {spec['mechanical']['envelope']['board_height_mm']} mm", f"Placement entries: {len(graph['components'])}"], docs / "layout_preview.pdf")
         simple_pdf("Bring-up Guide", self._release_bringup_pdf_lines(profile), docs / "bringup_guide.pdf")
-        (staging / "fabrication" / "assembly_drawing.pdf").write_bytes((docs / "assembly_drawing.pdf").read_bytes())
-        provenance = graph.get("provenance", {}) | {"release_eligible": True, "candidate_only": False}
+        if release_tier == "fabrication":
+            fabrication = staging / "fabrication"
+            fabrication.mkdir(parents=True, exist_ok=True)
+            (fabrication / "assembly_drawing.pdf").write_bytes((docs / "assembly_drawing.pdf").read_bytes())
+        provenance = graph.get("provenance", {}) | {"release_eligible": True, "candidate_only": False, "release_tier": release_tier}
         write_json(staging / "provenance.json", provenance)
         write_manifest(staging, staging / "manifest.json", provenance=provenance, candidate_only=False)
         release.parent.mkdir(parents=True, exist_ok=True)
         staging.rename(release)
         files = [item.replace(str(staging), str(release), 1) for item in files]
         manifest = str(release / "manifest.json")
-        reports = [fabrication_report.to_dict(), mechanical_report.to_dict()]
+        reports = [tier_report.to_dict(), *(report.to_dict() for report in mechanical_reports)]
         for report in reports:
             report["artifacts"] = [item.replace(str(staging), str(release), 1) for item in report.get("artifacts", [])]
         return {"status": "released", "release_path": str(release), "files": files + [str(release / "firmware" / "source.zip"), manifest], "reports": reports}
 
-    def _python_netlist_release_fabrication(self, project_path: Path, staging: Path) -> GateReport:
+    @staticmethod
+    def _release_tier_for_backend(backend: str) -> str:
+        return {
+            "python_netlist": "netlist",
+            "atopile": "hdl_source",
+            "tscircuit": "fabrication",
+            "kicad": "fabrication",
+        }.get(backend, "candidate")
+
+    def _python_netlist_release_artifacts(self, project_path: Path, staging: Path) -> GateReport:
         compiled = project_path / "electronics" / "source" / "python_netlist" / "compiled_netlist.json"
         if not compiled.is_file():
             return GateReport(
-                "python_netlist_fabrication",
+                "python_netlist_release_artifacts",
                 Status.BLOCKED,
                 [Failure(FailureCategory.EDA_ERROR, "compiled_netlist_missing", "Run evaluate with python_netlist backend first to produce compiled_netlist.json")],
                 backend={"name": "python_netlist", "release_tier": "netlist"},
             )
-        dest = staging / "fabrication"
+        dest = staging / "netlist"
         dest.mkdir(parents=True, exist_ok=True)
         target = dest / "compiled_netlist.json"
         target.write_bytes(compiled.read_bytes())
         return GateReport(
-            "python_netlist_fabrication",
+            "python_netlist_release_artifacts",
             Status.PASS,
             [],
             artifacts=[str(target)],
@@ -587,18 +723,18 @@ class HardwareService:
             backend={"name": "python_netlist", "release_tier": "netlist"},
         )
 
-    def _atopile_release_fabrication(self, project_path: Path, staging: Path) -> GateReport:
+    def _atopile_release_source_artifacts(self, project_path: Path, staging: Path) -> GateReport:
         source_dir = project_path / "electronics" / "source" / "atopile"
         ato_file = source_dir / "design.ato"
         ato_yaml = source_dir / "ato.yaml"
         if not ato_file.is_file():
             return GateReport(
-                "atopile_fabrication",
+                "atopile_source_release_artifacts",
                 Status.BLOCKED,
                 [Failure(FailureCategory.EDA_ERROR, "source_not_generated", "Run generate_electronics_only first to produce atopile source")],
                 backend={"name": "atopile", "release_tier": "hdl_source"},
             )
-        dest = staging / "fabrication" / "atopile_source"
+        dest = staging / "source" / "atopile"
         dest.mkdir(parents=True, exist_ok=True)
         target_ato = dest / "design.ato"
         target_yaml = dest / "ato.yaml"
@@ -608,7 +744,7 @@ class HardwareService:
             target_yaml.write_bytes(ato_yaml.read_bytes())
             artifacts.append(str(target_yaml))
         return GateReport(
-            "atopile_fabrication",
+            "atopile_source_release_artifacts",
             Status.PASS,
             [],
             artifacts=artifacts,
@@ -712,28 +848,30 @@ class HardwareService:
         revision = spec["project"]["revision"]
         release = path / "exports" / "releases" / revision
         backend = spec.get("electronics", {}).get("backend", "reference")
+        release_tier = self._release_tier_for_backend(backend)
         if backend == "atopile":
-            fab_required = [
-                release / "fabrication" / "atopile_source" / "design.ato",
-                release / "fabrication" / "assembly_drawing.pdf",
+            tier_required = [
+                release / "source" / "atopile" / "design.ato",
             ]
         elif backend == "python_netlist":
-            fab_required = [
-                release / "fabrication" / "gerbers.zip",
-                release / "fabrication" / "pick_and_place.csv",
-                release / "fabrication" / "bom.csv",
-                release / "fabrication" / "assembly_drawing.pdf",
+            tier_required = [
+                release / "netlist" / "compiled_netlist.json",
             ]
         else:
-            fab_required = [
+            tier_required = [
                 release / "fabrication" / "gerbers.zip", release / "fabrication" / "drill.zip",
                 release / "fabrication" / "bom.csv", release / "fabrication" / "pick_and_place.csv",
                 release / "fabrication" / "assembly_drawing.pdf",
             ]
+        mechanical_required: list[Path] = []
+        if release_tier == "fabrication":
+            mechanical_required = [
+                release / "mechanical" / "board.step", release / "mechanical" / "enclosure.step", release / "mechanical" / "enclosure.stl", release / "mechanical" / "assembly.step",
+                release / "mechanical" / "mechanical_manifest.json",
+            ]
         required = [
-            *fab_required,
-            release / "mechanical" / "board.step", release / "mechanical" / "enclosure.step", release / "mechanical" / "enclosure.stl", release / "mechanical" / "assembly.step",
-            release / "mechanical" / "mechanical_manifest.json",
+            *tier_required,
+            *mechanical_required,
             release / "firmware" / "source.zip", release / "docs" / "design_report.md",
             release / "firmware" / "pinmap.h", release / "firmware" / "devicetree.overlay", release / "firmware" / "build_instructions.md",
             release / "docs" / "validation_report.json", release / "docs" / "bringup_guide.md", release / "docs" / "known_risks.md",
@@ -741,12 +879,13 @@ class HardwareService:
             release / "docs" / "schematic.pdf", release / "docs" / "layout_preview.pdf", release / "docs" / "design_report.pdf",
             release / "docs" / "validation_report.pdf", release / "docs" / "bringup_guide.pdf", release / "manifest.json",
         ]
-        required.extend(release / "mechanical" / "variants" / f"enclosure_{variant['name']}.step" for variant in spec["mechanical"]["variants"])
-        fixtures = spec["mechanical"].get("fixtures", {})
-        if fixtures.get("mounting_plate", {}).get("enabled"):
-            required.append(release / "mechanical" / "mounting_plate.step")
-        if fixtures.get("frame_brackets", {}).get("enabled"):
-            required.extend([release / "mechanical" / "frame_bracket_left.step", release / "mechanical" / "frame_bracket_right.step"])
+        if release_tier == "fabrication":
+            required.extend(release / "mechanical" / "variants" / f"enclosure_{variant['name']}.step" for variant in spec["mechanical"]["variants"])
+            fixtures = spec["mechanical"].get("fixtures", {})
+            if fixtures.get("mounting_plate", {}).get("enabled"):
+                required.append(release / "mechanical" / "mounting_plate.step")
+            if fixtures.get("frame_brackets", {}).get("enabled"):
+                required.extend([release / "mechanical" / "frame_bracket_left.step", release / "mechanical" / "frame_bracket_right.step"])
         if backend not in _RELEASE_ELIGIBLE_BACKENDS:
             reports = [*reports, GateReport("backend_release_policy", Status.BLOCKED, [Failure(FailureCategory.RELEASE_ERROR, "compiled_electronics_backend_required", f"Backend {backend} is not release eligible")])]
         elif backend == "atopile":
@@ -1783,10 +1922,10 @@ class HardwareService:
                 area("pinout_package_footprint", ["datasheet_evidence", "component_provenance", "pin_symbol_footprint"]),
                 area("semantic_representation_integrity", ["semantic_schematic_roundtrip"]),
                 area("component_availability_lifecycle", ["component_resolution", "supplier_availability", "sourcing", "sourcing_resilience", "component_provenance"]),
-                area("support_circuit_and_power_assumptions", ["requirements_lowering", "semantic_electrical", "power_tree_integrity", "interface_integrity", "support_circuit_completeness", "ir_erc", "bom"]),
+                area("support_circuit_and_power_assumptions", ["requirements_lowering", "semantic_electrical", "power_tree_integrity", "power_integrity_estimate", "interface_integrity", "support_circuit_completeness", "ir_erc", "bom"]),
                 area("long_horizon_dependency_integrity", ["design_dependency_graph"]),
                 area("layout_routing_manufacturability", ["placement_constraints", "layout_thermal_integrity", "layout_signal_integrity", "ir_pcb_sanity", "reference_fabrication", "compiled_electronics_backend"]),
-                area("mechanical_integration", ["mechanical_fit", "mechanical_connector_retention"]),
+                area("mechanical_integration", ["mechanical_fit", "mechanical_connector_retention", "mechanical_connector_cutouts", "mechanical_mounting_integrity"]),
                 area("firmware_interface", ["firmware_pinmap", "firmware_modules", "hw_sw_parity", "firmware_interface_contract", "reference_firmware_build"]),
                 area("physical_qualification_evidence", ["physical_qualification"]),
             ],
@@ -1794,6 +1933,105 @@ class HardwareService:
                 "SI/PI, EMI/EMC, thermal load behavior, vibration, ingress, connector fatigue, and board bring-up still require simulation or physical evidence outside this digital candidate.",
             ],
         }
+
+    def _candidate_critic_report(
+        self,
+        project_path: Path,
+        spec: dict[str, Any],
+        graph: dict[str, Any],
+        reports: list[GateReport],
+        *,
+        include_external: bool,
+    ) -> GateReport:
+        """Second-pass critic over the candidate as a whole, not a single domain gate."""
+        backend = spec.get("electronics", {}).get("backend", "reference")
+        by_gate = {report.gate: report for report in reports}
+        failures: list[Failure] = []
+
+        graph_provenance = graph.get("provenance") or {}
+        if graph_provenance.get("release_eligible"):
+            failures.append(Failure(
+                FailureCategory.RELEASE_ERROR,
+                "candidate_graph_claims_release_eligible",
+                "Generated electrical graph claims release eligibility before promotion gates ran",
+                path="electronics.generated.electrical_graph.provenance.release_eligible",
+                details={"backend": backend},
+            ))
+
+        if backend not in _RELEASE_ELIGIBLE_BACKENDS:
+            backend_gate = by_gate.get("compiled_electronics_backend")
+            if backend_gate is None or backend_gate.status == Status.PASS:
+                failures.append(Failure(
+                    FailureCategory.RELEASE_ERROR,
+                    "candidate_only_backend_not_blocked",
+                    f"Candidate-only backend {backend} is not blocked by compiled_electronics_backend",
+                    path="electronics.backend",
+                    details={"backend": backend, "gate_status": backend_gate.status.value if backend_gate else "missing"},
+                ))
+
+        ref_fab = by_gate.get("reference_fabrication")
+        if ref_fab and ref_fab.status == Status.PASS and ref_fab.backend.get("release_eligible"):
+            failures.append(Failure(
+                FailureCategory.RELEASE_ERROR,
+                "reference_fabrication_claims_release_eligible",
+                "Reference fabrication artifacts are candidate previews and must not claim release eligibility",
+                path="exports.candidates.reference-fabrication",
+                details={"backend": ref_fab.backend},
+            ))
+
+        physical = by_gate.get("physical_qualification")
+        physical_gap_categories: list[str] = []
+        if physical and physical.status != Status.PASS:
+            physical_gap_categories = sorted({
+                str(failure.details.get("category"))
+                for failure in physical.failures
+                if failure.code == "physical_evidence_missing" and failure.details.get("category")
+            })
+            failures.append(Failure(
+                FailureCategory.RELEASE_ERROR,
+                "physical_oracle_gap_open",
+                "Candidate still requires external physical qualification evidence; this is not a software gate failure",
+                severity="warning",
+                path="validation.physical",
+                details={
+                    "physical_qualification_status": physical.status.value,
+                    "gap_categories": physical_gap_categories,
+                    "required_tests": physical.metrics.get("required_tests") if physical.metrics else None,
+                },
+            ))
+
+        native_not_run = sorted(
+            gate for gate, report in by_gate.items()
+            if gate in _EXTERNAL_GATES
+            and any(failure.code == "external_gate_not_run" for failure in report.failures)
+        )
+        if native_not_run:
+            failures.append(Failure(
+                FailureCategory.TOOL_ERROR,
+                "native_toolchain_gates_not_run",
+                "Native toolchain gates were not run; candidate cannot be release-reviewed as fabrication-authoritative",
+                severity="warning",
+                path="validation.reports",
+                details={"include_external": include_external, "gates": native_not_run},
+            ))
+
+        error_count = sum(1 for failure in failures if failure.severity == "error")
+        warning_count = sum(1 for failure in failures if failure.severity == "warning")
+        return GateReport(
+            "candidate_critic",
+            Status.FAIL if error_count else Status.PASS,
+            failures,
+            metrics={
+                "critic_version": "candidate_critic_v0",
+                "errors": error_count,
+                "warnings": warning_count,
+                "backend": backend,
+                "include_external": include_external,
+                "physical_gap_categories": physical_gap_categories,
+                "native_toolchain_gates_not_run": native_not_run,
+            },
+            backend={"name": "candidate-critic", "deterministic": True},
+        )
 
     @staticmethod
     def _design_dependency_graph_report(reports: list[GateReport]) -> GateReport:
@@ -1810,6 +2048,7 @@ class HardwareService:
             "component_provenance": ["component_resolution", "datasheet_evidence"],
             "pin_symbol_footprint": ["component_resolution", "component_provenance"],
             "power_tree_integrity": ["pin_symbol_footprint", "component_provenance"],
+            "power_integrity_estimate": ["power_tree_integrity", "pin_symbol_footprint"],
             "interface_integrity": ["pin_symbol_footprint", "power_tree_integrity"],
             "firmware_pinmap": ["pin_symbol_footprint", "semantic_schematic_roundtrip"],
             "firmware_modules": ["firmware_pinmap", "hw_sw_parity"],
@@ -1827,9 +2066,11 @@ class HardwareService:
             "native_erc": ["pin_symbol_footprint"],
             "native_drc": ["ir_pcb_sanity"],
             "kicad_library_crosscheck": ["native_erc", "native_drc"],
-            "native_mechanical_validation": ["mechanical_fit", "mechanical_connector_retention", "reference_fabrication"],
+            "mechanical_connector_cutouts": ["mechanical_fit", "placement_constraints"],
+            "mechanical_mounting_integrity": ["mechanical_fit", "placement_constraints"],
+            "native_mechanical_validation": ["mechanical_fit", "mechanical_connector_retention", "mechanical_connector_cutouts", "mechanical_mounting_integrity", "reference_fabrication"],
             "native_zephyr_build": ["firmware_pinmap", "firmware_modules", "firmware_interface_contract", "reference_firmware_build"],
-            "physical_qualification": ["reference_fabrication", "reference_firmware_build", "firmware_modules", "firmware_interface_contract", "mechanical_fit", "mechanical_connector_retention", "layout_thermal_integrity", "layout_signal_integrity"],
+            "physical_qualification": ["reference_fabrication", "reference_firmware_build", "firmware_modules", "firmware_interface_contract", "mechanical_fit", "mechanical_connector_retention", "mechanical_connector_cutouts", "mechanical_mounting_integrity", "layout_thermal_integrity", "layout_signal_integrity"],
         }
         by_gate = {report.gate: report for report in reports}
         failures: list[Failure] = []
@@ -1978,6 +2219,9 @@ class HardwareService:
         selected_roles = role_data.get("roles", {})
         alternatives = role_data.get("alternatives") or {}
         single_source = role_data.get("single_source_justifications") or {}
+        provider = spec.get("sourcing", {}).get("provider", "curated")
+        component_database = self._design_space_component_database()
+        supplier_records = self._design_space_supplier_records(provider)
         resolved_roles = {
             item.get("role"): item.get("component_id")
             for item in graph.get("component_resolution", [])
@@ -2022,6 +2266,68 @@ class HardwareService:
                                 "compatibility": compatibility,
                             },
                         ))
+                    alternate_id = alternate.get("component_id")
+                    alternate_part = component_database.get(alternate_id)
+                    if not alternate_part:
+                        failures.append(Failure(
+                            FailureCategory.BOM_ERROR,
+                            "critical_alternate_component_missing",
+                            f"Critical role {role} alternate {alternate_id} is absent from the curated component database",
+                            path=f"electronics.role_set.alternatives.{role}",
+                            details={"role": role, "alternate_component_id": alternate_id},
+                        ))
+                        continue
+                    if alternate_part.get("lifecycle") != "active":
+                        failures.append(Failure(
+                            FailureCategory.BOM_ERROR,
+                            "critical_alternate_lifecycle_not_active",
+                            f"Critical role {role} alternate {alternate_id} is not active",
+                            path=f"electronics.role_set.alternatives.{role}",
+                            details={
+                                "role": role,
+                                "alternate_component_id": alternate_id,
+                                "lifecycle": alternate_part.get("lifecycle"),
+                            },
+                        ))
+                    supplier_record = supplier_records.get(alternate_id)
+                    if not supplier_record:
+                        failures.append(Failure(
+                            FailureCategory.BOM_ERROR,
+                            "critical_alternate_supplier_record_missing",
+                            f"Critical role {role} alternate {alternate_id} lacks a supplier evidence record for {provider}",
+                            path=f"electronics.role_set.alternatives.{role}",
+                            details={"role": role, "alternate_component_id": alternate_id, "provider": provider},
+                        ))
+                    else:
+                        availability = supplier_record.get("availability")
+                        observed_at = supplier_record.get("observed_at")
+                        if availability in {"out_of_stock", "discontinued"}:
+                            failures.append(Failure(
+                                FailureCategory.BOM_ERROR,
+                                "critical_alternate_supplier_unavailable",
+                                f"Critical role {role} alternate {alternate_id} is {availability} at {provider}",
+                                path=f"electronics.role_set.alternatives.{role}",
+                                details={
+                                    "role": role,
+                                    "alternate_component_id": alternate_id,
+                                    "provider": provider,
+                                    "availability": availability,
+                                },
+                            ))
+                        elif availability == "available" and (not observed_at or _evidence_is_stale(observed_at)):
+                            failures.append(Failure(
+                                FailureCategory.BOM_ERROR,
+                                "critical_alternate_supplier_evidence_stale",
+                                f"Critical role {role} alternate {alternate_id} availability evidence is not current",
+                                path=f"electronics.role_set.alternatives.{role}",
+                                details={
+                                    "role": role,
+                                    "alternate_component_id": alternate_id,
+                                    "provider": provider,
+                                    "observed_at": observed_at,
+                                    "max_age_days": SUPPLIER_EVIDENCE_MAX_AGE_DAYS,
+                                },
+                            ))
                 continue
 
             justification = single_source.get(role) or {}
@@ -2046,6 +2352,7 @@ class HardwareService:
                 "alternate_roles": len(alternate_roles),
                 "single_source_justified_roles": len(justified_roles),
                 "checked_alternates": checked_alternates,
+                "supplier_provider": provider,
             },
             artifacts=[str(role_path)] if role_path.is_file() and role_data_override is None else [],
             backend={"name": "sourcing-resilience-contract", "deterministic": True},
@@ -2228,6 +2535,38 @@ class HardwareService:
         )
         if has_motor_pwm:
             required_interfaces.append("motor_pwm")
+            motor_pwm_channels = sorted({
+                int(match.group(1))
+                for signal in pinmap_signals
+                if (match := re.fullmatch(r"MOTOR(\d+)_PWM", signal))
+            })
+            if motor_channels > 0:
+                observed = set(motor_pwm_channels)
+                expected = set(range(1, motor_channels + 1))
+                missing_channels = sorted(expected - observed)
+                extra_channels = sorted(observed - expected)
+                if missing_channels:
+                    add_failure(
+                        "firmware_motor_pwm_channel_missing",
+                        "Firmware pinmap does not cover every motor PWM channel required by the actuation spec",
+                        "firmware/generated/pinmap.json",
+                        {
+                            "expected_motor_channels": motor_channels,
+                            "observed_pwm_channels": motor_pwm_channels,
+                            "missing_channels": missing_channels,
+                        },
+                    )
+                if extra_channels:
+                    add_failure(
+                        "firmware_motor_pwm_channel_extra",
+                        "Firmware pinmap exposes motor PWM channels outside the actuation spec",
+                        "firmware/generated/pinmap.json",
+                        {
+                            "expected_motor_channels": motor_channels,
+                            "observed_pwm_channels": motor_pwm_channels,
+                            "extra_channels": extra_channels,
+                        },
+                    )
             require_config("motor PWM", ("CONFIG_PWM=y",), "firmware_motor_pwm_config_missing")
             require_test("motor PWM", ("MOTOR", "PWM"), "firmware_motor_pwm_bringup_missing")
 
@@ -2496,6 +2835,19 @@ class HardwareService:
                 ["power_output_exceeds_input_voltage"],
             )
 
+        graph_missing_decoupling = deepcopy(graph)
+        graph_missing_decoupling["components"] = [
+            component for component in graph_missing_decoupling.get("components", [])
+            if component.get("category") != "decoupling"
+        ]
+        record(
+            "missing_rail_decoupling",
+            "power_integrity_grounding",
+            "Removed all decoupling capacitors while powered IC loads remain",
+            self.validator.check_power_integrity_estimate(graph_missing_decoupling, spec),
+            ["rail_decoupling_missing"],
+        )
+
         graph_missing_i2c_pullups = deepcopy(graph)
         i2c_nets = [
             net.get("name")
@@ -2568,11 +2920,18 @@ class HardwareService:
                     float(envelope.get("board_width_mm", 0.0)) / 2.0,
                     float(envelope.get("board_height_mm", 0.0)) / 2.0,
                 ]
+                usb_esd_proposal = propose_placement(spec, graph_bad_usb_esd_placement)
+                usb_esd_proposal.placements[usb_esd_component["ref"]] = replace(
+                    usb_esd_proposal.placements[usb_esd_component["ref"]],
+                    x_mm=bad_esd["pcb_position_mm"][0],
+                    y_mm=bad_esd["pcb_position_mm"][1],
+                    source="benchmark_forced_bad_usb_esd",
+                )
                 record(
                     "usb_esd_far_from_connector",
                     "layout_signal_integrity",
                     f"Moved USB ESD component {usb_esd_component.get('ref')} away from the USB connector",
-                    check_layout_signal_integrity(propose_placement(spec, graph_bad_usb_esd_placement), graph_bad_usb_esd_placement, spec),
+                    check_layout_signal_integrity(usb_esd_proposal, graph_bad_usb_esd_placement, spec),
                     ["usb_esd_far_from_connector"],
                 )
 
@@ -2589,12 +2948,50 @@ class HardwareService:
         if hot_component and logic_component:
             logic_position = logic_component.get("pcb_position_mm", [0.0, 0.0])
             hot_component["pcb_position_mm"] = [float(logic_position[0]) + 1.0, float(logic_position[1])]
+            hot_proposal = propose_placement(spec, graph_hot_near_logic)
+            hot_proposal.placements[hot_component["ref"]] = replace(
+                hot_proposal.placements[hot_component["ref"]],
+                x_mm=hot_component["pcb_position_mm"][0],
+                y_mm=hot_component["pcb_position_mm"][1],
+                source="benchmark_forced_hot_near_logic",
+            )
             record(
                 "hot_block_near_sensitive_logic",
                 "layout_thermal_grounding",
                 f"Moved {hot_component.get('ref')} next to MCU {logic_component.get('ref')}",
-                check_layout_thermal_integrity(propose_placement(spec, graph_hot_near_logic), graph_hot_near_logic, spec),
+                check_layout_thermal_integrity(hot_proposal, graph_hot_near_logic, spec),
                 ["thermal_sensitive_spacing_violation"],
+            )
+
+        targeted_decoupling = next(
+            (
+                component
+                for component in graph.get("components", [])
+                if component.get("category") == "decoupling" and component.get("decoupling_target_ref")
+            ),
+            None,
+        )
+        if targeted_decoupling:
+            graph_bad_decoupling_placement = deepcopy(graph)
+            bad_decap = next(
+                component
+                for component in graph_bad_decoupling_placement.get("components", [])
+                if component.get("ref") == targeted_decoupling.get("ref")
+            )
+            bad_decap["pcb_position_mm"] = [0.0, 0.0]
+            decoupling_proposal = propose_placement(spec, graph_bad_decoupling_placement)
+            decoupling_proposal.placements[targeted_decoupling["ref"]] = replace(
+                decoupling_proposal.placements[targeted_decoupling["ref"]],
+                x_mm=0.0,
+                y_mm=0.0,
+                source="benchmark_forced_bad_decoupling",
+            )
+            record(
+                "decoupling_far_from_target",
+                "layout_power_integrity",
+                f"Moved targeted decoupling capacitor {targeted_decoupling.get('ref')} away from {targeted_decoupling.get('decoupling_target_ref')}",
+                check_placement(decoupling_proposal, graph_bad_decoupling_placement),
+                ["decoupling_too_far_from_target"],
             )
 
         rf_component = next(
@@ -2619,11 +3016,18 @@ class HardwareService:
                 float(envelope.get("board_width_mm", 0.0)) / 2.0,
                 float(envelope.get("board_height_mm", 0.0)) / 2.0,
             ]
+            rf_proposal = propose_placement(spec, graph_bad_rf_placement)
+            rf_proposal.placements[rf_component["ref"]] = replace(
+                rf_proposal.placements[rf_component["ref"]],
+                x_mm=rf_bad["pcb_position_mm"][0],
+                y_mm=rf_bad["pcb_position_mm"][1],
+                source="benchmark_forced_bad_rf",
+            )
             record(
                 "rf_antenna_not_edge_aligned",
                 "layout_signal_integrity",
                 f"Moved RF antenna component {rf_component.get('ref')} away from the board edge",
-                check_layout_signal_integrity(propose_placement(spec, graph_bad_rf_placement), graph_bad_rf_placement, spec),
+                check_layout_signal_integrity(rf_proposal, graph_bad_rf_placement, spec),
                 ["rf_antenna_not_edge_aligned"],
             )
 
@@ -2653,6 +3057,58 @@ class HardwareService:
                 ["connector_retention_missing"],
             )
 
+        connector_interfaces = [
+            item for item in mechanical.get("connector_interfaces", [])
+            if item.get("ref") and item.get("side")
+        ]
+        if connector_interfaces:
+            interface = connector_interfaces[0]
+            graph_bad_cutout_alignment = deepcopy(graph)
+            connector = next(
+                (
+                    component
+                    for component in graph_bad_cutout_alignment.get("components", [])
+                    if component.get("ref") == interface.get("ref")
+                ),
+                None,
+            )
+            if connector:
+                envelope = spec.get("mechanical", {}).get("envelope", {})
+                connector["pcb_position_mm"] = [
+                    float(envelope.get("board_width_mm", 0.0)) / 2.0,
+                    float(envelope.get("board_height_mm", 0.0)) / 2.0,
+                ]
+                record(
+                    "connector_cutout_misaligned",
+                    "mechanical_cutout_grounding",
+                    f"Moved connector {connector.get('ref')} away from its declared {interface.get('side')} enclosure cutout",
+                    self.validator.check_mechanical_connector_cutouts(spec, graph_bad_cutout_alignment),
+                    ["connector_cutout_alignment_failed"],
+                )
+
+        mounting_holes = mechanical.get("mounting_holes", [])
+        if mounting_holes:
+            graph_bad_mounting_keepout = deepcopy(graph)
+            mounting_components = graph_bad_mounting_keepout.get("components", [])
+            target = next(
+                (
+                    component
+                    for component in mounting_components
+                    if component.get("ref") and not str(component.get("ref", "")).startswith("J")
+                ),
+                mounting_components[0] if mounting_components else None,
+            )
+            if target:
+                hole = mounting_holes[0]
+                target["pcb_position_mm"] = [float(hole["x_mm"]), float(hole["y_mm"])]
+                record(
+                    "component_on_mounting_hole",
+                    "mechanical_mounting_grounding",
+                    f"Moved component {target.get('ref')} onto a mounting-hole keepout",
+                    self.validator.check_mechanical_mounting_integrity(spec, graph_bad_mounting_keepout),
+                    ["mounting_hole_component_keepout_intrusion"],
+                )
+
         if role_data.get("critical_roles"):
             role_data_without_resilience = deepcopy(role_data)
             role_data_without_resilience["alternatives"] = {}
@@ -2665,6 +3121,22 @@ class HardwareService:
                 ["critical_role_resilience_missing"],
             )
 
+            critical_role = sorted(role_data["critical_roles"])[0]
+            role_data_missing_alternate = deepcopy(role_data)
+            role_data_missing_alternate.setdefault("alternatives", {})[critical_role] = [{
+                "component_id": "__MISSING_CURATED_ALTERNATE__",
+                "resolution": "curated",
+                "compatibility": {"pin_numbers": "exact", "footprint": "exact"},
+                "rationale": "Synthetic benchmark alternate claims to be drop-in but has no curated component record.",
+            }]
+            record(
+                "missing_curated_alternate_component",
+                "component_availability_lifecycle",
+                f"Added a critical-role alternate for {critical_role} that is absent from the curated component database",
+                self._sourcing_resilience_report(spec, graph, role_data_override=role_data_missing_alternate),
+                ["critical_alternate_component_missing"],
+            )
+
         unavailable_components = deepcopy(graph["components"])
         unavailable_components[0]["lifecycle"] = "obsolete"
         unavailable_components[0].setdefault("sourcing", {})["status"] = "unresolved"
@@ -2674,6 +3146,27 @@ class HardwareService:
             f"Marked {unavailable_components[0].get('ref')} obsolete and sourcing-unresolved",
             self.validator.check_sourcing(unavailable_components),
             ["lifecycle_risk", "sourcing_unresolved"],
+        )
+
+        stale_supplier_components = deepcopy(graph["components"])
+        stale_supplier = stale_supplier_components[0]
+        stale_supplier["lifecycle"] = "active"
+        stale_supplier.setdefault("sourcing", {})["status"] = "resolved"
+        stale_supplier["supplier_offer"] = {
+            "provider": spec.get("sourcing", {}).get("provider", "curated"),
+            "component_id": stale_supplier.get("component_id"),
+            "sku": "STALE-BENCHMARK-SKU",
+            "availability": "available",
+            "stock": 100,
+            "observed_at": "2020-01-01T00:00:00Z",
+            "source_record": {"benchmark_mutation": "stale_supplier_evidence"},
+        }
+        record(
+            "stale_supplier_evidence",
+            "component_availability_lifecycle",
+            f"Attached stale supplier availability evidence to {stale_supplier.get('ref')}",
+            self.validator.check_sourcing(stale_supplier_components),
+            ["supplier_evidence_stale"],
         )
 
         graph_bad_net = deepcopy(graph)
@@ -2715,6 +3208,56 @@ class HardwareService:
             f"Mapped firmware signal {pinmap_bad[0].get('signal')} to a missing hardware net",
             self.validator.check_hw_sw_parity(graph, pinmap_bad),
             ["missing_hardware_net"],
+        )
+
+        pinmap_wrong_mcu_pin = deepcopy(pinmap)
+        pinmap_wrong_mcu_pin[0]["mcu_pin"] = "__WRONG_MCU_PIN__"
+        record(
+            "firmware_mcu_pin_mismatch",
+            "firmware_co_design",
+            f"Kept firmware net {pinmap_wrong_mcu_pin[0].get('net_name')} but assigned it to a wrong MCU pin name",
+            self.validator.check_hw_sw_parity(graph, pinmap_wrong_mcu_pin),
+            ["firmware_mcu_pin_mismatch"],
+        )
+
+        try:
+            motor_channels = int(spec.get("actuation", {}).get("motor_channels", 0) or 0)
+        except (TypeError, ValueError):
+            motor_channels = 0
+        motor_pwm_rows = [
+            item for item in pinmap
+            if re.fullmatch(r"MOTOR\d+_PWM", str(item.get("signal", "")))
+        ]
+        if motor_channels > 0 and motor_pwm_rows:
+            pinmap_missing_pwm = [
+                item for item in pinmap
+                if item is not motor_pwm_rows[-1]
+            ]
+            record(
+                "firmware_motor_pwm_channel_missing",
+                "firmware_co_design",
+                f"Removed firmware pinmap coverage for required motor PWM channel {motor_pwm_rows[-1].get('signal')}",
+                self._firmware_interface_contract_report(path, spec, graph, pinmap_missing_pwm),
+                ["firmware_motor_pwm_channel_missing"],
+            )
+
+        record(
+            "firmware_sensor_poll_missing_bus",
+            "firmware_co_design",
+            "Added a sensor_poll firmware module for an SPI sensor when no matching SPI bus exists in the hardware graph",
+            self.validator.check_firmware_modules(
+                [{
+                    "id": "phantom_spi_sensor",
+                    "behavior": "sensor_poll",
+                    "bus": "spi",
+                    "sensor": "imu",
+                    "poll_interval_ms": 100,
+                }],
+                pinmap,
+                spec=spec,
+                graph=graph,
+            ),
+            ["firmware_sensor_bus_missing"],
         )
 
         if int(spec.get("actuation", {}).get("motor_channels", 0) or 0) > 0 and spec.get("safety", {}).get("emergency_stop", {}).get("required"):
@@ -3155,6 +3698,8 @@ class HardwareService:
                 sw_fail = [g for g in failed_gates if g not in _STRUCTURAL_BLOCKED_GATES]
                 sw_total = len(passed_gates) + len(sw_fail)
                 sw_pass_rate = len(passed_gates) / sw_total if sw_total else 1.0
+                physical_report = self._physical_qualification_report(project_path)
+                physical_summary = self._physical_qualification_benchmark_summary(physical_report)
                 # Native gate rate: only gates that ACTUALLY RAN (not blocked). Blocked
                 # means the toolchain for that architecture is unavailable — it's not a
                 # design defect, so excluded from the denominator.
@@ -3183,6 +3728,7 @@ class HardwareService:
                     "native_gate_pass_rate": round(native_pass_rate, 4),
                     "gates_passed_count": len(passed_gates),
                     "gates_failed_count": len(failed_gates),
+                    "physical_qualification_summary": physical_summary,
                 })
             except Exception as exc:
                 spec_results.append({
@@ -3215,6 +3761,17 @@ class HardwareService:
         mean_sw_pass_rate = round(sum(sw_rates) / len(sw_rates), 4) if sw_rates else 0.0
         native_rates = [r["native_gate_pass_rate"] for r in spec_results if "native_gate_pass_rate" in r]
         mean_native_pass_rate = round(sum(native_rates) / len(native_rates), 4) if native_rates else 0.0
+        physical_summaries = [r["physical_qualification_summary"] for r in spec_results if "physical_qualification_summary" in r]
+        physical_required = sum(item.get("required_tests", 0) for item in physical_summaries)
+        physical_passed = sum(item.get("approved_passed", 0) for item in physical_summaries)
+        physical_missing = sum(item.get("missing_or_unapproved", 0) for item in physical_summaries)
+        physical_failed = sum(item.get("failed", 0) for item in physical_summaries)
+        physical_ready = sum(1 for item in physical_summaries if item.get("status") == "pass")
+        physical_gap_categories = sorted({
+            category
+            for item in physical_summaries
+            for category in item.get("gap_categories", [])
+        })
 
         benchmark_result: dict[str, Any] = {
             "status": overall_status,
@@ -3230,6 +3787,13 @@ class HardwareService:
                 "mean_iterations": round(mean_iterations, 2),
                 "software_gate_pass_rate": mean_sw_pass_rate,
                 "native_gate_pass_rate": mean_native_pass_rate,
+                "physical_qualification_ready": physical_ready,
+                "physical_qualification_ready_rate": round(physical_ready / total, 4) if total else 0.0,
+                "physical_qualification_required_tests": physical_required,
+                "physical_qualification_approved_passed": physical_passed,
+                "physical_qualification_missing_or_unapproved": physical_missing,
+                "physical_qualification_failed": physical_failed,
+                "physical_qualification_gap_categories": physical_gap_categories,
             },
             "specs": spec_results,
         }
@@ -3237,6 +3801,23 @@ class HardwareService:
         write_json(artifact_path, benchmark_result)
         benchmark_result["artifact"] = artifact_path.as_posix()
         return benchmark_result
+
+    @staticmethod
+    def _physical_qualification_benchmark_summary(report: GateReport) -> dict[str, Any]:
+        gap_categories = sorted({
+            str(failure.details.get("category"))
+            for failure in report.failures
+            if failure.code == "physical_evidence_missing" and failure.details.get("category")
+        })
+        return {
+            "status": report.status.value,
+            "required_tests": int(report.metrics.get("required_tests", 0) if report.metrics else 0),
+            "approved_passed": int(report.metrics.get("approved_passed", 0) if report.metrics else 0),
+            "missing_or_unapproved": int(report.metrics.get("missing_or_unapproved", 0) if report.metrics else 0),
+            "failed": int(report.metrics.get("failed", 0) if report.metrics else 0),
+            "gap_categories": gap_categories,
+            "gate": report.to_dict(),
+        }
 
     # ------------------------------------------------------------------
     # Candidate lifecycle
@@ -3293,7 +3874,7 @@ class HardwareService:
         assumptions_summary: dict[str, Any] | None = None
         iteration_spec = path / "history" / "iterations" / candidate_id / "spec" / "system.yaml"
         if iteration_spec.is_file():
-            raw_assumptions = read_yaml(iteration_spec).get("assumptions", {})
+            raw_assumptions = _assumptions_as_dict(read_yaml(iteration_spec).get("assumptions", {}))
             unresolved_critical = sorted(name for name, a in raw_assumptions.items() if a.get("critical") and a.get("requires_user_review"))
             assumptions_summary = {"total": len(raw_assumptions), "unresolved_critical": len(unresolved_critical), "unresolved_critical_names": unresolved_critical}
         release_blocking: list[str] = []
@@ -3475,7 +4056,7 @@ class HardwareService:
             req_data = read_yaml(req_path).get("requirements", {})
             unresolved_requirements = [r for r in req_data.get("active_unresolved", []) if r.get("release_blocking")]
 
-        raw_assumptions = spec.get("assumptions", {})
+        raw_assumptions = _assumptions_as_dict(spec.get("assumptions", {}))
         unresolved_assumptions = sorted(name for name, a in raw_assumptions.items() if a.get("critical") and a.get("requires_user_review"))
 
         backend_release_eligible = backend in _RELEASE_ELIGIBLE_BACKENDS
@@ -3711,7 +4292,7 @@ class HardwareService:
                 "release_blocking": release_blocking_requirements,
             }
 
-        raw_assumptions = spec.get("assumptions", {})
+        raw_assumptions = _assumptions_as_dict(spec.get("assumptions", {}))
         unresolved_critical = sorted(name for name, a in raw_assumptions.items() if a.get("critical") and a.get("requires_user_review"))
         assumptions_summary = {
             "total": len(raw_assumptions),
@@ -4412,7 +4993,7 @@ class HardwareService:
             }
 
         # Assumptions summary.
-        raw_assumptions = spec.get("assumptions", {})
+        raw_assumptions = _assumptions_as_dict(spec.get("assumptions", {}))
         unresolved_critical = [name for name, a in raw_assumptions.items() if a.get("critical") and a.get("requires_user_review")]
         assumptions_summary = {
             "total": len(raw_assumptions),

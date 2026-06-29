@@ -1112,7 +1112,10 @@ def _declared_peak_current_a(spec: dict[str, Any]) -> float:
 
 
 def _connector_current_rating_a(spec: dict[str, Any]) -> float | None:
-    value = spec.get("assumptions", {}).get("connector_current_rating", {}).get("value_a")
+    assumptions = spec.get("assumptions", {})
+    if not isinstance(assumptions, dict):
+        return None
+    value = assumptions.get("connector_current_rating", {}).get("value_a")
     if isinstance(value, (int, float)):
         return float(value)
     return None
