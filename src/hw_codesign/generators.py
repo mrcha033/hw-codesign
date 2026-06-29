@@ -400,7 +400,10 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
         cmake_sources: list[str] = []
         live_ids: set[str] = set()
         for mod_spec in modules:
-            output = render_module(mod_spec)
+            try:
+                output = render_module(mod_spec)
+            except ValueError:
+                continue  # Skip modules with unknown/missing behavior (driver stacks, libraries)
             live_ids.add(output.id)
             c_path = modules_dir / f"{output.id}.c"
             h_path = modules_dir / f"{output.id}.h"
