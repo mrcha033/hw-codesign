@@ -293,7 +293,7 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
             "required": ["project", "requirements_text"],
             "additionalProperties": False,
         },
-        output_schema=ref("opaque_result"),
+        output_schema=ref("requirements_update_result"),
     ),
 
     "hw_list_assumptions": ToolDef(

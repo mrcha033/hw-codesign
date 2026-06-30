@@ -42,6 +42,20 @@ _STATUS_ENUM: dict[str, Any] = {
     "enum": ["pass", "fail", "blocked", "candidate", "released", "generated", "created"],
 }
 
+_SOURCE_RANGE: dict[str, Any] = {
+    "type": "object",
+    "required": ["start", "end"],
+    "additionalProperties": False,
+    "properties": {
+        "start": {"type": "integer"},
+        "end":   {"type": "integer"},
+    },
+}
+
+_NULLABLE_SOURCE_RANGE: dict[str, Any] = {
+    "oneOf": [deepcopy(_SOURCE_RANGE), {"type": "null"}],
+}
+
 _REPAIR_PATCH: dict[str, Any] = {
     "type": "object",
     "required": ["section", "spec_path", "value", "operation"],
@@ -229,6 +243,146 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------
+    # requirements_update_result — hw_update_requirements output
+    # -------------------------------------------------------------------
+    "requirements_update_result": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("requirements_update_result"),
+        "title": "RequirementsUpdateResult",
+        "description": (
+            "Unresolved-aware compiler output for lowering natural-language hardware requirements "
+            "into typed spec fields while preserving assumptions, unsupported constraints, approvals, "
+            "affected gates, and source-token provenance."
+        ),
+        "type": "object",
+        "required": [
+            "status",
+            "has_unresolved_constraints",
+            "mode",
+            "changed_paths",
+            "changed_files",
+            "unresolved_requirements",
+            "unsupported_constraints",
+            "compiler_ir",
+            "required_human_approvals",
+            "affected_gates",
+        ],
+        "additionalProperties": True,
+        "properties": {
+            "status":                     {"type": "string", "const": "generated"},
+            "has_unresolved_constraints": {"type": "boolean"},
+            "mode":                       {"type": "string", "const": "replace_active_requirements"},
+            "changed_paths":              {"type": "array", "items": {"type": "string"}},
+            "changed_files":              {"type": "array", "items": {"type": "string"}},
+            "unresolved_requirements":    {"type": "array", "items": {"type": "string"}},
+            "unsupported_constraints":    {"type": "array", "items": {"type": "string"}},
+            "required_human_approvals":   {"type": "array", "items": {"type": "string"}},
+            "affected_gates":             {"type": "array", "items": {"type": "string"}},
+            "compiler_ir": {
+                "type": "object",
+                "required": [
+                    "version",
+                    "input_id",
+                    "lowered_fields",
+                    "unresolved_assumptions",
+                    "unsupported_constraints",
+                    "tokens",
+                    "required_human_approvals",
+                    "affected_gates",
+                ],
+                "additionalProperties": True,
+                "properties": {
+                    "version":                  {"type": "string", "const": "requirements_ir_v1"},
+                    "input_id":                 {"type": "string"},
+                    "required_human_approvals": {"type": "array", "items": {"type": "string"}},
+                    "affected_gates":           {"type": "array", "items": {"type": "string"}},
+                    "lowered_fields": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["spec_path", "value", "field_type", "status", "affected_gates"],
+                            "additionalProperties": True,
+                            "properties": {
+                                "spec_path":                {"type": "string"},
+                                "field_type":               {"type": "string"},
+                                "status":                   {"type": "string", "const": "lowered"},
+                                "source_span":              {"type": ["string", "null"]},
+                                "source_range":             deepcopy(_NULLABLE_SOURCE_RANGE),
+                                "affected_gates":           {"type": "array", "items": {"type": "string"}},
+                                "required_human_approvals": {"type": "array", "items": {"type": "string"}},
+                            },
+                        },
+                    },
+                    "unresolved_assumptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["source", "status", "release_blocking", "required_human_approvals", "affected_gates"],
+                            "additionalProperties": True,
+                            "properties": {
+                                "source":                   {"type": "string"},
+                                "status":                   {"type": "string"},
+                                "release_blocking":         {"type": "boolean"},
+                                "required_human_approvals": {"type": "array", "items": {"type": "string"}},
+                                "affected_gates":           {"type": "array", "items": {"type": "string"}},
+                            },
+                        },
+                    },
+                    "unsupported_constraints": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "source",
+                                "source_span",
+                                "source_range",
+                                "category",
+                                "field_type",
+                                "status",
+                                "release_blocking",
+                                "reason",
+                                "required_human_approvals",
+                                "affected_gates",
+                            ],
+                            "additionalProperties": True,
+                            "properties": {
+                                "source":                   {"type": "string"},
+                                "source_span":              {"type": "string"},
+                                "source_range":             deepcopy(_SOURCE_RANGE),
+                                "category":                 {"type": "string"},
+                                "field_type":               {"type": "string", "const": "unsupported_constraint"},
+                                "status":                   {"type": "string", "const": "unresolved"},
+                                "release_blocking":         {"type": "boolean", "const": True},
+                                "reason":                   {"type": "string"},
+                                "required_human_approvals": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+                                "affected_gates":           {"type": "array", "items": {"type": "string"}, "minItems": 1},
+                            },
+                        },
+                    },
+                    "tokens": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["id", "kind", "status", "affected_gates", "required_human_approvals"],
+                            "additionalProperties": True,
+                            "properties": {
+                                "id":                       {"type": "string"},
+                                "kind":                     {"type": "string", "enum": ["lowered_field", "unsupported_constraint", "retained_assumption"]},
+                                "status":                   {"type": "string"},
+                                "source_span":              {"type": ["string", "null"]},
+                                "source_range":             deepcopy(_NULLABLE_SOURCE_RANGE),
+                                "release_blocking":         {"type": "boolean"},
+                                "affected_gates":           {"type": "array", "items": {"type": "string"}},
+                                "required_human_approvals": {"type": "array", "items": {"type": "string"}},
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+
+    # -------------------------------------------------------------------
     # design_candidate_result — design_candidate output
     # -------------------------------------------------------------------
     "design_candidate_result": {
@@ -266,7 +420,7 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
             "release_eligible":          {"type": "boolean", "const": False},
             "candidate_only":            {"type": "boolean", "const": True},
             "release_blocking_failures": {"type": "array", "items": {"type": "string"}},
-            "requirements_update":       {"type": ["object", "null"], "additionalProperties": True},
+            "requirements_update":       {"oneOf": [{"$ref": _id("requirements_update_result")}, {"type": "null"}]},
             "generated":                 {"$ref": _id("generate_all_result")},
             "design_domains": {
                 "type": "object",

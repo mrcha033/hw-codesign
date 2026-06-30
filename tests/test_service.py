@@ -297,6 +297,33 @@ def test_natural_language_requirements_update_structured_spec(service, project):
     assert ir["required_human_approvals"] == []
 
 
+def test_requirements_update_result_matches_public_schema(service, project):
+    from jsonschema import Draft202012Validator
+    from referencing import Registry, Resource
+
+    from hw_codesign.contracts import SHARED_SCHEMAS, TOOL_REGISTRY
+    from hw_codesign.mcp_server import _enrich
+
+    result = service.update_requirements(
+        project,
+        "16 channel 24V battery, IP67, CAN-FD, ASIL-B, 8A continuous, JLCPCB assembly, impedance-controlled",
+    )
+    registry = Registry().with_resources(
+        (schema["$id"], Resource.from_contents(schema))
+        for schema in SHARED_SCHEMAS.values()
+    )
+
+    Draft202012Validator(
+        SHARED_SCHEMAS["requirements_update_result"],
+        registry=registry,
+    ).validate(result)
+    Draft202012Validator(
+        TOOL_REGISTRY["hw_update_requirements"].to_dict()["output_schema"],
+        registry=registry,
+    ).validate(_enrich(result))
+    assert TOOL_REGISTRY["hw_update_requirements"].output_schema["$ref"].endswith("requirements_update_result")
+
+
 def test_unsupported_constraints_persist_to_spec_and_block_validation(service, project):
     """update_requirements with high-risk constraints that cannot be lowered must:
     - return status='generated' with has_unresolved_constraints=true
