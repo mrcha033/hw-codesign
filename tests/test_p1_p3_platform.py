@@ -6,6 +6,8 @@ import runpy
 from pathlib import Path
 
 import yaml
+from jsonschema import Draft202012Validator
+from referencing import Registry, Resource
 
 from hw_codesign.backends.tscircuit import TSCircuitBackend
 
@@ -223,6 +225,29 @@ def test_public_tool_schemas_have_release_envelope():
         public_schema = tool.to_dict()["output_schema"]
         schema_text = json.dumps(public_schema, sort_keys=True)
         assert "mcp_response_envelope" in schema_text or "release_eligible" in schema_text
+
+
+def test_public_tool_schemas_validate_runtime_release_envelope():
+    from hw_codesign.contracts import SHARED_SCHEMAS, TOOL_REGISTRY
+    from hw_codesign.mcp_server import _enrich
+    from hw_codesign.models import GateReport, Status
+
+    registry = Registry().with_resources(
+        (schema["$id"], Resource.from_contents(schema))
+        for schema in SHARED_SCHEMAS.values()
+    )
+
+    strict_inline_output = _enrich({"status": "pass", "spec": {}})
+    Draft202012Validator(
+        TOOL_REGISTRY["hw_read_spec"].to_dict()["output_schema"],
+        registry=registry,
+    ).validate(strict_inline_output)
+
+    ref_output = _enrich(GateReport("validate_spec", Status.PASS).to_dict())
+    Draft202012Validator(
+        TOOL_REGISTRY["hw_validate_spec"].to_dict()["output_schema"],
+        registry=registry,
+    ).validate(ref_output)
 
 
 def test_tscircuit_real_compile_and_graph_parity(tmp_path):
