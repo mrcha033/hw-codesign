@@ -8,6 +8,7 @@ import pytest
 from hw_codesign.backends.kicad import KiCadBackend
 from hw_codesign.backends.freerouting import FreeroutingBackend
 from hw_codesign.errors import UnsafeChangeError
+from hw_codesign.reference_backend import internal_drc
 from hw_codesign.schematic_generator import generate_kicad_schematic
 
 
@@ -104,6 +105,11 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
     assert routing["status"] == "generated"
     assert routing["failures"] == []
+    spec = service.read_spec(project)
+    assert spec["manufacturing"]["pcb"]["min_clearance_mm"] >= 0.15
+    assert spec["manufacturing"]["pcb"]["min_track_width_mm"] >= 0.15
+    ir_drc_report = internal_drc(path, spec, graph)
+    assert ir_drc_report.status.value == "pass"
 
     board = (path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb").read_text(encoding="utf-8")
     assert 'footprint "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"' in board

@@ -58,8 +58,8 @@ electronics:
     layers: 2
     width_mm: 51
     height_mm: 21
-    min_trace_mm: 0.127
-    min_space_mm: 0.127
+    min_trace_mm: 0.15
+    min_space_mm: 0.15
     controlled_impedance: false
 
 mechanical:
@@ -139,8 +139,8 @@ manufacturing:
   pcb:
     profile: jlcpcb_2layer
     layers: 2
-    min_clearance_mm: 0.127
-    min_track_width_mm: 0.127
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15
 
 safety:
   regulatory: [CE, FCC_B]

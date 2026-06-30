@@ -2,5 +2,5 @@ manufacturing:
   pcb:
     profile: jlcpcb_2layer
     layers: 2
-    min_clearance_mm: 0.127
-    min_track_width_mm: 0.127
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15

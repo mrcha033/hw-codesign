@@ -6,17 +6,7 @@
     "deterministic": true,
     "name": "reference-ir-drc"
   },
-  "failures": [
-    {
-      "category": "EDA_ERROR",
-      "code": "drc_clearance",
-      "details": {},
-      "message": "Manufacturing clearance is below the supported profile",
-      "path": null,
-      "requires_user_decision": false,
-      "severity": "error"
-    }
-  ],
+  "failures": [],
   "gate": "ir_pcb_sanity",
   "metrics": {
     "footprints": 11,
@@ -24,5 +14,5 @@
     "pads": 60,
     "segments": 49
   },
-  "status": "fail"
+  "status": "pass"
 }
