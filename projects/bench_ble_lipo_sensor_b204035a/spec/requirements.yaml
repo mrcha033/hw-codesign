@@ -1,0 +1,8 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: nRF52840 BLE sensor node with LiPo charging SHT31 temperature humidity 50x35
+      mm
+    created_by: user
+  active_lowered: []
+  active_unresolved: []

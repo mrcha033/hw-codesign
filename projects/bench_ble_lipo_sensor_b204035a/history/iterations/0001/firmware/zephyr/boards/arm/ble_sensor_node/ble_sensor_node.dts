@@ -1,0 +1,3 @@
+/dts-v1/;
+#include <nordic/nrf52840.dtsi>
+/ { model = "HW Co-design nRF52840 BLE Sensor Node"; compatible = "hw,ble-sensor-node"; chosen { zephyr,console = &usart3; }; };

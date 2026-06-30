@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/electronics/generated/kicad/bench_ble_lipo_sensor_b204035a.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "footprints": 19,
+    "layers": 2,
+    "pads": 88,
+    "segments": 52
+  },
+  "status": "pass"
+}

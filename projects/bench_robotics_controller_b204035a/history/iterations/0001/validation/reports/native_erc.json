@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/validation/reports/kicad_erc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "sch",
+      "erc",
+      "--format",
+      "json",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/validation/reports/kicad_erc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/electronics/generated/kicad/bench_robotics_controller_b204035a.kicad_sch"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 22 violations\nSaved ERC Report to /Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/validation/reports/kicad_erc.json\n"
+  },
+  "failures": [],
+  "gate": "native_erc",
+  "metrics": {
+    "footprint_link_issues": 22,
+    "violations": 0
+  },
+  "status": "pass"
+}

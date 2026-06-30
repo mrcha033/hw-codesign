@@ -1,0 +1,23 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: STM32H7 motor controller 12 channels 24V CAN bus emergency stop 4-layer
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: actuation.motor_channels
+    spec_path: actuation.motor_channels
+    status: lowered
+  - id: req_0002
+    source: compute.mcu.family
+    spec_path: compute.mcu.family
+    status: lowered
+  - id: req_0003
+    source: manufacturing.pcb.layers
+    spec_path: manufacturing.pcb.layers
+    status: lowered
+  - id: req_0004
+    source: sensing.e_stop
+    spec_path: sensing.e_stop
+    status: lowered
+  active_unresolved: []

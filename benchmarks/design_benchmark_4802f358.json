@@ -1,0 +1,623 @@
+{
+  "benchmark": "design_benchmark_v0",
+  "include_external": true,
+  "specs": [
+    {
+      "gate_summary": {
+        "fail": 10,
+        "native_failed": [
+          "native_drc"
+        ],
+        "native_gate_pass_rate": 0.8,
+        "native_passed": [
+          "autoroute",
+          "native_erc",
+          "kicad_library_crosscheck",
+          "native_mechanical_validation"
+        ],
+        "pass": 34,
+        "software_fail": 7,
+        "software_gate_pass_rate": 0.8293,
+        "total": 44
+      },
+      "gates_failed_count": 10,
+      "gates_passed_count": 34,
+      "id": "sensor_logger_usb",
+      "intent": "ESP32-S3 data logger with USB-C power and ICM-42688-P 6-axis IMU",
+      "iterations": 1,
+      "native_gate_pass_rate": 0.8,
+      "physical_qualification_summary": {
+        "approved_passed": 0,
+        "failed": 0,
+        "gap_categories": [
+          "assembly_quality",
+          "bringup",
+          "emi_emc",
+          "environmental_safety",
+          "firmware_co_design",
+          "mechanical_reliability",
+          "si_pi",
+          "thermal"
+        ],
+        "gate": {
+          "artifacts": [
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_4802f358/validation/physical/qualification_plan.json",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_4802f358/validation/physical/qualification_plan.md"
+          ],
+          "backend": {
+            "digital_only": false,
+            "name": "physical-qualification-ledger"
+          },
+          "failures": [
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "assembly_quality",
+                "evidence_required": [
+                  "photos",
+                  "assembly_checklist",
+                  "bom_lot_trace"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+              "path": "validation.physical_evidence.assembly_inspection",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "bringup",
+                "evidence_required": [
+                  "bench_supply_log",
+                  "rail_voltage_measurements",
+                  "thermal_image_optional"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+              "path": "validation.physical_evidence.current_limited_power_up",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "firmware_co_design",
+                "evidence_required": [
+                  "flash_log",
+                  "interface_probe_log",
+                  "firmware_revision_hash"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+              "path": "validation.physical_evidence.firmware_interface_bringup",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "thermal",
+                "evidence_required": [
+                  "thermal_camera_capture",
+                  "load_profile_log",
+                  "ambient_temperature_log"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+              "path": "validation.physical_evidence.thermal_load_profile",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "emi_emc",
+                "evidence_required": [
+                  "emi_prescan_report",
+                  "test_setup_photos",
+                  "cable_configuration"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+              "path": "validation.physical_evidence.emi_emc_prescan",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "si_pi",
+                "evidence_required": [
+                  "oscilloscope_captures",
+                  "probe_points",
+                  "load_state_log"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+              "path": "validation.physical_evidence.signal_power_integrity_probe",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "mechanical_reliability",
+                "evidence_required": [
+                  "vibration_test_log",
+                  "post_test_inspection_photos",
+                  "connector_retention_measurements"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+              "path": "validation.physical_evidence.vibration_connector_retention",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "environmental_safety",
+                "evidence_required": [
+                  "ingress_test_report_or_waiver",
+                  "esd_test_log_or_waiver",
+                  "enclosure_photos"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+              "path": "validation.physical_evidence.ingress_esd_abuse_check",
+              "requires_user_decision": true,
+              "severity": "error"
+            }
+          ],
+          "gate": "physical_qualification",
+          "metrics": {
+            "approved_passed": 0,
+            "failed": 0,
+            "missing_or_unapproved": 8,
+            "required_tests": 8
+          },
+          "status": "blocked"
+        },
+        "missing_or_unapproved": 8,
+        "required_tests": 8,
+        "status": "blocked"
+      },
+      "software_gate_pass_rate": 0.8293,
+      "status": "fail",
+      "template": "sensor_data_logger"
+    },
+    {
+      "gate_summary": {
+        "fail": 10,
+        "native_failed": [
+          "native_zephyr_build"
+        ],
+        "native_gate_pass_rate": 0.8333,
+        "native_passed": [
+          "autoroute",
+          "native_erc",
+          "native_drc",
+          "kicad_library_crosscheck",
+          "native_mechanical_validation"
+        ],
+        "pass": 34,
+        "software_fail": 8,
+        "software_gate_pass_rate": 0.8095,
+        "total": 44
+      },
+      "gates_failed_count": 10,
+      "gates_passed_count": 34,
+      "id": "ble_lipo_sensor",
+      "intent": "nRF52840 BLE sensor node with LiPo charging SHT31 temperature humidity 50x35 mm",
+      "iterations": 1,
+      "native_gate_pass_rate": 0.8333,
+      "physical_qualification_summary": {
+        "approved_passed": 0,
+        "failed": 0,
+        "gap_categories": [
+          "assembly_quality",
+          "bringup",
+          "emi_emc",
+          "environmental_safety",
+          "firmware_co_design",
+          "mechanical_reliability",
+          "si_pi",
+          "thermal"
+        ],
+        "gate": {
+          "artifacts": [
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_4802f358/validation/physical/qualification_plan.json",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_4802f358/validation/physical/qualification_plan.md"
+          ],
+          "backend": {
+            "digital_only": false,
+            "name": "physical-qualification-ledger"
+          },
+          "failures": [
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "assembly_quality",
+                "evidence_required": [
+                  "photos",
+                  "assembly_checklist",
+                  "bom_lot_trace"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+              "path": "validation.physical_evidence.assembly_inspection",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "bringup",
+                "evidence_required": [
+                  "bench_supply_log",
+                  "rail_voltage_measurements",
+                  "thermal_image_optional"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+              "path": "validation.physical_evidence.current_limited_power_up",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "firmware_co_design",
+                "evidence_required": [
+                  "flash_log",
+                  "interface_probe_log",
+                  "firmware_revision_hash"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+              "path": "validation.physical_evidence.firmware_interface_bringup",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "thermal",
+                "evidence_required": [
+                  "thermal_camera_capture",
+                  "load_profile_log",
+                  "ambient_temperature_log"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+              "path": "validation.physical_evidence.thermal_load_profile",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "emi_emc",
+                "evidence_required": [
+                  "emi_prescan_report",
+                  "test_setup_photos",
+                  "cable_configuration"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+              "path": "validation.physical_evidence.emi_emc_prescan",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "si_pi",
+                "evidence_required": [
+                  "oscilloscope_captures",
+                  "probe_points",
+                  "load_state_log"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+              "path": "validation.physical_evidence.signal_power_integrity_probe",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "mechanical_reliability",
+                "evidence_required": [
+                  "vibration_test_log",
+                  "post_test_inspection_photos",
+                  "connector_retention_measurements"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+              "path": "validation.physical_evidence.vibration_connector_retention",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "environmental_safety",
+                "evidence_required": [
+                  "ingress_test_report_or_waiver",
+                  "esd_test_log_or_waiver",
+                  "enclosure_photos"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+              "path": "validation.physical_evidence.ingress_esd_abuse_check",
+              "requires_user_decision": true,
+              "severity": "error"
+            }
+          ],
+          "gate": "physical_qualification",
+          "metrics": {
+            "approved_passed": 0,
+            "failed": 0,
+            "missing_or_unapproved": 8,
+            "required_tests": 8
+          },
+          "status": "blocked"
+        },
+        "missing_or_unapproved": 8,
+        "required_tests": 8,
+        "status": "blocked"
+      },
+      "software_gate_pass_rate": 0.8095,
+      "status": "fail",
+      "template": "ble_sensor_node"
+    },
+    {
+      "gate_summary": {
+        "fail": 7,
+        "native_failed": [
+          "native_zephyr_build"
+        ],
+        "native_gate_pass_rate": 0.8,
+        "native_passed": [
+          "autoroute",
+          "native_erc",
+          "native_drc",
+          "kicad_library_crosscheck"
+        ],
+        "pass": 32,
+        "software_fail": 3,
+        "software_gate_pass_rate": 0.9143,
+        "total": 39
+      },
+      "gates_failed_count": 7,
+      "gates_passed_count": 32,
+      "id": "robotics_controller",
+      "intent": "STM32H7 motor controller 12 channels 24V CAN bus emergency stop 4-layer",
+      "iterations": 1,
+      "native_gate_pass_rate": 0.8,
+      "physical_qualification_summary": {
+        "approved_passed": 0,
+        "failed": 0,
+        "gap_categories": [
+          "assembly_quality",
+          "bringup",
+          "emi_emc",
+          "environmental_safety",
+          "firmware_co_design",
+          "mechanical_reliability",
+          "si_pi",
+          "thermal"
+        ],
+        "gate": {
+          "artifacts": [
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_4802f358/validation/physical/qualification_plan.json",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_4802f358/validation/physical/qualification_plan.md"
+          ],
+          "backend": {
+            "digital_only": false,
+            "name": "physical-qualification-ledger"
+          },
+          "failures": [
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "assembly_quality",
+                "evidence_required": [
+                  "photos",
+                  "assembly_checklist",
+                  "bom_lot_trace"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+              "path": "validation.physical_evidence.assembly_inspection",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "bringup",
+                "evidence_required": [
+                  "bench_supply_log",
+                  "rail_voltage_measurements",
+                  "thermal_image_optional"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+              "path": "validation.physical_evidence.current_limited_power_up",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "firmware_co_design",
+                "evidence_required": [
+                  "flash_log",
+                  "interface_probe_log",
+                  "firmware_revision_hash"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+              "path": "validation.physical_evidence.firmware_interface_bringup",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "thermal",
+                "evidence_required": [
+                  "thermal_camera_capture",
+                  "load_profile_log",
+                  "ambient_temperature_log"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+              "path": "validation.physical_evidence.thermal_load_profile",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "emi_emc",
+                "evidence_required": [
+                  "emi_prescan_report",
+                  "test_setup_photos",
+                  "cable_configuration"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+              "path": "validation.physical_evidence.emi_emc_prescan",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "si_pi",
+                "evidence_required": [
+                  "oscilloscope_captures",
+                  "probe_points",
+                  "load_state_log"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+              "path": "validation.physical_evidence.signal_power_integrity_probe",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "mechanical_reliability",
+                "evidence_required": [
+                  "vibration_test_log",
+                  "post_test_inspection_photos",
+                  "connector_retention_measurements"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+              "path": "validation.physical_evidence.vibration_connector_retention",
+              "requires_user_decision": true,
+              "severity": "error"
+            },
+            {
+              "category": "RELEASE_ERROR",
+              "code": "physical_evidence_missing",
+              "details": {
+                "category": "environmental_safety",
+                "evidence_required": [
+                  "ingress_test_report_or_waiver",
+                  "esd_test_log_or_waiver",
+                  "enclosure_photos"
+                ]
+              },
+              "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+              "path": "validation.physical_evidence.ingress_esd_abuse_check",
+              "requires_user_decision": true,
+              "severity": "error"
+            }
+          ],
+          "gate": "physical_qualification",
+          "metrics": {
+            "approved_passed": 0,
+            "failed": 0,
+            "missing_or_unapproved": 8,
+            "required_tests": 8
+          },
+          "status": "blocked"
+        },
+        "missing_or_unapproved": 8,
+        "required_tests": 8,
+        "status": "blocked"
+      },
+      "software_gate_pass_rate": 0.9143,
+      "status": "blocked",
+      "template": "robotics_controller_full"
+    },
+    {
+      "error": "'list' object has no attribute 'items'",
+      "gate_summary": {},
+      "id": "rp2040_usb_hid",
+      "intent": "RP2040 USB HID device with 2 MB QSPI flash and USB-C connector",
+      "iterations": 0,
+      "status": "error",
+      "template": "rp2040_usb_device"
+    }
+  ],
+  "status": "fail",
+  "summary": {
+    "failed": 4,
+    "mean_iterations": 1.0,
+    "native_gate_pass_rate": 0.8111,
+    "pass_rate": 0.0,
+    "passed": 0,
+    "physical_qualification_approved_passed": 0,
+    "physical_qualification_failed": 0,
+    "physical_qualification_gap_categories": [
+      "assembly_quality",
+      "bringup",
+      "emi_emc",
+      "environmental_safety",
+      "firmware_co_design",
+      "mechanical_reliability",
+      "si_pi",
+      "thermal"
+    ],
+    "physical_qualification_missing_or_unapproved": 24,
+    "physical_qualification_ready": 0,
+    "physical_qualification_ready_rate": 0.0,
+    "physical_qualification_required_tests": 24,
+    "software_gate_pass_rate": 0.851,
+    "software_gates_ready": 0,
+    "software_gates_ready_rate": 0.0,
+    "total": 4
+  }
+}

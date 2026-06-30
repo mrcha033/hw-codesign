@@ -1,0 +1,2808 @@
+{
+  "blocked_gates": [
+    "supplier_availability",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export",
+    "autoroute",
+    "native_erc",
+    "native_drc",
+    "kicad_library_crosscheck",
+    "native_mechanical_validation",
+    "native_zephyr_build",
+    "physical_qualification"
+  ],
+  "candidate": {
+    "bundle": "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/exports/candidates/0007/bench_rp2040_usb_hid_ercfix-0007-candidate.zip",
+    "candidate_only": true,
+    "iteration_id": "0007",
+    "path": "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/exports/candidates/0007",
+    "release_eligible": false,
+    "status": "candidate"
+  },
+  "failed_gates": [
+    "spec_schema",
+    "semantic_electrical",
+    "mechanical_mounting_integrity",
+    "firmware_modules",
+    "supplier_availability",
+    "sourcing_resilience",
+    "component_provenance",
+    "power_tree_integrity",
+    "power_integrity_estimate",
+    "interface_integrity",
+    "ir_erc",
+    "ir_pcb_sanity",
+    "placement_constraints",
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export",
+    "autoroute",
+    "native_erc",
+    "native_drc",
+    "kicad_library_crosscheck",
+    "native_mechanical_validation",
+    "native_zephyr_build",
+    "physical_qualification",
+    "design_dependency_graph"
+  ],
+  "generated": {
+    "backend": "tscircuit",
+    "component_resolution": [
+      {
+        "component_id": "usb4105_gf_a",
+        "data": {
+          "constraints": [
+            "usb2"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usb4105_gf_a",
+              "content_sha256": null,
+              "id": "datasheet_usb4105_gf_a",
+              "kind": "datasheet",
+              "locator": "USB4105-GF-A",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "library_id": "Connector_USB:USB_C_GCT_USB4105",
+            "verified": true
+          },
+          "id": "usb4105_gf_a",
+          "lifecycle": "active",
+          "manufacturer": "GCT",
+          "mpn": "USB4105-GF-A",
+          "package": "USB-C-16",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VBUS",
+              "number": "1",
+              "voltage_domain": "USB_5V"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D+",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D-",
+              "number": "4"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USB4105-GF-A"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "library_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_usb4105_gf_a"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J1",
+        "resolution": "curated",
+        "role": "power_input"
+      },
+      {
+        "component_id": "usblc6_2sc6",
+        "data": {
+          "constraints": [
+            "usb_esd"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usblc6_2sc6",
+              "content_sha256": null,
+              "id": "datasheet_usblc6_2sc6",
+              "kind": "datasheet",
+              "locator": "USBLC6-2SC6",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+            "verified": true
+          },
+          "id": "usblc6_2sc6",
+          "lifecycle": "active",
+          "manufacturer": "STMicroelectronics",
+          "mpn": "USBLC6-2SC6",
+          "package": "SOT-23-6",
+          "pins": [
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_OUT",
+              "number": "2"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_IN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_OUT",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USBLC6-2SC6"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Power_Protection:USBLC6-2SC6",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_usblc6_2sc6"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          }
+        },
+        "ref": "D1",
+        "resolution": "curated",
+        "role": "tvs"
+      },
+      {
+        "component_id": "ap2112k_33trg1",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "ap2112k_33trg1",
+              "content_sha256": null,
+              "id": "datasheet_ap2112k_33trg1",
+              "kind": "datasheet",
+              "locator": "AP2112K-3.3TRG1",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-5",
+            "verified": true
+          },
+          "id": "ap2112k_33trg1",
+          "lifecycle": "active",
+          "manufacturer": "Diodes Incorporated",
+          "mpn": "AP2112K-3.3TRG1",
+          "package": "SOT-23-5",
+          "pins": [
+            {
+              "electrical_type": "input",
+              "name": "EN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VIN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "NC",
+              "number": "4"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "VOUT",
+              "number": "5"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "AP2112K-3.3TRG1"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "AP2112K-3.3TRG1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "ap2112k_33trg1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "AP2112K-3.3TRG1"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Regulator_Linear:AP2112K-3.3",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_ap2112k_33trg1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "AP2112K-3.3TRG1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "ap2112k_33trg1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "AP2112K-3.3TRG1"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U1",
+        "resolution": "curated",
+        "role": "regulator_3v3"
+      },
+      {
+        "component_id": "rp2040",
+        "data": {
+          "constraints": [
+            "dual_core_cortex_m0plus",
+            "native_usb_fs",
+            "pio_programmable_io",
+            "qspi_xip_flash_required"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rp2040",
+              "content_sha256": null,
+              "id": "datasheet_rp2040",
+              "kind": "datasheet",
+              "locator": "RP2040",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "backend_footprints": {
+              "tscircuit": "rp2040_qfn56"
+            },
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "57"
+            ],
+            "library_id": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+            "verified": true
+          },
+          "id": "rp2040",
+          "lifecycle": "active",
+          "manufacturer": "Raspberry Pi Ltd",
+          "mpn": "RP2040",
+          "package": "QFN-56",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "1",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "USB_DM",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "USB_DP",
+              "number": "4"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "XIN",
+              "number": "5"
+            },
+            {
+              "electrical_type": "output",
+              "name": "QSPI_SCLK",
+              "number": "6"
+            },
+            {
+              "electrical_type": "output",
+              "name": "QSPI_CS",
+              "number": "7"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "QSPI_SD0",
+              "number": "8"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "QSPI_SD1",
+              "number": "9"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "QSPI_SD2",
+              "number": "10"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "QSPI_SD3",
+              "number": "11"
+            },
+            {
+              "electrical_type": "input",
+              "name": "RUN",
+              "number": "12"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO23",
+              "number": "13"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO25",
+              "number": "14"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SWCLK",
+              "number": "15"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SWDIO",
+              "number": "16"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO0",
+              "number": "17"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO1",
+              "number": "18"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO2",
+              "number": "19"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO3",
+              "number": "20"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO4",
+              "number": "21"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "GPIO5",
+              "number": "22"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RP2040"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rp2040",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RP2040",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rp2040",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RP2040"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22"
+            ],
+            "library_id": "MCU_RaspberryPi:RP2040",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+          "database_file_sha256": "b0b8db1c5b69997c5189a5d37153bed39ad75e7d284d3d5ccbd2625171df305c",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_rp2040"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rp2040",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RP2040",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rp2040",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RP2040"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U2",
+        "resolution": "curated",
+        "role": "mcu"
+      },
+      {
+        "component_id": "w25q16jv",
+        "data": {
+          "constraints": [
+            "qspi_compatible",
+            "xip_capable",
+            "rp2040_compatible_command_set"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "w25q16jv",
+              "content_sha256": null,
+              "id": "datasheet_w25q16jv",
+              "kind": "datasheet",
+              "locator": "W25Q16JVSSIQ",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "backend_footprints": {
+              "tscircuit": "w25q16jv_soic8"
+            },
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+            "verified": true
+          },
+          "id": "w25q16jv",
+          "lifecycle": "active",
+          "manufacturer": "Winbond Electronics",
+          "mpn": "W25Q16JVSSIQ",
+          "package": "SOIC-8",
+          "pins": [
+            {
+              "electrical_type": "input",
+              "name": "CS",
+              "number": "1"
+            },
+            {
+              "electrical_type": "output",
+              "name": "DO",
+              "number": "2"
+            },
+            {
+              "electrical_type": "input",
+              "name": "WP",
+              "number": "3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "4",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "DI",
+              "number": "5"
+            },
+            {
+              "electrical_type": "input",
+              "name": "CLK",
+              "number": "6"
+            },
+            {
+              "electrical_type": "input",
+              "name": "HOLD",
+              "number": "7"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VCC",
+              "number": "8",
+              "voltage_domain": "V3V3"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "W25Q16JVSSIQ"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "w25q16jv",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "W25Q16JVSSIQ",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "w25q16jv",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "W25Q16JVSSIQ"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Memory_Flash:W25Q16JV",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+          "database_file_sha256": "b0b8db1c5b69997c5189a5d37153bed39ad75e7d284d3d5ccbd2625171df305c",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_w25q16jv"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "w25q16jv",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "W25Q16JVSSIQ",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "w25q16jv",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "W25Q16JVSSIQ"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U3",
+        "resolution": "curated",
+        "role": "flash"
+      },
+      {
+        "component_id": "abm8_12m",
+        "data": {
+          "constraints": [
+            "12mhz_xosc",
+            "usb_timing_qualified",
+            "10ppm_stability"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "abm8_12m",
+              "content_sha256": null,
+              "id": "datasheet_abm8_12m",
+              "kind": "datasheet",
+              "locator": "ABM8-12.000MHZ-B2-T",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Crystal:Crystal_SMD_HC-49S",
+            "verified": true
+          },
+          "id": "abm8_12m",
+          "lifecycle": "active",
+          "manufacturer": "Abracon",
+          "mpn": "ABM8-12.000MHZ-B2-T",
+          "package": "HC-49S-SMD",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "XIN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "XOUT",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "ABM8-12.000MHZ-B2-T"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "abm8_12m",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ABM8-12.000MHZ-B2-T",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "abm8_12m",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ABM8-12.000MHZ-B2-T"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:Crystal",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+          "database_file_sha256": "b0b8db1c5b69997c5189a5d37153bed39ad75e7d284d3d5ccbd2625171df305c",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_abm8_12m"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "abm8_12m",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ABM8-12.000MHZ-B2-T",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "abm8_12m",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ABM8-12.000MHZ-B2-T"
+            },
+            "stock": null
+          }
+        },
+        "ref": "X1",
+        "resolution": "curated",
+        "role": "crystal_12m"
+      },
+      {
+        "component_id": "conn_2x05_2p54",
+        "data": {
+          "constraints": [
+            "swd_10pin_cortex_debug",
+            "jtag_compatible"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "conn_2x05_2p54",
+              "content_sha256": null,
+              "id": "datasheet_conn_2x05_2p54",
+              "kind": "datasheet",
+              "locator": "61201021621",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "library_id": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+            "verified": true
+          },
+          "id": "conn_2x05_2p54",
+          "lifecycle": "active",
+          "manufacturer": "W\u00fcrth Elektronik",
+          "mpn": "61201021621",
+          "package": "PinHeader-2x5-2.54mm",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SWDIO",
+              "number": "2"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SWDCLK",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "output",
+              "name": "SWO",
+              "number": "6"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "KEY",
+              "number": "7"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "NC",
+              "number": "8"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "9",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "RESET",
+              "number": "10"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "61201021621"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "61201021621",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "conn_2x05_2p54",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "61201021621"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "library_id": "Connector_Generic:Conn_02x05_Odd_Even",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_conn_2x05_2p54"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "61201021621",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "conn_2x05_2p54",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "61201021621"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J2",
+        "resolution": "curated",
+        "role": "debug_header"
+      },
+      {
+        "component_id": "grm155_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm155_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm155_100n",
+              "kind": "datasheet",
+              "locator": "GRM155R71C104KA88D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0402_1005Metric",
+            "verified": true
+          },
+          "id": "grm155_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM155R71C104KA88D",
+          "package": "0402",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM155R71C104KA88D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm155_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C1",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm155_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm155_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm155_100n",
+              "kind": "datasheet",
+              "locator": "GRM155R71C104KA88D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0402_1005Metric",
+            "verified": true
+          },
+          "id": "grm155_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM155R71C104KA88D",
+          "package": "0402",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM155R71C104KA88D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm155_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C2",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm188_10u",
+        "data": {
+          "constraints": [
+            "bulk_capacitor"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_10u",
+              "content_sha256": null,
+              "id": "datasheet_grm188_10u",
+              "kind": "datasheet",
+              "locator": "GRM188R60J106ME47D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_10u",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R60J106ME47D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R60J106ME47D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R60J106ME47D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_10u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R60J106ME47D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_10u"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+          "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R60J106ME47D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_10u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R60J106ME47D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C3",
+        "resolution": "curated",
+        "role": "capacitor_10u_50v"
+      }
+    ],
+    "files": {
+      "bom": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/bom.csv"
+      ],
+      "electronics": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/intent/board.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/intent/sensor_bus.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/intent/connectors.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/intent/power_tree.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/electrical_graph.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/semantic/semantic_schematic.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/semantic/semantic_schematic.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/kicad/bench_rp2040_usb_hid_ercfix.kicad_pcb",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/kicad/bench_rp2040_usb_hid_ercfix.kicad_pro",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/kicad/bench_rp2040_usb_hid_ercfix.kicad_sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/kicad/bench_rp2040_usb_hid_ercfix.sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/kicad/routing.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/source/tscircuit/board.tsx",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/source/tscircuit/board.compiler.mjs",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/source/tscircuit/source_manifest.json"
+      ],
+      "firmware": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/generated/board.cmake",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/generated/devicetree.overlay",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/generated/kconfig.defconfig",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/generated/pinmap.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/generated/pinmap.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/modules/CMakeLists.txt",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/app/src/main.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_can_loopback.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_estop_fail_safe.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_i2c_imu.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_motor_pwm.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_usb_connection.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/boards/arm/robot_controller/robot_controller.dts",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/reference/CMakeLists.txt"
+      ],
+      "mechanical": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/assembly.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/connector_cutouts.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/enclosure.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/enclosure_variants.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/fixtures.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/mechanical_contract.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/mechanical/source/source_manifest.json"
+      ]
+    },
+    "resolution_report": {
+      "artifacts": [
+        "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml"
+      ],
+      "backend": {
+        "mutates_database": false,
+        "name": "ComponentResolver"
+      },
+      "failures": [],
+      "gate": "component_resolution",
+      "metrics": {
+        "critical_roles": 5,
+        "requested": 10,
+        "resolved": 10,
+        "supplier_provider": "curated"
+      },
+      "status": "pass"
+    },
+    "status": "generated"
+  },
+  "iteration_id": "0007",
+  "passed_gates": [
+    "requirements_lowering",
+    "mechanical_fit",
+    "firmware_pinmap",
+    "mechanical_connector_retention",
+    "mechanical_connector_cutouts",
+    "component_resolution",
+    "datasheet_evidence",
+    "bom",
+    "sourcing",
+    "pin_symbol_footprint",
+    "semantic_schematic_roundtrip",
+    "support_circuit_completeness",
+    "hw_sw_parity",
+    "firmware_interface_contract",
+    "reference_firmware_build",
+    "layout_thermal_integrity",
+    "layout_signal_integrity",
+    "reference_fabrication",
+    "candidate_critic"
+  ],
+  "release_gate": {
+    "status": "blocked"
+  },
+  "repair_plan": {
+    "actions": [
+      {
+        "action": "Resolve schema_violation: 'motor_channel_peak_current_a' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: [{'id': 'ASM-01', 'text': 'External QSPI flash required \u2014 RP2040 has no on-chip flash', 'rationale': 'RP2040 XIP (execute-in-place) boots from external SPI flash via QSPI; W25Q16JV selected for 2MB capacity'}, {'id': 'ASM-02', 'text': 'USB-C connector bus-powers the board at 5V; AP2112K LDO provides 3.3V', 'rationale': 'RP2040 core voltage 1.1V generated internally via VREG; only 3.3V IO rail needs external LDO'}, {'id': 'ASM-03', 'text': '12MHz crystal optional \u2014 RP2040 ROSC can run USB PLL; crystal improves frequency accuracy', 'rationale': 'RP2040 USB PLL can lock to 48MHz from ROSC, but USB spec requires \u00b12500ppm; crystal locks within \u00b120ppm'}, {'id': 'ASM-04', 'text': 'PIO state machines can implement additional protocols (WS2812, UART, SPI, I2S) in firmware', 'rationale': 'RP2040 has two PIO blocks with 8 state machines; eliminates need for external protocol ICs'}] is not of type 'object'",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'framework' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'target' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'exports' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'connector_interfaces' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'revision' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'target_use' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'emergency_stop' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'required_protections' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'imu' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'e_stop' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve schema_violation: 'supply' is a required property",
+        "failure_code": "schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mechanical_schema_violation: 'connector_interfaces' is a required property",
+        "failure_code": "mechanical_schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve requirements_schema_violation: Additional properties are not allowed ('performance', 'reliability' were unexpected)",
+        "failure_code": "requirements_schema_violation",
+        "gate": "spec_schema",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_protection: Required protection is missing: reverse_polarity",
+        "failure_code": "missing_protection",
+        "gate": "semantic_electrical",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_protection: Required protection is missing: fuse_or_efuse",
+        "failure_code": "missing_protection",
+        "gate": "semantic_electrical",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_protection: Required protection is missing: tvs",
+        "failure_code": "missing_protection",
+        "gate": "semantic_electrical",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_protection: Required protection is missing: watchdog",
+        "failure_code": "missing_protection",
+        "gate": "semantic_electrical",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mounting_hole_component_keepout_intrusion: U1 placement intrudes into mounting-hole screw/standoff keepout",
+        "failure_code": "mounting_hole_component_keepout_intrusion",
+        "gate": "mechanical_mounting_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mounting_hole_component_keepout_intrusion: J2 placement intrudes into mounting-hole screw/standoff keepout",
+        "failure_code": "mounting_hole_component_keepout_intrusion",
+        "gate": "mechanical_mounting_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mounting_hole_component_keepout_intrusion: C3 placement intrudes into mounting-hole screw/standoff keepout",
+        "failure_code": "mounting_hole_component_keepout_intrusion",
+        "gate": "mechanical_mounting_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unknown_behavior: Module 'usb_hid_stack' has unknown behavior 'None'",
+        "failure_code": "unknown_behavior",
+        "gate": "firmware_modules",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unknown_behavior: Module 'usb_cdc_stack' has unknown behavior 'None'",
+        "failure_code": "unknown_behavior",
+        "gate": "firmware_modules",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unknown_behavior: Module 'flash_xip' has unknown behavior 'None'",
+        "failure_code": "unknown_behavior",
+        "gate": "firmware_modules",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unknown_behavior: Module 'pio_ws2812' has unknown behavior 'None'",
+        "failure_code": "unknown_behavior",
+        "gate": "firmware_modules",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for J1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for D1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U3 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for X1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for J2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C3 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role flash has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role mcu has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role power_input has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role regulator_3v3 has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role tvs has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.33 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.33 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.34 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.34 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.40 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.40 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.41 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.41 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.44 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.44 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.45 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.45 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.46 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.46 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.47 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.47 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U2.48 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U2.48 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U2.44 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U2.45 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U2.46 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U2.47 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U2.48 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U3.3 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U3.7 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U3.8 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J2.1 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: C1.1 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: C2.1 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: C3.1 requires unreachable power net V3V3",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve rail_decoupling_missing: Rail USB_VBUS feeds active loads without any local decoupling or bulk capacitor in the graph",
+        "failure_code": "rail_decoupling_missing",
+        "gate": "power_integrity_estimate",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve usb_differential_pair_incomplete: USB interface is missing raw or protected D+/D- nets",
+        "failure_code": "usb_differential_pair_incomplete",
+        "gate": "interface_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: can",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: efuse",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: fuse",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: imu",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: motor_io",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: regulator",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: reverse_polarity",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_required_block: Missing schematic block: safety_gate",
+        "failure_code": "missing_required_block",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve single_pin_net: QSPI_D2 has fewer than two endpoints",
+        "failure_code": "single_pin_net",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve single_pin_net: QSPI_D3 has fewer than two endpoints",
+        "failure_code": "single_pin_net",
+        "gate": "ir_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve drc_clearance: Manufacturing clearance is below the supported profile",
+        "failure_code": "drc_clearance",
+        "gate": "ir_pcb_sanity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve routing_failed: Router could not connect GND",
+        "failure_code": "routing_failed",
+        "gate": "ir_pcb_sanity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve routing_incomplete: PCB signal routing is deferred or incomplete",
+        "failure_code": "routing_incomplete",
+        "gate": "ir_pcb_sanity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve coincident_components: D1 and U3 are 0.000 mm apart (below 1.5 mm)",
+        "failure_code": "coincident_components",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve coincident_components: U1 and J2 are 0.000 mm apart (below 1.5 mm)",
+        "failure_code": "coincident_components",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve coincident_components: U1 and C3 are 0.000 mm apart (below 1.5 mm)",
+        "failure_code": "coincident_components",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U2 and C1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U3 and X1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J2 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve coincident_components: J2 and C3 are 0.000 mm apart (below 1.5 mm)",
+        "failure_code": "coincident_components",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: C2 and C3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mounting_hole_keepout_intrusion: U1 center is within 1.6 mm of mounting hole (48.5, 18.5)",
+        "failure_code": "mounting_hole_keepout_intrusion",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mounting_hole_keepout_intrusion: J2 center is within 1.6 mm of mounting hole (48.5, 18.5)",
+        "failure_code": "mounting_hole_keepout_intrusion",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve mounting_hole_keepout_intrusion: C3 center is within 1.6 mm of mounting hole (48.5, 18.5)",
+        "failure_code": "mounting_hole_keepout_intrusion",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve decoupling_proximity_deferred: C1 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "failure_code": "decoupling_proximity_deferred",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve decoupling_proximity_deferred: C2 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "failure_code": "decoupling_proximity_deferred",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve compiled_circuit_contains_errors: tscircuit emitted Circuit JSON error elements",
+        "failure_code": "compiled_circuit_contains_errors",
+        "gate": "tscircuit_compile",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve compile_prerequisite_failed: Prerequisite compile gate did not pass",
+        "failure_code": "compile_prerequisite_failed",
+        "gate": "tscircuit_netlist_extract",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve compile_prerequisite_failed: Prerequisite compile gate did not pass",
+        "failure_code": "compile_prerequisite_failed",
+        "gate": "tscircuit_graph_parity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve compile_prerequisite_failed: Prerequisite compile gate did not pass",
+        "failure_code": "compile_prerequisite_failed",
+        "gate": "tscircuit_footprint_parity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve compile_prerequisite_failed: Prerequisite compile gate did not pass",
+        "failure_code": "compile_prerequisite_failed",
+        "gate": "tscircuit_layout_completeness",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve compile_prerequisite_failed: Prerequisite compile gate did not pass",
+        "failure_code": "compile_prerequisite_failed",
+        "gate": "tscircuit_manufacturing_export",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: Freerouting was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "autoroute",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: KiCad ERC was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: KiCad DRC was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_drc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: KiCad library cross-check was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "kicad_library_crosscheck",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: Native CAD validation was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_mechanical_validation",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: Native Zephyr build was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_zephyr_build",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: assembly_inspection",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_oracle_gap_open: Candidate still requires external physical qualification evidence; this is not a software gate failure",
+        "failure_code": "physical_oracle_gap_open",
+        "gate": "candidate_critic",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve native_toolchain_gates_not_run: Native toolchain gates were not run; candidate cannot be release-reviewed as fabrication-authoritative",
+        "failure_code": "native_toolchain_gates_not_run",
+        "gate": "candidate_critic",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: requirements_lowering passed before prerequisite spec_schema passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: component_resolution passed before prerequisite spec_schema passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: semantic_schematic_roundtrip passed before prerequisite semantic_electrical passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: pin_symbol_footprint passed before prerequisite component_provenance passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: support_circuit_completeness passed before prerequisite semantic_electrical passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: support_circuit_completeness passed before prerequisite power_tree_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: support_circuit_completeness passed before prerequisite interface_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: hw_sw_parity passed before prerequisite interface_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: firmware_interface_contract passed before prerequisite interface_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: reference_firmware_build passed before prerequisite firmware_modules passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: layout_thermal_integrity passed before prerequisite placement_constraints passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: layout_thermal_integrity passed before prerequisite power_tree_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: layout_thermal_integrity passed before prerequisite interface_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: layout_signal_integrity passed before prerequisite placement_constraints passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: layout_signal_integrity passed before prerequisite interface_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: reference_fabrication passed before prerequisite ir_pcb_sanity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: reference_fabrication passed before prerequisite placement_constraints passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: mechanical_connector_cutouts passed before prerequisite placement_constraints passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      }
+    ],
+    "agent_actions": [
+      {
+        "args": {
+          "category": "can"
+        },
+        "reason": "'can' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "efuse"
+        },
+        "reason": "'efuse' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "fuse"
+        },
+        "reason": "'fuse' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "imu"
+        },
+        "reason": "'imu' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "motor_io"
+        },
+        "reason": "'motor_io' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "regulator"
+        },
+        "reason": "'regulator' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "reverse_polarity"
+        },
+        "reason": "'reverse_polarity' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {
+          "category": "safety_gate"
+        },
+        "reason": "'safety_gate' block is missing from schematic",
+        "tool": "hw_propose_circuit_block"
+      },
+      {
+        "args": {},
+        "reason": "A net has only one connection \u2014 add the missing component or correct the net name",
+        "tool": "hw_add_circuit_block"
+      },
+      {
+        "args": {},
+        "reason": "A net has only one connection \u2014 add the missing component or correct the net name",
+        "tool": "hw_add_circuit_block"
+      }
+    ],
+    "project": "bench_rp2040_usb_hid_ercfix",
+    "requires_user_decision": true,
+    "status": "generated"
+  },
+  "status": "blocked"
+}

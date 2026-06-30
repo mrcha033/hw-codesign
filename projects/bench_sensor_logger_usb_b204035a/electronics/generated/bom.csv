@@ -1,0 +1,15 @@
+reference,category,mpn,quantity,risk
+J1,power_input,USB4105-GF-A,1,normal
+F1,fuse,Littelfuse-0498080.M,1,normal
+Q1,reverse_polarity,LM74700QDBVRQ1,1,normal
+D1,tvs,USBLC6-2SC6,1,normal
+U3,regulator,TPS62133RGTR,1,normal
+U1,mcu,ESP32-S3-WROOM-1-N8,1,normal
+U2,imu,ICM-42688-P,1,normal
+J2,debug,Samtec-FTSH-105-01-L-DV-K,1,normal
+R1,pullup,RC0603FR-074K7L,1,normal
+R2,pullup,RC0603FR-074K7L,1,normal
+R3,pullup,RC0603FR-074K7L,1,normal
+C1,decoupling,GRM188R71C104KA01D,1,normal
+C2,decoupling,GRM188R71C104KA01D,1,normal
+C9,bulk_cap,GRM31CR61E226ME15L,1,normal

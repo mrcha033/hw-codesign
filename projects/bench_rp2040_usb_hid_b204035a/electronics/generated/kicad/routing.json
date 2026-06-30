@@ -1,0 +1,15 @@
+{
+  "failures": [
+    {
+      "endpoint_mm": [
+        24.0,
+        50.0
+      ],
+      "net": "GND",
+      "reason": "no_clear_single_layer_path"
+    }
+  ],
+  "mode": "plane_preseeded",
+  "signal_routing": "deferred_to_freerouting",
+  "status": "fail"
+}

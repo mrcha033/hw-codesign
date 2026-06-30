@@ -1,0 +1,36 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/exports/candidates/native-check/mechanical/board.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/exports/candidates/native-check/mechanical/enclosure.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/exports/candidates/native-check/mechanical/enclosure.stl",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/exports/candidates/native-check/mechanical/variants/enclosure_desktop.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/exports/candidates/native-check/mechanical/assembly.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/exports/candidates/native-check/mechanical/mechanical_manifest.json"
+  ],
+  "backend": {
+    "deterministic_geometry": true,
+    "name": "OpenCASCADE"
+  },
+  "failures": [],
+  "gate": "native_mechanical_validation",
+  "metrics": {
+    "assembly_interference_free": true,
+    "board_fit": true,
+    "board_step_imported": true,
+    "board_wall_intersection_mm3": 0.0,
+    "bottom_clearance_mm": 1.2000000000000002,
+    "component_height_clearance": true,
+    "component_lid_intersection_mm3": 0.0,
+    "connector_cutout_alignment": true,
+    "connector_wall_intersection_mm3": 0.0,
+    "fixture_count": 0,
+    "insertion_clearance_mm": 1.5,
+    "mounting_hole_alignment": true,
+    "stl_manifold": true,
+    "tolerance_mm": 0.2,
+    "top_clearance_mm": 3.1999999999999993,
+    "valid_solid": true,
+    "variant_count": 1
+  },
+  "status": "pass"
+}

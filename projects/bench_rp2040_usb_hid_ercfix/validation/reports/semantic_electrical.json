@@ -1,0 +1,48 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "missing_protection",
+      "details": {},
+      "message": "Required protection is missing: reverse_polarity",
+      "path": "safety.required_protections",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "missing_protection",
+      "details": {},
+      "message": "Required protection is missing: fuse_or_efuse",
+      "path": "safety.required_protections",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "missing_protection",
+      "details": {},
+      "message": "Required protection is missing: tvs",
+      "path": "safety.required_protections",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "missing_protection",
+      "details": {},
+      "message": "Required protection is missing: watchdog",
+      "path": "safety.required_protections",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "semantic_electrical",
+  "metrics": {
+    "errors": 4,
+    "warnings": 0
+  },
+  "status": "fail"
+}

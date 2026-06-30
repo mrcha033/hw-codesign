@@ -1,0 +1,91 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/validation/reports/kicad_drc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "pcb",
+      "drc",
+      "--format",
+      "json",
+      "--severity-error",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/validation/reports/kicad_drc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/electronics/generated/kicad/bench_sensor_logger_usb_b204035a.kicad_pcb"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 2 violations\nFound 0 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_b204035a/validation/reports/kicad_drc.json\n"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Track [GND] on B.Cu, length 11.0000 mm",
+            "pos": {
+              "x": 65.0,
+              "y": 45.0
+            },
+            "uuid": "840b0948-0068-43a9-b317-2eff9f5f4646"
+          },
+          {
+            "description": "NPTH pad of H4",
+            "pos": {
+              "x": 66.0,
+              "y": 46.0
+            },
+            "uuid": "63826ebd-7097-4423-b804-911d22cb88f0"
+          }
+        ],
+        "severity": "error",
+        "type": "hole_clearance"
+      },
+      "message": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Track [GND] on B.Cu, length 1.0000 mm",
+            "pos": {
+              "x": 65.0,
+              "y": 44.0
+            },
+            "uuid": "c043bb3a-04a7-4fa5-b45b-573029b68a5e"
+          },
+          {
+            "description": "NPTH pad of H4",
+            "pos": {
+              "x": 66.0,
+              "y": 46.0
+            },
+            "uuid": "63826ebd-7097-4423-b804-911d22cb88f0"
+          }
+        ],
+        "severity": "error",
+        "type": "hole_clearance"
+      },
+      "message": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_drc",
+  "metrics": {
+    "violations": 2
+  },
+  "status": "fail"
+}

@@ -1,0 +1,150 @@
+{
+  "board": {
+    "component_height_map": [
+      {
+        "category": "power_input",
+        "height_mm": 4.0,
+        "ref": "J1",
+        "x_mm": 20.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "tvs",
+        "height_mm": 4.0,
+        "ref": "D1",
+        "x_mm": 49.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "regulator_3v3",
+        "height_mm": 4.0,
+        "ref": "U1",
+        "x_mm": 49.0,
+        "y_mm": 19.0
+      },
+      {
+        "category": "mcu",
+        "height_mm": 4.0,
+        "ref": "U2",
+        "x_mm": 22.0,
+        "y_mm": 19.0
+      },
+      {
+        "category": "flash",
+        "height_mm": 4.0,
+        "ref": "U3",
+        "x_mm": 49.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "crystal_12m",
+        "height_mm": 4.0,
+        "ref": "X1",
+        "x_mm": 49.0,
+        "y_mm": 10.0
+      },
+      {
+        "category": "debug_header",
+        "height_mm": 4.0,
+        "ref": "J2",
+        "x_mm": 49.0,
+        "y_mm": 19.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C1",
+        "x_mm": 24.0,
+        "y_mm": 19.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C2",
+        "x_mm": 46.0,
+        "y_mm": 19.0
+      },
+      {
+        "category": "bulk_cap",
+        "height_mm": 4.0,
+        "ref": "C3",
+        "x_mm": 49.0,
+        "y_mm": 19.0
+      }
+    ],
+    "height_mm": 21.0,
+    "max_component_height_bottom_mm": 1.0,
+    "max_component_height_top_mm": 3.5,
+    "origin_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "thickness_mm": 1.6,
+    "width_mm": 51.0
+  },
+  "clearances": {
+    "assembly_mm": 0.5,
+    "insertion_mm": 1.0,
+    "max_connector_edge_distance_mm": 6.0,
+    "tolerance_mm": 0.2
+  },
+  "connector_component_refs": [
+    "J1"
+  ],
+  "connector_cutouts": [],
+  "connector_retention": {},
+  "contract_version": 1,
+  "enclosure": {
+    "internal_mm": [
+      51.0,
+      21.0,
+      9.0
+    ],
+    "wall_thickness_mm": 2.0
+  },
+  "fixtures": {
+    "frame_brackets": {
+      "enabled": false
+    },
+    "mounting_plate": {
+      "enabled": false
+    }
+  },
+  "mounting_holes": [
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 2.5,
+      "y_mm": 2.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 48.5,
+      "y_mm": 2.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 2.5,
+      "y_mm": 18.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 48.5,
+      "y_mm": 18.5
+    }
+  ],
+  "provenance": {
+    "component_db_hash": "5a97ac71f96574a18a58a6ad3b1b878b9858cb069286457b0c411a425bf7fbd1",
+    "role_set_hash": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+    "source_spec_hash": "76d7ea4d3f8a296e40785e3e4ed4f615c3ec390056fb4908b3b96d7b317698ae"
+  },
+  "selected_variant": "bare_pcb",
+  "variants": [
+    {
+      "gasket": false,
+      "lid_style": "none",
+      "name": "bare_pcb",
+      "ventilation": "none"
+    }
+  ]
+}

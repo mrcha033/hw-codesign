@@ -1,0 +1,4 @@
+target_use: ble_environmental_sensor
+revision: r1
+template: ble_sensor_node
+name: bench_ble_lipo_sensor_b204035a

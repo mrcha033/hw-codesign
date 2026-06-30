@@ -1,0 +1,50 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/enclosure.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/enclosure.stl",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/variants/enclosure_sealed.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/variants/enclosure_vented.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/variants/enclosure_service.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/mounting_plate.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/frame_bracket_left.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/frame_bracket_right.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/assembly.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/exports/candidates/native-check/mechanical/mechanical_manifest.json"
+  ],
+  "backend": {
+    "deterministic_geometry": true,
+    "name": "OpenCASCADE"
+  },
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "board_step_missing",
+      "details": {},
+      "message": "Native board STEP is required for assembly import and interference validation",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_mechanical_validation",
+  "metrics": {
+    "assembly_interference_free": true,
+    "board_fit": true,
+    "board_step_imported": false,
+    "board_wall_intersection_mm3": 0.0,
+    "bottom_clearance_mm": 3.4000000000000004,
+    "component_height_clearance": true,
+    "component_lid_intersection_mm3": 0.0,
+    "connector_cutout_alignment": true,
+    "connector_wall_intersection_mm3": 0.0,
+    "fixture_count": 3,
+    "insertion_clearance_mm": 2.0,
+    "mounting_hole_alignment": true,
+    "stl_manifold": true,
+    "tolerance_mm": 0.25,
+    "top_clearance_mm": 2.0,
+    "valid_solid": true,
+    "variant_count": 3
+  },
+  "status": "blocked"
+}

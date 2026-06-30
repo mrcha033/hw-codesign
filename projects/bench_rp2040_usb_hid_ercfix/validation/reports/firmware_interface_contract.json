@@ -1,0 +1,48 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/app/prj.conf",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_can_loopback.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_estop_fail_safe.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_i2c_imu.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_motor_pwm.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/firmware/zephyr/tests/test_usb_connection.c"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "firmware-interface-contract"
+  },
+  "failures": [],
+  "gate": "firmware_interface_contract",
+  "metrics": {
+    "config_options": [
+      "CONFIG_CAN=y",
+      "CONFIG_GPIO=y",
+      "CONFIG_I2C=y",
+      "CONFIG_PWM=y",
+      "CONFIG_USB_DEVICE_STACK=y"
+    ],
+    "pinmap_signals": [
+      "QSPI_CLK",
+      "QSPI_CS",
+      "QSPI_D2",
+      "QSPI_D3",
+      "QSPI_MISO",
+      "QSPI_MOSI",
+      "USB_DM",
+      "USB_DP",
+      "XIN",
+      "XOUT"
+    ],
+    "required_interfaces": [
+      "usb"
+    ],
+    "test_files": [
+      "test_can_loopback.c",
+      "test_estop_fail_safe.c",
+      "test_i2c_imu.c",
+      "test_motor_pwm.c",
+      "test_usb_connection.c"
+    ]
+  },
+  "status": "pass"
+}

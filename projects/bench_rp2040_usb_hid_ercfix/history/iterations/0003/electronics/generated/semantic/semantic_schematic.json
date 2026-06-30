@@ -1,0 +1,1356 @@
+{
+  "artifact_type": "semantic_schematic",
+  "authoring_model": "semantic-first-pin-name-wiring",
+  "components": [
+    {
+      "component_id": "grm155_100n",
+      "footprint": "Capacitor_SMD:C_0402_1005Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM155R71C104KA88D",
+      "package": "0402",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C1",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm155_100n",
+      "footprint": "Capacitor_SMD:C_0402_1005Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM155R71C104KA88D",
+      "package": "0402",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C2",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_10u",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R60J106ME47D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C3",
+      "role": "bulk_cap",
+      "value": "10uF"
+    },
+    {
+      "component_id": "usblc6_2sc6",
+      "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+      "manufacturer": "STMicroelectronics",
+      "mpn": "USBLC6-2SC6",
+      "package": "SOT-23-6",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "A",
+          "net": "USB_DP",
+          "number": "1",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "K",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "A2",
+          "net": "USB_DM",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "D1",
+      "role": "tvs",
+      "value": "USB ESD"
+    },
+    {
+      "component_id": "usb4105_gf_a",
+      "footprint": "Connector_USB:USB_C_GCT_USB4105",
+      "manufacturer": "GCT",
+      "mpn": "USB4105-GF-A",
+      "package": "USB-C-16",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VBUS",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "USB_5V"
+        },
+        {
+          "mcu_pin": null,
+          "name": "DP",
+          "net": "USB_DP",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "DM",
+          "net": "USB_DM",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "4",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J1",
+      "role": "power_input",
+      "value": "USB-C POWER"
+    },
+    {
+      "component_id": "conn_2x05_2p54",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+      "manufacturer": "W\u00fcrth Elektronik",
+      "mpn": "61201021621",
+      "package": "PinHeader-2x5-2.54mm",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "P1",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P2",
+          "net": "SWDIO",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "P3",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P4",
+          "net": "SWCLK",
+          "number": "4",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "P5",
+          "net": "GND",
+          "number": "5",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P6",
+          "net": "GND",
+          "number": "6",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P7",
+          "net": "GND",
+          "number": "7",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P8",
+          "net": "GND",
+          "number": "8",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P9",
+          "net": "GND",
+          "number": "9",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "P10",
+          "net": "GND",
+          "number": "10",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J2",
+      "role": "debug_header",
+      "value": "SWD 10-pin"
+    },
+    {
+      "component_id": "ap2112k_33trg1",
+      "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "manufacturer": "Diodes Incorporated",
+      "mpn": "AP2112K-3.3TRG1",
+      "package": "SOT-23-5",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VIN",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "USB_5V"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VOUT",
+          "net": "V3V3",
+          "number": "3",
+          "role": "power_out",
+          "voltage_domain": "V3V3"
+        }
+      ],
+      "ref": "U1",
+      "role": "regulator_3v3",
+      "value": "3V3 LDO"
+    },
+    {
+      "component_id": "rp2040",
+      "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+      "manufacturer": "Raspberry Pi Ltd",
+      "mpn": "RP2040",
+      "package": "QFN-56",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "QSPI_SD3",
+          "net": "QSPI_D3",
+          "number": "1",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "QSPI_SD2",
+          "net": "QSPI_D2",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "QSPI_SD1",
+          "net": "QSPI_MISO",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "QSPI_SD0",
+          "net": "QSPI_MOSI",
+          "number": "4",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "QSPI_SCK",
+          "net": "QSPI_CLK",
+          "number": "5",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "QSPI_SS_N",
+          "net": "QSPI_CS",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "USB_DM",
+          "net": "USB_DM",
+          "number": "11",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "USB_DP",
+          "net": "USB_DP",
+          "number": "12",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "TESTEN",
+          "net": "GND",
+          "number": "16",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "XIN",
+          "net": "XIN",
+          "number": "17",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "XOUT",
+          "net": "XOUT",
+          "number": "18",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "33",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "34",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "SWCLK",
+          "net": "SWCLK",
+          "number": "40",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "SWDIO",
+          "net": "SWDIO",
+          "number": "41",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "DVDD",
+          "net": "V3V3",
+          "number": "44",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "45",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "46",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "47",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "48",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        }
+      ],
+      "ref": "U2",
+      "role": "mcu",
+      "value": "RP2040"
+    },
+    {
+      "component_id": "w25q16jv",
+      "footprint": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+      "manufacturer": "Winbond Electronics",
+      "mpn": "W25Q16JVSSIQ",
+      "package": "SOIC-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "~CS",
+          "net": "QSPI_CS",
+          "number": "1",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "IO1",
+          "net": "QSPI_MISO",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "~WP",
+          "net": "V3V3",
+          "number": "3",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "4",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "IO0",
+          "net": "QSPI_MOSI",
+          "number": "5",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CLK",
+          "net": "QSPI_CLK",
+          "number": "6",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "~HOLD",
+          "net": "V3V3",
+          "number": "7",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "8",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        }
+      ],
+      "ref": "U3",
+      "role": "flash",
+      "value": "2MB QSPI"
+    },
+    {
+      "component_id": "abm8_12m",
+      "footprint": "Crystal:Crystal_SMD_HC-49S",
+      "manufacturer": "Abracon",
+      "mpn": "ABM8-12.000MHZ-B2-T",
+      "package": "HC-49S-SMD",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "XIN",
+          "net": "XIN",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "XOUT",
+          "net": "XOUT",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "X1",
+      "role": "crystal_12m",
+      "value": "12MHz XTAL"
+    }
+  ],
+  "nets": [
+    {
+      "name": "GND",
+      "pin_name_connections": [
+        {
+          "component_ref": "C1",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C2",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C3",
+          "component_role": "bulk_cap",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "D1",
+          "component_role": "tvs",
+          "mcu_pin": null,
+          "pin_name": "K",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J1",
+          "component_role": "power_input",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "4",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P10",
+          "pin_number": "10",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P3",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P5",
+          "pin_number": "5",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P6",
+          "pin_number": "6",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P7",
+          "pin_number": "7",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P8",
+          "pin_number": "8",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P9",
+          "pin_number": "9",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "regulator_3v3",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "TESTEN",
+          "pin_number": "16",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "33",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "34",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "4",
+          "pin_role": "ground"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "ground",
+      "voltage_domain": "GND"
+    },
+    {
+      "name": "QSPI_CLK",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "QSPI_SCK",
+          "pin_number": "5",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "CLK",
+          "pin_number": "6",
+          "pin_role": "input"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "QSPI_CS",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "QSPI_SS_N",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "~CS",
+          "pin_number": "1",
+          "pin_role": "input"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "QSPI_D2",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "QSPI_SD2",
+          "pin_number": "2",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "QSPI_D3",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "QSPI_SD3",
+          "pin_number": "1",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "QSPI_MISO",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "QSPI_SD1",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "IO1",
+          "pin_number": "2",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "QSPI_MOSI",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "QSPI_SD0",
+          "pin_number": "4",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "IO0",
+          "pin_number": "5",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "SWCLK",
+      "pin_name_connections": [
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P4",
+          "pin_number": "4",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "SWCLK",
+          "pin_number": "40",
+          "pin_role": "input"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "SWDIO",
+      "pin_name_connections": [
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P2",
+          "pin_number": "2",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "SWDIO",
+          "pin_number": "41",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_DM",
+      "pin_name_connections": [
+        {
+          "component_ref": "D1",
+          "component_role": "tvs",
+          "mcu_pin": null,
+          "pin_name": "A2",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "J1",
+          "component_role": "power_input",
+          "mcu_pin": null,
+          "pin_name": "DM",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "USB_DM",
+          "pin_number": "11",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "usb",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_DP",
+      "pin_name_connections": [
+        {
+          "component_ref": "D1",
+          "component_role": "tvs",
+          "mcu_pin": null,
+          "pin_name": "A",
+          "pin_number": "1",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "J1",
+          "component_role": "power_input",
+          "mcu_pin": null,
+          "pin_name": "DP",
+          "pin_number": "2",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "USB_DP",
+          "pin_number": "12",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "usb",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_VBUS",
+      "pin_name_connections": [
+        {
+          "component_ref": "J1",
+          "component_role": "power_input",
+          "mcu_pin": null,
+          "pin_name": "VBUS",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "regulator_3v3",
+          "mcu_pin": null,
+          "pin_name": "VIN",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "USB_5V"
+    },
+    {
+      "name": "V3V3",
+      "pin_name_connections": [
+        {
+          "component_ref": "C1",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "C2",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "C3",
+          "component_role": "bulk_cap",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "debug_header",
+          "mcu_pin": null,
+          "pin_name": "P1",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "regulator_3v3",
+          "mcu_pin": null,
+          "pin_name": "VOUT",
+          "pin_number": "3",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "DVDD",
+          "pin_number": "44",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "VDD",
+          "pin_number": "45",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "VDD",
+          "pin_number": "46",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "VDD",
+          "pin_number": "47",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "VDD",
+          "pin_number": "48",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "~WP",
+          "pin_number": "3",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "~HOLD",
+          "pin_number": "7",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "8",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "XIN",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "XIN",
+          "pin_number": "17",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "X1",
+          "component_role": "crystal_12m",
+          "mcu_pin": null,
+          "pin_name": "XIN",
+          "pin_number": "1",
+          "pin_role": "passive"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "XOUT",
+      "pin_name_connections": [
+        {
+          "component_ref": "U2",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "XOUT",
+          "pin_number": "18",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "X1",
+          "component_role": "crystal_12m",
+          "mcu_pin": null,
+          "pin_name": "XOUT",
+          "pin_number": "2",
+          "pin_role": "passive"
+        }
+      ],
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    }
+  ],
+  "project": "bench_rp2040_usb_hid_ercfix",
+  "purpose": "LLM-suited schematic representation derived from typed graph; native EDA files are generated outputs.",
+  "relative_placement": {
+    "board_height_mm": 21.0,
+    "board_width_mm": 51.0,
+    "constraints": [
+      {
+        "derived_from": "mechanical.envelope + manufacturing.pcb.min_clearance_mm",
+        "enforced": true,
+        "kind": "board_keepout",
+        "params": {
+          "edge_margin_mm": 0.127,
+          "height_mm": 21.0,
+          "width_mm": 51.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[0] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 2.5,
+          "y_mm": 2.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[1] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 48.5,
+          "y_mm": 2.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[2] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 2.5,
+          "y_mm": 18.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[3] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 48.5,
+          "y_mm": 18.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "max_distance_mm": 12.0,
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ],
+          "target_ref": null
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C1"
+      },
+      {
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "max_distance_mm": 12.0,
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ],
+          "target_ref": null
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C2"
+      }
+    ],
+    "placements": {
+      "C1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 24.0,
+        "y_mm": 19.0
+      },
+      "C2": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 46.0,
+        "y_mm": 19.0
+      },
+      "C3": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 49.0,
+        "y_mm": 19.0
+      },
+      "D1": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "D1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 49.0,
+        "y_mm": 5.0
+      },
+      "J1": {
+        "courtyard_h_mm": 6.0,
+        "courtyard_w_mm": 6.0,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 20.0,
+        "y_mm": 5.0
+      },
+      "J2": {
+        "courtyard_h_mm": 9.487,
+        "courtyard_w_mm": 9.487,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 49.0,
+        "y_mm": 19.0
+      },
+      "U1": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 49.0,
+        "y_mm": 19.0
+      },
+      "U2": {
+        "courtyard_h_mm": 13.416,
+        "courtyard_w_mm": 13.416,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 22.0,
+        "y_mm": 19.0
+      },
+      "U3": {
+        "courtyard_h_mm": 8.485,
+        "courtyard_w_mm": 8.485,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 49.0,
+        "y_mm": 5.0
+      },
+      "X1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Deterministic grid fallback; no curated anchor for this reference.",
+        "ref": "X1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "grid_fallback",
+        "x_mm": 49.0,
+        "y_mm": 10.0
+      }
+    }
+  },
+  "revision": null,
+  "source_graph": "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_ercfix/electronics/generated/electrical_graph.json"
+}

@@ -1,0 +1,14 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/reference/build/bringup_tests"
+  ],
+  "backend": {
+    "name": "reference-host-bsp",
+    "returncode": 0,
+    "stderr": ""
+  },
+  "failures": [],
+  "gate": "reference_firmware_build",
+  "metrics": {},
+  "status": "pass"
+}

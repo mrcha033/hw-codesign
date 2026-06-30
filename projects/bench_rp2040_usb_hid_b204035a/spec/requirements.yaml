@@ -1,0 +1,19 @@
+requirements:
+  performance:
+  - id: REQ-01
+    text: USB HID report rate ≥ 1000 Hz (1 ms polling)
+  - id: REQ-02
+    text: USB enumeration within 500 ms of power-on
+  reliability:
+  - id: REQ-03
+    text: No USB disconnect events under sustained HID traffic
+  raw_inputs:
+  - id: req_input_0001
+    text: RP2040 USB HID device with 2 MB QSPI flash and USB-C connector
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: compute.mcu.family
+    spec_path: compute.mcu.family
+    status: lowered
+  active_unresolved: []

@@ -1,0 +1,48 @@
+system:
+  supply:
+    battery:
+      type: lipo_usb_charged
+      pack_voltage_nominal: 3.7
+      pack_voltage_max: 4.2
+      pack_voltage_min: 3.0
+      pack_current_peak_a: 0.3
+    rails:
+    - name: VBAT
+      voltage: 3.7
+      current_peak_a: 0.3
+    - name: V3V3
+      voltage: 3.3
+      current_peak_a: 0.2
+compute:
+  mcu:
+    family: nRF52840
+    hard_realtime_required: false
+actuation:
+  motor_channels: 0
+  motor_channel_peak_current_a: 0.0
+sensing:
+  imu: not_required
+  battery_monitor: required
+  current_monitor: not_required
+  temperature_monitor: required
+  humidity_monitor: required
+  e_stop: not_required
+assumptions:
+  rf_antenna_clearance:
+    value: pcb_trace_antenna_with_keepout
+    confidence: high
+    reason: nRF52840-QIAA requires a 2.4 GHz trace antenna and a copper keepout zone
+      per Nordic reference layout AN117.
+    critical: true
+    requires_user_review: true
+  lipo_protection:
+    value: charger_ic_provides_protection
+    confidence: medium
+    reason: BQ24079 provides overcharge, over-discharge, and thermal protection. Additional
+      external protection circuit not modelled.
+    critical: false
+    requires_user_review: false
+electronics:
+  backend: tscircuit
+  role_set: ble_sensor_node
+  compiled_backend_required: true

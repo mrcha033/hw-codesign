@@ -1,0 +1,86 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/zephyr/app/prj.conf",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/zephyr/tests/test_can_loopback.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/zephyr/tests/test_estop_fail_safe.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/zephyr/tests/test_i2c_imu.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/zephyr/tests/test_motor_pwm.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/firmware/zephyr/tests/test_usb_connection.c"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "firmware-interface-contract"
+  },
+  "failures": [],
+  "gate": "firmware_interface_contract",
+  "metrics": {
+    "config_options": [
+      "CONFIG_CAN=y",
+      "CONFIG_GPIO=y",
+      "CONFIG_I2C=y",
+      "CONFIG_PWM=y",
+      "CONFIG_USB_DEVICE_STACK=y"
+    ],
+    "pinmap_signals": [
+      "CAN_RX",
+      "CAN_TX",
+      "ESTOP_IN",
+      "I2C_IMU_SCL",
+      "I2C_IMU_SDA",
+      "IMU_INT",
+      "MOTOR10_CURRENT",
+      "MOTOR10_ENC",
+      "MOTOR10_PWM",
+      "MOTOR11_CURRENT",
+      "MOTOR11_ENC",
+      "MOTOR11_PWM",
+      "MOTOR12_CURRENT",
+      "MOTOR12_ENC",
+      "MOTOR12_PWM",
+      "MOTOR1_CURRENT",
+      "MOTOR1_ENC",
+      "MOTOR1_PWM",
+      "MOTOR2_CURRENT",
+      "MOTOR2_ENC",
+      "MOTOR2_PWM",
+      "MOTOR3_CURRENT",
+      "MOTOR3_ENC",
+      "MOTOR3_PWM",
+      "MOTOR4_CURRENT",
+      "MOTOR4_ENC",
+      "MOTOR4_PWM",
+      "MOTOR5_CURRENT",
+      "MOTOR5_ENC",
+      "MOTOR5_PWM",
+      "MOTOR6_CURRENT",
+      "MOTOR6_ENC",
+      "MOTOR6_PWM",
+      "MOTOR7_CURRENT",
+      "MOTOR7_ENC",
+      "MOTOR7_PWM",
+      "MOTOR8_CURRENT",
+      "MOTOR8_ENC",
+      "MOTOR8_PWM",
+      "MOTOR9_CURRENT",
+      "MOTOR9_ENC",
+      "MOTOR9_PWM",
+      "USB_DM",
+      "USB_DP"
+    ],
+    "required_interfaces": [
+      "i2c",
+      "can",
+      "motor_pwm",
+      "estop",
+      "usb"
+    ],
+    "test_files": [
+      "test_can_loopback.c",
+      "test_estop_fail_safe.c",
+      "test_i2c_imu.c",
+      "test_motor_pwm.c",
+      "test_usb_connection.c"
+    ]
+  },
+  "status": "pass"
+}

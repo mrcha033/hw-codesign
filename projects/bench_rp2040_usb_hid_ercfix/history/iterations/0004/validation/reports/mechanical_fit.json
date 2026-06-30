@@ -1,0 +1,38 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "insufficient_clearance",
+      "details": {
+        "actual_mm": 51.0,
+        "axis": "width",
+        "minimum_mm": 55.0
+      },
+      "message": "Enclosure width 51.0 mm is below required 55.0 mm",
+      "path": "mechanical.enclosure_internal_mm",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "insufficient_clearance",
+      "details": {
+        "actual_mm": 21.0,
+        "axis": "height",
+        "minimum_mm": 25.0
+      },
+      "message": "Enclosure height 21.0 mm is below required 25.0 mm",
+      "path": "mechanical.enclosure_internal_mm",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "mechanical_fit",
+  "metrics": {
+    "errors": 2,
+    "warnings": 0
+  },
+  "status": "fail"
+}

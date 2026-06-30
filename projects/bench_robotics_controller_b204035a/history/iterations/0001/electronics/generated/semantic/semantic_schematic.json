@@ -1,0 +1,5224 @@
+{
+  "artifact_type": "semantic_schematic",
+  "authoring_model": "semantic-first-pin-name-wiring",
+  "components": [
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C1",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm32_10u_50v",
+      "footprint": "Capacitor_SMD:C_1210_3225Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM32ER71H106KA12L",
+      "package": "1210",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "VSYS",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C10",
+      "role": "bulk_cap",
+      "value": "10uF 50V"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C2",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C3",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C4",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C5",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C6",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C7",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm188_100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C8",
+      "role": "decoupling",
+      "value": "100nF"
+    },
+    {
+      "component_id": "grm31_22u",
+      "footprint": "Capacitor_SMD:C_1206_3216Metric",
+      "manufacturer": "Murata",
+      "mpn": "GRM31CR61E226ME15L",
+      "package": "1206",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V5",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C9",
+      "role": "bulk_cap",
+      "value": "22uF"
+    },
+    {
+      "component_id": "smcj33a",
+      "footprint": "Diode_SMD:D_SMC",
+      "manufacturer": "Littelfuse",
+      "mpn": "SMCJ33A",
+      "package": "SMC",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "K",
+          "net": "VBAT",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "A",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "D1",
+      "role": "tvs",
+      "value": "33V TVS"
+    },
+    {
+      "component_id": "usblc6_2sc6",
+      "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+      "manufacturer": "STMicroelectronics",
+      "mpn": "USBLC6-2SC6",
+      "package": "SOT-23-6",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "DP_IN",
+          "net": "USB_DP_RAW",
+          "number": "1",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "DP_OUT",
+          "net": "USB_DP",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "DM_IN",
+          "net": "USB_DM_RAW",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "DM_OUT",
+          "net": "USB_DM",
+          "number": "4",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "5",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "D2",
+      "role": "usb_esd",
+      "value": "USB ESD"
+    },
+    {
+      "component_id": "littelfuse_0498080",
+      "footprint": "HW_Curated:MIDI_Fuse",
+      "manufacturer": "Littelfuse",
+      "mpn": "Littelfuse-0498080.M",
+      "package": "MIDI",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "IN",
+          "net": "VBAT_RAW",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "OUT",
+          "net": "VBAT_FUSED",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "F1",
+      "role": "fuse",
+      "value": "80A SERVICE FUSE"
+    },
+    {
+      "component_id": "molex_42820_2212",
+      "footprint": "HW_Curated:MicroFit_2Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-42820-2212",
+      "package": "Micro-Fit",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VBAT",
+          "net": "VBAT_RAW",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "VBAT"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J1",
+      "role": "power_input",
+      "value": "24V INPUT"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR1_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR1_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR1_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J11",
+      "role": "motor_io",
+      "value": "MOTOR_IO_1"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR2_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR2_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR2_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J12",
+      "role": "motor_io",
+      "value": "MOTOR_IO_2"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR3_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR3_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR3_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J13",
+      "role": "motor_io",
+      "value": "MOTOR_IO_3"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR4_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR4_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR4_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J14",
+      "role": "motor_io",
+      "value": "MOTOR_IO_4"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR5_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR5_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR5_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J15",
+      "role": "motor_io",
+      "value": "MOTOR_IO_5"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR6_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR6_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR6_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J16",
+      "role": "motor_io",
+      "value": "MOTOR_IO_6"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR7_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR7_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR7_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J17",
+      "role": "motor_io",
+      "value": "MOTOR_IO_7"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR8_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR8_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR8_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J18",
+      "role": "motor_io",
+      "value": "MOTOR_IO_8"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR9_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR9_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR9_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J19",
+      "role": "motor_io",
+      "value": "MOTOR_IO_9"
+    },
+    {
+      "component_id": "phoenix_1935161",
+      "footprint": "TerminalBlock:Phoenix_3Pin",
+      "manufacturer": "Phoenix Contact",
+      "mpn": "Phoenix-1935161",
+      "package": "Terminal-3",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V3V3",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_IN",
+          "number": "2",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J2",
+      "role": "estop",
+      "value": "E-STOP"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR10_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR10_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR10_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J20",
+      "role": "motor_io",
+      "value": "MOTOR_IO_10"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR11_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR11_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR11_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J21",
+      "role": "motor_io",
+      "value": "MOTOR_IO_11"
+    },
+    {
+      "component_id": "molex_43045_0800",
+      "footprint": "HW_Curated:MicroFit_8Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43045-0800",
+      "package": "Micro-Fit-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "V5",
+          "net": "V5",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "PWM",
+          "net": "MOTOR12_PWM",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CURRENT",
+          "net": "MOTOR12_CURRENT",
+          "number": "4",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ENC",
+          "net": "MOTOR12_ENC",
+          "number": "5",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP",
+          "net": "ESTOP_GATE",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J22",
+      "role": "motor_io",
+      "value": "MOTOR_IO_12"
+    },
+    {
+      "component_id": "molex_43650_0300",
+      "footprint": "HW_Curated:MicroFit_3Pin",
+      "manufacturer": "Molex",
+      "mpn": "Molex-43650-0300",
+      "package": "Micro-Fit-3",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "CANH",
+          "net": "CANH",
+          "number": "1",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CANL",
+          "net": "CANL",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J3",
+      "role": "can_connector",
+      "value": "CAN"
+    },
+    {
+      "component_id": "samtec_ftsh_105",
+      "footprint": "Connector_Samtec:FTSH-105",
+      "manufacturer": "Samtec",
+      "mpn": "Samtec-FTSH-105-01-L-DV-K",
+      "package": "FTSH-10",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VREF",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_out",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "SWDIO",
+          "net": "SWDIO",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "SWCLK",
+          "net": "SWCLK",
+          "number": "4",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "NRST",
+          "net": "NRST",
+          "number": "5",
+          "role": "bidirectional",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J4",
+      "role": "debug",
+      "value": "SWD"
+    },
+    {
+      "component_id": "usb4105_gf_a",
+      "footprint": "Connector_USB:USB_C_GCT_USB4105",
+      "manufacturer": "GCT",
+      "mpn": "USB4105-GF-A",
+      "package": "USB-C-16",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VBUS",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "USB_5V"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "D+",
+          "net": "USB_DP_RAW",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "D-",
+          "net": "USB_DM_RAW",
+          "number": "4",
+          "role": "bidirectional",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "J5",
+      "role": "usb",
+      "value": "USB-C"
+    },
+    {
+      "component_id": "lm74700qdbvrq1",
+      "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+      "manufacturer": "Texas Instruments",
+      "mpn": "LM74700QDBVRQ1",
+      "package": "SOT-23-6",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "ANODE",
+          "net": "VBAT_FUSED",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "VBAT"
+        },
+        {
+          "mcu_pin": null,
+          "name": "CATHODE",
+          "net": "VBAT",
+          "number": "2",
+          "role": "power_out",
+          "voltage_domain": "VBAT"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "Q1",
+      "role": "reverse_polarity",
+      "value": "IDEAL DIODE"
+    },
+    {
+      "component_id": "sn74lvc1g97dbvr",
+      "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+      "manufacturer": "Texas Instruments",
+      "mpn": "SN74LVC1G97DBVR",
+      "package": "SOT-23-6",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "IN",
+          "net": "ESTOP_IN",
+          "number": "2",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "OUT",
+          "net": "ESTOP_GATE",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "4",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "Q2",
+      "role": "safety_gate",
+      "value": "E-STOP GATE"
+    },
+    {
+      "component_id": "rc0603_120r",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-07120RL",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "A",
+          "net": "CANH",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "B",
+          "net": "CANL",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "R1",
+      "role": "termination",
+      "value": "120R"
+    },
+    {
+      "component_id": "rc0603_4k7",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-074K7L",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "SCL",
+          "net": "I2C_IMU_SCL",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "R2",
+      "role": "pullup",
+      "value": "4K7"
+    },
+    {
+      "component_id": "rc0603_4k7",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-074K7L",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "SDA",
+          "net": "I2C_IMU_SDA",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "R3",
+      "role": "pullup",
+      "value": "4K7"
+    },
+    {
+      "component_id": "rc0603_100k",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-07100KL",
+      "package": "0603",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VBUS",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "R4",
+      "role": "discharge",
+      "value": "100K"
+    },
+    {
+      "component_id": "stm32h743vit6",
+      "footprint": "Package_QFP:LQFP-100_14x14mm_P0.5mm",
+      "manufacturer": "STMicroelectronics",
+      "mpn": "STM32H743VIT6",
+      "package": "LQFP-100",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VSS",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "ESTOP_IN",
+          "net": "ESTOP_IN",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CAN_RX",
+          "net": "CAN_RX",
+          "number": "4",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CAN_TX",
+          "net": "CAN_TX",
+          "number": "5",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "I2C_IMU_SCL",
+          "net": "I2C_IMU_SCL",
+          "number": "6",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "I2C_IMU_SDA",
+          "net": "I2C_IMU_SDA",
+          "number": "7",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "IMU_INT",
+          "net": "IMU_INT",
+          "number": "8",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "SWDIO",
+          "net": "SWDIO",
+          "number": "9",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "SWCLK",
+          "net": "SWCLK",
+          "number": "10",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "NRST",
+          "net": "NRST",
+          "number": "11",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "USB_DP",
+          "net": "USB_DP",
+          "number": "12",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "USB_DM",
+          "net": "USB_DM",
+          "number": "13",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR1_PWM",
+          "net": "MOTOR1_PWM",
+          "number": "14",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR1_CURRENT",
+          "net": "MOTOR1_CURRENT",
+          "number": "15",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR1_ENC",
+          "net": "MOTOR1_ENC",
+          "number": "16",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR2_PWM",
+          "net": "MOTOR2_PWM",
+          "number": "17",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR2_CURRENT",
+          "net": "MOTOR2_CURRENT",
+          "number": "18",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR2_ENC",
+          "net": "MOTOR2_ENC",
+          "number": "19",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR3_PWM",
+          "net": "MOTOR3_PWM",
+          "number": "20",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR3_CURRENT",
+          "net": "MOTOR3_CURRENT",
+          "number": "21",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR3_ENC",
+          "net": "MOTOR3_ENC",
+          "number": "22",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR4_PWM",
+          "net": "MOTOR4_PWM",
+          "number": "23",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR4_CURRENT",
+          "net": "MOTOR4_CURRENT",
+          "number": "24",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR4_ENC",
+          "net": "MOTOR4_ENC",
+          "number": "25",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR5_PWM",
+          "net": "MOTOR5_PWM",
+          "number": "26",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR5_CURRENT",
+          "net": "MOTOR5_CURRENT",
+          "number": "27",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR5_ENC",
+          "net": "MOTOR5_ENC",
+          "number": "28",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR6_PWM",
+          "net": "MOTOR6_PWM",
+          "number": "29",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR6_CURRENT",
+          "net": "MOTOR6_CURRENT",
+          "number": "30",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR6_ENC",
+          "net": "MOTOR6_ENC",
+          "number": "31",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR7_PWM",
+          "net": "MOTOR7_PWM",
+          "number": "32",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR7_CURRENT",
+          "net": "MOTOR7_CURRENT",
+          "number": "33",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR7_ENC",
+          "net": "MOTOR7_ENC",
+          "number": "34",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR8_PWM",
+          "net": "MOTOR8_PWM",
+          "number": "35",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR8_CURRENT",
+          "net": "MOTOR8_CURRENT",
+          "number": "36",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR8_ENC",
+          "net": "MOTOR8_ENC",
+          "number": "37",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR9_PWM",
+          "net": "MOTOR9_PWM",
+          "number": "38",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR9_CURRENT",
+          "net": "MOTOR9_CURRENT",
+          "number": "39",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR9_ENC",
+          "net": "MOTOR9_ENC",
+          "number": "40",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR10_PWM",
+          "net": "MOTOR10_PWM",
+          "number": "41",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR10_CURRENT",
+          "net": "MOTOR10_CURRENT",
+          "number": "42",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR10_ENC",
+          "net": "MOTOR10_ENC",
+          "number": "43",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR11_PWM",
+          "net": "MOTOR11_PWM",
+          "number": "44",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR11_CURRENT",
+          "net": "MOTOR11_CURRENT",
+          "number": "45",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR11_ENC",
+          "net": "MOTOR11_ENC",
+          "number": "46",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR12_PWM",
+          "net": "MOTOR12_PWM",
+          "number": "47",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR12_CURRENT",
+          "net": "MOTOR12_CURRENT",
+          "number": "48",
+          "role": "analog",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "MOTOR12_ENC",
+          "net": "MOTOR12_ENC",
+          "number": "49",
+          "role": "bidirectional",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "U1",
+      "role": "mcu",
+      "value": "STM32H743"
+    },
+    {
+      "component_id": "icm_42688_p",
+      "footprint": "Package_LGA:LGA-14",
+      "manufacturer": "TDK InvenSense",
+      "mpn": "ICM-42688-P",
+      "package": "LGA-14",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "SCL",
+          "net": "I2C_IMU_SCL",
+          "number": "3",
+          "role": "open_drain",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "SDA",
+          "net": "I2C_IMU_SDA",
+          "number": "4",
+          "role": "open_drain",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "INT1",
+          "net": "IMU_INT",
+          "number": "5",
+          "role": "output",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "U2",
+      "role": "imu",
+      "value": "ICM-42688-P"
+    },
+    {
+      "component_id": "tps26630rget",
+      "footprint": "Package_DFN_QFN:VQFN-24-1EP",
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS26630RGET",
+      "package": "VQFN-24",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "IN",
+          "net": "VBAT",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "VBAT"
+        },
+        {
+          "mcu_pin": null,
+          "name": "OUT",
+          "net": "VSYS",
+          "number": "2",
+          "role": "power_out",
+          "voltage_domain": "VBAT"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "SHDN",
+          "net": "ESTOP_GATE",
+          "number": "4",
+          "role": "input",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "U3",
+      "role": "efuse",
+      "value": "eFuse"
+    },
+    {
+      "component_id": "lm76005rnpr",
+      "footprint": "Package_DFN_QFN:WQFN-30",
+      "manufacturer": "Texas Instruments",
+      "mpn": "LM76005RNPR",
+      "package": "WQFN-30",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VIN",
+          "net": "VSYS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "VBAT"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VOUT",
+          "net": "V5",
+          "number": "2",
+          "role": "power_out",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "U4",
+      "role": "regulator",
+      "value": "5V Buck"
+    },
+    {
+      "component_id": "tps62133rgtr",
+      "footprint": "Package_DFN_QFN:VQFN-16",
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS62133RGTR",
+      "package": "VQFN-16",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VIN",
+          "net": "V5",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "VOUT",
+          "net": "V3V3",
+          "number": "2",
+          "role": "power_out",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "U5",
+      "role": "regulator",
+      "value": "3V3 Buck"
+    },
+    {
+      "component_id": "tcan1042hgvdrq1",
+      "footprint": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+      "manufacturer": "Texas Instruments",
+      "mpn": "TCAN1042HGVDRQ1",
+      "package": "SOIC-8",
+      "pins": [
+        {
+          "mcu_pin": null,
+          "name": "VCC",
+          "net": "V5",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V5"
+        },
+        {
+          "mcu_pin": null,
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "mcu_pin": null,
+          "name": "RXD",
+          "net": "CAN_RX",
+          "number": "3",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "TXD",
+          "net": "CAN_TX",
+          "number": "4",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CANH",
+          "net": "CANH",
+          "number": "5",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "mcu_pin": null,
+          "name": "CANL",
+          "net": "CANL",
+          "number": "6",
+          "role": "bidirectional",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "U6",
+      "role": "can",
+      "value": "CAN PHY"
+    }
+  ],
+  "nets": [
+    {
+      "name": "CANH",
+      "pin_name_connections": [
+        {
+          "component_ref": "J3",
+          "component_role": "can_connector",
+          "mcu_pin": null,
+          "pin_name": "CANH",
+          "pin_number": "1",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "R1",
+          "component_role": "termination",
+          "mcu_pin": null,
+          "pin_name": "A",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U6",
+          "component_role": "can",
+          "mcu_pin": null,
+          "pin_name": "CANH",
+          "pin_number": "5",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "can",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "CANL",
+      "pin_name_connections": [
+        {
+          "component_ref": "J3",
+          "component_role": "can_connector",
+          "mcu_pin": null,
+          "pin_name": "CANL",
+          "pin_number": "2",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "R1",
+          "component_role": "termination",
+          "mcu_pin": null,
+          "pin_name": "B",
+          "pin_number": "2",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U6",
+          "component_role": "can",
+          "mcu_pin": null,
+          "pin_name": "CANL",
+          "pin_number": "6",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "can",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "CAN_RX",
+      "pin_name_connections": [
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "CAN_RX",
+          "pin_number": "4",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U6",
+          "component_role": "can",
+          "mcu_pin": null,
+          "pin_name": "RXD",
+          "pin_number": "3",
+          "pin_role": "output"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "CAN_TX",
+      "pin_name_connections": [
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "CAN_TX",
+          "pin_number": "5",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U6",
+          "component_role": "can",
+          "mcu_pin": null,
+          "pin_name": "TXD",
+          "pin_number": "4",
+          "pin_role": "input"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "ESTOP_GATE",
+      "pin_name_connections": [
+        {
+          "component_ref": "J11",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J12",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J13",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J14",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J15",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J16",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J17",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J18",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J19",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J20",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J21",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "J22",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "6",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "Q2",
+          "component_role": "safety_gate",
+          "mcu_pin": null,
+          "pin_name": "OUT",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "efuse",
+          "mcu_pin": null,
+          "pin_name": "SHDN",
+          "pin_number": "4",
+          "pin_role": "input"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "ESTOP_IN",
+      "pin_name_connections": [
+        {
+          "component_ref": "J2",
+          "component_role": "estop",
+          "mcu_pin": null,
+          "pin_name": "ESTOP",
+          "pin_number": "2",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "Q2",
+          "component_role": "safety_gate",
+          "mcu_pin": null,
+          "pin_name": "IN",
+          "pin_number": "2",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "ESTOP_IN",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "GND",
+      "pin_name_connections": [
+        {
+          "component_ref": "C1",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C10",
+          "component_role": "bulk_cap",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C2",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C3",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C4",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C5",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C6",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C7",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C8",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "C9",
+          "component_role": "bulk_cap",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "D1",
+          "component_role": "tvs",
+          "mcu_pin": null,
+          "pin_name": "A",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "D2",
+          "component_role": "usb_esd",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "5",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J1",
+          "component_role": "power_input",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J11",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J12",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J13",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J14",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J15",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J16",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J17",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J18",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J19",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "estop",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J20",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J21",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J22",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J3",
+          "component_role": "can_connector",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J4",
+          "component_role": "debug",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "J5",
+          "component_role": "usb",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "Q1",
+          "component_role": "reverse_polarity",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "Q2",
+          "component_role": "safety_gate",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "4",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "R4",
+          "component_role": "discharge",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "VSS",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "imu",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "efuse",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U4",
+          "component_role": "regulator",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U5",
+          "component_role": "regulator",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "3",
+          "pin_role": "ground"
+        },
+        {
+          "component_ref": "U6",
+          "component_role": "can",
+          "mcu_pin": null,
+          "pin_name": "GND",
+          "pin_number": "2",
+          "pin_role": "ground"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "ground",
+      "voltage_domain": "GND"
+    },
+    {
+      "name": "I2C_IMU_SCL",
+      "pin_name_connections": [
+        {
+          "component_ref": "R2",
+          "component_role": "pullup",
+          "mcu_pin": null,
+          "pin_name": "SCL",
+          "pin_number": "2",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "I2C_IMU_SCL",
+          "pin_number": "6",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "imu",
+          "mcu_pin": null,
+          "pin_name": "SCL",
+          "pin_number": "3",
+          "pin_role": "open_drain"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "I2C_IMU_SDA",
+      "pin_name_connections": [
+        {
+          "component_ref": "R3",
+          "component_role": "pullup",
+          "mcu_pin": null,
+          "pin_name": "SDA",
+          "pin_number": "2",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "I2C_IMU_SDA",
+          "pin_number": "7",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "imu",
+          "mcu_pin": null,
+          "pin_name": "SDA",
+          "pin_number": "4",
+          "pin_role": "open_drain"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "IMU_INT",
+      "pin_name_connections": [
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "IMU_INT",
+          "pin_number": "8",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "imu",
+          "mcu_pin": null,
+          "pin_name": "INT1",
+          "pin_number": "5",
+          "pin_role": "output"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR10_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J20",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR10_CURRENT",
+          "pin_number": "42",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR10_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J20",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR10_ENC",
+          "pin_number": "43",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR10_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J20",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR10_PWM",
+          "pin_number": "41",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR11_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J21",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR11_CURRENT",
+          "pin_number": "45",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR11_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J21",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR11_ENC",
+          "pin_number": "46",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR11_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J21",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR11_PWM",
+          "pin_number": "44",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR12_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J22",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR12_CURRENT",
+          "pin_number": "48",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR12_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J22",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR12_ENC",
+          "pin_number": "49",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR12_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J22",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR12_PWM",
+          "pin_number": "47",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR1_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J11",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR1_CURRENT",
+          "pin_number": "15",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR1_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J11",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR1_ENC",
+          "pin_number": "16",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR1_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J11",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR1_PWM",
+          "pin_number": "14",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR2_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J12",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR2_CURRENT",
+          "pin_number": "18",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR2_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J12",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR2_ENC",
+          "pin_number": "19",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR2_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J12",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR2_PWM",
+          "pin_number": "17",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR3_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J13",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR3_CURRENT",
+          "pin_number": "21",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR3_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J13",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR3_ENC",
+          "pin_number": "22",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR3_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J13",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR3_PWM",
+          "pin_number": "20",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR4_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J14",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR4_CURRENT",
+          "pin_number": "24",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR4_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J14",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR4_ENC",
+          "pin_number": "25",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR4_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J14",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR4_PWM",
+          "pin_number": "23",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR5_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J15",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR5_CURRENT",
+          "pin_number": "27",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR5_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J15",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR5_ENC",
+          "pin_number": "28",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR5_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J15",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR5_PWM",
+          "pin_number": "26",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR6_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J16",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR6_CURRENT",
+          "pin_number": "30",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR6_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J16",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR6_ENC",
+          "pin_number": "31",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR6_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J16",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR6_PWM",
+          "pin_number": "29",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR7_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J17",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR7_CURRENT",
+          "pin_number": "33",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR7_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J17",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR7_ENC",
+          "pin_number": "34",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR7_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J17",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR7_PWM",
+          "pin_number": "32",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR8_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J18",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR8_CURRENT",
+          "pin_number": "36",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR8_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J18",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR8_ENC",
+          "pin_number": "37",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR8_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J18",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR8_PWM",
+          "pin_number": "35",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR9_CURRENT",
+      "pin_name_connections": [
+        {
+          "component_ref": "J19",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "CURRENT",
+          "pin_number": "4",
+          "pin_role": "analog"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR9_CURRENT",
+          "pin_number": "39",
+          "pin_role": "analog"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "analog",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR9_ENC",
+      "pin_name_connections": [
+        {
+          "component_ref": "J19",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "ENC",
+          "pin_number": "5",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR9_ENC",
+          "pin_number": "40",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "MOTOR9_PWM",
+      "pin_name_connections": [
+        {
+          "component_ref": "J19",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "PWM",
+          "pin_number": "3",
+          "pin_role": "output"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "MOTOR9_PWM",
+          "pin_number": "38",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "NRST",
+      "pin_name_connections": [
+        {
+          "component_ref": "J4",
+          "component_role": "debug",
+          "mcu_pin": null,
+          "pin_name": "NRST",
+          "pin_number": "5",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "NRST",
+          "pin_number": "11",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "SWCLK",
+      "pin_name_connections": [
+        {
+          "component_ref": "J4",
+          "component_role": "debug",
+          "mcu_pin": null,
+          "pin_name": "SWCLK",
+          "pin_number": "4",
+          "pin_role": "input"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "SWCLK",
+          "pin_number": "10",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "SWDIO",
+      "pin_name_connections": [
+        {
+          "component_ref": "J4",
+          "component_role": "debug",
+          "mcu_pin": null,
+          "pin_name": "SWDIO",
+          "pin_number": "2",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "SWDIO",
+          "pin_number": "9",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_DM",
+      "pin_name_connections": [
+        {
+          "component_ref": "D2",
+          "component_role": "usb_esd",
+          "mcu_pin": null,
+          "pin_name": "DM_OUT",
+          "pin_number": "4",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "USB_DM",
+          "pin_number": "13",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_DM_RAW",
+      "pin_name_connections": [
+        {
+          "component_ref": "D2",
+          "component_role": "usb_esd",
+          "mcu_pin": null,
+          "pin_name": "DM_IN",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "J5",
+          "component_role": "usb",
+          "mcu_pin": null,
+          "pin_name": "D-",
+          "pin_number": "4",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_DP",
+      "pin_name_connections": [
+        {
+          "component_ref": "D2",
+          "component_role": "usb_esd",
+          "mcu_pin": null,
+          "pin_name": "DP_OUT",
+          "pin_number": "2",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "USB_DP",
+          "pin_number": "12",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_DP_RAW",
+      "pin_name_connections": [
+        {
+          "component_ref": "D2",
+          "component_role": "usb_esd",
+          "mcu_pin": null,
+          "pin_name": "DP_IN",
+          "pin_number": "1",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "J5",
+          "component_role": "usb",
+          "mcu_pin": null,
+          "pin_name": "D+",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
+        }
+      ],
+      "required_track_width_mm": 0.2,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "USB_VBUS",
+      "pin_name_connections": [
+        {
+          "component_ref": "J5",
+          "component_role": "usb",
+          "mcu_pin": null,
+          "pin_name": "VBUS",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "R4",
+          "component_role": "discharge",
+          "mcu_pin": null,
+          "pin_name": "VBUS",
+          "pin_number": "1",
+          "pin_role": "passive"
+        }
+      ],
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "USB_5V"
+    },
+    {
+      "name": "V3V3",
+      "pin_name_connections": [
+        {
+          "component_ref": "C1",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C2",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C3",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C4",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C5",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C6",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C7",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "C8",
+          "component_role": "decoupling",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "J2",
+          "component_role": "estop",
+          "mcu_pin": null,
+          "pin_name": "V3V3",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J4",
+          "component_role": "debug",
+          "mcu_pin": null,
+          "pin_name": "VREF",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "Q2",
+          "component_role": "safety_gate",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "R2",
+          "component_role": "pullup",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "R3",
+          "component_role": "pullup",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U1",
+          "component_role": "mcu",
+          "mcu_pin": null,
+          "pin_name": "VDD",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U2",
+          "component_role": "imu",
+          "mcu_pin": null,
+          "pin_name": "VDD",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U5",
+          "component_role": "regulator",
+          "mcu_pin": null,
+          "pin_name": "VOUT",
+          "pin_number": "2",
+          "pin_role": "power_out"
+        }
+      ],
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "name": "V5",
+      "pin_name_connections": [
+        {
+          "component_ref": "C9",
+          "component_role": "bulk_cap",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "J11",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J12",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J13",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J14",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J15",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J16",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J17",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J18",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J19",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J20",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J21",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "J22",
+          "component_role": "motor_io",
+          "mcu_pin": null,
+          "pin_name": "V5",
+          "pin_number": "1",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "U4",
+          "component_role": "regulator",
+          "mcu_pin": null,
+          "pin_name": "VOUT",
+          "pin_number": "2",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "U5",
+          "component_role": "regulator",
+          "mcu_pin": null,
+          "pin_name": "VIN",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        },
+        {
+          "component_ref": "U6",
+          "component_role": "can",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "V5"
+    },
+    {
+      "name": "VBAT",
+      "pin_name_connections": [
+        {
+          "component_ref": "D1",
+          "component_role": "tvs",
+          "mcu_pin": null,
+          "pin_name": "K",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "Q1",
+          "component_role": "reverse_polarity",
+          "mcu_pin": null,
+          "pin_name": "CATHODE",
+          "pin_number": "2",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "efuse",
+          "mcu_pin": null,
+          "pin_name": "IN",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 2.0,
+      "signal_class": "power",
+      "voltage_domain": "VBAT"
+    },
+    {
+      "name": "VBAT_FUSED",
+      "pin_name_connections": [
+        {
+          "component_ref": "F1",
+          "component_role": "fuse",
+          "mcu_pin": null,
+          "pin_name": "OUT",
+          "pin_number": "2",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "Q1",
+          "component_role": "reverse_polarity",
+          "mcu_pin": null,
+          "pin_name": "ANODE",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 2.0,
+      "signal_class": "power",
+      "voltage_domain": "VBAT"
+    },
+    {
+      "name": "VBAT_RAW",
+      "pin_name_connections": [
+        {
+          "component_ref": "F1",
+          "component_role": "fuse",
+          "mcu_pin": null,
+          "pin_name": "IN",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "J1",
+          "component_role": "power_input",
+          "mcu_pin": null,
+          "pin_name": "VBAT",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 2.0,
+      "signal_class": "power",
+      "voltage_domain": "VBAT"
+    },
+    {
+      "name": "VSYS",
+      "pin_name_connections": [
+        {
+          "component_ref": "C10",
+          "component_role": "bulk_cap",
+          "mcu_pin": null,
+          "pin_name": "VCC",
+          "pin_number": "1",
+          "pin_role": "passive"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "efuse",
+          "mcu_pin": null,
+          "pin_name": "OUT",
+          "pin_number": "2",
+          "pin_role": "power_out"
+        },
+        {
+          "component_ref": "U4",
+          "component_role": "regulator",
+          "mcu_pin": null,
+          "pin_name": "VIN",
+          "pin_number": "1",
+          "pin_role": "power_in"
+        }
+      ],
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "VBAT"
+    }
+  ],
+  "project": "bench_robotics_controller_b204035a",
+  "purpose": "LLM-suited schematic representation derived from typed graph; native EDA files are generated outputs.",
+  "relative_placement": {
+    "board_height_mm": 100.0,
+    "board_width_mm": 160.0,
+    "constraints": [
+      {
+        "derived_from": "mechanical.envelope + manufacturing.pcb.min_clearance_mm",
+        "enforced": true,
+        "kind": "board_keepout",
+        "params": {
+          "edge_margin_mm": 0.15,
+          "height_mm": 100.0,
+          "width_mm": 160.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[0] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 2.6,
+          "x_mm": 6.0,
+          "y_mm": 6.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[1] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 2.6,
+          "x_mm": 154.0,
+          "y_mm": 6.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[2] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 2.6,
+          "x_mm": 6.0,
+          "y_mm": 94.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[3] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 2.6,
+          "x_mm": 154.0,
+          "y_mm": 94.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "front"
+        },
+        "rationale": "",
+        "target_ref": "J1"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "front"
+        },
+        "rationale": "",
+        "target_ref": "J3"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "rear"
+        },
+        "rationale": "",
+        "target_ref": "J5"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "rear"
+        },
+        "rationale": "",
+        "target_ref": "J2"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "left"
+        },
+        "rationale": "",
+        "target_ref": "J11"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "left"
+        },
+        "rationale": "",
+        "target_ref": "J12"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "left"
+        },
+        "rationale": "",
+        "target_ref": "J13"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "left"
+        },
+        "rationale": "",
+        "target_ref": "J14"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "left"
+        },
+        "rationale": "",
+        "target_ref": "J15"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "left"
+        },
+        "rationale": "",
+        "target_ref": "J16"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "right"
+        },
+        "rationale": "",
+        "target_ref": "J17"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "right"
+        },
+        "rationale": "",
+        "target_ref": "J18"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "right"
+        },
+        "rationale": "",
+        "target_ref": "J19"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "right"
+        },
+        "rationale": "",
+        "target_ref": "J20"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "right"
+        },
+        "rationale": "",
+        "target_ref": "J21"
+      },
+      {
+        "derived_from": "mechanical.connector_interfaces + mechanical.max_connector_edge_distance_mm",
+        "enforced": true,
+        "kind": "connector_edge",
+        "params": {
+          "max_edge_distance_mm": 6.0,
+          "side": "right"
+        },
+        "rationale": "",
+        "target_ref": "J22"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C1"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C2"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C3"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C4"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C5"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C6"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C7"
+      },
+      {
+        "derived_from": "graph decoupling component pins",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ]
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C8"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "Q1"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "U3"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "U4"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "U5"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "Q2"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J11"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J12"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J13"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J14"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J15"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J16"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J17"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J18"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J19"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J20"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J21"
+      },
+      {
+        "derived_from": "graph power-category component",
+        "enforced": false,
+        "kind": "thermal_spacing",
+        "params": {
+          "min_spacing_mm": 8.0
+        },
+        "rationale": "Advisory spacing only; thermal qualification requires load testing.",
+        "target_ref": "J22"
+      }
+    ],
+    "placements": {
+      "C1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 24.0,
+        "y_mm": 76.0
+      },
+      "C10": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C10",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 112.0,
+        "y_mm": 89.0
+      },
+      "C2": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 46.0,
+        "y_mm": 76.0
+      },
+      "C3": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 68.0,
+        "y_mm": 76.0
+      },
+      "C4": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C4",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 90.0,
+        "y_mm": 76.0
+      },
+      "C5": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C5",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 112.0,
+        "y_mm": 76.0
+      },
+      "C6": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C6",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 24.0,
+        "y_mm": 89.0
+      },
+      "C7": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C7",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 46.0,
+        "y_mm": 89.0
+      },
+      "C8": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C8",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 68.0,
+        "y_mm": 89.0
+      },
+      "C9": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Seed row reserved for decoupling capacitors.",
+        "ref": "C9",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "decoupling_row_seed",
+        "x_mm": 90.0,
+        "y_mm": 89.0
+      },
+      "D1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "D1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 74.0,
+        "y_mm": 5.0
+      },
+      "D2": {
+        "courtyard_h_mm": 6.708,
+        "courtyard_w_mm": 6.708,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "D2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 120.0,
+        "y_mm": 86.0
+      },
+      "F1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "F1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 38.0,
+        "y_mm": 5.0
+      },
+      "J1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 20.0,
+        "y_mm": 5.0
+      },
+      "J11": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J11",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 3.0,
+        "y_mm": 7.0
+      },
+      "J12": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J12",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 3.0,
+        "y_mm": 22.0
+      },
+      "J13": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J13",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 3.0,
+        "y_mm": 37.0
+      },
+      "J14": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J14",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 3.0,
+        "y_mm": 52.0
+      },
+      "J15": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J15",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 3.0,
+        "y_mm": 67.0
+      },
+      "J16": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J16",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 3.0,
+        "y_mm": 82.0
+      },
+      "J17": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J17",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 157.0,
+        "y_mm": 7.0
+      },
+      "J18": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J18",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 157.0,
+        "y_mm": 22.0
+      },
+      "J19": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J19",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 157.0,
+        "y_mm": 37.0
+      },
+      "J2": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 140.0,
+        "y_mm": 95.0
+      },
+      "J20": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J20",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 157.0,
+        "y_mm": 52.0
+      },
+      "J21": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J21",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 157.0,
+        "y_mm": 67.0
+      },
+      "J22": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Seed pushed to a board edge for connector access.",
+        "ref": "J22",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "connector_edge_seed",
+        "x_mm": 157.0,
+        "y_mm": 82.0
+      },
+      "J3": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 80.0,
+        "y_mm": 5.0
+      },
+      "J4": {
+        "courtyard_h_mm": 6.708,
+        "courtyard_w_mm": 6.708,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J4",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 104.0,
+        "y_mm": 69.0
+      },
+      "J5": {
+        "courtyard_h_mm": 6.0,
+        "courtyard_w_mm": 6.0,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "J5",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 120.0,
+        "y_mm": 95.0
+      },
+      "Q1": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "Q1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 56.0,
+        "y_mm": 5.0
+      },
+      "Q2": {
+        "courtyard_h_mm": 6.0,
+        "courtyard_w_mm": 6.0,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "Q2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 124.0,
+        "y_mm": 48.0
+      },
+      "R1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "R1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 136.0,
+        "y_mm": 27.0
+      },
+      "R2": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "R2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 42.0,
+        "y_mm": 48.0
+      },
+      "R3": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "R3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 58.0,
+        "y_mm": 48.0
+      },
+      "R4": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "R4",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 60.0,
+        "y_mm": 27.0
+      },
+      "U1": {
+        "courtyard_h_mm": 21.0,
+        "courtyard_w_mm": 21.0,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 70.0,
+        "y_mm": 37.0
+      },
+      "U2": {
+        "courtyard_h_mm": 6.708,
+        "courtyard_w_mm": 6.708,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 22.0,
+        "y_mm": 48.0
+      },
+      "U3": {
+        "courtyard_h_mm": 6.0,
+        "courtyard_w_mm": 6.0,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 92.0,
+        "y_mm": 5.0
+      },
+      "U4": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U4",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 112.0,
+        "y_mm": 18.0
+      },
+      "U5": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U5",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 132.0,
+        "y_mm": 18.0
+      },
+      "U6": {
+        "courtyard_h_mm": 7.348,
+        "courtyard_w_mm": 7.348,
+        "rationale": "Hand-tuned anchor from the reference layout seed.",
+        "ref": "U6",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "curated_anchor",
+        "x_mm": 90.0,
+        "y_mm": 27.0
+      }
+    }
+  },
+  "revision": "r1",
+  "source_graph": "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/electronics/generated/electrical_graph.json"
+}

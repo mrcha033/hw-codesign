@@ -1,0 +1,2 @@
+config BOARD_ROBOT_CONTROLLER
+  bool "Robot Controller"

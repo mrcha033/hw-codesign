@@ -1,0 +1,11 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: ESP32-S3 data logger with USB-C power and ICM-42688-P 6-axis IMU
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: sensing.imu
+    spec_path: sensing.imu
+    status: lowered
+  active_unresolved: []

@@ -1,0 +1,38 @@
+{
+  "artifact_type": "mechanical_source",
+  "backend": "opencascade",
+  "release_eligible": false,
+  "selected_variant": "sealed",
+  "source_spec_hash": "7023edc25d7e119cdfcdb28ce582e3605ca5d4e8f60777bcb598d6a8b666d5ce",
+  "sources": [
+    {
+      "path": "assembly.py",
+      "sha256": "a9e2bed413dd52387f093e1ef018c71c164d39f8643ea07cc3d13692b1abd7a8"
+    },
+    {
+      "path": "connector_cutouts.py",
+      "sha256": "f2c63d08693fff7d9bc689f972a5bc4e887f70b39ff89a697abe61d17c965f5f"
+    },
+    {
+      "path": "enclosure.py",
+      "sha256": "c43ffa1b19d55127ebc49656bf0475c4f093c37aa94162137c53b0b75a6134be"
+    },
+    {
+      "path": "enclosure_variants.py",
+      "sha256": "42997d1ecba8a73570ff84d4d0eb6e8dcc999d190cc8da31981bd0674a4d9e0c"
+    },
+    {
+      "path": "fixtures.py",
+      "sha256": "80927a4721e116210977f860b3a7dbcfeeb61fd07e3c02ff4ea517b5881e26f2"
+    },
+    {
+      "path": "mechanical_contract.json",
+      "sha256": "5146bc6f380d934f4890eeaf292970d9284bfe6c1e8ef2db5a5298df2390ee61"
+    }
+  ],
+  "variants": [
+    "sealed",
+    "vented",
+    "service"
+  ]
+}

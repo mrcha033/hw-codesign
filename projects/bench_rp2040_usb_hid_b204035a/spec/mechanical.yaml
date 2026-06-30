@@ -1,0 +1,22 @@
+mechanical:
+  enclosure: none
+  selected_variant: bare_pcb
+  variants:
+  - name: bare_pcb
+    lid_style: none
+    ventilation: none
+    gasket: false
+  mounting: host_product
+  connectors_exposed: true
+  vibration_environment: low
+  cooling: passive
+  envelope:
+    board_width_mm: 51.0
+    board_height_mm: 21.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 3.5
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm:
+  - 51.0
+  - 21.0
+  - 5.0

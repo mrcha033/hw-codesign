@@ -1,0 +1,180 @@
+EESchema Schematic File Version 4
+LIBS:power
+EELAYER 29 0
+EELAYER END
+$Descr A4 11693 8268
+Sheet 1 1
+Title "nRF52840 BLE Sensor Node"
+$EndDescr
+$Comp
+L Connector_Generic:Conn_01x02 J1
+U 1 1 3E8
+P 1500 1200
+F 0 "J1" H 1580 1400 50  0000 C CNN
+F 1 "USB-C CHARGE" H 1580 1000 50  0000 C CNN
+F 2 "Connector_USB:USB_C_GCT_USB4105" H 1500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 F1
+U 1 1 3E9
+P 3500 1200
+F 0 "F1" H 3580 1400 50  0000 C CNN
+F 1 "500mA Fuse" H 3580 1000 50  0000 C CNN
+F 2 "HW_Curated:MIDI_Fuse" H 3500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 Q1
+U 1 1 3EA
+P 5500 1200
+F 0 "Q1" H 5580 1400 50  0000 C CNN
+F 1 "Ideal Diode" H 5580 1000 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 5500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U2
+U 1 1 3EB
+P 7500 1200
+F 0 "U2" H 7580 1400 50  0000 C CNN
+F 1 "LiPo Charger" H 7580 1000 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-8" H 7500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 BT1
+U 1 1 3EC
+P 1500 2100
+F 0 "BT1" H 1580 2300 50  0000 C CNN
+F 1 "LiPo 400mAh" H 1580 1900 50  0000 C CNN
+F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 1500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U3
+U 1 1 3ED
+P 3500 2100
+F 0 "U3" H 3580 2300 50  0000 C CNN
+F 1 "Fuel Gauge" H 3580 1900 50  0000 C CNN
+F 2 "Package_SON:VSON-9_2x3mm_P0.5mm" H 3500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 LD1
+U 1 1 3EE
+P 5500 2100
+F 0 "LD1" H 5580 2300 50  0000 C CNN
+F 1 "3V3 LDO" H 5580 1900 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 5500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U1
+U 1 1 3EF
+P 7500 2100
+F 0 "U1" H 7580 2300 50  0000 C CNN
+F 1 "nRF52840" H 7580 1900 50  0000 C CNN
+F 2 "Nordic_nRF52840:nRF52840-QIAA" H 7500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U5
+U 1 1 3F0
+P 1500 3000
+F 0 "U5" H 1580 3200 50  0000 C CNN
+F 1 "Temp/Humidity" H 1580 2800 50  0000 C CNN
+F 2 "Package_DFN_QFN:DFN-8-1EP_2x2.5mm_P0.5mm" H 1500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J2
+U 1 1 3F1
+P 3500 3000
+F 0 "J2" H 3580 3200 50  0000 C CNN
+F 1 "SWD DEBUG" H 3580 2800 50  0000 C CNN
+F 2 "Connector_Samtec:FTSH-105" H 3500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R1
+U 1 1 3F2
+P 5500 3000
+F 0 "R1" H 5580 3200 50  0000 C CNN
+F 1 "4K7" H 5580 2800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R2
+U 1 1 3F3
+P 7500 3000
+F 0 "R2" H 7580 3200 50  0000 C CNN
+F 1 "4K7" H 7580 2800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 7500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R3
+U 1 1 3F4
+P 1500 3900
+F 0 "R3" H 1580 4100 50  0000 C CNN
+F 1 "1K" H 1580 3700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 1500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R4
+U 1 1 3F5
+P 3500 3900
+F 0 "R4" H 3580 4100 50  0000 C CNN
+F 1 "10K" H 3580 3700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C1
+U 1 1 3F6
+P 5500 3900
+F 0 "C1" H 5580 4100 50  0000 C CNN
+F 1 "100nF" H 5580 3700 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 5500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C2
+U 1 1 3F7
+P 7500 3900
+F 0 "C2" H 7580 4100 50  0000 C CNN
+F 1 "100nF" H 7580 3700 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C3
+U 1 1 3F8
+P 1500 4800
+F 0 "C3" H 1580 5000 50  0000 C CNN
+F 1 "10uF" H 1580 4600 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1210_3225Metric" H 1500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C4
+U 1 1 3F9
+P 3500 4800
+F 0 "C4" H 3580 5000 50  0000 C CNN
+F 1 "10uF" H 3580 4600 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1210_3225Metric" H 3500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 D1
+U 1 1 3FA
+P 5500 4800
+F 0 "D1" H 5580 5000 50  0000 C CNN
+F 1 "USB ESD" H 5580 4600 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 5500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$EndSCHEMATC

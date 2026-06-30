@@ -1,0 +1,12 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml"
+  ],
+  "backend": {},
+  "failures": [],
+  "gate": "datasheet_evidence",
+  "metrics": {
+    "components_checked": 10
+  },
+  "status": "pass"
+}

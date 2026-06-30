@@ -1,0 +1,4 @@
+target_use: iot_sensor_gateway
+revision: r1
+template: sensor_data_logger
+name: bench_sensor_logger_usb_b204035a

@@ -1,0 +1,173 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-28T14:42:43",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/23702c83-d85c-53ba-be2c-377218409131",
+            "violations": [
+                {
+                    "description": "Both I2C_SDA and V3V3 are attached to the same items; I2C_SDA will be used in the netlist",
+                    "items": [
+                        {
+                            "description": "Label 'I2C_SDA'",
+                            "pos": {
+                                "x": 0.7747,
+                                "y": 0.6096
+                            },
+                            "uuid": "45993b65-e029-5130-bec0-590f9e30b341"
+                        },
+                        {
+                            "description": "Label 'V3V3'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.3937
+                            },
+                            "uuid": "a2e8306a-090b-58b3-8681-bdd10f59933e"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "multiple_net_names"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol F1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.2954
+                            },
+                            "uuid": "33bf4bd5-86d7-55a5-9510-5f9b850ce628"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'USB_C_GCT_USB4105' not found in library 'Connector_USB'",
+                    "items": [
+                        {
+                            "description": "Symbol J1 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.4859
+                            },
+                            "uuid": "8e203363-03b9-5c6d-84ca-a1f486b1beb8"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'FTSH-105' not found in library 'Connector_Samtec'",
+                    "items": [
+                        {
+                            "description": "Symbol J2 [Conn_01x08]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.6637
+                            },
+                            "uuid": "f570e434-f6e4-597c-b275-973533d3cec4"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Both CHG_ISET and I2C_SCL are attached to the same items; CHG_ISET will be used in the netlist",
+                    "items": [
+                        {
+                            "description": "Label 'CHG_ISET'",
+                            "pos": {
+                                "x": 0.7747,
+                                "y": 0.9398
+                            },
+                            "uuid": "f572ac69-63c3-564f-a59a-5f31e6a80907"
+                        },
+                        {
+                            "description": "Label 'I2C_SCL'",
+                            "pos": {
+                                "x": 0.7747,
+                                "y": 0.4191
+                            },
+                            "uuid": "65f49eda-41de-5a60-8912-318dd93c0939"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "multiple_net_names"
+                },
+                {
+                    "description": "Footprint 'VSON-9_2x3mm_P0.5mm' not found in library 'Package_SON'",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [Conn_01x09]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.2954
+                            },
+                            "uuid": "662f67c6-08a4-5058-915e-4def65c2d893"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'DFN-8-1EP_2x2.5mm_P0.5mm' not found in library 'Package_DFN_QFN'",
+                    "items": [
+                        {
+                            "description": "Symbol U5 [Conn_01x08]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.4859
+                            },
+                            "uuid": "5d4fd28f-92bf-5f8e-934e-e41ee2263e47"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'Nordic_nRF52840'",
+                    "items": [
+                        {
+                            "description": "Symbol U1 [Conn_01x18]",
+                            "pos": {
+                                "x": 2.8194,
+                                "y": 1.0541
+                            },
+                            "uuid": "04c524f0-002e-523a-b1c6-652082653330"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                }
+            ]
+        }
+    ],
+    "source": "bench_ble_lipo_sensor_b204035a.kicad_sch"
+}

@@ -1,0 +1,9 @@
+safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections:
+  - reverse_polarity
+  - fuse_or_efuse
+  - tvs
+  - watchdog

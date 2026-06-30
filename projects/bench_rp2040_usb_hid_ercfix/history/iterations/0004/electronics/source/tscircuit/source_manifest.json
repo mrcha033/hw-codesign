@@ -1,0 +1,55 @@
+{
+  "backend": "tscircuit",
+  "backend_release_capable": true,
+  "compiler_version": "0.1.1491",
+  "contract_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "pcb_disabled": false,
+  "provenance": {
+    "backend": "tscircuit",
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/bench_rp2040_usb_hid_ercfix/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "compiler_version": "0.1.1491",
+    "component_db_hash": "5a97ac71f96574a18a58a6ad3b1b878b9858cb069286457b0c411a425bf7fbd1",
+    "release_eligible": true,
+    "role_set_hash": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+    "source_spec_hash": "76d7ea4d3f8a296e40785e3e4ed4f615c3ec390056fb4908b3b96d7b317698ae",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "release_blocking_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "routing_disabled": false,
+  "source_release_eligible": true,
+  "sources": [
+    {
+      "path": "board.compiler.mjs",
+      "sha256": "352eff66dfcc842a3e7251d5063fc0c59d7d25941a6eb1ac205136b10bf6ac5a"
+    },
+    {
+      "path": "board.tsx",
+      "sha256": "b108d7f65c4e6e4cb77506e09aa805953845a3e757f671e072038da72ff1e326"
+    }
+  ],
+  "unsupported_footprints": []
+}

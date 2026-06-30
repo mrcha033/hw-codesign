@@ -1,0 +1,86 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "sourcing-resilience-contract"
+  },
+  "failures": [
+    {
+      "category": "BOM_ERROR",
+      "code": "critical_role_resilience_missing",
+      "details": {
+        "role": "flash",
+        "role_set": "rp2040_usb_device",
+        "selected_component_id": "w25q16jv"
+      },
+      "message": "Critical role flash has neither a curated alternate nor a single-source mitigation",
+      "path": "electronics.role_set.flash",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "critical_role_resilience_missing",
+      "details": {
+        "role": "mcu",
+        "role_set": "rp2040_usb_device",
+        "selected_component_id": "rp2040"
+      },
+      "message": "Critical role mcu has neither a curated alternate nor a single-source mitigation",
+      "path": "electronics.role_set.mcu",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "critical_role_resilience_missing",
+      "details": {
+        "role": "power_input",
+        "role_set": "rp2040_usb_device",
+        "selected_component_id": "usb4105_gf_a"
+      },
+      "message": "Critical role power_input has neither a curated alternate nor a single-source mitigation",
+      "path": "electronics.role_set.power_input",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "critical_role_resilience_missing",
+      "details": {
+        "role": "regulator_3v3",
+        "role_set": "rp2040_usb_device",
+        "selected_component_id": "ap2112k_33trg1"
+      },
+      "message": "Critical role regulator_3v3 has neither a curated alternate nor a single-source mitigation",
+      "path": "electronics.role_set.regulator_3v3",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "critical_role_resilience_missing",
+      "details": {
+        "role": "tvs",
+        "role_set": "rp2040_usb_device",
+        "selected_component_id": "usblc6_2sc6"
+      },
+      "message": "Critical role tvs has neither a curated alternate nor a single-source mitigation",
+      "path": "electronics.role_set.tvs",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "sourcing_resilience",
+  "metrics": {
+    "alternate_roles": 0,
+    "checked_alternates": 0,
+    "critical_roles": 5,
+    "role_set": "rp2040_usb_device",
+    "single_source_justified_roles": 0,
+    "supplier_provider": "curated"
+  },
+  "status": "fail"
+}

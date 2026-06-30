@@ -1,0 +1,15 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "firmware_modules",
+  "metrics": {
+    "isr_count": 1,
+    "module_count": 1,
+    "required_behaviors": [
+      "estop_motor_shutdown"
+    ],
+    "total_stack_bytes": 2048
+  },
+  "status": "pass"
+}

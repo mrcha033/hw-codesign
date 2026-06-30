@@ -1,0 +1,52 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/electronics/generated/kicad/bench_robotics_controller_b204035a.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/electronics/generated/kicad/bench_robotics_controller_b204035a.ses"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/electronics/generated/kicad/bench_robotics_controller_b204035a.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_b204035a/electronics/generated/kicad/bench_robotics_controller_b204035a.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-06-28 14:54:39.665 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-06-28 14:54:39.824 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-06-28 14:54:42.692 INFO   [246041\\3658DE] Job '246041\\3658DE' started at 2026-06-28T05:54:42.691470Z.\n2026-06-28 14:54:43.271 INFO   New version available: v2.2.4\n2026-06-28 14:56:01.284 INFO   [246041\\3658DE] Auto-router pass #1 on board '8ace1719cc4a36841fed9d81c2149122' was completed in 1 minute 18.02 seconds with the score of 928.36 (19 unrouted), using 23.51 CPU seconds and the job allocated 6.92 GB of memory so far.\n2026-06-28 14:56:37.559 INFO   [246041\\3658DE] Auto-router pass #2 on board '4b7f11d8c37848973a64504693ed9711' was completed in 36.14 seconds with the score of 939.16 (16 unrouted), using 39.39 CPU seconds and the job allocated 12.48 GB of memory so far.\n2026-06-28 14:57:18.706 INFO   [246041\\3658DE] Auto-router pass #3 on board 'b7661922bd8e0f215c11e9fad25e7cbf' was completed in 41.02 seconds with the score of 947.00 (14 unrouted), using 55.97 CPU seconds and the job allocated 18.28 GB of memory so far.\n2026-06-28 14:57:48.031 INFO   [246041\\3658DE] Auto-router pass #4 on board '47cd30cbc89a494774a802d1b1d49564' was completed in 29.22 seconds with the score of 946.50 (14 unrouted), using 71.26 CPU seconds and the job allocated 23.97 GB of memory so far.\n2026-06-28 14:58:48.974 INFO   [246041\\3658DE] Auto-router pass #5 on board 'dc214da8507c11fa9b17a850800c154b' was completed in 1 minute 0.82 seconds with the score of 962.72 (10 unrouted), using 93.42 CPU seconds and the job allocated 30.89 GB of memory so far.\n2026-06-28 14:59:08.585 INFO   [246041\\3658DE] Auto-router pass #6 on board '008940fbfc5d67beb073cda7ce71d9e7' was completed in 19.44 seconds with the score of 969.03 (8 unrouted), using 105.47 CPU seconds and the job allocated 35.33 GB of memory so far.\n2026-06-28 14:59:32.438 INFO   [246041\\3658DE] Auto-router pass #7 on board '7f4ee00d6e84c980d9d6f161792d8d6c' was completed in 23.77 seconds with the score of 972.66 (7 unrouted), using 116.59 CPU seconds and the job allocated 39.26 GB of memory so far.\n2026-06-28 14:59:46.389 INFO   [246041\\3658DE] Auto-router pass #8 on board '3a777bed23d4240540972a656a636e10' was completed in 13.80 seconds with the score of 975.42 (6 unrouted), using 125.63 CPU seconds and the job allocated 42.87 GB of memory so far.\n2026-06-28 15:00:00.622 INFO   [246041\\3658DE] Auto-router pass #9 on board 'df6b57941269b5a6d919e6bc8adf99e6' was completed in 14.05 seconds with the score of 978.51 (5 unrouted), using 133.85 CPU seconds and the job allocated 46.04 GB of memory so far.\n2026-06-28 15:00:32.097 INFO   [246041\\3658DE] Auto-router pass #10 on board 'b21af487fc12d5f00eb48a0bbf6c38a7' was completed in 31.34 seconds with the score of 978.51 (5 unrouted), using 146.07 CPU seconds and the job allocated 49.70 GB of memory so far.\n2026-06-28 15:00:57.565 INFO   [246041\\3658DE] Auto-router pass #11 on board '8848e7b56c4d49dcadad08dd2ad17405' was completed in 25.29 seconds with the score of 978.51 (5 unrouted), using 155.19 CPU seconds and the job allocated 52.80 GB of memory so far.\n2026-06-28 15:01:25.606 INFO   [246041\\3658DE] Auto-router pass #12 on board 'b21af487fc12d5f00eb48a0bbf6c38a7' was completed in 0.00 seconds with the score of 978.51 (5 unrouted), using 164.71 CPU seconds and the job allocated 56.06 GB of memory so far.\n2026-06-28 15:01:58.838 INFO   [246041\\3658DE] Auto-router pass #13 on board 'b21af487fc12d5f00eb48a0bbf6c38a7' was completed in 33.06 seconds with the score of 978.48 (5 unrouted), using 174.05 CPU seconds and the job allocated 59.19 GB of memory so far.\n2026-06-28 15:02:13.350 INFO   [246041\\3658DE] Auto-router pass #14 on board '3d5da6d8d7b6a2965ed86aeef4895331' was completed in 14.42 seconds with the score of 978.51 (5 unrouted), using 180.91 CPU seconds and the job allocated 62.18 GB of memory so far.\n2026-06-28 15:02:29.197 INFO   [246041\\3658DE] Auto-router pass #15 on board '9f15b97a6784adb68c2a4e9a7e985502' was completed in 15.77 seconds with the score of 978.36 (5 unrouted), using 188.84 CPU seconds and the job allocated 65.25 GB of memory so far.\n2026-06-28 15:02:45.669 INFO   [246041\\3658DE] Auto-router pass #16 on board 'fb45a3d8e9d51e3aa88d1fbbac8f969b' was completed in 16.39 seconds with the score of 978.55 (5 unrouted), using 198.90 CPU seconds and the job allocated 69.88 GB of memory so far.\n2026-06-28 15:02:56.601 INFO   [246041\\3658DE] Auto-router pass #17 on board 'cb84a78a06b25698aac8b3024696a3d7' was completed in 10.87 seconds with the score of 981.32 (4 unrouted), using 205.91 CPU seconds and the job allocated 73.06 GB of memory so far.\n2026-06-28 15:03:10.704 INFO   [246041\\3658DE] Auto-router pass #18 on board 'e1fdd962f6fbe8815df1501583d7c76f' was completed in 14.01 seconds with the score of 981.35 (4 unrouted), using 213.45 CPU seconds and the job allocated 76.11 GB of memory so far.\n2026-06-28 15:03:27.736 INFO   [246041\\3658DE] Auto-router pass #19 on board 'cd455293b368e75609943bf1f83d8e10' was completed in 16.95 seconds with the score of 981.32 (4 unrouted), using 222.21 CPU seconds and the job allocated 79.76 GB of memory so far.\n2026-06-28 15:03:38.504 INFO   [246041\\3658DE] Auto-router pass #20 on board '81c43b9f63b72e65f971d2572898689f' was completed in 10.68 seconds with the score of 981.45 (4 unrouted), using 228.78 CPU seconds and the job allocated 82.81 GB of memory so far.\n2026-06-28 15:03:38.684 INFO   [246041\\3658DE] Auto-router session completed: started with 76 unrouted nets, completed in 8 minutes 55.87 seconds, final score: 981.45 (4 unrouted), using 228.78 total CPU seconds, 82.81 GB total allocated, and 807.72 MB peak heap usage.\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "routing_incomplete",
+      "details": {
+        "unrouted": 4
+      },
+      "message": "Freerouting left 4 connection(s) unrouted",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "autoroute",
+  "metrics": {
+    "max_passes": 20,
+    "unrouted": 4
+  },
+  "status": "fail"
+}

@@ -1,0 +1,14 @@
+firmware:
+  rtos: bare_metal
+  rp2040_sdk: pico-sdk
+  toolchain: arm-none-eabi-gcc
+  modules:
+  - id: usb_hid_stack
+    description: TinyUSB HID stack implementing keyboard + mouse composite device
+  - id: usb_cdc_stack
+    description: TinyUSB CDC-ACM UART-over-USB for debug console
+  - id: flash_xip
+    description: XIP boot loader stub for W25Q16JV QSPI flash
+  - id: pio_ws2812
+    description: PIO state machine driver for WS2812 RGB LED (optional)
+  ota: false

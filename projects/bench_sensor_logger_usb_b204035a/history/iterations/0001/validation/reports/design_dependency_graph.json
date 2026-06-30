@@ -1,0 +1,35 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "structural_dependency_graph"
+  },
+  "failures": [
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "kicad_library_crosscheck",
+        "prerequisite": "native_drc",
+        "prerequisite_status": "fail"
+      },
+      "message": "kicad_library_crosscheck passed before prerequisite native_drc passed",
+      "path": "gates.kicad_library_crosscheck",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "design_dependency_graph",
+  "metrics": {
+    "blocked_or_unpassed_nodes": [
+      "native_drc",
+      "native_zephyr_build",
+      "physical_qualification",
+      "supplier_availability"
+    ],
+    "declared_edges": 78,
+    "evaluated_edges": 62,
+    "nodes": 41
+  },
+  "status": "fail"
+}

@@ -1,0 +1,16 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "mechanical_connector_cutouts",
+  "metrics": {
+    "connector_refs": [
+      "J1"
+    ],
+    "errors": 0,
+    "interface_refs": [],
+    "required": false,
+    "warnings": 0
+  },
+  "status": "pass"
+}

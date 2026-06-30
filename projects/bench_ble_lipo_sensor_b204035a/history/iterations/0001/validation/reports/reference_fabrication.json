@@ -1,0 +1,26 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/assembly_drawing.svg",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_b204035a-Edge_Cuts.gm1",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_b204035a-F_Cu.gtl",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_b204035a-board_outline.dxf",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_b204035a.drl",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/bom.csv",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/drill.zip",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/gerbers.zip",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/panelization.json",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_b204035a/exports/candidates/reference-fabrication/fabrication/pick_and_place.csv"
+  ],
+  "backend": {
+    "candidate_only": true,
+    "name": "reference-fabrication",
+    "release_eligible": false
+  },
+  "failures": [],
+  "gate": "reference_fabrication",
+  "metrics": {
+    "artifact_count": 10,
+    "candidate_only": true
+  },
+  "status": "pass"
+}

@@ -1,0 +1,14 @@
+{
+  "board": {
+    "design_settings": {
+      "rules": {
+        "min_clearance": 0.15,
+        "min_track_width": 0.15
+      }
+    }
+  },
+  "meta": {
+    "filename": "bench_robotics_controller_b204035a.kicad_pro",
+    "version": 1
+  }
+}

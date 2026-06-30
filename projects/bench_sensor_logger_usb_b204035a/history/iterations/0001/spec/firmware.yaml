@@ -1,0 +1,8 @@
+firmware:
+  framework: zephyr
+  target: esp32s3
+  outputs:
+  - devicetree_overlay
+  - pinmap
+  - driver_stubs
+  - bringup_tests

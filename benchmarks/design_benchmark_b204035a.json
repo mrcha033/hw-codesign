@@ -1,0 +1,110 @@
+{
+  "benchmark": "design_benchmark_v0",
+  "include_external": true,
+  "specs": [
+    {
+      "gate_summary": {
+        "fail": 10,
+        "native_failed": [
+          "native_drc"
+        ],
+        "native_gate_pass_rate": 0.8,
+        "native_passed": [
+          "autoroute",
+          "native_erc",
+          "kicad_library_crosscheck",
+          "native_mechanical_validation"
+        ],
+        "pass": 32,
+        "software_fail": 7,
+        "software_gate_pass_rate": 0.8205,
+        "total": 42
+      },
+      "gates_failed_count": 10,
+      "gates_passed_count": 32,
+      "id": "sensor_logger_usb",
+      "intent": "ESP32-S3 data logger with USB-C power and ICM-42688-P 6-axis IMU",
+      "iterations": 1,
+      "native_gate_pass_rate": 0.8,
+      "software_gate_pass_rate": 0.8205,
+      "status": "fail",
+      "template": "sensor_data_logger"
+    },
+    {
+      "gate_summary": {
+        "fail": 13,
+        "native_failed": [
+          "native_erc"
+        ],
+        "native_gate_pass_rate": 0.8,
+        "native_passed": [
+          "autoroute",
+          "native_drc",
+          "kicad_library_crosscheck",
+          "native_mechanical_validation"
+        ],
+        "pass": 29,
+        "software_fail": 10,
+        "software_gate_pass_rate": 0.7436,
+        "total": 42
+      },
+      "gates_failed_count": 13,
+      "gates_passed_count": 29,
+      "id": "ble_lipo_sensor",
+      "intent": "nRF52840 BLE sensor node with LiPo charging SHT31 temperature humidity 50x35 mm",
+      "iterations": 1,
+      "native_gate_pass_rate": 0.8,
+      "software_gate_pass_rate": 0.7436,
+      "status": "fail",
+      "template": "ble_sensor_node"
+    },
+    {
+      "gate_summary": {
+        "fail": 9,
+        "native_failed": [
+          "autoroute",
+          "native_drc"
+        ],
+        "native_gate_pass_rate": 0.5,
+        "native_passed": [
+          "native_erc",
+          "kicad_library_crosscheck"
+        ],
+        "pass": 28,
+        "software_fail": 3,
+        "software_gate_pass_rate": 0.9032,
+        "total": 37
+      },
+      "gates_failed_count": 9,
+      "gates_passed_count": 28,
+      "id": "robotics_controller",
+      "intent": "STM32H7 motor controller 12 channels 24V CAN bus emergency stop 4-layer",
+      "iterations": 1,
+      "native_gate_pass_rate": 0.5,
+      "software_gate_pass_rate": 0.9032,
+      "status": "blocked",
+      "template": "robotics_controller_full"
+    },
+    {
+      "error": "'wall_thickness_mm'",
+      "gate_summary": {},
+      "id": "rp2040_usb_hid",
+      "intent": "RP2040 USB HID device with 2 MB QSPI flash and USB-C connector",
+      "iterations": 0,
+      "status": "error",
+      "template": "rp2040_usb_device"
+    }
+  ],
+  "status": "fail",
+  "summary": {
+    "failed": 4,
+    "mean_iterations": 1.0,
+    "native_gate_pass_rate": 0.7,
+    "pass_rate": 0.0,
+    "passed": 0,
+    "software_gate_pass_rate": 0.8224,
+    "software_gates_ready": 0,
+    "software_gates_ready_rate": 0.0,
+    "total": 4
+  }
+}

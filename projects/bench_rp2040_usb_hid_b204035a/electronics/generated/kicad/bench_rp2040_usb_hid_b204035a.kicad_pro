@@ -1,0 +1,14 @@
+{
+  "board": {
+    "design_settings": {
+      "rules": {
+        "min_clearance": 0.127,
+        "min_track_width": 0.127
+      }
+    }
+  },
+  "meta": {
+    "filename": "bench_rp2040_usb_hid_b204035a.kicad_pro",
+    "version": 1
+  }
+}

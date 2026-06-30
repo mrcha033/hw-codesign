@@ -1,0 +1,3 @@
+/dts-v1/;
+#include <st/h7/stm32h743Xi.dtsi>
+/ { model = "HW Co-design Robot Controller"; compatible = "hw,robot-controller"; chosen { zephyr,console = &usart3; }; };

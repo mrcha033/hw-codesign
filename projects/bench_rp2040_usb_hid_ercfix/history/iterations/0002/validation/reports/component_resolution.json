@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml"
+  ],
+  "backend": {
+    "mutates_database": false,
+    "name": "ComponentResolver"
+  },
+  "failures": [],
+  "gate": "component_resolution",
+  "metrics": {
+    "critical_roles": 5,
+    "requested": 10,
+    "resolved": 10,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}

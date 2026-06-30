@@ -1,0 +1,19 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "support-circuit-contract"
+  },
+  "failures": [],
+  "gate": "support_circuit_completeness",
+  "metrics": {
+    "components": 19,
+    "critical_roles": 9,
+    "net_contract_checks": 9,
+    "resolved_critical_roles": 9,
+    "role_set": "ble_sensor_node"
+  },
+  "status": "pass"
+}

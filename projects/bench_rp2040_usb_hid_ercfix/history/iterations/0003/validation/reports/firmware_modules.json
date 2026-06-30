@@ -1,0 +1,78 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "unknown_behavior",
+      "details": {
+        "available": [
+          "periodic_transmit",
+          "sensor_poll",
+          "state_machine",
+          "timeout_shutdown"
+        ]
+      },
+      "message": "Module 'usb_hid_stack' has unknown behavior 'None'",
+      "path": "firmware.modules.usb_hid_stack.behavior",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "unknown_behavior",
+      "details": {
+        "available": [
+          "periodic_transmit",
+          "sensor_poll",
+          "state_machine",
+          "timeout_shutdown"
+        ]
+      },
+      "message": "Module 'usb_cdc_stack' has unknown behavior 'None'",
+      "path": "firmware.modules.usb_cdc_stack.behavior",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "unknown_behavior",
+      "details": {
+        "available": [
+          "periodic_transmit",
+          "sensor_poll",
+          "state_machine",
+          "timeout_shutdown"
+        ]
+      },
+      "message": "Module 'flash_xip' has unknown behavior 'None'",
+      "path": "firmware.modules.flash_xip.behavior",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "unknown_behavior",
+      "details": {
+        "available": [
+          "periodic_transmit",
+          "sensor_poll",
+          "state_machine",
+          "timeout_shutdown"
+        ]
+      },
+      "message": "Module 'pio_ws2812' has unknown behavior 'None'",
+      "path": "firmware.modules.pio_ws2812.behavior",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "firmware_modules",
+  "metrics": {
+    "isr_count": 0,
+    "module_count": 4,
+    "required_behaviors": [],
+    "total_stack_bytes": 0
+  },
+  "status": "fail"
+}

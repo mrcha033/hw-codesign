@@ -1,0 +1,105 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-erc"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: can",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: efuse",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: fuse",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: imu",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: motor_io",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: regulator",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: reverse_polarity",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: safety_gate",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "single_pin_net",
+      "details": {},
+      "message": "QSPI_D2 has fewer than two endpoints",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "single_pin_net",
+      "details": {},
+      "message": "QSPI_D3 has fewer than two endpoints",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "ir_erc",
+  "metrics": {
+    "components": 10,
+    "nets": 15
+  },
+  "status": "fail"
+}

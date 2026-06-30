@@ -1,0 +1,82 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-28T14:40:40",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error"
+    ],
+    "kicad_version": "10.0.3",
+    "schematic_parity": [],
+    "source": "bench_sensor_logger_usb_b204035a.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Track [GND] on B.Cu, length 11.0000 mm",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 45.0
+                    },
+                    "uuid": "840b0948-0068-43a9-b317-2eff9f5f4646"
+                },
+                {
+                    "description": "NPTH pad of H4",
+                    "pos": {
+                        "x": 66.0,
+                        "y": 46.0
+                    },
+                    "uuid": "63826ebd-7097-4423-b804-911d22cb88f0"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Track [GND] on B.Cu, length 1.0000 mm",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 44.0
+                    },
+                    "uuid": "c043bb3a-04a7-4fa5-b45b-573029b68a5e"
+                },
+                {
+                    "description": "NPTH pad of H4",
+                    "pos": {
+                        "x": 66.0,
+                        "y": 46.0
+                    },
+                    "uuid": "63826ebd-7097-4423-b804-911d22cb88f0"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        }
+    ]
+}
