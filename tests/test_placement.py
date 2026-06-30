@@ -60,6 +60,14 @@ def test_proposal_carries_provenance_and_constraints(spec: dict, graph: dict):
     assert proposal.cost >= 0.0
     assert proposal.solver_iterations >= 0
     assert "solver" in proposal.to_dict()
+    assert proposal.to_dict()["constraint_graph"] == proposal.constraint_graph
+    graph_metrics = proposal.constraint_graph["metrics"]
+    assert graph_metrics["nodes"] == len(proposal.placements)
+    assert graph_metrics["edges"] > len(proposal.constraints)
+    edge_kinds = graph_metrics["edges_by_kind"]
+    assert edge_kinds["connector_edge"] >= 1
+    assert edge_kinds["decoupling_proximity"] >= 1
+    assert edge_kinds["high_current_loop"] >= 1
 
     kinds = {constraint.kind for constraint in proposal.constraints}
     assert {"board_keepout", "mounting_hole_keepout", "connector_edge", "decoupling_proximity", "thermal_spacing"} <= kinds
@@ -251,6 +259,30 @@ def test_layout_thermal_integrity_passes_seed(spec: dict, graph: dict):
     assert report.status == Status.PASS
     assert report.metrics["peak_current_a"] >= 80.0
     assert report.metrics["layers"] == 4
+    assert report.metrics["high_current_chain_refs"]
+    assert report.metrics["high_current_chain_steps"]
+
+
+def test_layout_thermal_integrity_rejects_high_current_chain_spread(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+    seed_report = check_layout_thermal_integrity(proposal, graph, spec)
+    chain = seed_report.metrics["high_current_chain_refs"]
+    assert len(chain) >= 2
+
+    left, right = chain[0], chain[1]
+    proposal.placements[left] = replace(proposal.placements[left], x_mm=2.0, y_mm=2.0)
+    proposal.placements[right] = replace(
+        proposal.placements[right],
+        x_mm=proposal.board_width_mm - 2.0,
+        y_mm=proposal.board_height_mm - 2.0,
+    )
+
+    report = check_layout_thermal_integrity(proposal, graph, spec)
+
+    assert report.status == Status.FAIL
+    assert "high_current_path_spread_excessive" in _codes(report)
+    spread = next(step for step in report.metrics["high_current_chain_steps"] if step["refs"] == [left, right])
+    assert spread["distance_mm"] > spread["max_step_mm"]
 
 
 def test_layout_thermal_integrity_rejects_hot_block_near_logic(spec: dict, graph: dict):

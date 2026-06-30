@@ -110,6 +110,7 @@ class PlacementProposal:
     cost: float = 0.0
     cost_breakdown: dict[str, float] = field(default_factory=dict)
     solver_iterations: int = 0
+    constraint_graph: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -119,6 +120,7 @@ class PlacementProposal:
             "constraints": [constraint.to_dict() for constraint in self.constraints],
             "cost": self.cost,
             "cost_breakdown": self.cost_breakdown,
+            "constraint_graph": self.constraint_graph,
             "solver": {
                 "method": "deterministic_constraint_cost_search",
                 "iterations": self.solver_iterations,
@@ -253,7 +255,17 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
 
     constraints = _derive_constraints(spec, graph) + agent_constraint_list
     placements, cost, cost_breakdown, iterations = _solve_placement_cost(placements, constraints, graph, spec, width, height)
-    return PlacementProposal(width, height, placements, constraints, cost=cost, cost_breakdown=cost_breakdown, solver_iterations=iterations)
+    constraint_graph = _build_constraint_graph(placements, constraints, graph, spec)
+    return PlacementProposal(
+        width,
+        height,
+        placements,
+        constraints,
+        cost=cost,
+        cost_breakdown=cost_breakdown,
+        solver_iterations=iterations,
+        constraint_graph=constraint_graph,
+    )
 
 
 def _derive_constraints(spec: dict[str, Any], graph: dict[str, Any]) -> list[PlacementConstraint]:
@@ -595,6 +607,183 @@ def _placement_cost(
                     add("mounting_hole_keepout", (radius - dist) * 500.0)
 
     return sum(breakdown.values()), breakdown
+
+
+def _build_constraint_graph(
+    placements: dict[str, Placement],
+    constraints: list[PlacementConstraint],
+    graph: dict[str, Any],
+    spec: dict[str, Any],
+) -> dict[str, Any]:
+    """Return an auditable graph of physical placement relationships.
+
+    The solver still emits absolute coordinates, but this graph is the compact
+    representation an agent can inspect: which refs are coupled, why, and which
+    relationships are enforced by digital gates versus deferred to evidence.
+    """
+    components = {str(component.get("ref")): component for component in graph.get("components", []) if component.get("ref")}
+    basis = graph.get("design_basis", {})
+    edges: list[dict[str, Any]] = []
+
+    def add_edge(kind: str, refs: list[str], enforced: bool, derived_from: str, **details: Any) -> None:
+        refs = [str(ref) for ref in refs if ref]
+        if not refs:
+            return
+        edge: dict[str, Any] = {
+            "kind": kind,
+            "refs": refs,
+            "enforced": enforced,
+            "derived_from": derived_from,
+        }
+        if details:
+            edge["details"] = details
+        edges.append(edge)
+
+    for constraint in constraints:
+        if constraint.kind == "connector_edge" and constraint.target_ref:
+            add_edge(
+                "connector_edge",
+                [constraint.target_ref],
+                constraint.enforced,
+                constraint.derived_from,
+                side=constraint.params.get("side"),
+                max_edge_distance_mm=constraint.params.get("max_edge_distance_mm"),
+            )
+        elif constraint.kind == "mounting_hole_keepout":
+            add_edge(
+                "mounting_hole_keepout",
+                list(placements),
+                constraint.enforced,
+                constraint.derived_from,
+                x_mm=constraint.params.get("x_mm"),
+                y_mm=constraint.params.get("y_mm"),
+                keepout_radius_mm=constraint.params.get("keepout_radius_mm"),
+            )
+        elif constraint.kind == "decoupling_proximity" and constraint.target_ref:
+            refs = [constraint.target_ref]
+            target_ref = constraint.params.get("target_ref")
+            if target_ref:
+                refs.append(str(target_ref))
+            add_edge(
+                "decoupling_proximity",
+                refs,
+                constraint.enforced,
+                constraint.derived_from,
+                max_distance_mm=constraint.params.get("max_distance_mm"),
+                power_nets=constraint.params.get("power_nets", []),
+            )
+        elif constraint.kind in {"agent_adjacent_to", "agent_near_connector"} and constraint.target_ref:
+            target = constraint.params.get("target")
+            add_edge(
+                constraint.kind,
+                [constraint.target_ref, str(target)] if target else [constraint.target_ref],
+                constraint.enforced,
+                constraint.derived_from,
+                max_distance_mm=constraint.params.get("max_distance_mm"),
+                side=constraint.params.get("side"),
+            )
+        elif constraint.kind == "thermal_spacing" and constraint.target_ref:
+            add_edge(
+                "thermal_spacing",
+                [constraint.target_ref],
+                constraint.enforced,
+                constraint.derived_from,
+                min_spacing_mm=constraint.params.get("min_spacing_mm"),
+            )
+
+    if _declared_peak_current_a(spec) >= HIGH_CURRENT_THRESHOLD_A:
+        chain = _high_current_chain_refs(graph)
+        for left, right in zip(chain, chain[1:]):
+            add_edge(
+                "high_current_loop",
+                [left, right],
+                True,
+                "graph high-current categories + spec declared peak current",
+                max_step_mm=MAX_HIGH_CURRENT_CHAIN_STEP_MM,
+                distance_mm=(
+                    round(_placement_distance_mm(placements[left], placements[right]), 3)
+                    if left in placements and right in placements else None
+                ),
+            )
+
+    rf_refs = [
+        ref for ref, component in components.items()
+        if ref in placements and (
+            RF_CONSTRAINT_MARKERS & set(component.get("constraints", []))
+            or (component.get("category") == "mcu" and basis.get("integral_pcb_antenna_required"))
+        )
+    ]
+    noisy_refs = [
+        ref for ref, component in components.items()
+        if ref in placements and component.get("category") in RF_NOISY_CATEGORIES
+    ]
+    for rf_ref in rf_refs:
+        add_edge(
+            "rf_edge_keepout",
+            [rf_ref],
+            True,
+            "component RF/integral-antenna metadata",
+            max_edge_distance_mm=RF_EDGE_DISTANCE_MAX_MM,
+        )
+        for noisy_ref in noisy_refs:
+            if noisy_ref != rf_ref:
+                add_edge(
+                    "rf_noisy_keepout",
+                    [rf_ref, noisy_ref],
+                    True,
+                    "component RF/noisy category metadata",
+                    minimum_keepout_mm=RF_NOISY_COMPONENT_KEEP_OUT_MM,
+                )
+
+    for hot_ref, hot_component in components.items():
+        if hot_ref not in placements or hot_component.get("category") not in THERMAL_RISK_CATEGORIES:
+            continue
+        for sensitive_ref, sensitive_component in components.items():
+            if sensitive_ref not in placements or sensitive_ref == hot_ref:
+                continue
+            if sensitive_component.get("category") in SENSITIVE_CATEGORIES:
+                add_edge(
+                    "thermal_zone",
+                    [hot_ref, sensitive_ref],
+                    True,
+                    "thermal-risk and sensitive component categories",
+                    minimum_spacing_mm=MIN_THERMAL_TO_SENSITIVE_MM,
+                )
+
+    usb_connector_refs = [
+        ref for ref, component in components.items()
+        if ref in placements and {"USB_DP_RAW", "USB_DM_RAW"} <= _component_nets(component) and not {"USB_DP", "USB_DM"} & _component_nets(component)
+    ]
+    usb_esd_refs = [
+        ref for ref, component in components.items()
+        if ref in placements and component.get("category") in {"usb_esd", "tvs"} and {"USB_DP_RAW", "USB_DM_RAW", "USB_DP", "USB_DM"} <= _component_nets(component)
+    ]
+    for esd_ref in usb_esd_refs:
+        for connector_ref in usb_connector_refs:
+            add_edge(
+                "usb_esd_connector_side",
+                [esd_ref, connector_ref],
+                True,
+                "USB raw/protected net bridge metadata",
+                max_connector_distance_mm=USB_ESD_MAX_CONNECTOR_DISTANCE_MM,
+            )
+
+    edges_by_kind: dict[str, int] = {}
+    for edge in edges:
+        kind = str(edge["kind"])
+        edges_by_kind[kind] = edges_by_kind.get(kind, 0) + 1
+
+    return {
+        "nodes": sorted(placements),
+        "edges": edges,
+        "metrics": {
+            "nodes": len(placements),
+            "edges": len(edges),
+            "edges_by_kind": dict(sorted(edges_by_kind.items())),
+            "enforced_edges": sum(1 for edge in edges if edge.get("enforced")),
+            "deferred_edges": sum(1 for edge in edges if not edge.get("enforced")),
+        },
+    }
 
 
 def _edge_aligned_position(placement: Placement, side: str, width: float, height: float, edge_distance: float) -> tuple[float, float]:
@@ -941,10 +1130,18 @@ def check_layout_thermal_integrity(
 
     if peak_current >= HIGH_CURRENT_THRESHOLD_A:
         chain = _high_current_chain_refs(graph)
+        high_current_chain_steps: list[dict[str, Any]] = []
         for left, right in zip(chain, chain[1:]):
             if left not in placements or right not in placements:
                 continue
             distance = _placement_distance_mm(placements[left], placements[right])
+            high_current_chain_steps.append(
+                {
+                    "refs": [left, right],
+                    "distance_mm": round(distance, 3),
+                    "max_step_mm": MAX_HIGH_CURRENT_CHAIN_STEP_MM,
+                }
+            )
             if distance > MAX_HIGH_CURRENT_CHAIN_STEP_MM:
                 fail(
                     "high_current_path_spread_excessive",
@@ -953,6 +1150,9 @@ def check_layout_thermal_integrity(
                     distance_mm=round(distance, 3),
                     max_step_mm=MAX_HIGH_CURRENT_CHAIN_STEP_MM,
                 )
+    else:
+        chain = []
+        high_current_chain_steps = []
 
     return GateReport(
         "layout_thermal_integrity",
@@ -964,6 +1164,9 @@ def check_layout_thermal_integrity(
             "layers": layers,
             "thermal_risk_components": len(thermal_refs),
             "sensitive_components": len(sensitive_refs),
+            "high_current_chain_refs": chain,
+            "high_current_chain_steps": high_current_chain_steps,
+            "high_current_chain_max_step_mm": MAX_HIGH_CURRENT_CHAIN_STEP_MM,
         },
         backend={"name": "layout-thermal-precheck", "deterministic": True, "release_authoritative": False},
     )
