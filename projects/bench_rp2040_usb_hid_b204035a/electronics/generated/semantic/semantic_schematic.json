@@ -492,10 +492,10 @@
         {
           "mcu_pin": null,
           "name": "~WP",
-          "net": "V3V3",
+          "net": "QSPI_D2",
           "number": "3",
-          "role": "power_in",
-          "voltage_domain": "V3V3"
+          "role": "bidirectional",
+          "voltage_domain": null
         },
         {
           "mcu_pin": null,
@@ -524,10 +524,10 @@
         {
           "mcu_pin": null,
           "name": "~HOLD",
-          "net": "V3V3",
+          "net": "QSPI_D3",
           "number": "7",
-          "role": "power_in",
-          "voltage_domain": "V3V3"
+          "role": "bidirectional",
+          "voltage_domain": null
         },
         {
           "mcu_pin": null,
@@ -774,6 +774,14 @@
           "pin_name": "QSPI_SD2",
           "pin_number": "2",
           "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "~WP",
+          "pin_number": "3",
+          "pin_role": "bidirectional"
         }
       ],
       "required_track_width_mm": 0.15,
@@ -789,6 +797,14 @@
           "mcu_pin": null,
           "pin_name": "QSPI_SD3",
           "pin_number": "1",
+          "pin_role": "bidirectional"
+        },
+        {
+          "component_ref": "U3",
+          "component_role": "flash",
+          "mcu_pin": null,
+          "pin_name": "~HOLD",
+          "pin_number": "7",
           "pin_role": "bidirectional"
         }
       ],
@@ -1067,22 +1083,6 @@
           "component_ref": "U3",
           "component_role": "flash",
           "mcu_pin": null,
-          "pin_name": "~WP",
-          "pin_number": "3",
-          "pin_role": "power_in"
-        },
-        {
-          "component_ref": "U3",
-          "component_role": "flash",
-          "mcu_pin": null,
-          "pin_name": "~HOLD",
-          "pin_number": "7",
-          "pin_role": "power_in"
-        },
-        {
-          "component_ref": "U3",
-          "component_role": "flash",
-          "mcu_pin": null,
           "pin_name": "VCC",
           "pin_number": "8",
           "pin_role": "power_in"
@@ -1160,27 +1160,31 @@
         "target_ref": null
       },
       {
-        "derived_from": "graph decoupling component pins",
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": null
         },
         "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
         "target_ref": "C1"
       },
       {
-        "derived_from": "graph decoupling component pins",
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": null
         },
         "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
         "target_ref": "C2"
@@ -1196,7 +1200,7 @@
         "side": "top",
         "source": "decoupling_row_seed",
         "x_mm": 24.0,
-        "y_mm": 76.0
+        "y_mm": 19.0
       },
       "C2": {
         "courtyard_h_mm": 4.243,
@@ -1207,7 +1211,7 @@
         "side": "top",
         "source": "decoupling_row_seed",
         "x_mm": 46.0,
-        "y_mm": 76.0
+        "y_mm": 19.0
       },
       "C3": {
         "courtyard_h_mm": 4.243,
@@ -1217,8 +1221,8 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "decoupling_row_seed",
-        "x_mm": 68.0,
-        "y_mm": 76.0
+        "x_mm": 49.0,
+        "y_mm": 19.0
       },
       "D1": {
         "courtyard_h_mm": 5.196,
@@ -1228,7 +1232,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 74.0,
+        "x_mm": 49.0,
         "y_mm": 5.0
       },
       "J1": {
@@ -1250,8 +1254,8 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 140.0,
-        "y_mm": 95.0
+        "x_mm": 49.0,
+        "y_mm": 19.0
       },
       "U1": {
         "courtyard_h_mm": 5.196,
@@ -1261,8 +1265,8 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 70.0,
-        "y_mm": 37.0
+        "x_mm": 49.0,
+        "y_mm": 19.0
       },
       "U2": {
         "courtyard_h_mm": 13.416,
@@ -1273,7 +1277,7 @@
         "side": "top",
         "source": "curated_anchor",
         "x_mm": 22.0,
-        "y_mm": 48.0
+        "y_mm": 19.0
       },
       "U3": {
         "courtyard_h_mm": 8.485,
@@ -1283,7 +1287,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 92.0,
+        "x_mm": 49.0,
         "y_mm": 5.0
       },
       "X1": {
@@ -1294,7 +1298,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "grid_fallback",
-        "x_mm": 110.0,
+        "x_mm": 49.0,
         "y_mm": 10.0
       }
     }

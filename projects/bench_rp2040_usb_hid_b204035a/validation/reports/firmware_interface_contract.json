@@ -1,0 +1,26 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "firmware-interface-contract"
+  },
+  "failures": [
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_config_missing",
+      "details": {},
+      "message": "Generated firmware config is missing",
+      "path": "firmware/zephyr/app/prj.conf",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "firmware_interface_contract",
+  "metrics": {
+    "config_options": [],
+    "pinmap_signals": [],
+    "required_interfaces": [],
+    "test_files": []
+  },
+  "status": "fail"
+}

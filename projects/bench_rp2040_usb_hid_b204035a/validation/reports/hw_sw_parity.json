@@ -1,0 +1,102 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: QSPI_CLK",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: QSPI_CS",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: QSPI_D2",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: QSPI_D3",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: QSPI_MISO",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: QSPI_MOSI",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: USB_DM",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: USB_DP",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: XIN",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "missing_firmware_assignment",
+      "details": {},
+      "message": "Electrical signal lacks firmware assignment: XOUT",
+      "path": "electronics.nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "hw_sw_parity",
+  "metrics": {
+    "errors": 10,
+    "warnings": 0
+  },
+  "status": "fail"
+}

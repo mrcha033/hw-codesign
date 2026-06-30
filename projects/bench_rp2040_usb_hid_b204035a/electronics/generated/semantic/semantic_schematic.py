@@ -184,11 +184,11 @@ component(
     pins=[
         pin('1', '~CS', net='QSPI_CS', role='input', voltage_domain=None, mcu_pin=None),
         pin('2', 'IO1', net='QSPI_MISO', role='bidirectional', voltage_domain=None, mcu_pin=None),
-        pin('3', '~WP', net='V3V3', role='power_in', voltage_domain='V3V3', mcu_pin=None),
+        pin('3', '~WP', net='QSPI_D2', role='bidirectional', voltage_domain=None, mcu_pin=None),
         pin('4', 'GND', net='GND', role='ground', voltage_domain='GND', mcu_pin=None),
         pin('5', 'IO0', net='QSPI_MOSI', role='bidirectional', voltage_domain=None, mcu_pin=None),
         pin('6', 'CLK', net='QSPI_CLK', role='input', voltage_domain=None, mcu_pin=None),
-        pin('7', '~HOLD', net='V3V3', role='power_in', voltage_domain='V3V3', mcu_pin=None),
+        pin('7', '~HOLD', net='QSPI_D3', role='bidirectional', voltage_domain=None, mcu_pin=None),
         pin('8', 'VCC', net='V3V3', role='power_in', voltage_domain='V3V3', mcu_pin=None),
     ],
 )
@@ -238,9 +238,11 @@ connect('U3', pin='~CS', number='1', net='QSPI_CS', role='input', mcu_pin=None)
 
 net('QSPI_D2', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('U2', pin='QSPI_SD2', number='2', net='QSPI_D2', role='bidirectional', mcu_pin=None)
+connect('U3', pin='~WP', number='3', net='QSPI_D2', role='bidirectional', mcu_pin=None)
 
 net('QSPI_D3', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('U2', pin='QSPI_SD3', number='1', net='QSPI_D3', role='bidirectional', mcu_pin=None)
+connect('U3', pin='~HOLD', number='7', net='QSPI_D3', role='bidirectional', mcu_pin=None)
 
 net('QSPI_MISO', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
 connect('U2', pin='QSPI_SD1', number='3', net='QSPI_MISO', role='bidirectional', mcu_pin=None)
@@ -283,8 +285,6 @@ connect('U2', pin='VDD', number='45', net='V3V3', role='power_in', mcu_pin=None)
 connect('U2', pin='VDD', number='46', net='V3V3', role='power_in', mcu_pin=None)
 connect('U2', pin='VDD', number='47', net='V3V3', role='power_in', mcu_pin=None)
 connect('U2', pin='VDD', number='48', net='V3V3', role='power_in', mcu_pin=None)
-connect('U3', pin='~WP', number='3', net='V3V3', role='power_in', mcu_pin=None)
-connect('U3', pin='~HOLD', number='7', net='V3V3', role='power_in', mcu_pin=None)
 connect('U3', pin='VCC', number='8', net='V3V3', role='power_in', mcu_pin=None)
 
 net('XIN', signal_class='signal', voltage_domain='V3V3', required_track_width_mm=0.15)
@@ -296,19 +296,19 @@ connect('U2', pin='XOUT', number='18', net='XOUT', role='passive', mcu_pin=None)
 connect('X1', pin='XOUT', number='2', net='XOUT', role='passive', mcu_pin=None)
 
 
-place('C1', data={'ref': 'C1', 'x_mm': 24.0, 'y_mm': 76.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'decoupling_row_seed', 'rationale': 'Seed row reserved for decoupling capacitors.'})
-place('C2', data={'ref': 'C2', 'x_mm': 46.0, 'y_mm': 76.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'decoupling_row_seed', 'rationale': 'Seed row reserved for decoupling capacitors.'})
-place('C3', data={'ref': 'C3', 'x_mm': 68.0, 'y_mm': 76.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'decoupling_row_seed', 'rationale': 'Seed row reserved for decoupling capacitors.'})
-place('D1', data={'ref': 'D1', 'x_mm': 74.0, 'y_mm': 5.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 5.196, 'courtyard_h_mm': 5.196, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
+place('C1', data={'ref': 'C1', 'x_mm': 24.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'decoupling_row_seed', 'rationale': 'Seed row reserved for decoupling capacitors.'})
+place('C2', data={'ref': 'C2', 'x_mm': 46.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'decoupling_row_seed', 'rationale': 'Seed row reserved for decoupling capacitors.'})
+place('C3', data={'ref': 'C3', 'x_mm': 49.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'decoupling_row_seed', 'rationale': 'Seed row reserved for decoupling capacitors.'})
+place('D1', data={'ref': 'D1', 'x_mm': 49.0, 'y_mm': 5.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 5.196, 'courtyard_h_mm': 5.196, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
 place('J1', data={'ref': 'J1', 'x_mm': 20.0, 'y_mm': 5.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 6.0, 'courtyard_h_mm': 6.0, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
-place('J2', data={'ref': 'J2', 'x_mm': 140.0, 'y_mm': 95.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 9.487, 'courtyard_h_mm': 9.487, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
-place('U1', data={'ref': 'U1', 'x_mm': 70.0, 'y_mm': 37.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 5.196, 'courtyard_h_mm': 5.196, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
-place('U2', data={'ref': 'U2', 'x_mm': 22.0, 'y_mm': 48.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 13.416, 'courtyard_h_mm': 13.416, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
-place('U3', data={'ref': 'U3', 'x_mm': 92.0, 'y_mm': 5.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
-place('X1', data={'ref': 'X1', 'x_mm': 110.0, 'y_mm': 10.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'grid_fallback', 'rationale': 'Deterministic grid fallback; no curated anchor for this reference.'})
+place('J2', data={'ref': 'J2', 'x_mm': 49.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 9.487, 'courtyard_h_mm': 9.487, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
+place('U1', data={'ref': 'U1', 'x_mm': 49.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 5.196, 'courtyard_h_mm': 5.196, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
+place('U2', data={'ref': 'U2', 'x_mm': 22.0, 'y_mm': 19.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 13.416, 'courtyard_h_mm': 13.416, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
+place('U3', data={'ref': 'U3', 'x_mm': 49.0, 'y_mm': 5.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 8.485, 'courtyard_h_mm': 8.485, 'source': 'curated_anchor', 'rationale': 'Hand-tuned anchor from the reference layout seed.'})
+place('X1', data={'ref': 'X1', 'x_mm': 49.0, 'y_mm': 10.0, 'rotation_deg': 0.0, 'side': 'top', 'courtyard_w_mm': 4.243, 'courtyard_h_mm': 4.243, 'source': 'grid_fallback', 'rationale': 'Deterministic grid fallback; no curated anchor for this reference.'})
 
 constraint(data={'kind': 'board_keepout', 'target_ref': None, 'params': {'width_mm': 51.0, 'height_mm': 21.0, 'edge_margin_mm': 0.127}, 'derived_from': 'mechanical.envelope + manufacturing.pcb.min_clearance_mm', 'enforced': True, 'rationale': ''})
-constraint(data={'kind': 'decoupling_proximity', 'target_ref': 'C1', 'params': {'power_nets': ['GND', 'V3V3']}, 'derived_from': 'graph decoupling component pins', 'enforced': False, 'rationale': 'Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.'})
-constraint(data={'kind': 'decoupling_proximity', 'target_ref': 'C2', 'params': {'power_nets': ['GND', 'V3V3']}, 'derived_from': 'graph decoupling component pins', 'enforced': False, 'rationale': 'Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.'})
+constraint(data={'kind': 'decoupling_proximity', 'target_ref': 'C1', 'params': {'power_nets': ['GND', 'V3V3'], 'target_ref': None, 'max_distance_mm': 12.0}, 'derived_from': 'graph decoupling component pins + decoupling_target_ref', 'enforced': False, 'rationale': 'Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.'})
+constraint(data={'kind': 'decoupling_proximity', 'target_ref': 'C2', 'params': {'power_nets': ['GND', 'V3V3'], 'target_ref': None, 'max_distance_mm': 12.0}, 'derived_from': 'graph decoupling component pins + decoupling_target_ref', 'enforced': False, 'rationale': 'Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.'})
 
 semantic_schematic = board.to_dict()

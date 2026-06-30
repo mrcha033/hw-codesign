@@ -2159,7 +2159,7 @@
       "mpn": "USBLC6-2SC6",
       "package": "SOT-23-6",
       "pcb_position_mm": [
-        74.0,
+        49.0,
         5.0
       ],
       "pins": [
@@ -2303,8 +2303,8 @@
       "mpn": "AP2112K-3.3TRG1",
       "package": "SOT-23-5",
       "pcb_position_mm": [
-        70.0,
-        37.0
+        49.0,
+        19.0
       ],
       "pins": [
         {
@@ -2474,7 +2474,7 @@
       "package": "QFN-56",
       "pcb_position_mm": [
         22.0,
-        48.0
+        19.0
       ],
       "pins": [
         {
@@ -2763,7 +2763,7 @@
       "mpn": "W25Q16JVSSIQ",
       "package": "SOIC-8",
       "pcb_position_mm": [
-        92.0,
+        49.0,
         5.0
       ],
       "pins": [
@@ -2783,10 +2783,10 @@
         },
         {
           "name": "~WP",
-          "net": "V3V3",
+          "net": "QSPI_D2",
           "number": "3",
-          "role": "power_in",
-          "voltage_domain": "V3V3"
+          "role": "bidirectional",
+          "voltage_domain": null
         },
         {
           "name": "GND",
@@ -2811,10 +2811,10 @@
         },
         {
           "name": "~HOLD",
-          "net": "V3V3",
+          "net": "QSPI_D3",
           "number": "7",
-          "role": "power_in",
-          "voltage_domain": "V3V3"
+          "role": "bidirectional",
+          "voltage_domain": null
         },
         {
           "name": "VCC",
@@ -2946,7 +2946,7 @@
       "mpn": "ABM8-12.000MHZ-B2-T",
       "package": "HC-49S-SMD",
       "pcb_position_mm": [
-        110.0,
+        49.0,
         10.0
       ],
       "pins": [
@@ -3088,8 +3088,8 @@
       "mpn": "61201021621",
       "package": "PinHeader-2x5-2.54mm",
       "pcb_position_mm": [
-        140.0,
-        95.0
+        49.0,
+        19.0
       ],
       "pins": [
         {
@@ -3286,7 +3286,7 @@
       "package": "0402",
       "pcb_position_mm": [
         24.0,
-        76.0
+        19.0
       ],
       "pins": [
         {
@@ -3419,7 +3419,7 @@
       "package": "0402",
       "pcb_position_mm": [
         46.0,
-        76.0
+        19.0
       ],
       "pins": [
         {
@@ -3551,8 +3551,8 @@
       "mpn": "GRM188R60J106ME47D",
       "package": "0603",
       "pcb_position_mm": [
-        68.0,
-        76.0
+        49.0,
+        19.0
       ],
       "pins": [
         {
@@ -3712,7 +3712,8 @@
     },
     {
       "connected_pins": [
-        "U2.2"
+        "U2.2",
+        "U3.3"
       ],
       "name": "QSPI_D2",
       "required_track_width_mm": 0.15,
@@ -3721,7 +3722,8 @@
     },
     {
       "connected_pins": [
-        "U2.1"
+        "U2.1",
+        "U3.7"
       ],
       "name": "QSPI_D3",
       "required_track_width_mm": 0.15,
@@ -3812,8 +3814,6 @@
         "U2.46",
         "U2.47",
         "U2.48",
-        "U3.3",
-        "U3.7",
         "U3.8"
       ],
       "name": "V3V3",
@@ -3859,32 +3859,40 @@
         "target_ref": null
       },
       {
-        "derived_from": "graph decoupling component pins",
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": null
         },
         "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
         "target_ref": "C1"
       },
       {
-        "derived_from": "graph decoupling component pins",
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",
         "params": {
+          "max_distance_mm": 12.0,
           "power_nets": [
             "GND",
             "V3V3"
-          ]
+          ],
+          "target_ref": null
         },
         "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
         "target_ref": "C2"
       }
     ],
+    "cost": 9.566083,
+    "cost_breakdown": {
+      "movement": 9.566083
+    },
     "placements": {
       "C1": {
         "courtyard_h_mm": 4.243,
@@ -3895,7 +3903,7 @@
         "side": "top",
         "source": "decoupling_row_seed",
         "x_mm": 24.0,
-        "y_mm": 76.0
+        "y_mm": 19.0
       },
       "C2": {
         "courtyard_h_mm": 4.243,
@@ -3906,7 +3914,7 @@
         "side": "top",
         "source": "decoupling_row_seed",
         "x_mm": 46.0,
-        "y_mm": 76.0
+        "y_mm": 19.0
       },
       "C3": {
         "courtyard_h_mm": 4.243,
@@ -3916,8 +3924,8 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "decoupling_row_seed",
-        "x_mm": 68.0,
-        "y_mm": 76.0
+        "x_mm": 49.0,
+        "y_mm": 19.0
       },
       "D1": {
         "courtyard_h_mm": 5.196,
@@ -3927,7 +3935,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 74.0,
+        "x_mm": 49.0,
         "y_mm": 5.0
       },
       "J1": {
@@ -3949,8 +3957,8 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 140.0,
-        "y_mm": 95.0
+        "x_mm": 49.0,
+        "y_mm": 19.0
       },
       "U1": {
         "courtyard_h_mm": 5.196,
@@ -3960,8 +3968,8 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 70.0,
-        "y_mm": 37.0
+        "x_mm": 49.0,
+        "y_mm": 19.0
       },
       "U2": {
         "courtyard_h_mm": 13.416,
@@ -3972,7 +3980,7 @@
         "side": "top",
         "source": "curated_anchor",
         "x_mm": 22.0,
-        "y_mm": 48.0
+        "y_mm": 19.0
       },
       "U3": {
         "courtyard_h_mm": 8.485,
@@ -3982,7 +3990,7 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "curated_anchor",
-        "x_mm": 92.0,
+        "x_mm": 49.0,
         "y_mm": 5.0
       },
       "X1": {
@@ -3993,9 +4001,14 @@
         "rotation_deg": 0.0,
         "side": "top",
         "source": "grid_fallback",
-        "x_mm": 110.0,
+        "x_mm": 49.0,
         "y_mm": 10.0
       }
+    },
+    "solver": {
+      "authoritative": false,
+      "iterations": 9,
+      "method": "deterministic_constraint_cost_search"
     }
   },
   "provenance": {

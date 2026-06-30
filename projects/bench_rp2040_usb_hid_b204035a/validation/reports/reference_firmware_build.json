@@ -1,0 +1,24 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/reference/build/bringup_tests"
+  ],
+  "backend": {
+    "name": "reference-host-bsp",
+    "returncode": 1,
+    "stderr": "CMake Error: The source directory \"/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/reference\" does not appear to contain CMakeLists.txt.\nSpecify --help for usage, or press the help button on the CMake GUI.\n"
+  },
+  "failures": [
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "build_failure",
+      "details": {},
+      "message": "CMake Error: The source directory \"/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/reference\" does not appear to contain CMakeLists.txt.\nSpecify --help for usage, or press the help button on the CMake GUI.\n",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "reference_firmware_build",
+  "metrics": {},
+  "status": "fail"
+}

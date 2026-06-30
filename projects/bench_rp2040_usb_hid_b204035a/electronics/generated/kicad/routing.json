@@ -3,7 +3,7 @@
     {
       "endpoint_mm": [
         24.0,
-        50.0
+        21.0
       ],
       "net": "GND",
       "reason": "no_clear_single_layer_path"

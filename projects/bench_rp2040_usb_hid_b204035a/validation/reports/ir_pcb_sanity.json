@@ -1,0 +1,57 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/electronics/generated/kicad/bench_rp2040_usb_hid_b204035a.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_clearance",
+      "details": {},
+      "message": "Manufacturing clearance is below the supported profile",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "routing_failed",
+      "details": {
+        "endpoint_mm": [
+          24.0,
+          21.0
+        ],
+        "net": "GND",
+        "reason": "no_clear_single_layer_path"
+      },
+      "message": "Router could not connect GND",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "routing_incomplete",
+      "details": {
+        "nets": 13,
+        "routing_status": "fail",
+        "segments": 0
+      },
+      "message": "PCB signal routing is deferred or incomplete",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "footprints": 10,
+    "layers": 2,
+    "pads": 56,
+    "segments": 0
+  },
+  "status": "fail"
+}

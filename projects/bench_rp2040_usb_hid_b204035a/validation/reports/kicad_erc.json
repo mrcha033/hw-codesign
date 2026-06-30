@@ -1,0 +1,187 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-30T10:24:05",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/88910779-0556-5ee0-bd87-5866982d5e43",
+            "violations": [
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol C1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.2159
+                            },
+                            "uuid": "856d1f3e-3122-5133-8459-8e1dedf06fd3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol C2 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.2921
+                            },
+                            "uuid": "4b6afd31-fed0-5ade-adc3-a517bc818d89"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol C3 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.3683
+                            },
+                            "uuid": "ea3b1d72-8954-5c2d-877f-8ddab3aacfd0"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol D1 [Conn_01x03]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.4699
+                            },
+                            "uuid": "edceeb18-c7a8-5384-8bce-07fde515a342"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol J1 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.5715
+                            },
+                            "uuid": "b38e5d38-3ae1-5a39-a09a-2d4320fb6473"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol J2 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.6985
+                            },
+                            "uuid": "34ad4727-eede-5719-a237-02af90badb5a"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol U2 [Conn_01x14]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.9525
+                            },
+                            "uuid": "78961f7e-ea7c-5281-809d-bb146b5928e3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [Conn_01x08]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.2573
+                            },
+                            "uuid": "405d2a5b-7a63-5c29-b125-2e41f301c794"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol X1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.4097
+                            },
+                            "uuid": "78d91cbb-327f-56a7-9c5c-61c9792e4d88"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library ''",
+                    "items": [
+                        {
+                            "description": "Symbol U1 [Conn_01x03]",
+                            "pos": {
+                                "x": 2.8194,
+                                "y": 1.0541
+                            },
+                            "uuid": "faffd055-5cbc-5b93-89c1-91a17e6de51c"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                }
+            ]
+        }
+    ],
+    "source": "bench_rp2040_usb_hid_b204035a.kicad_sch"
+}

@@ -1,0 +1,192 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'motor_channel_peak_current_a' is a required property",
+      "path": "actuation",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "[{'id': 'ASM-01', 'text': 'External QSPI flash required \u2014 RP2040 has no on-chip flash', 'rationale': 'RP2040 XIP (execute-in-place) boots from external SPI flash via QSPI; W25Q16JV selected for 2MB capacity'}, {'id': 'ASM-02', 'text': 'USB-C connector bus-powers the board at 5V; AP2112K LDO provides 3.3V', 'rationale': 'RP2040 core voltage 1.1V generated internally via VREG; only 3.3V IO rail needs external LDO'}, {'id': 'ASM-03', 'text': '12MHz crystal optional \u2014 RP2040 ROSC can run USB PLL; crystal improves frequency accuracy', 'rationale': 'RP2040 USB PLL can lock to 48MHz from ROSC, but USB spec requires \u00b12500ppm; crystal locks within \u00b120ppm'}, {'id': 'ASM-04', 'text': 'PIO state machines can implement additional protocols (WS2812, UART, SPI, I2S) in firmware', 'rationale': 'RP2040 has two PIO blocks with 8 state machines; eliminates need for external protocol ICs'}] is not of type 'object'",
+      "path": "assumptions",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'framework' is a required property",
+      "path": "firmware",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'target' is a required property",
+      "path": "firmware",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'exports' is a required property",
+      "path": "manufacturing",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'mounting_holes' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'connector_interfaces' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'revision' is a required property",
+      "path": "project",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'target_use' is a required property",
+      "path": "project",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'emergency_stop' is a required property",
+      "path": "safety",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'required_protections' is a required property",
+      "path": "safety",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'imu' is a required property",
+      "path": "sensing",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'e_stop' is a required property",
+      "path": "sensing",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "schema_violation",
+      "details": {},
+      "message": "'supply' is a required property",
+      "path": "system",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "mechanical_schema_violation",
+      "details": {},
+      "message": "'mounting_holes' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "mechanical_schema_violation",
+      "details": {},
+      "message": "'connector_interfaces' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "mechanical_schema_violation",
+      "details": {},
+      "message": "'insertion_clearance_mm' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "mechanical_schema_violation",
+      "details": {},
+      "message": "'assembly_clearance_mm' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "mechanical_schema_violation",
+      "details": {},
+      "message": "'tolerance_mm' is a required property",
+      "path": "mechanical",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "SPEC_ERROR",
+      "code": "requirements_schema_violation",
+      "details": {},
+      "message": "Additional properties are not allowed ('performance', 'reliability' were unexpected)",
+      "path": "requirements",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "spec_schema",
+  "metrics": {
+    "errors": 20,
+    "warnings": 0
+  },
+  "status": "fail"
+}
