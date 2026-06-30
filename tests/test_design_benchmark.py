@@ -230,3 +230,27 @@ def test_run_design_benchmark_gate_counts_per_spec(service: HardwareService):
             assert "gates_failed_count" in spec_result
             assert spec_result["gates_passed_count"] >= 0
             assert spec_result["gates_failed_count"] >= 0
+
+
+def test_run_design_benchmark_tracks_physical_qualification_gaps(service: HardwareService):
+    result = service.run_design_benchmark(include_external=False)
+    summary = result["summary"]
+
+    assert summary["physical_qualification_required_tests"] >= len(_BENCHMARK_SPECS)
+    assert summary["physical_qualification_missing_or_unapproved"] >= len(_BENCHMARK_SPECS)
+    assert summary["physical_qualification_ready"] == 0
+    assert summary["physical_qualification_ready_rate"] == 0.0
+    assert summary["physical_qualification_gap_categories"]
+
+
+def test_run_design_benchmark_physical_summary_per_spec(service: HardwareService):
+    result = service.run_design_benchmark(include_external=False)
+    for spec_result in result["specs"]:
+        if spec_result["status"] == "error":
+            continue
+        physical = spec_result["physical_qualification_summary"]
+        assert physical["status"] == "blocked"
+        assert physical["required_tests"] > 0
+        assert physical["missing_or_unapproved"] > 0
+        assert "gate" in physical
+        assert physical["gate"]["gate"] == "physical_qualification"

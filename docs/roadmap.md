@@ -55,8 +55,9 @@ tiers only as they earn it against physical measurement.
 
 - **Benchmark harness (`hw_run_design_benchmark`).** A held-out set of N reference specs
   (one-line intents) with known-good gate outcomes. Score: full-gate pass-rate, iteration
-  count to release, native-ERC/DRC pass-rate, regression deltas between commits. Wire into
-  CI as a tracked metric, not a blocking gate (toolchain-gated).
+  count to release, native-ERC/DRC pass-rate, physical-qualification gap categories, and
+  regression deltas between commits. Wire into CI as a tracked metric, not a blocking gate
+  (toolchain-gated).
 - **Expand the grounding benchmark into a verifier/critic loop.** Today
   `run_grounding_benchmark` injects defects and confirms gates catch them. Add an
   independent critic pass over agent-authored candidates (adversarial review of the design,

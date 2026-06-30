@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from ._schemas import SHARED_SCHEMAS, ref  # noqa: F401 — ref imported for callers
+from ._schemas import SHARED_SCHEMAS, enveloped, ref  # noqa: F401 — ref imported for callers
 
 
 @dataclass(frozen=True)
@@ -20,7 +20,7 @@ class ToolDef:
             "name": self.name,
             "description": self.description,
             "input_schema": self.input_schema,
-            "output_schema": self.output_schema,
+            "output_schema": enveloped(self.output_schema),
             "execution_mode": self.execution_mode,
         }
 
@@ -599,11 +599,11 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         description=(
             "Run the deterministic hardware-grounding benchmark against generated artifacts. "
             "Injects in-memory wrong pinout, wrong footprint, missing or miswired support circuit, bad power budget, "
-            "unreachable power rail, regulator voltage-order violation, missing I2C pull-up, missing CAN termination, "
+            "unreachable power rail, regulator voltage-order violation, missing rail decoupling, missing I2C pull-up, missing CAN termination, "
             "missing USB ESD bridge, misplaced USB ESD placement, hot-block placement near sensitive logic, "
-            "misplaced RF antenna/keepout, under-rated connector current, missing critical-role sourcing resilience, "
+            "misplaced RF antenna/keepout, under-rated connector current, connector cutout misalignment, mounting keepout intrusion, missing critical-role sourcing resilience, missing curated alternate integrity, "
             "unavailable part, invalid net endpoint, component pin/net mismatch, firmware pinmap mismatch, "
-            "missing e-stop shutdown behavior, missing firmware interface bring-up, and dependency-graph "
+            "missing motor PWM channel coverage, missing e-stop shutdown behavior, missing firmware interface bring-up, and dependency-graph "
             "violations, then verifies the gates catch "
             "each plausible-but-wrong candidate."
         ),
@@ -1256,6 +1256,8 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
             "Run the held-out design benchmark: for each reference spec in the built-in suite, "
             "create a project, lower a one-line intent via hw_update_requirements, then run "
             "design_until_release. Reports pass_rate, mean_iterations, and per-spec gate outcomes. "
+            "Also reports physical qualification gaps so software-gate readiness is not confused "
+            "with bench-qualified release evidence. "
             "Use this to measure platform regression after every non-trivial change. "
             "include_external=False by default (CI-safe); set True only when native toolchain is present. "
             "Temporary projects are deleted after the run unless keep_projects=True."

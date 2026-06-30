@@ -158,6 +158,48 @@ def test_sourcing_resilience_rejects_unjustified_critical_roles(service, project
     assert "critical_role_resilience_missing" in {failure.code for failure in report.failures}
 
 
+def test_sourcing_resilience_rejects_missing_curated_alternate(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = yaml.safe_load((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    role_data = read_yaml(service.parts_root / "role_sets" / "robotics_controller.yaml")
+    role_data.setdefault("alternatives", {})["mcu"] = [{
+        "component_id": "missing_release_mcu_alt",
+        "resolution": "curated",
+        "compatibility": {"pin_numbers": "exact", "footprint": "exact"},
+    }]
+
+    report = service._sourcing_resilience_report(service.read_spec(project), graph, role_data_override=role_data)
+
+    assert report.status == "fail"
+    assert "critical_alternate_component_missing" in {failure.code for failure in report.failures}
+
+
+def test_sourcing_resilience_rejects_unavailable_curated_alternate(service, project, monkeypatch):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = yaml.safe_load((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    role_data = read_yaml(service.parts_root / "role_sets" / "robotics_controller.yaml")
+    role_data.setdefault("alternatives", {})["mcu"] = [{
+        "component_id": "rc0603_10k",
+        "resolution": "curated",
+        "compatibility": {"pin_numbers": "exact", "footprint": "exact"},
+    }]
+    supplier_records = service._design_space_supplier_records(service.read_spec(project)["sourcing"]["provider"])
+    supplier_records["rc0603_10k"] = {
+        "component_id": "rc0603_10k",
+        "availability": "discontinued",
+        "supplier_sku": "RC0603FR-0710KL",
+        "observed_at": "2026-06-21T00:00:00Z",
+    }
+    monkeypatch.setattr(service, "_design_space_supplier_records", lambda provider: supplier_records)
+
+    report = service._sourcing_resilience_report(service.read_spec(project), graph, role_data_override=role_data)
+
+    assert report.status == "fail"
+    assert "critical_alternate_supplier_unavailable" in {failure.code for failure in report.failures}
+
+
 def test_project_role_override_selects_curated_alternative(service, project):
     spec_path = service.workspace.require_project(project) / "spec" / "system.yaml"
     system = read_yaml(spec_path)
@@ -245,6 +287,32 @@ def test_stale_observed_at_blocks_availability(tmp_path):
     report = resolver.supplier_availability_report
     assert report.status.value == "blocked"
     stale = [f for f in report.failures if f.code == "supplier_evidence_stale"]
+    assert stale
+    assert stale[0].details["observed_at"] == "2020-01-01T00:00:00Z"
+    assert stale[0].details["max_age_days"] == 90
+
+
+def test_sourcing_validator_rejects_stale_claimed_available_offer(service):
+    report = service.validator.check_sourcing([
+        {
+            "ref": "U1",
+            "lifecycle": "active",
+            "manufacturer": "Example",
+            "sourcing": {"status": "resolved", "supplier_skus": ["STALE-BENCHMARK-SKU"]},
+            "supplier_offer": {
+                "provider": "digikey",
+                "component_id": "example",
+                "sku": "STALE-BENCHMARK-SKU",
+                "availability": "available",
+                "stock": 100,
+                "observed_at": "2020-01-01T00:00:00Z",
+            },
+            "pins": [{"number": "1", "name": "IO", "net": "N1"}],
+        }
+    ])
+
+    assert report.status.value == "fail"
+    stale = [failure for failure in report.failures if failure.code == "supplier_evidence_stale"]
     assert stale
     assert stale[0].details["observed_at"] == "2020-01-01T00:00:00Z"
     assert stale[0].details["max_age_days"] == 90

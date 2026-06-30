@@ -31,6 +31,9 @@ def test_update_requirements_persists_unlowered_constraints(service, project):
     assert unresolved, "Unresolved constraints must be persisted to spec/requirements.yaml"
     assert all(item["release_blocking"] for item in unresolved)
     assert all(item["status"] == "unresolved" for item in unresolved)
+    assert all(item["required_human_approvals"] for item in unresolved)
+    assert all(item["affected_gates"] for item in unresolved)
+    assert spec["requirements"]["compiler_ir"]["input_id"] == "req_input_0001"
 
 
 def test_requirements_lowering_gate_blocks_release(service, project):

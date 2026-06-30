@@ -39,10 +39,9 @@ def test_python_netlist_compile_and_parity_gates_pass(service, project):
     reports = {item["gate"]: item for item in checks["reports"]}
     for stage in ("compile", "netlist_extract", "graph_parity", "footprint_parity"):
         assert reports[f"python_netlist_{stage}"]["status"] == "pass"
-    # layout_completeness fails when kicad tools available (placed but unrouted) or blocked when not
-    assert reports["python_netlist_layout_completeness"]["status"] in ("fail", "blocked")
-    # manufacturing_export passes when kicad tools available, blocked when not
-    assert reports["python_netlist_manufacturing_export"]["status"] in ("pass", "blocked")
+    # Layout and manufacturing are not applicable to the netlist release tier.
+    assert reports["python_netlist_layout_completeness"]["status"] == "blocked"
+    assert reports["python_netlist_manufacturing_export"]["status"] == "blocked"
 
 
 def test_missing_kicad_tool_blocks_every_contract_gate(service, project, monkeypatch):
@@ -153,11 +152,35 @@ def test_python_netlist_backend_is_release_eligible(service, project):
     source = service.workspace.require_project(project) / "electronics" / "source" / "python_netlist"
     manifest = json.loads((source / "source_manifest.json").read_text(encoding="utf-8"))
     assert manifest["backend_release_capable"] is True
-    assert manifest["release_tier"] == "fabrication"
-    # layout/manufacturing gates are not release-blocking (layout fails honestly, manufacturing passes when KiCad available)
+    assert manifest["release_tier"] == "netlist"
+    assert manifest["fabrication_release_eligible"] is False
+    # layout/manufacturing gates are not release-blocking because this is a netlist tier.
     blocking = set(manifest["release_blocking_gates"])
     assert "python_netlist_layout_completeness" not in blocking
     assert "python_netlist_manufacturing_export" not in blocking
+
+
+def test_python_netlist_release_gate_requires_netlist_not_fabrication(service, project):
+    _set_backend(service, project, "python_netlist")
+    service.generate_all(project)
+    checks = service.run_all_checks(project, include_external=False)
+    gate = service.check_release_gate(project, [service._report_from_dict(item) for item in checks["reports"]])
+    missing_paths = {failure["path"] for failure in gate["failures"] if failure["code"] == "missing_export"}
+
+    assert any(path.endswith("netlist/compiled_netlist.json") for path in missing_paths)
+    assert not any(path.endswith("fabrication/gerbers.zip") for path in missing_paths)
+    assert not any(path.endswith("fabrication/pick_and_place.csv") for path in missing_paths)
+
+
+def test_atopile_release_gate_requires_source_not_fabrication(service, project):
+    _set_backend(service, project, "atopile")
+    service.generate_all(project)
+    checks = service.run_all_checks(project, include_external=False)
+    gate = service.check_release_gate(project, [service._report_from_dict(item) for item in checks["reports"]])
+    missing_paths = {failure["path"] for failure in gate["failures"] if failure["code"] == "missing_export"}
+
+    assert any(path.endswith("source/atopile/design.ato") for path in missing_paths)
+    assert not any(path.endswith("fabrication/atopile_source/design.ato") for path in missing_paths)
 
 
 def test_kicad_netlist_parser_extracts_graph_and_footprints(tmp_path):

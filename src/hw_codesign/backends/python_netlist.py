@@ -79,7 +79,8 @@ class PythonNetlistBackend(ElectronicsBackendAdapter):
             "backend": self.name,
             "backend_release_capable": True,
             "source_release_eligible": True,
-            "release_tier": "fabrication",
+            "release_tier": "netlist",
+            "fabrication_release_eligible": False,
             "sources": self.source_entries(target, [source]),
             "contract_gates": list(self.gate_names),
             "release_blocking_gates": [
@@ -112,28 +113,29 @@ class PythonNetlistBackend(ElectronicsBackendAdapter):
         for component in graph.get("components", []):
             if compiled.get("footprints", {}).get(component["ref"]) != component.get("footprint_metadata", {}):
                 footprint_failures.append(Failure(FailureCategory.EDA_ERROR, "footprint_parity_mismatch", f"Footprint metadata differs for {component['ref']}"))
-        fab_dir = project / "exports" / "candidates" / "backend-validation" / self.name
-        fab_reports = self._fabrication_gates(project, compiled, fab_dir)
         return self.complete_contract([
             GateReport(f"{self.name}_compile", Status.PASS, artifacts=[str(output)], backend=backend),
             GateReport(f"{self.name}_netlist_extract", Status.PASS, artifacts=[str(output)], backend=backend),
             GateReport(f"{self.name}_graph_parity", Status.FAIL if parity_failures else Status.PASS, parity_failures, backend=backend),
             GateReport(f"{self.name}_footprint_parity", Status.FAIL if footprint_failures else Status.PASS, footprint_failures, backend=backend),
-            *fab_reports,
+            *self._netlist_tier_nonfabrication_gates(),
         ])
 
     def export_manufacturing(self, project: Path, release: Path) -> GateReport:
-        """Generate fabrication artifacts into release directory, for use in prepare_release."""
-        compiled_path = project / "electronics" / "source" / self.name / "compiled_netlist.json"
-        if not compiled_path.is_file():
-            return GateReport(
-                f"{self.name}_manufacturing_export",
-                Status.BLOCKED,
-                [Failure(FailureCategory.EDA_ERROR, "compiled_netlist_missing", "Run evaluate with python_netlist backend first")],
-                backend={"name": self.name},
-            )
-        compiled = json.loads(compiled_path.read_text(encoding="utf-8"))
-        return self._fabrication_gates(project, compiled, release, gate_name=f"{self.name}_manufacturing_export")[1]
+        """Return the manufacturing gate for callers that mistakenly ask this tier for Gerbers."""
+        return self._netlist_tier_nonfabrication_gates()[1]
+
+    def _netlist_tier_nonfabrication_gates(self) -> list[GateReport]:
+        blocked = Failure(
+            FailureCategory.EDA_ERROR,
+            "not_applicable_to_netlist_tier",
+            "python_netlist is a netlist-tier backend; PCB layout and manufacturing export require tscircuit or native KiCad",
+        )
+        backend = {"name": self.name, "release_tier": "netlist", "fabrication_release_eligible": False}
+        return [
+            GateReport(f"{self.name}_layout_completeness", Status.BLOCKED, [blocked], metrics={"release_tier": "netlist"}, backend=backend),
+            GateReport(f"{self.name}_manufacturing_export", Status.BLOCKED, [blocked], metrics={"release_tier": "netlist"}, backend=backend),
+        ]
 
     def _fabrication_gates(self, project: Path, compiled: dict[str, Any], fab_dir: Path, *, gate_name: str | None = None) -> list[GateReport]:
         """Return [layout_completeness, manufacturing_export] gate reports."""
@@ -225,4 +227,11 @@ class PythonNetlistBackend(ElectronicsBackendAdapter):
         artifacts = [str(fab / "gerbers.zip"), str(fab / "pick_and_place.csv"), str(fab / "bom.csv")]
         if drills:
             artifacts.append(str(fab / "drill.zip"))
-        return GateReport(gate_name, Status.PASS, [], artifacts=artifacts, metrics={"gerber_files": len(gerbers), "drill_files": len(drills), "release_tier": "fabrication"}, backend={"name": self.name, "kicad_cli": True, "pcbnew": True})
+        return GateReport(
+            gate_name,
+            Status.PASS,
+            [],
+            artifacts=artifacts,
+            metrics={"gerber_files": len(gerbers), "drill_files": len(drills), "artifact_tier": "fabrication_candidate", "release_tier": "netlist"},
+            backend={"name": self.name, "kicad_cli": True, "pcbnew": True, "fabrication_release_eligible": False},
+        )

@@ -43,6 +43,77 @@ def test_high_vibration_exposed_connectors_require_retention_fixture(service, pr
     assert {item.code for item in report.failures} == {"connector_retention_missing"}
 
 
+def test_mechanical_connector_cutouts_pass_generated_template(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_mechanical_connector_cutouts(service.read_spec(project), graph)
+
+    assert report.status == "pass"
+    assert report.metrics["required"] is True
+    assert "J1" in report.metrics["interface_refs"]
+
+
+def test_mechanical_connector_cutouts_reject_edge_misalignment(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    spec = service.read_spec(project)
+    bad_graph = deepcopy(graph)
+    connector = next(component for component in bad_graph["components"] if component["ref"] == "J1")
+    envelope = spec["mechanical"]["envelope"]
+    connector["pcb_position_mm"] = [
+        envelope["board_width_mm"] / 2.0,
+        envelope["board_height_mm"] / 2.0,
+    ]
+
+    report = service.validator.check_mechanical_connector_cutouts(spec, bad_graph)
+
+    assert report.status == "fail"
+    assert "connector_cutout_alignment_failed" in {item.code for item in report.failures}
+
+
+def test_mechanical_mounting_integrity_passes_generated_template(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_mechanical_mounting_integrity(service.read_spec(project), graph)
+
+    assert report.status == "pass"
+    assert report.metrics["holes_checked"] >= 3
+
+
+def test_mechanical_mounting_integrity_rejects_component_on_hole(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    spec = service.read_spec(project)
+    bad_graph = deepcopy(graph)
+    target = next(component for component in bad_graph["components"] if not component["ref"].startswith("J"))
+    hole = spec["mechanical"]["mounting_holes"][0]
+    target["pcb_position_mm"] = [hole["x_mm"], hole["y_mm"]]
+
+    report = service.validator.check_mechanical_mounting_integrity(spec, bad_graph)
+
+    assert report.status == "fail"
+    assert "mounting_hole_component_keepout_intrusion" in {item.code for item in report.failures}
+
+
+def test_mechanical_mounting_integrity_rejects_hole_edge_violation(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    spec = deepcopy(service.read_spec(project))
+    spec["mechanical"]["mounting_holes"][0]["x_mm"] = 0.2
+
+    report = service.validator.check_mechanical_mounting_integrity(spec, graph)
+
+    assert report.status == "fail"
+    assert "mounting_hole_edge_clearance_failed" in {item.code for item in report.failures}
+
+
 def test_pin_conflicts_and_net_mismatches_are_reported(service):
     report = service.validator.check_pinmap([
         {"signal": "I2C_SCL", "mcu_pin": "GPIO9", "net_name": "I2C_SCL"},
@@ -60,6 +131,36 @@ def test_release_rejects_unresolved_assumptions_and_missing_exports(service, pro
     assert release["status"] == "blocked"
     assert "unresolved_critical_assumption" in codes
     assert "missing_export" in codes
+
+
+def test_candidate_critic_records_physical_and_native_gaps_without_blocking(service, project):
+    service.generate_all(project)
+    checks = service.run_all_checks(project, include_external=False)
+    report = next(item for item in checks["reports"] if item["gate"] == "candidate_critic")
+
+    assert report["status"] == "pass"
+    assert report["metrics"]["critic_version"] == "candidate_critic_v0"
+    assert report["metrics"]["warnings"] >= 2
+    assert report["metrics"]["errors"] == 0
+    codes = {failure["code"] for failure in report["failures"]}
+    assert {"physical_oracle_gap_open", "native_toolchain_gates_not_run"} <= codes
+
+
+def test_candidate_critic_fails_false_release_eligibility_claim(service, project):
+    service.generate_all(project)
+    path = service.workspace.require_project(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    graph["provenance"]["release_eligible"] = True
+    report = service._candidate_critic_report(
+        path,
+        service.read_spec(project),
+        graph,
+        [service.validator.validate_spec(service.read_spec(project))],
+        include_external=False,
+    )
+
+    assert report.status == "fail"
+    assert "candidate_graph_claims_release_eligible" in {failure.code for failure in report.failures}
 
 
 def test_bom_requires_approved_mpns(service):
@@ -146,6 +247,30 @@ def test_power_tree_integrity_rejects_regulator_voltage_inversion(service, proje
     assert "power_output_exceeds_input_voltage" in {item.code for item in report.failures}
 
 
+def test_power_integrity_estimate_passes_generated_graph(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_power_integrity_estimate(graph, service.read_spec(project))
+
+    assert report.status == "pass"
+    assert report.metrics["rails_checked"] > 0
+    assert "V3V3" in report.metrics["coverage"]
+
+
+def test_power_integrity_estimate_rejects_missing_decoupling(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    graph["components"] = [component for component in graph["components"] if component.get("category") != "decoupling"]
+
+    report = service.validator.check_power_integrity_estimate(graph, service.read_spec(project))
+
+    assert report.status == "fail"
+    assert "rail_decoupling_missing" in {item.code for item in report.failures}
+
+
 def test_interface_integrity_passes_generated_robotics_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)
@@ -230,6 +355,20 @@ def test_firmware_interface_contract_rejects_missing_can_bringup(service, projec
     assert "firmware_can_bringup_missing" in {item.code for item in report.failures}
 
 
+def test_firmware_interface_contract_rejects_missing_motor_pwm_channel(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    pinmap = [item for item in pinmap if item.get("signal") != "MOTOR12_PWM"]
+
+    report = service._firmware_interface_contract_report(project_path, service.read_spec(project), graph, pinmap)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "firmware_motor_pwm_channel_missing")
+    assert failure.details["missing_channels"] == [12]
+
+
 def test_firmware_modules_pass_generated_estop_shutdown_behavior(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)
@@ -242,6 +381,32 @@ def test_firmware_modules_pass_generated_estop_shutdown_behavior(service, projec
     assert report.status == "pass"
     assert "estop_motor_shutdown" in report.metrics["required_behaviors"]
     assert (project_path / "firmware" / "modules" / "motor_estop_watchdog.c").is_file()
+
+
+def test_hw_sw_parity_rejects_wrong_mcu_pin_name(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    pinmap[0]["mcu_pin"] = "__WRONG_MCU_PIN__"
+
+    report = service.validator.check_hw_sw_parity(graph, pinmap)
+
+    assert report.status == "fail"
+    assert "firmware_mcu_pin_mismatch" in {item.code for item in report.failures}
+
+
+def test_hw_sw_parity_rejects_graph_pin_net_mismatch(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    pinmap[0]["graph_pin"] = pinmap[1]["graph_pin"]
+
+    report = service.validator.check_hw_sw_parity(graph, pinmap)
+
+    assert report.status == "fail"
+    assert "firmware_graph_pin_net_mismatch" in {item.code for item in report.failures}
 
 
 def test_firmware_modules_reject_missing_estop_shutdown_behavior(service, project):
@@ -268,3 +433,41 @@ def test_firmware_modules_reject_estop_shutdown_without_motor_disable(service, p
 
     assert report.status == "fail"
     assert "unsafe_estop_shutdown_action" in {item.code for item in report.failures}
+
+
+def test_firmware_sensor_poll_rejects_missing_hardware_bus(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    module = {
+        "id": "phantom_spi_sensor",
+        "behavior": "sensor_poll",
+        "bus": "spi",
+        "sensor": "imu",
+        "poll_interval_ms": 100,
+    }
+
+    report = service.validator.check_firmware_modules([module], pinmap, spec=service.read_spec(project), graph=graph)
+
+    assert report.status == "fail"
+    assert "firmware_sensor_bus_missing" in {item.code for item in report.failures}
+
+
+def test_firmware_sensor_poll_rejects_unresolved_sensor_target(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    module = {
+        "id": "phantom_i2c_sensor",
+        "behavior": "sensor_poll",
+        "bus": "i2c",
+        "sensor": "unobtanium_gas_sensor",
+        "poll_interval_ms": 100,
+    }
+
+    report = service.validator.check_firmware_modules([module], pinmap, spec=service.read_spec(project), graph=graph)
+
+    assert report.status == "fail"
+    assert "firmware_sensor_target_missing" in {item.code for item in report.failures}

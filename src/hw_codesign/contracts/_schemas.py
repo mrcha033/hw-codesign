@@ -8,6 +8,7 @@ URN scheme: urn:hw-codesign:contracts:{name}
 """
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 _BASE = "urn:hw-codesign:contracts:"
@@ -81,11 +82,42 @@ _ITERATION_SUMMARY: dict[str, Any] = {
     },
 }
 
+_ENVELOPE_PROPERTIES: dict[str, Any] = {
+    "release_eligible": {
+        "type": "boolean",
+        "description": "True only when the tool result authoritatively permits release promotion.",
+    },
+    "candidate_only": {
+        "type": "boolean",
+        "description": "True when the result is a candidate artifact or otherwise not release-approved.",
+    },
+    "release_blocking_failures": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "Known blockers that prevent release; empty only when no blockers are known.",
+    },
+}
+_ENVELOPE_REQUIRED = ["release_eligible", "candidate_only", "release_blocking_failures"]
+
 # ---------------------------------------------------------------------------
 # Top-level shared schemas (each has a stable $id)
 # ---------------------------------------------------------------------------
 
 SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
+
+    # -------------------------------------------------------------------
+    # mcp_response_envelope — required on every public MCP tool response
+    # -------------------------------------------------------------------
+    "mcp_response_envelope": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": _id("mcp_response_envelope"),
+        "title": "MCPResponseEnvelope",
+        "description": "Stable top-level release-safety envelope present on every MCP tool response.",
+        "type": "object",
+        "required": list(_ENVELOPE_REQUIRED),
+        "additionalProperties": True,
+        "properties": deepcopy(_ENVELOPE_PROPERTIES),
+    },
 
     # -------------------------------------------------------------------
     # gate_report — single gate check result (GateReport.to_dict())
@@ -497,6 +529,15 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
                     "mean_iterations":            {"type": "number"},
                     "software_gate_pass_rate":    {"type": "number",
                                                    "description": "Mean fraction of non-external gates that pass; CI-measurable without native toolchain"},
+                    "physical_qualification_ready": {"type": "integer",
+                                                     "description": "Specs with approved passing evidence for every required physical qualification test"},
+                    "physical_qualification_ready_rate": {"type": "number",
+                                                          "description": "Fraction of specs whose physical qualification gate passes"},
+                    "physical_qualification_required_tests": {"type": "integer"},
+                    "physical_qualification_approved_passed": {"type": "integer"},
+                    "physical_qualification_missing_or_unapproved": {"type": "integer"},
+                    "physical_qualification_failed": {"type": "integer"},
+                    "physical_qualification_gap_categories": {"type": "array", "items": {"type": "string"}},
                 },
             },
             "specs": {
@@ -513,6 +554,20 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
                         "iterations":               {"type": "integer"},
                         "gate_summary":             {"type": "object", "additionalProperties": True},
                         "software_gate_pass_rate":  {"type": "number"},
+                        "native_gate_pass_rate":    {"type": "number"},
+                        "physical_qualification_summary": {
+                            "type": "object",
+                            "additionalProperties": True,
+                            "properties": {
+                                "status": {"type": "string"},
+                                "required_tests": {"type": "integer"},
+                                "approved_passed": {"type": "integer"},
+                                "missing_or_unapproved": {"type": "integer"},
+                                "failed": {"type": "integer"},
+                                "gap_categories": {"type": "array", "items": {"type": "string"}},
+                                "gate": {"$ref": _id("gate_report")},
+                            },
+                        },
                         "error":                    {"type": "string"},
                     },
                 },
@@ -1104,3 +1159,29 @@ def ref(name: str) -> dict[str, Any]:
     if name not in SHARED_SCHEMAS:
         raise KeyError(f"Unknown shared schema: {name!r}. Available: {sorted(SHARED_SCHEMAS)}")
     return {"$ref": _id(name)}
+
+
+def enveloped(schema: dict[str, Any]) -> dict[str, Any]:
+    """Return a public MCP output schema with the release-safety envelope at top level.
+
+    Inline strict schemas get the envelope properties merged in so
+    additionalProperties=false remains usable. Shared-schema refs are composed
+    with mcp_response_envelope because the shared result schemas are open
+    objects by contract.
+    """
+    copied = deepcopy(schema)
+    if copied.get("$ref"):
+        return {"allOf": [ref("mcp_response_envelope"), copied]}
+    if "oneOf" in copied:
+        branches = [enveloped(item) for item in copied.pop("oneOf")]
+        required = list(dict.fromkeys([*copied.get("required", []), *_ENVELOPE_REQUIRED]))
+        properties = {**deepcopy(_ENVELOPE_PROPERTIES), **copied.get("properties", {})}
+        copied.update({"type": "object", "required": required, "properties": properties, "oneOf": branches})
+        return copied
+    if copied.get("type") == "object" or "properties" in copied:
+        required = list(dict.fromkeys([*copied.get("required", []), *_ENVELOPE_REQUIRED]))
+        properties = {**deepcopy(_ENVELOPE_PROPERTIES), **copied.get("properties", {})}
+        copied["required"] = required
+        copied["properties"] = properties
+        return copied
+    return {"allOf": [ref("mcp_response_envelope"), copied]}

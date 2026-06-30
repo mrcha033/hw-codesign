@@ -45,12 +45,12 @@ Three release tiers are defined:
 
 - **Fabrication** (`tscircuit`, `kicad`): Gerber + drill + STEP + BOM.
   All six contract gates must pass, including layout and manufacturing export.
-- **Netlist** (`python_netlist`): `compiled_netlist.json` + firmware.
+- **Netlist** (`python_netlist`): `netlist/compiled_netlist.json` + firmware.
   Compile, netlist_extract, graph_parity, and footprint_parity must pass;
   layout_completeness and manufacturing_export are N/A for this tier.
-- **HDL source** (`atopile`): `.ato` source + project metadata. Compile,
-  netlist_extract, and graph_parity must pass; footprint, layout, and
-  manufacturing export are not fabrication evidence at this tier.
+- **HDL source** (`atopile`): `source/atopile/design.ato` + project metadata.
+  Compile, netlist_extract, and graph_parity must pass; footprint, layout,
+  and manufacturing export are not fabrication evidence at this tier.
 - **Candidate-only** (`reference`): no release path exists. This backend cannot
   become release-eligible through a manual status override.
 
@@ -110,13 +110,15 @@ placement, and backend gates depend on this gate through
 `hw_run_grounding_benchmark` is an adversarial digital benchmark over generated
 artifacts. It mutates in-memory copies of the electrical graph, pin/footprint
 contracts, support-role resolution and wiring, component pin/net consistency,
-power budget, power-tree reachability, regulator voltage ordering, bus-interface
-support subgraphs, layout/thermal precheck risks, connector current assumptions,
-sourcing metadata and critical-role resilience, high-vibration connector
-retention contracts, USB ESD placement, RF
-antenna/keepout placement, firmware pinmap, firmware e-stop shutdown behavior,
-firmware interface bring-up coverage, and dependency reports, then verifies that
-the relevant gates catch each plausible-but-wrong candidate.
+power budget, power-tree reachability, regulator voltage ordering, rail
+decoupling/bulk-cap coverage, bus-interface support subgraphs, layout/thermal precheck risks, targeted decoupling placement,
+connector current assumptions, sourcing metadata, critical-role resilience, curated alternate
+integrity, high-vibration connector retention contracts, PCB-to-enclosure connector cutout
+alignment, mounting-hole keepout intrusion, USB ESD placement, RF
+antenna/keepout placement, firmware net-to-MCU-pin assignments, motor PWM
+channel coverage, firmware e-stop shutdown behavior, firmware interface bring-up
+coverage, and dependency reports,
+then verifies that the relevant gates catch each plausible-but-wrong candidate.
 
 The benchmark passes only when all injected cases are detected. It is evidence
 that the current digital validators catch those classes of false positives; it

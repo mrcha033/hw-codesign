@@ -6,6 +6,8 @@
 [![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey)](#development-setup)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP%203.4-purple)](docs/mcp-tools.md)
 
+![hw-cli logo](docs/assets/hero.png)
+
 An MCP server and CLI that lets AI agents — Claude Code, Claude Desktop, Codex, or any
 MCP-capable agent — design PCB electronics, mechanical parts, firmware interfaces, sourcing
 decisions, and manufacturing outputs. Agents author cross-domain hardware candidates through
@@ -86,6 +88,7 @@ hw_design_candidate            ← generate all domains, run gates, return seman
                                   and review bundle; always release_eligible=false until gates pass
 hw_explore_design_space        ← score backend, component, mechanical, and supplier alternatives
 hw_run_grounding_benchmark     ← adversarial check: injected defects must be caught by gates
+hw_run_design_benchmark        ← held-out intents: gate pass-rate plus physical evidence gaps
 hw_generate_physical_qualification_plan
 hw_record_physical_evidence    ← attach bench measurements; physical_qualification gate requires them
 
@@ -156,8 +159,9 @@ PYTHONPATH=src python3 -m hw_codesign.cli --root . design-until-release quadrupe
 ## Known limits
 
 - The `reference` backend is candidate-only. `tscircuit` and `kicad` are fabrication-release-eligible;
-  `python_netlist` is netlist-release-eligible; `atopile` is HDL-source-release-eligible. All
-  release paths require every configured gate to pass.
+  `python_netlist` is netlist-release-eligible (`netlist/compiled_netlist.json`);
+  `atopile` is HDL-source-release-eligible (`source/atopile/design.ato`). All release paths
+  require every configured gate to pass.
 - Digital gates cannot certify load thermals, EMI/EMC, vibration, abuse safety, ingress
   protection, transients, or connector life. These gaps are stated explicitly in every generated
   report and cannot be closed by software.

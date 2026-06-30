@@ -220,8 +220,11 @@ def test_ble_sensor_node_grounding_benchmark_catches_rf_placement(service):
 
     case_ids = {item["id"] for item in benchmark["cases"]}
     assert "rf_antenna_not_edge_aligned" in case_ids
+    assert "decoupling_far_from_target" in case_ids
     rf_case = next(item for item in benchmark["cases"] if item["id"] == "rf_antenna_not_edge_aligned")
     assert rf_case["detected"] is True
+    decoupling_case = next(item for item in benchmark["cases"] if item["id"] == "decoupling_far_from_target")
+    assert decoupling_case["detected"] is True
 
 
 def test_ble_sensor_node_release_docs_are_ble_specific(service, monkeypatch):
@@ -238,11 +241,11 @@ def test_ble_sensor_node_release_docs_are_ble_specific(service, monkeypatch):
     for gate in [
         "spec_validation", "requirements_lowering", "electrical_semantics", "mechanical_check",
         "firmware_pinmap", "component_resolution", "supplier_availability", "datasheet_evidence", "sourcing_resilience",
-        "bom", "sourcing", "component_metadata", "graph_pin_resolution", "hw_sw_parity", "firmware_interface_contract",
+        "bom", "sourcing", "component_metadata", "graph_pin_resolution", "power_integrity_estimate", "mechanical_connector_cutouts", "mechanical_mounting_integrity", "hw_sw_parity", "firmware_interface_contract",
         "ir_erc", "ir_pcb_sanity", "reference_firmware_build", "placement_constraints", "layout_thermal_integrity", "layout_signal_integrity",
         "reference_fabrication", "compiled_electronics_backend",
         "autoroute", "native_erc", "native_drc", "kicad_library_crosscheck",
-        "native_mechanical_validation", "native_zephyr_build",
+        "native_mechanical_validation", "native_zephyr_build", "candidate_critic",
     ]:
         all_reports.append({"gate": gate, "status": "pass", "failures": [], "metrics": {}, "artifacts": []})
 

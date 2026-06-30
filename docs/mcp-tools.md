@@ -45,11 +45,11 @@ hw_check_cross_domain_consistency ← validate placement refs against BOM, firmw
 hw_design_candidate          ← primary design workflow: generate + gates + review bundle
 hw_explore_design_space      ← rank backend, component, mechanical, and supplier alternatives
 hw_run_grounding_benchmark   ← adversarial check: injected defects must be caught by gates
-hw_run_design_benchmark      ← held-out suite: one-line intent → design_until_release, measures pass-rate and software_gate_pass_rate
+hw_run_design_benchmark      ← held-out suite: one-line intent → design_until_release, tracks gate pass-rate plus physical evidence gaps
 hw_generate_physical_qualification_plan ← define the external evidence contract
 hw_record_physical_evidence  ← attach approved bench measurements to the qualification gate
 hw_generate_all              ← always candidate_only=true, release_eligible=false
-hw_run_all_checks            ← include_external=true for the full gate matrix
+hw_run_all_checks            ← include_external=true for the full gate matrix; includes candidate_critic
 hw_review_release_readiness  ← non-authoritative summary: blocking gates, requirements, assumptions
 hw_generate_repair_plan / hw_apply_repair_plan / hw_resolve_assumption
 hw_design_until_release      ← autonomous loop: returns 'released', 'software_gates_ready' (all SW gates pass; run with include_external=True for native gates), 'blocked', or 'fail'
@@ -62,6 +62,8 @@ hw_export_release_bundle     ← release_eligible=true when status==released
 
 Every tool response carries a consistent envelope that enforces the core invariant:
 **candidate generated ≠ release passed ≠ fabrication qualified.**
+The public tool registry exposes this as the shared top-level
+`mcp_response_envelope` output schema; tool-specific fields compose underneath it.
 
 | Field | Meaning |
 |---|---|
@@ -91,7 +93,9 @@ Every tool response carries a consistent envelope that enforces the core invaria
 - `hw_read_spec` — read the merged project spec
 - `hw_validate_spec` — validate the spec against its JSON Schema; returns failures with field paths
 - `hw_update_spec` — write a spec section; requires `user_approved=true` for safety-critical sections
-- `hw_update_requirements` — lower natural-language requirements into typed spec fields
+- `hw_update_requirements` — lower natural-language requirements into typed spec fields;
+  also returns and persists `requirements_ir_v1` with lowered fields, unresolved
+  assumptions, unsupported constraints, required approvals, and affected gates
 - `hw_list_assumptions` — list all declared design assumptions and their resolution state
 - `hw_resolve_assumption` — resolve a named assumption; requires `approved=true`
 
@@ -120,7 +124,7 @@ Every tool response carries a consistent envelope that enforces the core invaria
 ### Primary design workflow
 - `hw_design_candidate` — optionally lower a brief into the spec, generate all domains, run gates, return semantic-first representation and review bundle; always `release_eligible=false` until promotion gates pass
 - `hw_explore_design_space` — score alternatives across backend, component, mechanical, and supplier axes; writes `history/design_space/exploration.json`
-- `hw_run_grounding_benchmark` — adversarial check over pinout, footprint, support circuits, power tree, layout, RF, connector retention, sourcing, firmware modules, and dependency order
+- `hw_run_grounding_benchmark` — adversarial check over pinout, footprint, support circuits, power tree, rail decoupling, layout, decoupling placement, RF, connector retention, connector cutout alignment, mounting keepout intrusion, sourcing, critical-role alternate integrity, firmware pin assignment, motor PWM channel coverage, firmware modules, and dependency order
 - `hw_generate_physical_qualification_plan` — write the external evidence contract (thermal, EMI/EMC, SI/PI, vibration, ingress, connector, assembly, bring-up)
 - `hw_record_physical_evidence` — record approved external qualification evidence; `physical_qualification` remains `blocked` until every test has an approved passing record
 
@@ -133,7 +137,9 @@ Every tool response carries a consistent envelope that enforces the core invaria
 - `hw_generate_bringup_tests` — bring-up test scripts from the firmware source
 
 ### Validation
-- `hw_run_all_checks` — run all configured gates; `include_external=false` skips native toolchain gates
+- `hw_run_all_checks` — run all configured gates; `include_external=false` skips native toolchain gates.
+  The `candidate_critic` report performs a second-pass review over the whole candidate:
+  false release-eligibility claims fail, while open physical/native evidence gaps are recorded as warnings.
 - `hw_check_release_gate` — authoritative gate; the only tool that sets `release_eligible=true`
 - `hw_get_failure_report` — read persisted gate reports; optionally filter by gate name
 - `hw_run_erc` — KiCad-native ERC; returns structured failures

@@ -109,6 +109,13 @@ def test_natural_language_requirements_update_structured_spec(service, project):
     assert spec["manufacturing"]["pcb"]["layers"] == 6
     assert spec["firmware"]["framework"] == "zephyr"
     assert spec.get("requirements", {}).get("active_unresolved", []) == []
+    ir = result["compiler_ir"]
+    assert ir["version"] == "requirements_ir_v1"
+    lowered = {item["spec_path"]: item for item in ir["lowered_fields"]}
+    assert lowered["actuation.motor_channels"]["value"] == 16
+    assert lowered["actuation.motor_channels"]["field_type"] == "integer"
+    assert "power_budget" in lowered["actuation.motor_channels"]["affected_gates"]
+    assert ir["required_human_approvals"] == []
 
 
 def test_unsupported_constraints_persist_to_spec_and_block_validation(service, project):
@@ -123,8 +130,14 @@ def test_unsupported_constraints_persist_to_spec_and_block_validation(service, p
     assert result["status"] == "generated"
     assert result["has_unresolved_constraints"] is True
     assert result["unsupported_constraints"]
+    assert result["required_human_approvals"]
+    assert "firmware_interface_contract" in result["affected_gates"]
     spec = service.read_spec(project)
     assert spec.get("requirements", {}).get("active_unresolved"), "Constraints must be persisted to spec/requirements.yaml"
+    unresolved = spec["requirements"]["active_unresolved"]
+    assert all(item["required_human_approvals"] for item in unresolved)
+    assert all(item["affected_gates"] for item in unresolved)
+    assert spec["requirements"]["compiler_ir"]["unsupported_constraints"]
     checks = service.run_all_checks(project, include_external=False)
     assert checks["status"] != "pass"
     codes = {f["code"] for report in checks["reports"] for f in report["failures"]}

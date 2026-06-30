@@ -54,8 +54,12 @@ def test_proposal_carries_provenance_and_constraints(spec: dict, graph: dict):
     # Every component placed gets a provenance source for its coordinate.
     assert proposal.placements
     sources = {placement.source for placement in proposal.placements.values()}
-    assert {"curated_anchor", "decoupling_row_seed", "connector_edge_seed"} <= sources
+    assert {"curated_anchor", "decoupling_row_seed"} <= sources
+    assert any(source in sources for source in {"connector_edge_seed", "solver_connector_edge"})
     assert all(placement.source for placement in proposal.placements.values())
+    assert proposal.cost >= 0.0
+    assert proposal.solver_iterations >= 0
+    assert "solver" in proposal.to_dict()
 
     kinds = {constraint.kind for constraint in proposal.constraints}
     assert {"board_keepout", "mounting_hole_keepout", "connector_edge", "decoupling_proximity", "thermal_spacing"} <= kinds
@@ -73,8 +77,14 @@ def test_proposal_carries_provenance_and_constraints(spec: dict, graph: dict):
     assert connector.params["max_edge_distance_mm"] == spec["mechanical"]["max_connector_edge_distance_mm"]
 
 
-def test_proposal_does_not_move_seed_coordinates(spec: dict, graph: dict):
-    proposal = propose_placement(spec, graph)
+def test_proposal_preserves_seed_coordinates_without_active_costs(spec: dict, graph: dict):
+    quiet_spec = deepcopy(spec)
+    quiet_spec["mechanical"]["connector_interfaces"] = []
+    quiet_spec["system"]["supply"]["battery"]["pack_current_peak_a"] = 0.0
+    quiet_spec["actuation"]["motor_channels"] = 0
+    quiet_spec["actuation"]["max_simultaneous_peak_channels"] = 0
+
+    proposal = propose_placement(quiet_spec, graph)
     seed = component_positions(graph)
     for ref, (x, y) in seed.items():
         assert (proposal.placements[ref].x_mm, proposal.placements[ref].y_mm) == (x, y)
@@ -97,6 +107,43 @@ def test_seed_passes_hard_checks_with_honest_advisories(spec: dict, graph: dict)
     # The gate advertises that it is not authoritative for manufacturability.
     assert report.metrics["authoritative"] is False
     assert report.backend["release_authoritative"] is False
+
+
+def test_targeted_decoupling_proximity_is_enforced_for_ble_seed(ble_spec: dict, ble_graph: dict):
+    proposal = propose_placement(ble_spec, ble_graph)
+    targeted = [
+        constraint
+        for constraint in proposal.constraints
+        if constraint.kind == "decoupling_proximity" and constraint.enforced
+    ]
+
+    assert targeted
+    assert any(constraint.target_ref == "C2" and constraint.params["target_ref"] == "U1" for constraint in targeted)
+    assert check_placement(proposal, ble_graph).status == Status.PASS
+
+
+def test_constraint_solver_repairs_targeted_decoupling_far_from_ic(ble_spec: dict, ble_graph: dict):
+    bad_graph = deepcopy(ble_graph)
+    decap = next(component for component in bad_graph["components"] if component.get("ref") == "C2")
+    decap["pcb_position_mm"] = [0.0, 0.0]
+
+    proposal = propose_placement(ble_spec, bad_graph)
+    report = check_placement(proposal, bad_graph)
+
+    assert proposal.placements["C2"].source == "solver_decoupling_proximity"
+    assert report.status == Status.PASS
+    assert proposal.solver_iterations > 0
+    assert "decoupling_proximity" not in report.metrics["cost_breakdown"]
+
+
+def test_targeted_decoupling_far_from_ic_fails_when_forced(ble_spec: dict, ble_graph: dict):
+    proposal = propose_placement(ble_spec, ble_graph)
+    proposal.placements["C2"] = replace(proposal.placements["C2"], x_mm=0.0, y_mm=0.0)
+
+    report = check_placement(proposal, ble_graph)
+
+    assert report.status == Status.FAIL
+    assert "decoupling_too_far_from_target" in _codes(report)
 
 
 def test_off_board_component_fails(spec: dict, graph: dict):
@@ -236,7 +283,7 @@ def test_layout_signal_integrity_passes_ble_rf_seed(ble_spec: dict, ble_graph: d
     assert report.metrics["rf_components"] == 1
 
 
-def test_layout_signal_integrity_rejects_rf_component_away_from_edge(ble_spec: dict, ble_graph: dict):
+def test_constraint_solver_repairs_rf_component_away_from_edge(ble_spec: dict, ble_graph: dict):
     bad_graph = deepcopy(ble_graph)
     rf = next(component for component in bad_graph["components"] if component["category"] == "mcu")
     rf["pcb_position_mm"] = [
@@ -244,20 +291,51 @@ def test_layout_signal_integrity_rejects_rf_component_away_from_edge(ble_spec: d
         ble_spec["mechanical"]["envelope"]["board_height_mm"] / 2,
     ]
 
-    report = check_layout_signal_integrity(propose_placement(ble_spec, bad_graph), bad_graph, ble_spec)
+    proposal = propose_placement(ble_spec, bad_graph)
+    report = check_layout_signal_integrity(proposal, bad_graph, ble_spec)
+
+    assert proposal.placements[rf["ref"]].source == "solver_rf_edge_keepout"
+    assert report.status == Status.PASS
+
+
+def test_layout_signal_integrity_rejects_rf_component_away_from_edge_when_forced(ble_spec: dict, ble_graph: dict):
+    proposal = propose_placement(ble_spec, ble_graph)
+    rf = next(component for component in ble_graph["components"] if component["category"] == "mcu")
+    proposal.placements[rf["ref"]] = replace(
+        proposal.placements[rf["ref"]],
+        x_mm=ble_spec["mechanical"]["envelope"]["board_width_mm"] / 2,
+        y_mm=ble_spec["mechanical"]["envelope"]["board_height_mm"] / 2,
+    )
+
+    report = check_layout_signal_integrity(proposal, ble_graph, ble_spec)
 
     assert report.status == Status.FAIL
     assert "rf_antenna_not_edge_aligned" in _codes(report)
 
 
-def test_layout_signal_integrity_rejects_noisy_power_near_rf(ble_spec: dict, ble_graph: dict):
+def test_constraint_solver_repairs_noisy_power_near_rf(ble_spec: dict, ble_graph: dict):
     bad_graph = deepcopy(ble_graph)
     rf = next(component for component in bad_graph["components"] if component["category"] == "mcu")
     charger = next(component for component in bad_graph["components"] if component["category"] == "charger")
     rf_position = rf.get("pcb_position_mm", [25.0, 28.0])
     charger["pcb_position_mm"] = [float(rf_position[0]) + 1.0, float(rf_position[1])]
 
-    report = check_layout_signal_integrity(propose_placement(ble_spec, bad_graph), bad_graph, ble_spec)
+    proposal = propose_placement(ble_spec, bad_graph)
+    report = check_layout_signal_integrity(proposal, bad_graph, ble_spec)
+
+    assert proposal.placements[charger["ref"]].source in {"solver_rf_noise_keepout", "solver_thermal_zone", "ble_sensor_node_anchor"}
+    assert proposal.placements[rf["ref"]].source in {"solver_rf_edge_keepout", "ble_sensor_node_anchor"}
+    assert report.status == Status.PASS
+
+
+def test_layout_signal_integrity_rejects_noisy_power_near_rf_when_forced(ble_spec: dict, ble_graph: dict):
+    proposal = propose_placement(ble_spec, ble_graph)
+    rf = next(component for component in ble_graph["components"] if component["category"] == "mcu")
+    charger = next(component for component in ble_graph["components"] if component["category"] == "charger")
+    rf_position = proposal.placements[rf["ref"]]
+    proposal.placements[charger["ref"]] = replace(proposal.placements[charger["ref"]], x_mm=rf_position.x_mm + 1.0, y_mm=rf_position.y_mm)
+
+    report = check_layout_signal_integrity(proposal, ble_graph, ble_spec)
 
     assert report.status == Status.FAIL
     assert "rf_noisy_component_keepout_violation" in _codes(report)
@@ -270,7 +348,7 @@ def test_layout_signal_integrity_passes_usb_esd_near_connector(spec: dict, graph
     assert report.metrics["usb_esd_components"] == 1
 
 
-def test_layout_signal_integrity_rejects_usb_esd_far_from_connector(spec: dict, graph: dict):
+def test_constraint_solver_repairs_usb_esd_far_from_connector(spec: dict, graph: dict):
     bad_graph = deepcopy(graph)
     esd = next(component for component in bad_graph["components"] if component["category"] == "usb_esd")
     esd["pcb_position_mm"] = [
@@ -278,7 +356,23 @@ def test_layout_signal_integrity_rejects_usb_esd_far_from_connector(spec: dict, 
         spec["mechanical"]["envelope"]["board_height_mm"] / 2,
     ]
 
-    report = check_layout_signal_integrity(propose_placement(spec, bad_graph), bad_graph, spec)
+    proposal = propose_placement(spec, bad_graph)
+    report = check_layout_signal_integrity(proposal, bad_graph, spec)
+
+    assert proposal.placements[esd["ref"]].source == "solver_usb_esd_connector_side"
+    assert report.status == Status.PASS
+
+
+def test_layout_signal_integrity_rejects_usb_esd_far_from_connector_when_forced(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+    esd = next(component for component in graph["components"] if component["category"] == "usb_esd")
+    proposal.placements[esd["ref"]] = replace(
+        proposal.placements[esd["ref"]],
+        x_mm=spec["mechanical"]["envelope"]["board_width_mm"] / 2,
+        y_mm=spec["mechanical"]["envelope"]["board_height_mm"] / 2,
+    )
+
+    report = check_layout_signal_integrity(proposal, graph, spec)
 
     assert report.status == Status.FAIL
     assert "usb_esd_far_from_connector" in _codes(report)
@@ -362,7 +456,7 @@ def test_agent_near_connector_derives_position_in_same_half(spec: dict, graph: d
     }]}}
     proposal = propose_placement(spec_with, graph)
 
-    assert proposal.placements[constrained_ref].source == "agent_constraint_near_connector"
+    assert proposal.placements[constrained_ref].source in {"agent_constraint_near_connector", "solver_high_current_loop"}
     report = check_placement(proposal, graph)
     assert report.status == Status.PASS
     assert not any(f.code == "constraint_near_connector_violated" for f in report.failures)

@@ -138,6 +138,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "bad_power_assumption",
         "unreachable_power_rail",
         "regulator_voltage_order_violation",
+        "missing_rail_decoupling",
         "missing_i2c_pullup",
         "missing_can_termination",
         "missing_usb_esd_bridge",
@@ -145,11 +146,18 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "hot_block_near_sensitive_logic",
         "connector_current_rating_violation",
         "missing_connector_retention",
+        "connector_cutout_misaligned",
+        "component_on_mounting_hole",
         "missing_sourcing_resilience_strategy",
+        "missing_curated_alternate_component",
         "unavailable_or_obsolete_part",
+        "stale_supplier_evidence",
         "schematic_unknown_pin_endpoint",
         "component_pin_net_mismatch",
         "firmware_pinmap_mismatch",
+        "firmware_mcu_pin_mismatch",
+        "firmware_motor_pwm_channel_missing",
+        "firmware_sensor_poll_missing_bus",
         "missing_firmware_estop_shutdown_behavior",
         "missing_firmware_can_bringup",
         "dependency_graph_prerequisite_violation",
@@ -185,6 +193,20 @@ def test_design_space_exploration_ranks_variants_and_sourcing(service, project):
     assert all({"id", "rank", "score", "tradeoffs", "blockers", "evidence"} <= set(item) for item in candidates)
     assert "design_space_exploration_result" in SHARED_SCHEMAS
     assert TOOL_REGISTRY["hw_explore_design_space"].output_schema["$ref"].endswith("design_space_exploration_result")
+    public_schema = TOOL_REGISTRY["hw_explore_design_space"].to_dict()["output_schema"]
+    assert public_schema["allOf"][0]["$ref"].endswith("mcp_response_envelope")
+    assert public_schema["allOf"][1]["$ref"].endswith("design_space_exploration_result")
+
+
+def test_public_tool_schemas_have_release_envelope():
+    from hw_codesign.contracts import SHARED_SCHEMAS, TOOL_REGISTRY
+
+    envelope = SHARED_SCHEMAS["mcp_response_envelope"]
+    assert {"release_eligible", "candidate_only", "release_blocking_failures"} <= set(envelope["required"])
+    for tool in TOOL_REGISTRY.values():
+        public_schema = tool.to_dict()["output_schema"]
+        schema_text = json.dumps(public_schema, sort_keys=True)
+        assert "mcp_response_envelope" in schema_text or "release_eligible" in schema_text
 
 
 def test_tscircuit_real_compile_and_graph_parity(tmp_path):

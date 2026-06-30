@@ -42,6 +42,35 @@
           "reason": {"type": "string", "minLength": 1}
         }
       }
+    },
+    "compiler_ir": {
+      "type": "object",
+      "required": ["version", "input_id", "lowered_fields", "unresolved_assumptions", "unsupported_constraints", "required_human_approvals", "affected_gates"],
+      "properties": {
+        "version": {"const": "requirements_ir_v1"},
+        "input_id": {"type": "string"},
+        "lowered_fields": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": true}
+        },
+        "unresolved_assumptions": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": true}
+        },
+        "unsupported_constraints": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": true}
+        },
+        "required_human_approvals": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "affected_gates": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": false
