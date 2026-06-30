@@ -68,7 +68,9 @@ stages:
 
 The selected release-eligible backend must report every stage. Unsupported or
 unexecuted stages return `blocked`; compiler or design violations return `fail`.
-Manufacturing output from a source-only or netlist-only adapter is not inferred.
+Manufacturing output from a source-only or netlist-only adapter is not inferred:
+`python_netlist` manufacturing export is always `blocked` and does not create
+Gerbers, pick-and-place, or fabrication directories.
 
 Native gates, including KiCad ERC/DRC, mechanical validation, autorouting, and
 Zephyr builds, must include backend metadata and artifacts where applicable.

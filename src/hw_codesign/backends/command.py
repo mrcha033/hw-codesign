@@ -46,7 +46,14 @@ def tool_version(executable: str) -> str | None:
     resolved = resolve_tool(executable)
     if resolved is None:
         return None
-    completed = subprocess.run([resolved, "version"], capture_output=True, text=True, timeout=30, check=False)
+    try:
+        timeout = float(os.environ.get("HW_TOOL_VERSION_TIMEOUT_SECONDS", "5"))
+    except ValueError:
+        timeout = 5.0
+    try:
+        completed = subprocess.run([resolved, "version"], capture_output=True, text=True, timeout=timeout, check=False)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
     return completed.stdout.strip() or completed.stderr.strip() or None
 
 

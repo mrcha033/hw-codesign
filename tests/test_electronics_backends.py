@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from hw_codesign.backends import command as backend_command
 from hw_codesign.backends.tscircuit import TSCircuitBackend
 from hw_codesign.backends.command import ToolResult
 from hw_codesign.backends.electronics import CONTRACT_STAGES
@@ -88,6 +89,17 @@ def test_tscircuit_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
     assert compile_report.failures[0].code == "tool_timeout"
     assert compile_report.failures[0].details["timeout_seconds"] == 4
     assert compile_report.backend["timeout_seconds"] == 4
+
+
+def test_tool_version_timeout_degrades_to_unknown(monkeypatch):
+    monkeypatch.setattr(backend_command, "resolve_tool", lambda _: "/bin/hung-tool")
+
+    def fake_run(command, **kwargs):
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(backend_command.subprocess, "run", fake_run)
+
+    assert backend_command.tool_version("kicad-cli") is None
 
 
 def test_atopile_emits_real_ato_source_and_compile_gate_runs(service, project):
@@ -205,6 +217,22 @@ def test_python_netlist_release_gate_requires_netlist_not_fabrication(service, p
     assert any(path.endswith("netlist/compiled_netlist.json") for path in missing_paths)
     assert not any(path.endswith("fabrication/gerbers.zip") for path in missing_paths)
     assert not any(path.endswith("fabrication/pick_and_place.csv") for path in missing_paths)
+
+
+def test_python_netlist_manufacturing_export_never_creates_fabrication_artifacts(service, project):
+    _set_backend(service, project, "python_netlist")
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    release = project_path / "exports" / "tmp-python-netlist-export"
+
+    report = service.python_netlist.export_manufacturing(project_path, release)
+
+    assert report.gate == "python_netlist_manufacturing_export"
+    assert report.status == Status.BLOCKED
+    assert report.metrics["release_tier"] == "netlist"
+    assert report.backend["fabrication_release_eligible"] is False
+    assert not report.artifacts
+    assert not (release / "fabrication").exists()
 
 
 def test_atopile_release_gate_requires_source_not_fabrication(service, project):
