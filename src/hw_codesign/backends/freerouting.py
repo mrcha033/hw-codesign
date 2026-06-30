@@ -137,9 +137,9 @@ class FreeroutingBackend:
     def _final_unrouted(log: str) -> int | None:
         # Parse the "session completed" line which has the authoritative final score.
         # Format: "final score: S.SS (N unrouted)" or "final score: S.SS" (0 unrouted).
-        session = re.search(r"session completed:.*?final score:\s*[\d.]+\s*(?:\((\d+) unrouted\))?", log)
-        if session:
-            return int(session.group(1)) if session.group(1) is not None else 0
+        sessions = re.findall(r"(?:session completed:.*?)?final score:\s*[\d.]+\s*(?:\((\d+) unrouted\))?", log)
+        if sessions:
+            return int(sessions[-1]) if sessions[-1] else 0
         # Fallback: last "(N unrouted)" occurrence from pass lines.
         matches = re.findall(r"\((\d+) unrouted\)", log)
         return int(matches[-1]) if matches else None
