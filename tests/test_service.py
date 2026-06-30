@@ -61,6 +61,19 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     assert {"U2.2", "U3.3"} <= nets["QSPI_D2"]
     assert {"U2.1", "U3.7"} <= nets["QSPI_D3"]
 
+    positions = {item["ref"]: item["pcb_position_mm"] for item in graph["components"]}
+    assert positions["J1"] == [3.0, 10.0]
+    assert positions["U2"] == [18.0, 4.0]
+    assert positions["U3"] == [33.0, 2.0]
+
+    routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
+    assert routing["status"] == "generated"
+    assert routing["failures"] == []
+
+    board = (path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb").read_text(encoding="utf-8")
+    assert 'footprint "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"' in board
+    assert 'footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"' in board
+
 
 def test_kicad_schematic_preserves_duplicate_power_pins(tmp_path):
     graph = {

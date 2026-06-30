@@ -24,7 +24,23 @@ class OpenCascadeMechanicalBackend:
         board_step: Path | None = None,
         release_eligible: bool = False,
     ) -> GateReport:
-        return self.generate_from_contract(build_mechanical_contract(spec, graph or {"components": []}), release, board_step=board_step, release_eligible=release_eligible)
+        try:
+            contract = build_mechanical_contract(spec, graph or {"components": []})
+        except (KeyError, TypeError, ValueError) as exc:
+            return GateReport(
+                "mechanical_export",
+                Status.FAIL,
+                [
+                    Failure(
+                        FailureCategory.MECHANICAL_ERROR,
+                        "mechanical_contract_invalid",
+                        "Mechanical contract could not be built from the project spec",
+                        path="mechanical",
+                        details={"error": str(exc)},
+                    )
+                ],
+            )
+        return self.generate_from_contract(contract, release, board_step=board_step, release_eligible=release_eligible)
 
     def generate_from_contract(self, contract: dict[str, Any], release: Path, *, board_step: Path | None = None, release_eligible: bool = False) -> GateReport:
         try:

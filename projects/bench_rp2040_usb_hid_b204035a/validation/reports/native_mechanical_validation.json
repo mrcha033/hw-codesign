@@ -1,18 +1,84 @@
 {
-  "artifacts": [],
-  "backend": {},
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/exports/candidates/native-check/mechanical/board.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/exports/candidates/native-check/mechanical/enclosure.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/exports/candidates/native-check/mechanical/enclosure.stl",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/exports/candidates/native-check/mechanical/variants/enclosure_bare_pcb.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/exports/candidates/native-check/mechanical/assembly.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/exports/candidates/native-check/mechanical/mechanical_manifest.json"
+  ],
+  "backend": {
+    "deterministic_geometry": true,
+    "name": "OpenCASCADE"
+  },
   "failures": [
     {
-      "category": "TOOL_ERROR",
-      "code": "external_gate_not_run",
+      "category": "MECHANICAL_ERROR",
+      "code": "board_fit_failed",
       "details": {},
-      "message": "Native CAD validation was not requested",
+      "message": "Worst-case board edge clearance is below insertion clearance plus tolerance",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "component_height_clearance_failed",
+      "details": {
+        "bottom_gap_mm": -1.0,
+        "top_gap_mm": -0.09999999999999964
+      },
+      "message": "Worst-case component height envelope violates base or lid clearance",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "connector_cutout_missing",
+      "details": {
+        "references": [
+          "J1"
+        ]
+      },
+      "message": "Electrical connectors lack mechanical cutouts",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "assembly_interference",
+      "details": {
+        "board_wall_intersection_mm3": 0.0,
+        "component_lid_intersection_mm3": 0.0,
+        "connector_wall_intersection_mm3": 0.0
+      },
+      "message": "Board, component envelope, or connector insertion volume interferes with the enclosure",
       "path": null,
       "requires_user_decision": false,
       "severity": "error"
     }
   ],
   "gate": "native_mechanical_validation",
-  "metrics": {},
-  "status": "blocked"
+  "metrics": {
+    "assembly_interference_free": false,
+    "board_fit": false,
+    "board_step_imported": true,
+    "board_wall_intersection_mm3": 0.0,
+    "bottom_clearance_mm": -1.0,
+    "component_height_clearance": false,
+    "component_lid_intersection_mm3": 0.0,
+    "connector_cutout_alignment": false,
+    "connector_wall_intersection_mm3": 0.0,
+    "fixture_count": 0,
+    "insertion_clearance_mm": 1.0,
+    "mounting_hole_alignment": true,
+    "stl_manifold": true,
+    "tolerance_mm": 0.2,
+    "top_clearance_mm": -0.09999999999999964,
+    "valid_solid": true,
+    "variant_count": 1
+  },
+  "status": "fail"
 }

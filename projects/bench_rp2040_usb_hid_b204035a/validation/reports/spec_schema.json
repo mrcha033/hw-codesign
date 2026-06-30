@@ -51,15 +51,6 @@
       "category": "SPEC_ERROR",
       "code": "schema_violation",
       "details": {},
-      "message": "'mounting_holes' is a required property",
-      "path": "mechanical",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "SPEC_ERROR",
-      "code": "schema_violation",
-      "details": {},
       "message": "'connector_interfaces' is a required property",
       "path": "mechanical",
       "requires_user_decision": false,
@@ -132,43 +123,7 @@
       "category": "SPEC_ERROR",
       "code": "mechanical_schema_violation",
       "details": {},
-      "message": "'mounting_holes' is a required property",
-      "path": "mechanical",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "SPEC_ERROR",
-      "code": "mechanical_schema_violation",
-      "details": {},
       "message": "'connector_interfaces' is a required property",
-      "path": "mechanical",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "SPEC_ERROR",
-      "code": "mechanical_schema_violation",
-      "details": {},
-      "message": "'insertion_clearance_mm' is a required property",
-      "path": "mechanical",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "SPEC_ERROR",
-      "code": "mechanical_schema_violation",
-      "details": {},
-      "message": "'assembly_clearance_mm' is a required property",
-      "path": "mechanical",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "SPEC_ERROR",
-      "code": "mechanical_schema_violation",
-      "details": {},
-      "message": "'tolerance_mm' is a required property",
       "path": "mechanical",
       "requires_user_decision": false,
       "severity": "error"
@@ -185,7 +140,7 @@
   ],
   "gate": "spec_schema",
   "metrics": {
-    "errors": 20,
+    "errors": 15,
     "warnings": 0
   },
   "status": "fail"

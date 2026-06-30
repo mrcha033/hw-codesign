@@ -4,9 +4,9 @@
   "failures": [
     {
       "category": "TOOL_ERROR",
-      "code": "external_gate_not_run",
+      "code": "no_zephyr_target",
       "details": {},
-      "message": "Native Zephyr build was not requested",
+      "message": "Project spec has no firmware.target \u2014 project does not use Zephyr as its primary RTOS",
       "path": null,
       "requires_user_decision": false,
       "severity": "error"

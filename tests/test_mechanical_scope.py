@@ -91,6 +91,19 @@ def test_missing_native_board_step_blocks_mechanical_release(service, project, t
         assert "board_step_missing" in {failure.code for failure in report.failures}
 
 
+def test_native_mechanical_returns_failure_for_stale_mechanical_spec(service, project, tmp_path):
+    service.generate_all(project)
+    spec = service.read_spec(project)
+    spec["mechanical"].pop("insertion_clearance_mm")
+    root = service.workspace.require_project(project)
+    graph = json.loads((root / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = OpenCascadeMechanicalBackend().generate(spec, tmp_path / "candidate", graph=graph)
+
+    assert report.status == Status.FAIL
+    assert "mechanical_contract_invalid" in {failure.code for failure in report.failures}
+
+
 def test_geometry_interference_and_connector_drift_fail(service, project, tmp_path):
     _, _, contract = _generated_contract(service, project)
     board = contract["board"]

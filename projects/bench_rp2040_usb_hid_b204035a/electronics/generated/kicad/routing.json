@@ -1,15 +1,9 @@
 {
-  "failures": [
-    {
-      "endpoint_mm": [
-        24.0,
-        21.0
-      ],
-      "net": "GND",
-      "reason": "no_clear_single_layer_path"
-    }
-  ],
-  "mode": "plane_preseeded",
-  "signal_routing": "deferred_to_freerouting",
-  "status": "fail"
+  "failures": [],
+  "freerouting_version": "2.2.4",
+  "max_passes": 20,
+  "mode": "plane_preseeded_freerouting",
+  "signal_routing": "complete",
+  "status": "pass",
+  "unrouted": 0
 }

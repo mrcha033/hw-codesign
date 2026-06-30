@@ -135,10 +135,37 @@ def _ble_sensor_node_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
     }
 
 
+_RP2040_USB_HID_ANCHORS: dict[str, tuple[float, float]] = {
+    # Board: 51x21 mm, usable area 1..50 x 1..20.
+    # U2 (RP2040, 20 pins): 7-col placeholder, pads at (18-30, 4-8).
+    # U3 (Flash, 8 pins): 7-col placeholder, pads at (33-45, 2-4).
+    # QSPI_D3 path: U2(18,4) to U3(45,2); other QSPI paths are <= 20 mm.
+    "J1": (3.0,  10.0),   # USB-C, left edge; pads (3-9, 10)
+    "D1": (10.0, 10.0),   # USB ESD, inline on USB data path; pads (10-14, 10)
+    "U1": (3.0,  15.0),   # 3V3 LDO, near USB_VBUS; pads (3-7, 15)
+    "U2": (18.0,  4.0),   # RP2040 MCU, center; pads (18-30, 4-8)
+    "U3": (33.0,  2.0),   # 2 MB QSPI Flash, right of MCU; pads (33-45, 2-4)
+    "X1": (33.0, 10.0),   # 12 MHz crystal, near MCU XIN/XOUT; pads (33-35, 10)
+    "J2": (18.0, 12.0),   # SWD 10-pin, below MCU; pads (18-30, 12-14)
+    "C1": (3.0,   5.0),   # 100 nF decoupling; pads (3-5, 5)
+    "C2": (7.0,   5.0),   # 100 nF decoupling; pads (7-9, 5)
+    "C3": (11.0,  5.0),   # 10 uF bulk cap; pads (11-13, 5)
+}
+
+
+def _rp2040_usb_hid_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
+    return {
+        ref: (xy, "rp2040_usb_hid_anchor")
+        for ref, xy in _RP2040_USB_HID_ANCHORS.items()
+    }
+
+
 def _seed_table_for_graph(graph: dict[str, Any]) -> dict[str, tuple[tuple[float, float], str]]:
     architecture = graph.get("design_basis", {}).get("architecture")
     if architecture == "nrf52840_ble_sensor":
         return _ble_sensor_node_seed_table()
     if architecture == "esp32s3_usb_i2c_sensor_data_logger":
         return _sensor_data_logger_seed_table()
+    if architecture in {"rp2040_usb_hid_qspi_flash", "rp2040_qspi_usb_device"}:
+        return _rp2040_usb_hid_seed_table()
     return _seed_table()

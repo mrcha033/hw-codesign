@@ -101,19 +101,6 @@
       "code": "dependency_prerequisite_not_passed",
       "details": {
         "gate": "layout_thermal_integrity",
-        "prerequisite": "placement_constraints",
-        "prerequisite_status": "fail"
-      },
-      "message": "layout_thermal_integrity passed before prerequisite placement_constraints passed",
-      "path": "gates.layout_thermal_integrity",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "RELEASE_ERROR",
-      "code": "dependency_prerequisite_not_passed",
-      "details": {
-        "gate": "layout_thermal_integrity",
         "prerequisite": "power_tree_integrity",
         "prerequisite_status": "fail"
       },
@@ -132,19 +119,6 @@
       },
       "message": "layout_thermal_integrity passed before prerequisite interface_integrity passed",
       "path": "gates.layout_thermal_integrity",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "RELEASE_ERROR",
-      "code": "dependency_prerequisite_not_passed",
-      "details": {
-        "gate": "layout_signal_integrity",
-        "prerequisite": "placement_constraints",
-        "prerequisite_status": "fail"
-      },
-      "message": "layout_signal_integrity passed before prerequisite placement_constraints passed",
-      "path": "gates.layout_signal_integrity",
       "requires_user_decision": false,
       "severity": "error"
     },
@@ -178,12 +152,25 @@
       "category": "RELEASE_ERROR",
       "code": "dependency_prerequisite_not_passed",
       "details": {
-        "gate": "reference_fabrication",
-        "prerequisite": "placement_constraints",
+        "gate": "autoroute",
+        "prerequisite": "ir_pcb_sanity",
         "prerequisite_status": "fail"
       },
-      "message": "reference_fabrication passed before prerequisite placement_constraints passed",
-      "path": "gates.reference_fabrication",
+      "message": "autoroute passed before prerequisite ir_pcb_sanity passed",
+      "path": "gates.autoroute",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "native_drc",
+        "prerequisite": "ir_pcb_sanity",
+        "prerequisite_status": "fail"
+      },
+      "message": "native_drc passed before prerequisite ir_pcb_sanity passed",
+      "path": "gates.native_drc",
       "requires_user_decision": false,
       "severity": "error"
     },
@@ -204,19 +191,6 @@
       "category": "RELEASE_ERROR",
       "code": "dependency_prerequisite_not_passed",
       "details": {
-        "gate": "mechanical_connector_cutouts",
-        "prerequisite": "placement_constraints",
-        "prerequisite_status": "fail"
-      },
-      "message": "mechanical_connector_cutouts passed before prerequisite placement_constraints passed",
-      "path": "gates.mechanical_connector_cutouts",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "RELEASE_ERROR",
-      "code": "dependency_prerequisite_not_passed",
-      "details": {
         "gate": "mechanical_mounting_integrity",
         "prerequisite": "mechanical_fit",
         "prerequisite_status": "fail"
@@ -225,25 +199,11 @@
       "path": "gates.mechanical_mounting_integrity",
       "requires_user_decision": false,
       "severity": "error"
-    },
-    {
-      "category": "RELEASE_ERROR",
-      "code": "dependency_prerequisite_not_passed",
-      "details": {
-        "gate": "mechanical_mounting_integrity",
-        "prerequisite": "placement_constraints",
-        "prerequisite_status": "fail"
-      },
-      "message": "mechanical_mounting_integrity passed before prerequisite placement_constraints passed",
-      "path": "gates.mechanical_mounting_integrity",
-      "requires_user_decision": false,
-      "severity": "error"
     }
   ],
   "gate": "design_dependency_graph",
   "metrics": {
     "blocked_or_unpassed_nodes": [
-      "autoroute",
       "component_provenance",
       "firmware_interface_contract",
       "firmware_modules",
@@ -251,13 +211,9 @@
       "hw_sw_parity",
       "interface_integrity",
       "ir_pcb_sanity",
-      "kicad_library_crosscheck",
-      "native_drc",
-      "native_erc",
       "native_mechanical_validation",
       "native_zephyr_build",
       "physical_qualification",
-      "placement_constraints",
       "power_integrity_estimate",
       "power_tree_integrity",
       "reference_firmware_build",
@@ -266,7 +222,7 @@
       "supplier_availability"
     ],
     "declared_edges": 88,
-    "evaluated_edges": 27,
+    "evaluated_edges": 34,
     "nodes": 45
   },
   "status": "fail"

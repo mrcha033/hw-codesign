@@ -1,18 +1,19 @@
 {
-  "artifacts": [],
-  "backend": {},
-  "failures": [
-    {
-      "category": "TOOL_ERROR",
-      "code": "external_gate_not_run",
-      "details": {},
-      "message": "Freerouting was not requested",
-      "path": null,
-      "requires_user_decision": false,
-      "severity": "error"
-    }
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/electronics/generated/kicad/bench_rp2040_usb_hid_b204035a.kicad_pcb",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/electronics/generated/kicad/routing.json"
   ],
+  "backend": {
+    "cached": true,
+    "name": "freerouting",
+    "version": "2.2.4"
+  },
+  "failures": [],
   "gate": "autoroute",
-  "metrics": {},
-  "status": "blocked"
+  "metrics": {
+    "cached": true,
+    "max_passes": 20,
+    "unrouted": 0
+  },
+  "status": "pass"
 }
