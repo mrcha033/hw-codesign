@@ -48,19 +48,6 @@
       "category": "RELEASE_ERROR",
       "code": "dependency_prerequisite_not_passed",
       "details": {
-        "gate": "pin_symbol_footprint",
-        "prerequisite": "component_provenance",
-        "prerequisite_status": "fail"
-      },
-      "message": "pin_symbol_footprint passed before prerequisite component_provenance passed",
-      "path": "gates.pin_symbol_footprint",
-      "requires_user_decision": false,
-      "severity": "error"
-    },
-    {
-      "category": "RELEASE_ERROR",
-      "code": "dependency_prerequisite_not_passed",
-      "details": {
         "gate": "support_circuit_completeness",
         "prerequisite": "semantic_electrical",
         "prerequisite_status": "fail"
@@ -204,7 +191,6 @@
   "gate": "design_dependency_graph",
   "metrics": {
     "blocked_or_unpassed_nodes": [
-      "component_provenance",
       "firmware_interface_contract",
       "firmware_modules",
       "firmware_pinmap",
@@ -222,7 +208,7 @@
       "supplier_availability"
     ],
     "declared_edges": 88,
-    "evaluated_edges": 34,
+    "evaluated_edges": 36,
     "nodes": 45
   },
   "status": "fail"

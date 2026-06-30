@@ -1160,6 +1160,54 @@
         "target_ref": null
       },
       {
+        "derived_from": "mechanical.mounting_holes[0] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 2.5,
+          "y_mm": 2.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[1] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 48.5,
+          "y_mm": 2.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[2] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 2.5,
+          "y_mm": 18.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[3] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 48.5,
+          "y_mm": 18.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
         "derived_from": "graph decoupling component pins + decoupling_target_ref",
         "enforced": false,
         "kind": "decoupling_proximity",

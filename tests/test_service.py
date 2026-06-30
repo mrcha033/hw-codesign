@@ -47,6 +47,8 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     service.generate_electronics_only(project)
     path = service.workspace.require_project(project)
     graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    provenance_report = service.validator.check_component_metadata(graph["components"])
+    assert provenance_report.status.value == "pass"
 
     flash = next(item for item in graph["components"] if item["ref"] == "U3")
     flash_pins = {pin["number"]: pin for pin in flash["pins"]}
