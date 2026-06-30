@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -17,6 +18,7 @@ from .electronics import ElectronicsBackendAdapter
 class TSCircuitBackend(ElectronicsBackendAdapter):
     name = "tscircuit"
     VERSION = "0.1.1491"
+    DEFAULT_TIMEOUT_SECONDS = 600
 
     def __init__(self, platform_root: Path, parts_root: Path | None = None):
         self.platform_root = platform_root
@@ -144,7 +146,8 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
     def evaluate(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
         return self.complete_contract(self.compile(project, graph))
 
-    def compile(self, project: Path, graph: dict[str, Any]) -> list[GateReport]:
+    def compile(self, project: Path, graph: dict[str, Any], timeout_seconds: int | None = None) -> list[GateReport]:
+        timeout_seconds = _timeout_seconds(timeout_seconds, "HW_TSCIRCUIT_TIMEOUT_SECONDS", self.DEFAULT_TIMEOUT_SECONDS)
         entry = project / "electronics" / "source" / "tscircuit" / "board.tsx"
         cli = self.platform_root / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"
         if shutil.which("node") is None or not cli.is_file() or not self._tsx_bin().is_file():
@@ -164,22 +167,22 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
         if sys.platform == "win32":
             self._patch_windows_esm_imports()
         try:
-            result = subprocess.run(self.command(entry), cwd=str(self.platform_root), capture_output=True, text=True, timeout=600)
+            result = subprocess.run(self.command(entry), cwd=str(self.platform_root), capture_output=True, text=True, timeout=timeout_seconds)
         except OSError as exc:
             failure = Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", f"tscircuit CLI could not be executed: {exc}")
             blocked = Failure(FailureCategory.TOOL_ERROR, "compile_prerequisite_failed", "Prerequisite compile gate did not pass")
             return [
-                GateReport("tscircuit_compile", Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True}),
+                GateReport("tscircuit_compile", Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True, "timeout_seconds": timeout_seconds}),
                 GateReport("tscircuit_netlist_extract", Status.BLOCKED, [blocked]),
                 GateReport("tscircuit_graph_parity", Status.BLOCKED, [blocked]),
                 GateReport("tscircuit_footprint_parity", Status.BLOCKED, [blocked]),
                 GateReport("tscircuit_layout_completeness", Status.BLOCKED, [blocked]),
             ]
-        except subprocess.TimeoutExpired:
-            failure = Failure(FailureCategory.TOOL_ERROR, "tool_timeout", "tscircuit CLI did not complete within 600 s")
+        except subprocess.TimeoutExpired as exc:
+            failure = Failure(FailureCategory.TOOL_ERROR, "tool_timeout", f"tscircuit CLI did not complete within {timeout_seconds} s", details={"timeout_seconds": timeout_seconds, "stdout": (exc.stdout or "")[-4000:], "stderr": (exc.stderr or "")[-4000:]})
             blocked = Failure(FailureCategory.TOOL_ERROR, "compile_prerequisite_failed", "Prerequisite compile gate did not pass")
             return [
-                GateReport("tscircuit_compile", Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True}),
+                GateReport("tscircuit_compile", Status.BLOCKED, [failure], backend={"name": "tscircuit", "version": self.VERSION, "offline": True, "timeout_seconds": timeout_seconds}),
                 GateReport("tscircuit_netlist_extract", Status.BLOCKED, [blocked]),
                 GateReport("tscircuit_graph_parity", Status.BLOCKED, [blocked]),
                 GateReport("tscircuit_footprint_parity", Status.BLOCKED, [blocked]),
@@ -187,6 +190,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             ]
         backend = {
             "name": "tscircuit", "version": self.VERSION, "offline": True,
+            "timeout_seconds": timeout_seconds,
             "command": self.command(entry), "returncode": result.returncode,
             "stdout": result.stdout[-4000:], "stderr": result.stderr[-4000:],
         }
@@ -343,3 +347,12 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                 if ref and number:
                     nets.setdefault(name, set()).add(f"{ref}.{number}")
         return {name: sorted(values) for name, values in sorted(nets.items())}
+
+
+def _timeout_seconds(value: int | None, env_name: str, default: int) -> int:
+    raw = value if value is not None else os.environ.get(env_name, default)
+    try:
+        parsed = int(raw)
+    except (TypeError, ValueError):
+        return default
+    return max(1, parsed)

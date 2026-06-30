@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 
+from hw_codesign.backends.tscircuit import TSCircuitBackend
 from hw_codesign.backends.command import ToolResult
 from hw_codesign.backends.electronics import CONTRACT_STAGES
 from hw_codesign.io import read_yaml, write_yaml
@@ -53,6 +55,39 @@ def test_missing_kicad_tool_blocks_every_contract_gate(service, project, monkeyp
     assert [report.gate for report in reports] == [f"kicad_{stage}" for stage in CONTRACT_STAGES]
     assert all(report.status == "blocked" for report in reports)
     assert all(report.failures[0].code == "tool_unavailable" for report in reports)
+
+
+def test_tscircuit_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
+    project = tmp_path / "project"
+    source = project / "electronics" / "source" / "tscircuit"
+    source.mkdir(parents=True)
+    (source / "board.tsx").write_text("export default () => null\n", encoding="utf-8")
+    (source / "board.compiler.mjs").write_text("export default () => null\n", encoding="utf-8")
+    cli = tmp_path / "node_modules" / "@tscircuit" / "cli" / "dist" / "cli" / "main.js"
+    cli.parent.mkdir(parents=True)
+    cli.write_text("", encoding="utf-8")
+    tsx = tmp_path / "node_modules" / ".bin" / "tsx"
+    tsx.parent.mkdir(parents=True)
+    tsx.write_text("", encoding="utf-8")
+    observed = {}
+
+    monkeypatch.setattr("hw_codesign.backends.tscircuit.shutil.which", lambda _: "/usr/bin/node")
+
+    def fake_run(command, **kwargs):
+        observed["timeout"] = kwargs["timeout"]
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"], output="partial", stderr="still running")
+
+    monkeypatch.setattr("hw_codesign.backends.tscircuit.subprocess.run", fake_run)
+
+    reports = TSCircuitBackend(tmp_path).compile(project, {}, timeout_seconds=4)
+    compile_report = reports[0]
+
+    assert observed["timeout"] == 4
+    assert compile_report.gate == "tscircuit_compile"
+    assert compile_report.status.value == "blocked"
+    assert compile_report.failures[0].code == "tool_timeout"
+    assert compile_report.failures[0].details["timeout_seconds"] == 4
+    assert compile_report.backend["timeout_seconds"] == 4
 
 
 def test_atopile_emits_real_ato_source_and_compile_gate_runs(service, project):

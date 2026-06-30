@@ -13,11 +13,13 @@ from ..models import Failure, FailureCategory, GateReport, Status
 
 class FreeroutingBackend:
     VERSION = "2.2.4"
+    DEFAULT_TIMEOUT_SECONDS = 600
 
     def __init__(self, root: Path):
         self.root = root
 
-    def route(self, project: Path, max_passes: int = 20, threads: int = 4) -> GateReport:
+    def route(self, project: Path, max_passes: int = 20, threads: int = 4, timeout_seconds: int | None = None) -> GateReport:
+        timeout_seconds = _timeout_seconds(timeout_seconds, "HW_FREEROUTING_TIMEOUT_SECONDS", self.DEFAULT_TIMEOUT_SECONDS)
         target = project / "electronics" / "generated" / "kicad"
         board = target / f"{project.name}.kicad_pcb"
         dsn = target / f"{project.name}.dsn"
@@ -61,13 +63,13 @@ class FreeroutingBackend:
             "-mp", str(max_passes), "-mt", str(threads), "-l", "en",
         ]
         try:
-            completed = subprocess.run(command, cwd=project.resolve(), capture_output=True, text=True, timeout=600, check=False)
+            completed = subprocess.run(command, cwd=project.resolve(), capture_output=True, text=True, timeout=timeout_seconds, check=False)
         except subprocess.TimeoutExpired as exc:
             return GateReport(
                 "autoroute",
                 Status.FAIL,
-                [Failure(FailureCategory.TOOL_ERROR, "autoroute_timeout", "Freerouting exceeded the 600 second limit", details={"stdout": (exc.stdout or "")[-8000:], "stderr": (exc.stderr or "")[-8000:]})],
-                backend=self._backend(command, None, tools),
+                [Failure(FailureCategory.TOOL_ERROR, "autoroute_timeout", f"Freerouting exceeded the {timeout_seconds} second limit", details={"timeout_seconds": timeout_seconds, "stdout": (exc.stdout or "")[-8000:], "stderr": (exc.stderr or "")[-8000:]})],
+                backend={**self._backend(command, None, tools), "timeout_seconds": timeout_seconds},
             )
         log = f"{completed.stdout}\n{completed.stderr}"
         unrouted = self._final_unrouted(log)
@@ -80,7 +82,7 @@ class FreeroutingBackend:
                 [Failure(FailureCategory.EDA_ERROR, "routing_incomplete", f"Freerouting left {unrouted} connection(s) unrouted", details={"unrouted": unrouted})],
                 metrics={"unrouted": unrouted, "max_passes": max_passes},
                 artifacts=[str(dsn), str(ses)],
-                backend=self._backend(command, completed.returncode, tools, log),
+                backend={**self._backend(command, completed.returncode, tools, log), "timeout_seconds": timeout_seconds},
             )
 
         imported = self._pcbnew(
@@ -107,7 +109,7 @@ class FreeroutingBackend:
             Status.PASS,
             metrics={"unrouted": 0, "max_passes": max_passes},
             artifacts=[str(board), str(dsn), str(ses), str(routing_report)],
-            backend=self._backend(command, completed.returncode, tools, log),
+            backend={**self._backend(command, completed.returncode, tools, log), "timeout_seconds": timeout_seconds},
         )
 
     def _tools(self) -> dict[str, Path | None]:
@@ -162,3 +164,12 @@ class FreeroutingBackend:
             "log_tail": log[-8000:],
             "tools": {key: str(value) if value else None for key, value in tools.items()},
         }
+
+
+def _timeout_seconds(value: int | None, env_name: str, default: int) -> int:
+    raw = value if value is not None else os.environ.get(env_name, default)
+    try:
+        parsed = int(raw)
+    except (TypeError, ValueError):
+        return default
+    return max(1, parsed)

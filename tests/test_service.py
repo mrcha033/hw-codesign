@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -181,6 +182,43 @@ def test_kicad_schematic_preserves_duplicate_power_pins(tmp_path):
 def test_freerouting_log_parser_distinguishes_complete_and_incomplete():
     assert FreeroutingBackend._final_unrouted("final score: 988.64 (1 unrouted)\n") == 1
     assert FreeroutingBackend._final_unrouted("final score: 992.25\nSaving board\n") == 0
+
+
+def test_freerouting_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
+    project = tmp_path / "timeout_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    (target / "timeout_board.kicad_pcb").write_text("(kicad_pcb)\n", encoding="utf-8")
+    tools = {
+        "java": tmp_path / "java",
+        "jar": tmp_path / "freerouting.jar",
+        "kicad_python": tmp_path / "python",
+    }
+    for path in tools.values():
+        path.write_text("", encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    observed = {}
+
+    monkeypatch.setattr(backend, "_tools", lambda: tools)
+    monkeypatch.setattr(
+        backend,
+        "_pcbnew",
+        lambda *args: subprocess.CompletedProcess(args=args, returncode=0, stdout="", stderr=""),
+    )
+
+    def fake_run(command, **kwargs):
+        observed["timeout"] = kwargs["timeout"]
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"], output="partial", stderr="still running")
+
+    monkeypatch.setattr("hw_codesign.backends.freerouting.subprocess.run", fake_run)
+
+    report = backend.route(project, timeout_seconds=3)
+
+    assert observed["timeout"] == 3
+    assert report.status.value == "fail"
+    assert report.failures[0].code == "autoroute_timeout"
+    assert report.failures[0].details["timeout_seconds"] == 3
+    assert report.backend["timeout_seconds"] == 3
 
 
 def test_iteration_records_reports_history_and_repair_plan(service, project):
