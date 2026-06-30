@@ -48,6 +48,10 @@ def _codes(report) -> set[str]:
     return {failure.code for failure in report.failures}
 
 
+def _edges(proposal, kind: str) -> list[dict]:
+    return [edge for edge in proposal.constraint_graph["edges"] if edge["kind"] == kind]
+
+
 def test_proposal_carries_provenance_and_constraints(spec: dict, graph: dict):
     proposal = propose_placement(spec, graph)
 
@@ -83,6 +87,42 @@ def test_proposal_carries_provenance_and_constraints(spec: dict, graph: dict):
     # Connector-edge distance is reused from the connector contract, not invented.
     connector = next(c for c in proposal.constraints if c.kind == "connector_edge")
     assert connector.params["max_edge_distance_mm"] == spec["mechanical"]["max_connector_edge_distance_mm"]
+
+
+def test_constraint_graph_carries_measured_cost_evidence(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+
+    expected_cost_keys = {
+        "connector_edge": "connector_edge",
+        "high_current_loop": "high_current_loop",
+        "thermal_zone": "thermal_zone",
+        "usb_esd_connector_side": "usb_esd_connector_distance",
+    }
+    for kind, cost_key in expected_cost_keys.items():
+        edge = _edges(proposal, kind)[0]
+        details = edge["details"]
+        assert details["cost_key"] == cost_key
+        assert isinstance(details["distance_mm"], (int, float))
+        assert isinstance(details["margin_mm"], (int, float))
+        assert isinstance(details["violation_cost"], (int, float))
+        assert details["violation_cost"] >= 0.0
+
+
+def test_constraint_graph_carries_rf_and_targeted_decoupling_cost_evidence(ble_spec: dict, ble_graph: dict):
+    proposal = propose_placement(ble_spec, ble_graph)
+
+    for kind, cost_key in {
+        "rf_edge_keepout": "rf_edge_keepout",
+        "rf_noisy_keepout": "rf_noisy_keepout",
+        "decoupling_proximity": "decoupling_proximity",
+    }.items():
+        edge = next(edge for edge in _edges(proposal, kind) if "distance_mm" in edge.get("details", {}))
+        details = edge["details"]
+        assert details["cost_key"] == cost_key
+        assert isinstance(details["distance_mm"], (int, float))
+        assert isinstance(details["margin_mm"], (int, float))
+        assert isinstance(details["violation_cost"], (int, float))
+        assert details["violation_cost"] >= 0.0
 
 
 def test_proposal_preserves_seed_coordinates_without_active_costs(spec: dict, graph: dict):

@@ -31,8 +31,8 @@
 
 - Agent-authored placement constraints via `hw_set_placement_constraint`: express relationships
   (`adjacent_to`, `near_connector`) rather than absolute XY coordinates; the placer runs a
-  deterministic constraint-cost search and records solver iterations, cost breakdown, and
-  per-placement provenance before validation
+  deterministic constraint-cost search and records solver iterations, aggregate cost breakdown,
+  per-edge measured distance/margin/cost evidence, and per-placement provenance before validation
 - Constraint-driven placement proposal: structured, provenance-tagged placements with keepout,
   mounting-hole, connector-edge, decoupling-proximity, thermal-spacing, RF keepout,
   USB-ESD, high-current-loop, and thermal-zone costs

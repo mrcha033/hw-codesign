@@ -623,7 +623,34 @@ def _build_constraint_graph(
     """
     components = {str(component.get("ref")): component for component in graph.get("components", []) if component.get("ref")}
     basis = graph.get("design_basis", {})
+    envelope = spec.get("mechanical", {}).get("envelope", {})
+    width = float(envelope.get("board_width_mm", 0.0))
+    height = float(envelope.get("board_height_mm", 0.0))
     edges: list[dict[str, Any]] = []
+
+    def measured_max(distance: float | None, limit: float, cost_key: str, weight: float) -> dict[str, Any]:
+        if distance is None:
+            return {"limit_mm": limit, "margin_mm": None, "cost_key": cost_key, "violation_cost": None}
+        violation = max(0.0, distance - limit)
+        return {
+            "distance_mm": round(distance, 3),
+            "limit_mm": limit,
+            "margin_mm": round(limit - distance, 3),
+            "cost_key": cost_key,
+            "violation_cost": round(violation * weight, 6),
+        }
+
+    def measured_min(distance: float | None, minimum: float, cost_key: str, weight: float) -> dict[str, Any]:
+        if distance is None:
+            return {"minimum_mm": minimum, "margin_mm": None, "cost_key": cost_key, "violation_cost": None}
+        violation = max(0.0, minimum - distance)
+        return {
+            "distance_mm": round(distance, 3),
+            "minimum_mm": minimum,
+            "margin_mm": round(distance - minimum, 3),
+            "cost_key": cost_key,
+            "violation_cost": round(violation * weight, 6),
+        }
 
     def add_edge(kind: str, refs: list[str], enforced: bool, derived_from: str, **details: Any) -> None:
         refs = [str(ref) for ref in refs if ref]
@@ -641,13 +668,25 @@ def _build_constraint_graph(
 
     for constraint in constraints:
         if constraint.kind == "connector_edge" and constraint.target_ref:
+            placement = placements.get(constraint.target_ref)
+            distance, span = (
+                _edge_distance(placement, constraint.params.get("side", "front"), width, height)
+                if placement is not None else (None, None)
+            )
+            max_edge = float(constraint.params.get("max_edge_distance_mm", 6.0))
+            wrong_side_cost = (
+                round(max(0.0, float(distance) - float(span) / 2.0) * 200.0, 6)
+                if distance is not None and span is not None else None
+            )
             add_edge(
                 "connector_edge",
                 [constraint.target_ref],
                 constraint.enforced,
                 constraint.derived_from,
                 side=constraint.params.get("side"),
-                max_edge_distance_mm=constraint.params.get("max_edge_distance_mm"),
+                max_edge_distance_mm=max_edge,
+                wrong_side_cost=wrong_side_cost,
+                **measured_max(float(distance) if distance is not None else None, max_edge, "connector_edge", 15.0),
             )
         elif constraint.kind == "mounting_hole_keepout":
             add_edge(
@@ -662,15 +701,20 @@ def _build_constraint_graph(
         elif constraint.kind == "decoupling_proximity" and constraint.target_ref:
             refs = [constraint.target_ref]
             target_ref = constraint.params.get("target_ref")
+            distance = None
             if target_ref:
                 refs.append(str(target_ref))
+                if constraint.target_ref in placements and str(target_ref) in placements:
+                    distance = _placement_distance_mm(placements[constraint.target_ref], placements[str(target_ref)])
+            max_distance = float(constraint.params.get("max_distance_mm", MAX_DECOUPLING_TARGET_DISTANCE_MM))
             add_edge(
                 "decoupling_proximity",
                 refs,
                 constraint.enforced,
                 constraint.derived_from,
-                max_distance_mm=constraint.params.get("max_distance_mm"),
+                max_distance_mm=max_distance,
                 power_nets=constraint.params.get("power_nets", []),
+                **measured_max(distance, max_distance, "decoupling_proximity", 25.0),
             )
         elif constraint.kind in {"agent_adjacent_to", "agent_near_connector"} and constraint.target_ref:
             target = constraint.params.get("target")
@@ -694,16 +738,17 @@ def _build_constraint_graph(
     if _declared_peak_current_a(spec) >= HIGH_CURRENT_THRESHOLD_A:
         chain = _high_current_chain_refs(graph)
         for left, right in zip(chain, chain[1:]):
+            distance = (
+                _placement_distance_mm(placements[left], placements[right])
+                if left in placements and right in placements else None
+            )
             add_edge(
                 "high_current_loop",
                 [left, right],
                 True,
                 "graph high-current categories + spec declared peak current",
                 max_step_mm=MAX_HIGH_CURRENT_CHAIN_STEP_MM,
-                distance_mm=(
-                    round(_placement_distance_mm(placements[left], placements[right]), 3)
-                    if left in placements and right in placements else None
-                ),
+                **measured_max(distance, MAX_HIGH_CURRENT_CHAIN_STEP_MM, "high_current_loop", 10.0),
             )
 
     rf_refs = [
@@ -718,21 +763,26 @@ def _build_constraint_graph(
         if ref in placements and component.get("category") in RF_NOISY_CATEGORIES
     ]
     for rf_ref in rf_refs:
+        rf = placements[rf_ref]
+        edge_distance = min(rf.x_mm, width - rf.x_mm, rf.y_mm, height - rf.y_mm)
         add_edge(
             "rf_edge_keepout",
             [rf_ref],
             True,
             "component RF/integral-antenna metadata",
             max_edge_distance_mm=RF_EDGE_DISTANCE_MAX_MM,
+            **measured_max(edge_distance, RF_EDGE_DISTANCE_MAX_MM, "rf_edge_keepout", 30.0),
         )
         for noisy_ref in noisy_refs:
             if noisy_ref != rf_ref:
+                distance = _placement_distance_mm(placements[rf_ref], placements[noisy_ref])
                 add_edge(
                     "rf_noisy_keepout",
                     [rf_ref, noisy_ref],
                     True,
                     "component RF/noisy category metadata",
                     minimum_keepout_mm=RF_NOISY_COMPONENT_KEEP_OUT_MM,
+                    **measured_min(distance, RF_NOISY_COMPONENT_KEEP_OUT_MM, "rf_noisy_keepout", 40.0),
                 )
 
     for hot_ref, hot_component in components.items():
@@ -742,12 +792,14 @@ def _build_constraint_graph(
             if sensitive_ref not in placements or sensitive_ref == hot_ref:
                 continue
             if sensitive_component.get("category") in SENSITIVE_CATEGORIES:
+                distance = _placement_distance_mm(placements[hot_ref], placements[sensitive_ref])
                 add_edge(
                     "thermal_zone",
                     [hot_ref, sensitive_ref],
                     True,
                     "thermal-risk and sensitive component categories",
                     minimum_spacing_mm=MIN_THERMAL_TO_SENSITIVE_MM,
+                    **measured_min(distance, MIN_THERMAL_TO_SENSITIVE_MM, "thermal_zone", 20.0),
                 )
 
     usb_connector_refs = [
@@ -760,12 +812,14 @@ def _build_constraint_graph(
     ]
     for esd_ref in usb_esd_refs:
         for connector_ref in usb_connector_refs:
+            distance = _placement_distance_mm(placements[esd_ref], placements[connector_ref])
             add_edge(
                 "usb_esd_connector_side",
                 [esd_ref, connector_ref],
                 True,
                 "USB raw/protected net bridge metadata",
                 max_connector_distance_mm=USB_ESD_MAX_CONNECTOR_DISTANCE_MM,
+                **measured_max(distance, USB_ESD_MAX_CONNECTOR_DISTANCE_MM, "usb_esd_connector_distance", 25.0),
             )
 
     edges_by_kind: dict[str, int] = {}
