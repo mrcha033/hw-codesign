@@ -6,10 +6,13 @@ import runpy
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator
+import pytest
+from jsonschema import Draft202012Validator, ValidationError
 from referencing import Registry, Resource
 
 from hw_codesign.backends.tscircuit import TSCircuitBackend
+
+_ENVELOPE_KEYS = {"release_eligible", "candidate_only", "release_blocking_failures"}
 
 
 def _release_capable_tscircuit_graph():
@@ -220,11 +223,113 @@ def test_public_tool_schemas_have_release_envelope():
     from hw_codesign.contracts import SHARED_SCHEMAS, TOOL_REGISTRY
 
     envelope = SHARED_SCHEMAS["mcp_response_envelope"]
-    assert {"release_eligible", "candidate_only", "release_blocking_failures"} <= set(envelope["required"])
-    for tool in TOOL_REGISTRY.values():
+    assert _ENVELOPE_KEYS <= set(envelope["required"])
+    assert _ENVELOPE_KEYS <= set(envelope["properties"])
+
+    def assert_schema_has_top_level_envelope(schema: dict, path: str) -> None:
+        if "allOf" in schema:
+            assert any(
+                branch.get("$ref", "").endswith("mcp_response_envelope")
+                for branch in schema["allOf"]
+            ), path
+            return
+
+        assert _ENVELOPE_KEYS <= set(schema.get("required", [])), path
+        assert _ENVELOPE_KEYS <= set(schema.get("properties", {})), path
+        for index, branch in enumerate(schema.get("oneOf", [])):
+            assert_schema_has_top_level_envelope(branch, f"{path}.oneOf[{index}]")
+
+    for name, tool in TOOL_REGISTRY.items():
         public_schema = tool.to_dict()["output_schema"]
-        schema_text = json.dumps(public_schema, sort_keys=True)
-        assert "mcp_response_envelope" in schema_text or "release_eligible" in schema_text
+        assert_schema_has_top_level_envelope(public_schema, name)
+
+
+def test_public_tool_schema_envelope_preserves_strict_inline_contracts():
+    from hw_codesign.contracts._schemas import enveloped
+
+    schema = enveloped(
+        {
+            "type": "object",
+            "required": ["status"],
+            "additionalProperties": False,
+            "properties": {"status": {"type": "string"}},
+        }
+    )
+    validator = Draft202012Validator(schema)
+
+    validator.validate(
+        {
+            "status": "pass",
+            "release_eligible": False,
+            "candidate_only": True,
+            "release_blocking_failures": [],
+        }
+    )
+    with pytest.raises(ValidationError):
+        validator.validate({"status": "pass"})
+    with pytest.raises(ValidationError):
+        validator.validate(
+            {
+                "status": "pass",
+                "release_eligible": False,
+                "candidate_only": True,
+                "release_blocking_failures": [],
+                "unexpected": True,
+            }
+        )
+
+
+def test_public_tool_schema_envelope_preserves_strict_one_of_contracts():
+    from hw_codesign.contracts._schemas import enveloped
+
+    schema = enveloped(
+        {
+            "oneOf": [
+                {
+                    "type": "object",
+                    "required": ["status", "value"],
+                    "additionalProperties": False,
+                    "properties": {"status": {"const": "pass"}, "value": {"type": "integer"}},
+                },
+                {
+                    "type": "object",
+                    "required": ["status", "message"],
+                    "additionalProperties": False,
+                    "properties": {"status": {"const": "blocked"}, "message": {"type": "string"}},
+                },
+            ],
+        }
+    )
+    validator = Draft202012Validator(schema)
+
+    validator.validate(
+        {
+            "status": "pass",
+            "value": 1,
+            "release_eligible": False,
+            "candidate_only": True,
+            "release_blocking_failures": [],
+        }
+    )
+    validator.validate(
+        {
+            "status": "blocked",
+            "message": "requires approval",
+            "release_eligible": False,
+            "candidate_only": True,
+            "release_blocking_failures": ["requires approval"],
+        }
+    )
+    with pytest.raises(ValidationError):
+        validator.validate(
+            {
+                "status": "pass",
+                "message": "wrong branch",
+                "release_eligible": False,
+                "candidate_only": True,
+                "release_blocking_failures": [],
+            }
+        )
 
 
 def test_public_tool_schemas_validate_runtime_release_envelope():
