@@ -82,7 +82,8 @@ The public tool registry exposes this as the shared top-level
 ## Tools
 
 ### Platform introspection
-- `hw_get_capabilities` — available backends, external tools, and which gates each enables
+- `hw_get_capabilities` — available backends, explicit release tiers,
+  fabrication/netlist/source backend partitions, external tools, and which gates each enables
 - `hw_diagnose_environment` — Python version, toolchain paths, installed packages
 
 ### Project and spec

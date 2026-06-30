@@ -737,8 +737,8 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
     "hw_get_capabilities": ToolDef(
         name="hw_get_capabilities",
         description=(
-            "Return available backends, external tools, and which gates each enables. "
-            "Call this before generating to learn which backends are installed and which are release-eligible vs. candidate-only."
+            "Return available backends, explicit release tiers, external tools, and which gates each enables. "
+            "Call this before generating to distinguish fabrication-release backends from netlist/source-tier paths and candidate-only backends."
         ),
         input_schema={"type": "object", "properties": {}, "additionalProperties": False},
         output_schema=ref("capabilities_result"),

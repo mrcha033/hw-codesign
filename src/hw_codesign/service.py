@@ -41,6 +41,14 @@ from .workspace import Workspace
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
 _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
 _RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist", "atopile"})
+_FABRICATION_RELEASE_BACKENDS = frozenset({"tscircuit", "kicad"})
+_RELEASE_TIER_BY_BACKEND: dict[str, str] = {
+    "reference": "candidate",
+    "python_netlist": "netlist",
+    "atopile": "hdl_source",
+    "tscircuit": "fabrication",
+    "kicad": "fabrication",
+}
 # Gates that require native toolchain (ERC/DRC/autoroute/Zephyr). When include_external=False
 # these are BLOCKED-by-design; the benchmark excludes them from software_gate_pass_rate so CI
 # can track software-gate convergence without native tools.
@@ -697,12 +705,7 @@ class HardwareService:
 
     @staticmethod
     def _release_tier_for_backend(backend: str) -> str:
-        return {
-            "python_netlist": "netlist",
-            "atopile": "hdl_source",
-            "tscircuit": "fabrication",
-            "kicad": "fabrication",
-        }.get(backend, "candidate")
+        return _RELEASE_TIER_BY_BACKEND.get(backend, "candidate")
 
     def _python_netlist_release_artifacts(self, project_path: Path, staging: Path) -> GateReport:
         compiled = project_path / "electronics" / "source" / "python_netlist" / "compiled_netlist.json"
@@ -1225,13 +1228,6 @@ class HardwareService:
         current = spec.get("electronics", {}).get("backend", "reference")
         backends = capabilities.get("backends", {})
         tools = capabilities.get("external_tools", {})
-        release_tiers = {
-            "reference": "candidate",
-            "python_netlist": "netlist",
-            "atopile": "hdl_source",
-            "tscircuit": "fabrication",
-            "kicad": "fabrication",
-        }
         tier_bonus = {
             "candidate": 0,
             "netlist": 8,
@@ -1244,7 +1240,7 @@ class HardwareService:
             required_tool = info.get("requires_tool")
             tool_info = tools.get(required_tool, {}) if required_tool else {}
             tool_available = bool(tool_info.get("available")) if required_tool else True
-            release_tier = release_tiers.get(name, "unknown")
+            release_tier = capabilities.get("release_tiers", {}).get(name, _RELEASE_TIER_BY_BACKEND.get(name, "unknown"))
             score = 40 + tier_bonus.get(release_tier, 0)
             breakdown = {"release_tier_bonus": tier_bonus.get(release_tier, 0)}
             blockers: list[dict[str, Any]] = []
@@ -4252,11 +4248,11 @@ class HardwareService:
         """Return available backends, external tools, and which gates each tool enables."""
         import shutil
         backends: dict[str, Any] = {
-            "reference":      {"name": "reference",      "release_eligible": False, "candidate_only": True,  "description": "Reference intent generator — produces candidate artifacts only"},
-            "tscircuit":      {"name": "tscircuit",      "release_eligible": True,  "candidate_only": False, "description": "tscircuit Circuit JSON compiler — release-eligible via compiled KiCad export", "requires_tool": "node"},
-            "kicad":          {"name": "kicad",          "release_eligible": True,  "candidate_only": False, "description": "KiCad-native backend — release-eligible", "requires_tool": "kicad_cli"},
-            "python_netlist": {"name": "python_netlist", "release_eligible": True,  "candidate_only": False, "description": "Python netlist backend — release-eligible at netlist tier"},
-            "atopile":        {"name": "atopile",        "release_eligible": True,  "candidate_only": False, "description": "atopile backend — release-eligible HDL source; fabrication requires KiCad plugin", "requires_tool": "ato"},
+            "reference":      {"name": "reference",      "release_eligible": False, "candidate_only": True,  "release_tier": "candidate",   "fabrication_release_eligible": False, "description": "Reference intent generator — produces candidate artifacts only"},
+            "tscircuit":      {"name": "tscircuit",      "release_eligible": True,  "candidate_only": False, "release_tier": "fabrication", "fabrication_release_eligible": True,  "description": "tscircuit Circuit JSON compiler — canonical fabrication backend via compiled KiCad export", "requires_tool": "node"},
+            "kicad":          {"name": "kicad",          "release_eligible": True,  "candidate_only": False, "release_tier": "fabrication", "fabrication_release_eligible": True,  "description": "KiCad-native canonical fabrication backend", "requires_tool": "kicad_cli"},
+            "python_netlist": {"name": "python_netlist", "release_eligible": True,  "candidate_only": False, "release_tier": "netlist",     "fabrication_release_eligible": False, "description": "Python netlist backend — release-eligible only at netlist tier"},
+            "atopile":        {"name": "atopile",        "release_eligible": True,  "candidate_only": False, "release_tier": "hdl_source",  "fabrication_release_eligible": False, "description": "atopile backend — release-eligible HDL source; fabrication requires a KiCad bridge", "requires_tool": "ato"},
         }
         tools: dict[str, Any] = {
             "kicad_cli":         {"available": bool(resolve_tool("kicad-cli")),          "description": "KiCad CLI — native ERC, DRC, and Gerber export",        "gates": ["native_erc", "native_drc", "kicad_library_crosscheck"]},
@@ -4270,7 +4266,11 @@ class HardwareService:
         return {
             "status": "pass",
             "backends": backends,
+            "release_tiers": dict(_RELEASE_TIER_BY_BACKEND),
             "release_eligible_backends": [n for n, b in backends.items() if b["release_eligible"]],
+            "fabrication_release_backends": [n for n in backends if n in _FABRICATION_RELEASE_BACKENDS],
+            "netlist_release_backends": [n for n, b in backends.items() if b["release_tier"] == "netlist"],
+            "source_release_backends": [n for n, b in backends.items() if b["release_tier"] == "hdl_source"],
             "candidate_only_backends": [n for n, b in backends.items() if b["candidate_only"]],
             "external_tools": tools,
             "missing_external_gates": missing_external_gates,

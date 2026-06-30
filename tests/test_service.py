@@ -319,6 +319,28 @@ def test_prepare_fabrication_review_after_iteration(service, project):
 # Environment diagnosis
 # ---------------------------------------------------------------------------
 
+def test_get_capabilities_partitions_release_tiers(service, project):
+    result = service.get_capabilities()
+
+    assert result["release_tiers"] == {
+        "reference": "candidate",
+        "python_netlist": "netlist",
+        "atopile": "hdl_source",
+        "tscircuit": "fabrication",
+        "kicad": "fabrication",
+    }
+    assert set(result["release_eligible_backends"]) == {"tscircuit", "kicad", "python_netlist", "atopile"}
+    assert set(result["fabrication_release_backends"]) == {"tscircuit", "kicad"}
+    assert result["netlist_release_backends"] == ["python_netlist"]
+    assert result["source_release_backends"] == ["atopile"]
+    assert result["candidate_only_backends"] == ["reference"]
+    assert result["backends"]["python_netlist"]["fabrication_release_eligible"] is False
+    assert result["backends"]["python_netlist"]["release_tier"] == "netlist"
+    assert result["backends"]["atopile"]["fabrication_release_eligible"] is False
+    assert result["backends"]["tscircuit"]["fabrication_release_eligible"] is True
+    assert result["backends"]["kicad"]["release_tier"] == "fabrication"
+
+
 def test_diagnose_environment_candidate_target_always_ready(service, project):
     result = service.diagnose_environment(target="candidate")
     assert result["status"] == "pass"
