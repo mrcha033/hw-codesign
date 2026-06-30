@@ -1,0 +1,116 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "structural_dependency_graph"
+  },
+  "failures": [
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "requirements_lowering",
+        "prerequisite": "spec_schema",
+        "prerequisite_status": "fail"
+      },
+      "message": "requirements_lowering passed before prerequisite spec_schema passed",
+      "path": "gates.requirements_lowering",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "component_resolution",
+        "prerequisite": "spec_schema",
+        "prerequisite_status": "fail"
+      },
+      "message": "component_resolution passed before prerequisite spec_schema passed",
+      "path": "gates.component_resolution",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "semantic_schematic_roundtrip",
+        "prerequisite": "semantic_electrical",
+        "prerequisite_status": "fail"
+      },
+      "message": "semantic_schematic_roundtrip passed before prerequisite semantic_electrical passed",
+      "path": "gates.semantic_schematic_roundtrip",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "support_circuit_completeness",
+        "prerequisite": "semantic_electrical",
+        "prerequisite_status": "fail"
+      },
+      "message": "support_circuit_completeness passed before prerequisite semantic_electrical passed",
+      "path": "gates.support_circuit_completeness",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "reference_fabrication",
+        "prerequisite": "ir_pcb_sanity",
+        "prerequisite_status": "fail"
+      },
+      "message": "reference_fabrication passed before prerequisite ir_pcb_sanity passed",
+      "path": "gates.reference_fabrication",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "autoroute",
+        "prerequisite": "ir_pcb_sanity",
+        "prerequisite_status": "fail"
+      },
+      "message": "autoroute passed before prerequisite ir_pcb_sanity passed",
+      "path": "gates.autoroute",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "native_drc",
+        "prerequisite": "ir_pcb_sanity",
+        "prerequisite_status": "fail"
+      },
+      "message": "native_drc passed before prerequisite ir_pcb_sanity passed",
+      "path": "gates.native_drc",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "design_dependency_graph",
+  "metrics": {
+    "blocked_or_unpassed_nodes": [
+      "ir_pcb_sanity",
+      "native_mechanical_validation",
+      "native_zephyr_build",
+      "physical_qualification",
+      "semantic_electrical",
+      "sourcing_resilience",
+      "supplier_availability"
+    ],
+    "declared_edges": 88,
+    "evaluated_edges": 56,
+    "nodes": 45
+  },
+  "status": "fail"
+}

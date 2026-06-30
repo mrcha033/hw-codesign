@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_5eab0a5d/electronics/generated/kicad/bench_sensor_logger_usb_5eab0a5d.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "footprints": 14,
+    "layers": 2,
+    "pads": 52,
+    "segments": 37
+  },
+  "status": "pass"
+}

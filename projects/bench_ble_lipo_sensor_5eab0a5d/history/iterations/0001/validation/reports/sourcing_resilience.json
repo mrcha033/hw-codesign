@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "sourcing-resilience-contract"
+  },
+  "failures": [],
+  "gate": "sourcing_resilience",
+  "metrics": {
+    "alternate_roles": 0,
+    "checked_alternates": 0,
+    "critical_roles": 9,
+    "role_set": "ble_sensor_node",
+    "single_source_justified_roles": 9,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}

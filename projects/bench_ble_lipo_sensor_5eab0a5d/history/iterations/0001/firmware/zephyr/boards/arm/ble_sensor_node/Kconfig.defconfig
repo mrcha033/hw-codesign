@@ -1,0 +1,4 @@
+if BOARD_BLE_SENSOR_NODE
+config BOARD
+  default "ble_sensor_node"
+endif

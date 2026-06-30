@@ -1,0 +1,28 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: nRF52840 BLE sensor node with LiPo charging SHT31 temperature humidity 50x35
+      mm
+    created_by: user
+  active_lowered: []
+  active_unresolved: []
+  compiler_ir:
+    version: requirements_ir_v1
+    input_id: req_input_0001
+    lowered_fields: []
+    unresolved_assumptions:
+    - source: motor driver topology retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    - source: cooling condition retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    unsupported_constraints: []
+    required_human_approvals: []
+    affected_gates: []

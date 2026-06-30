@@ -1,0 +1,148 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/validation/physical/qualification_plan.json",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/validation/physical/qualification_plan.md"
+  ],
+  "backend": {
+    "digital_only": false,
+    "name": "physical-qualification-ledger"
+  },
+  "failures": [
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "assembly_quality",
+        "evidence_required": [
+          "photos",
+          "assembly_checklist",
+          "bom_lot_trace"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+      "path": "validation.physical_evidence.assembly_inspection",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "bringup",
+        "evidence_required": [
+          "bench_supply_log",
+          "rail_voltage_measurements",
+          "thermal_image_optional"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+      "path": "validation.physical_evidence.current_limited_power_up",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "firmware_co_design",
+        "evidence_required": [
+          "flash_log",
+          "interface_probe_log",
+          "firmware_revision_hash"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+      "path": "validation.physical_evidence.firmware_interface_bringup",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "thermal",
+        "evidence_required": [
+          "thermal_camera_capture",
+          "load_profile_log",
+          "ambient_temperature_log"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+      "path": "validation.physical_evidence.thermal_load_profile",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "emi_emc",
+        "evidence_required": [
+          "emi_prescan_report",
+          "test_setup_photos",
+          "cable_configuration"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+      "path": "validation.physical_evidence.emi_emc_prescan",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "si_pi",
+        "evidence_required": [
+          "oscilloscope_captures",
+          "probe_points",
+          "load_state_log"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+      "path": "validation.physical_evidence.signal_power_integrity_probe",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "mechanical_reliability",
+        "evidence_required": [
+          "vibration_test_log",
+          "post_test_inspection_photos",
+          "connector_retention_measurements"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+      "path": "validation.physical_evidence.vibration_connector_retention",
+      "requires_user_decision": true,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_evidence_missing",
+      "details": {
+        "category": "environmental_safety",
+        "evidence_required": [
+          "ingress_test_report_or_waiver",
+          "esd_test_log_or_waiver",
+          "enclosure_photos"
+        ]
+      },
+      "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+      "path": "validation.physical_evidence.ingress_esd_abuse_check",
+      "requires_user_decision": true,
+      "severity": "error"
+    }
+  ],
+  "gate": "physical_qualification",
+  "metrics": {
+    "approved_passed": 0,
+    "failed": 0,
+    "missing_or_unapproved": 8,
+    "required_tests": 8
+  },
+  "status": "blocked"
+}

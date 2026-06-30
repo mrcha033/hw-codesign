@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "tool_unavailable",
+      "details": {},
+      "message": "cadquery-ocp is not installed",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_mechanical_validation",
+  "metrics": {},
+  "status": "blocked"
+}

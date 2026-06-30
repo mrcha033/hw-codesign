@@ -1,0 +1,5 @@
+/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/reference/build/CMakeFiles/board_bsp.dir
+/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/reference/build/CMakeFiles/bringup_tests.dir
+/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/reference/build/CMakeFiles/test.dir
+/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/reference/build/CMakeFiles/edit_cache.dir
+/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/reference/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,266 @@
+[
+  {
+    "graph_pin": "U1.3",
+    "mcu_pin": "ESTOP_IN",
+    "net_name": "ESTOP_IN",
+    "signal": "ESTOP_IN"
+  },
+  {
+    "graph_pin": "U1.4",
+    "mcu_pin": "CAN_RX",
+    "net_name": "CAN_RX",
+    "signal": "CAN_RX"
+  },
+  {
+    "graph_pin": "U1.5",
+    "mcu_pin": "CAN_TX",
+    "net_name": "CAN_TX",
+    "signal": "CAN_TX"
+  },
+  {
+    "graph_pin": "U1.6",
+    "mcu_pin": "I2C_IMU_SCL",
+    "net_name": "I2C_IMU_SCL",
+    "signal": "I2C_IMU_SCL"
+  },
+  {
+    "graph_pin": "U1.7",
+    "mcu_pin": "I2C_IMU_SDA",
+    "net_name": "I2C_IMU_SDA",
+    "signal": "I2C_IMU_SDA"
+  },
+  {
+    "graph_pin": "U1.8",
+    "mcu_pin": "IMU_INT",
+    "net_name": "IMU_INT",
+    "signal": "IMU_INT"
+  },
+  {
+    "graph_pin": "U1.12",
+    "mcu_pin": "USB_DP",
+    "net_name": "USB_DP",
+    "signal": "USB_DP"
+  },
+  {
+    "graph_pin": "U1.13",
+    "mcu_pin": "USB_DM",
+    "net_name": "USB_DM",
+    "signal": "USB_DM"
+  },
+  {
+    "graph_pin": "U1.14",
+    "mcu_pin": "MOTOR1_PWM",
+    "net_name": "MOTOR1_PWM",
+    "signal": "MOTOR1_PWM"
+  },
+  {
+    "graph_pin": "U1.15",
+    "mcu_pin": "MOTOR1_CURRENT",
+    "net_name": "MOTOR1_CURRENT",
+    "signal": "MOTOR1_CURRENT"
+  },
+  {
+    "graph_pin": "U1.16",
+    "mcu_pin": "MOTOR1_ENC",
+    "net_name": "MOTOR1_ENC",
+    "signal": "MOTOR1_ENC"
+  },
+  {
+    "graph_pin": "U1.17",
+    "mcu_pin": "MOTOR2_PWM",
+    "net_name": "MOTOR2_PWM",
+    "signal": "MOTOR2_PWM"
+  },
+  {
+    "graph_pin": "U1.18",
+    "mcu_pin": "MOTOR2_CURRENT",
+    "net_name": "MOTOR2_CURRENT",
+    "signal": "MOTOR2_CURRENT"
+  },
+  {
+    "graph_pin": "U1.19",
+    "mcu_pin": "MOTOR2_ENC",
+    "net_name": "MOTOR2_ENC",
+    "signal": "MOTOR2_ENC"
+  },
+  {
+    "graph_pin": "U1.20",
+    "mcu_pin": "MOTOR3_PWM",
+    "net_name": "MOTOR3_PWM",
+    "signal": "MOTOR3_PWM"
+  },
+  {
+    "graph_pin": "U1.21",
+    "mcu_pin": "MOTOR3_CURRENT",
+    "net_name": "MOTOR3_CURRENT",
+    "signal": "MOTOR3_CURRENT"
+  },
+  {
+    "graph_pin": "U1.22",
+    "mcu_pin": "MOTOR3_ENC",
+    "net_name": "MOTOR3_ENC",
+    "signal": "MOTOR3_ENC"
+  },
+  {
+    "graph_pin": "U1.23",
+    "mcu_pin": "MOTOR4_PWM",
+    "net_name": "MOTOR4_PWM",
+    "signal": "MOTOR4_PWM"
+  },
+  {
+    "graph_pin": "U1.24",
+    "mcu_pin": "MOTOR4_CURRENT",
+    "net_name": "MOTOR4_CURRENT",
+    "signal": "MOTOR4_CURRENT"
+  },
+  {
+    "graph_pin": "U1.25",
+    "mcu_pin": "MOTOR4_ENC",
+    "net_name": "MOTOR4_ENC",
+    "signal": "MOTOR4_ENC"
+  },
+  {
+    "graph_pin": "U1.26",
+    "mcu_pin": "MOTOR5_PWM",
+    "net_name": "MOTOR5_PWM",
+    "signal": "MOTOR5_PWM"
+  },
+  {
+    "graph_pin": "U1.27",
+    "mcu_pin": "MOTOR5_CURRENT",
+    "net_name": "MOTOR5_CURRENT",
+    "signal": "MOTOR5_CURRENT"
+  },
+  {
+    "graph_pin": "U1.28",
+    "mcu_pin": "MOTOR5_ENC",
+    "net_name": "MOTOR5_ENC",
+    "signal": "MOTOR5_ENC"
+  },
+  {
+    "graph_pin": "U1.29",
+    "mcu_pin": "MOTOR6_PWM",
+    "net_name": "MOTOR6_PWM",
+    "signal": "MOTOR6_PWM"
+  },
+  {
+    "graph_pin": "U1.30",
+    "mcu_pin": "MOTOR6_CURRENT",
+    "net_name": "MOTOR6_CURRENT",
+    "signal": "MOTOR6_CURRENT"
+  },
+  {
+    "graph_pin": "U1.31",
+    "mcu_pin": "MOTOR6_ENC",
+    "net_name": "MOTOR6_ENC",
+    "signal": "MOTOR6_ENC"
+  },
+  {
+    "graph_pin": "U1.32",
+    "mcu_pin": "MOTOR7_PWM",
+    "net_name": "MOTOR7_PWM",
+    "signal": "MOTOR7_PWM"
+  },
+  {
+    "graph_pin": "U1.33",
+    "mcu_pin": "MOTOR7_CURRENT",
+    "net_name": "MOTOR7_CURRENT",
+    "signal": "MOTOR7_CURRENT"
+  },
+  {
+    "graph_pin": "U1.34",
+    "mcu_pin": "MOTOR7_ENC",
+    "net_name": "MOTOR7_ENC",
+    "signal": "MOTOR7_ENC"
+  },
+  {
+    "graph_pin": "U1.35",
+    "mcu_pin": "MOTOR8_PWM",
+    "net_name": "MOTOR8_PWM",
+    "signal": "MOTOR8_PWM"
+  },
+  {
+    "graph_pin": "U1.36",
+    "mcu_pin": "MOTOR8_CURRENT",
+    "net_name": "MOTOR8_CURRENT",
+    "signal": "MOTOR8_CURRENT"
+  },
+  {
+    "graph_pin": "U1.37",
+    "mcu_pin": "MOTOR8_ENC",
+    "net_name": "MOTOR8_ENC",
+    "signal": "MOTOR8_ENC"
+  },
+  {
+    "graph_pin": "U1.38",
+    "mcu_pin": "MOTOR9_PWM",
+    "net_name": "MOTOR9_PWM",
+    "signal": "MOTOR9_PWM"
+  },
+  {
+    "graph_pin": "U1.39",
+    "mcu_pin": "MOTOR9_CURRENT",
+    "net_name": "MOTOR9_CURRENT",
+    "signal": "MOTOR9_CURRENT"
+  },
+  {
+    "graph_pin": "U1.40",
+    "mcu_pin": "MOTOR9_ENC",
+    "net_name": "MOTOR9_ENC",
+    "signal": "MOTOR9_ENC"
+  },
+  {
+    "graph_pin": "U1.41",
+    "mcu_pin": "MOTOR10_PWM",
+    "net_name": "MOTOR10_PWM",
+    "signal": "MOTOR10_PWM"
+  },
+  {
+    "graph_pin": "U1.42",
+    "mcu_pin": "MOTOR10_CURRENT",
+    "net_name": "MOTOR10_CURRENT",
+    "signal": "MOTOR10_CURRENT"
+  },
+  {
+    "graph_pin": "U1.43",
+    "mcu_pin": "MOTOR10_ENC",
+    "net_name": "MOTOR10_ENC",
+    "signal": "MOTOR10_ENC"
+  },
+  {
+    "graph_pin": "U1.44",
+    "mcu_pin": "MOTOR11_PWM",
+    "net_name": "MOTOR11_PWM",
+    "signal": "MOTOR11_PWM"
+  },
+  {
+    "graph_pin": "U1.45",
+    "mcu_pin": "MOTOR11_CURRENT",
+    "net_name": "MOTOR11_CURRENT",
+    "signal": "MOTOR11_CURRENT"
+  },
+  {
+    "graph_pin": "U1.46",
+    "mcu_pin": "MOTOR11_ENC",
+    "net_name": "MOTOR11_ENC",
+    "signal": "MOTOR11_ENC"
+  },
+  {
+    "graph_pin": "U1.47",
+    "mcu_pin": "MOTOR12_PWM",
+    "net_name": "MOTOR12_PWM",
+    "signal": "MOTOR12_PWM"
+  },
+  {
+    "graph_pin": "U1.48",
+    "mcu_pin": "MOTOR12_CURRENT",
+    "net_name": "MOTOR12_CURRENT",
+    "signal": "MOTOR12_CURRENT"
+  },
+  {
+    "graph_pin": "U1.49",
+    "mcu_pin": "MOTOR12_ENC",
+    "net_name": "MOTOR12_ENC",
+    "signal": "MOTOR12_ENC"
+  }
+]

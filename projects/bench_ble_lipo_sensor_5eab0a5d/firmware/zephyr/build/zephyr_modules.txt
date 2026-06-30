@@ -1,0 +1,2 @@
+"hal_stm32":"/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32":"/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32"
+"cmsis_6":"/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6":"${ZEPHYR_CMSIS_6_CMAKE_DIR}"

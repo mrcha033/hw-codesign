@@ -1,0 +1,21 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "layout-signal-precheck",
+    "release_authoritative": false
+  },
+  "failures": [],
+  "gate": "layout_signal_integrity",
+  "metrics": {
+    "noisy_power_components": 17,
+    "rf_components": 0,
+    "rf_edge_distance_max_mm": 8.0,
+    "rf_noisy_keepout_mm": 10.0,
+    "usb_connectors": 1,
+    "usb_devices": 1,
+    "usb_esd_components": 1,
+    "usb_esd_max_connector_distance_mm": 15.0
+  },
+  "status": "pass"
+}

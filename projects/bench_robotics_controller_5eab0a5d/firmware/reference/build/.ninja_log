@@ -1,0 +1,5 @@
+# ninja log v7
+1	25	1782789677729052065	CMakeFiles/board_bsp.dir/src/board.c.o	bd838eed24ba5730
+1	41	1782789677729243151	CMakeFiles/bringup_tests.dir/tests/bringup_tests.c.o	54d1434ffd9e02be
+25	61	1782789677753611268	libboard_bsp.a	9582215924872ddc
+61	89	1782789677788727006	bringup_tests	e45fe7413ad22e4c

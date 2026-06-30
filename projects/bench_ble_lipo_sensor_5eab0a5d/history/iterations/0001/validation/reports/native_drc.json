@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_drc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "pcb",
+      "drc",
+      "--format",
+      "json",
+      "--severity-error",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_drc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_pcb"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 0 violations\nFound 0 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_drc.json\n"
+  },
+  "failures": [],
+  "gate": "native_drc",
+  "metrics": {
+    "violations": 0
+  },
+  "status": "pass"
+}

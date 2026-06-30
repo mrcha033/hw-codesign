@@ -1,0 +1,66 @@
+{
+  "artifacts": [],
+  "backend": {
+    "authority": "heuristic",
+    "name": "power-integrity-estimator"
+  },
+  "failures": [
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "rail_bulk_cap_missing",
+      "details": {
+        "declared_peak_current_a": 2.0,
+        "high_current_connector_loads": [],
+        "loads": [
+          "U1",
+          "U2"
+        ],
+        "rail": "V3V3"
+      },
+      "message": "Rail V3V3 declares 2.00 A peak current without a bulk capacitor in the graph",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "warning"
+    }
+  ],
+  "gate": "power_integrity_estimate",
+  "metrics": {
+    "coverage": {
+      "V3V3": {
+        "bulk": [],
+        "declared_peak_current_a": 2.0,
+        "decoupling": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8"
+        ],
+        "high_current_connector_loads": [],
+        "loads": [
+          "U1",
+          "U2"
+        ]
+      },
+      "V5": {
+        "bulk": [
+          "C9"
+        ],
+        "declared_peak_current_a": 5.0,
+        "decoupling": [],
+        "high_current_connector_loads": [],
+        "loads": [
+          "U6"
+        ]
+      }
+    },
+    "errors": 0,
+    "oracle_boundary": "Heuristic decoupling and bulk-cap coverage only; transient, impedance, and stability still require simulation or bench evidence.",
+    "rails_checked": 2,
+    "warnings": 1
+  },
+  "status": "pass"
+}

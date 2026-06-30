@@ -1,0 +1,367 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-30T12:21:43",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/ea1a2a6e-6802-5648-9825-06444535b5cb",
+            "violations": [
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol F1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.2065
+                            },
+                            "uuid": "a3dc79f0-cbe0-5109-acb1-4241abf2d884"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.2827
+                            },
+                            "uuid": "742c970c-8cf7-5ecf-8005-4a6f5b6b72d0"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'Phoenix_3Pin' not found in library 'TerminalBlock'",
+                    "items": [
+                        {
+                            "description": "Symbol J2 [Conn_01x03]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.3843
+                            },
+                            "uuid": "f16df60a-2bf2-5675-a6cb-ae8543311790"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J3 [Conn_01x03]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.4859
+                            },
+                            "uuid": "7d2761de-06e8-551e-9106-2b465689668b"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'FTSH-105' not found in library 'Connector_Samtec'",
+                    "items": [
+                        {
+                            "description": "Symbol J4 [Conn_01x05]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.6129
+                            },
+                            "uuid": "80d97bb1-9b57-58fa-93b8-433e5ed2c658"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'USB_C_GCT_USB4105' not found in library 'Connector_USB'",
+                    "items": [
+                        {
+                            "description": "Symbol J5 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.7399
+                            },
+                            "uuid": "151c4bc8-3977-5fb5-b5aa-aef58ee8a9b1"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J11 [Conn_01x06]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.8923
+                            },
+                            "uuid": "0390b252-15c3-5156-931d-7e76497ce67c"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J12 [Conn_01x06]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 2.0701
+                            },
+                            "uuid": "d986589f-417c-51a2-9690-a063f910f294"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J13 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 2.2479
+                            },
+                            "uuid": "d86369b0-e1be-5aff-b0a9-7106e9e9ca73"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J14 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 2.4257
+                            },
+                            "uuid": "f30311f5-d0fc-5725-ba50-c9b66eee40c6"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J15 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 2.6035
+                            },
+                            "uuid": "39bfe875-add8-5345-86f1-098a43a8e3b7"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J16 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 2.7813
+                            },
+                            "uuid": "d5924f72-e079-5833-aa0b-814833eba048"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J17 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 2.9591
+                            },
+                            "uuid": "fba7154b-cd6a-5b42-952e-373d41e4d5f2"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J18 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 3.1369
+                            },
+                            "uuid": "c9303f0b-d859-512d-b74f-3c0f4875ab98"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J19 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 3.3147
+                            },
+                            "uuid": "7f6ea66e-de45-56b2-ba85-0de32920ac58"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J20 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 3.4925
+                            },
+                            "uuid": "63e2c1b6-1f45-5d7d-b5fc-a3c04c0a9bea"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J21 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 3.6703
+                            },
+                            "uuid": "3cdebb24-2421-5647-8507-910487b005ea"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol J22 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 3.8481
+                            },
+                            "uuid": "2f7d525c-7c70-550a-a398-c7c4a0517fd3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'LGA-14' not found in library 'Package_LGA'",
+                    "items": [
+                        {
+                            "description": "Symbol U2 [Conn_01x05]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 4.5593
+                            },
+                            "uuid": "82ebd9a8-e392-517a-a3f1-2091f984ac30"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'VQFN-24-1EP' not found in library 'Package_DFN_QFN'",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [Conn_01x04]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 4.6863
+                            },
+                            "uuid": "1029c033-f03e-5200-a6f6-c39c68f40fea"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'WQFN-30' not found in library 'Package_DFN_QFN'",
+                    "items": [
+                        {
+                            "description": "Symbol U4 [Conn_01x03]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 4.8133
+                            },
+                            "uuid": "1f236cca-501d-5c95-a9d7-60438927b122"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'VQFN-16' not found in library 'Package_DFN_QFN'",
+                    "items": [
+                        {
+                            "description": "Symbol U5 [Conn_01x03]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 4.9149
+                            },
+                            "uuid": "feff32b5-1b6a-5059-9cef-c040c5025daa"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                }
+            ]
+        }
+    ],
+    "source": "bench_robotics_controller_5eab0a5d.kicad_sch"
+}

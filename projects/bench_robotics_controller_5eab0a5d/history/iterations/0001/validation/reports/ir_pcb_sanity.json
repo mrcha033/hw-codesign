@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/electronics/generated/kicad/bench_robotics_controller_5eab0a5d.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "footprints": 42,
+    "layers": 4,
+    "pads": 203,
+    "segments": 175
+  },
+  "status": "pass"
+}

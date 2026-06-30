@@ -1,0 +1,87 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-erc"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: can",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: efuse",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: fuse",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: imu",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: motor_io",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: regulator",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: reverse_polarity",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "missing_required_block",
+      "details": {},
+      "message": "Missing schematic block: safety_gate",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "ir_erc",
+  "metrics": {
+    "components": 11,
+    "nets": 17
+  },
+  "status": "fail"
+}

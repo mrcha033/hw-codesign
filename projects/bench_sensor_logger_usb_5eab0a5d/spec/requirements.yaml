@@ -1,0 +1,47 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: ESP32-S3 data logger with USB-C power and ICM-42688-P 6-axis IMU
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: sensing.imu
+    spec_path: sensing.imu
+    value: required
+    field_type: enum
+    source_span: imu
+    affected_gates: &id001
+    - electrical_semantics
+    - firmware_pinmap
+    - firmware_interface_contract
+    status: lowered
+  active_unresolved: []
+  compiler_ir:
+    version: requirements_ir_v1
+    input_id: req_input_0001
+    lowered_fields:
+    - spec_path: sensing.imu
+      value: required
+      field_type: enum
+      source_span: imu
+      affected_gates: *id001
+      status: lowered
+    unresolved_assumptions:
+    - source: motor driver topology retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    - source: cooling condition retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    unsupported_constraints: []
+    required_human_approvals: []
+    affected_gates:
+    - electrical_semantics
+    - firmware_interface_contract
+    - firmware_pinmap

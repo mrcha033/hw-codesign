@@ -1,0 +1,56 @@
+{
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "bytes": 138142,
+      "path": "bench_robotics_controller_5eab0a5d-0001-candidate.zip",
+      "provenance": {
+        "backend": "reference",
+        "command": [],
+        "compiler_version": null,
+        "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+        "release_eligible": false,
+        "role_set_hash": "c2a3d03d056e912ec67eed10acf01ddbbbadb1d105ea40acf0027d10dc81bea0",
+        "source_spec_hash": "4c00ea48ba78f77fe0983933289c335ad8e51d0912c46eb5701c706a8e5f1307",
+        "timestamp": "1970-01-01T00:00:00+00:00",
+        "tool_versions": {
+          "python": "3.14.6"
+        }
+      },
+      "sha256": "b399da74b022a83caf3d440a2dd413099222b27c2a33592e15edf1488a1c0739"
+    },
+    {
+      "bytes": 266841,
+      "path": "candidate.json",
+      "provenance": {
+        "backend": "reference",
+        "command": [],
+        "compiler_version": null,
+        "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+        "release_eligible": false,
+        "role_set_hash": "c2a3d03d056e912ec67eed10acf01ddbbbadb1d105ea40acf0027d10dc81bea0",
+        "source_spec_hash": "4c00ea48ba78f77fe0983933289c335ad8e51d0912c46eb5701c706a8e5f1307",
+        "timestamp": "1970-01-01T00:00:00+00:00",
+        "tool_versions": {
+          "python": "3.14.6"
+        }
+      },
+      "sha256": "a2c6daca511951ec05cd2bca9e7a5452047f21a1504a23eaaba8ce274da5cfbe"
+    }
+  ],
+  "candidate_only": true,
+  "provenance": {
+    "backend": "reference",
+    "command": [],
+    "compiler_version": null,
+    "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+    "release_eligible": false,
+    "role_set_hash": "c2a3d03d056e912ec67eed10acf01ddbbbadb1d105ea40acf0027d10dc81bea0",
+    "source_spec_hash": "4c00ea48ba78f77fe0983933289c335ad8e51d0912c46eb5701c706a8e5f1307",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "release_eligible": false
+}

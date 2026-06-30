@@ -1,0 +1,32 @@
+empty_file.o: \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/misc/empty_file.c \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840.dts \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/arm/nordic/nrf52840_qiaa.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/common/mem.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/arm/nordic/nrf52840.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/arm/armv7-m.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/common/skeleton.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/vendor/nordic/nrf_common.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/adc/adc.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/dt-util.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_macro.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_internal.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_loops.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_listify.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_internal_is_eq.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_internal_util_inc.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_internal_util_dec.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/sys/util_internal_util_x2.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/gpio/gpio.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/i2c/i2c.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/input/input-event-codes.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/pinctrl/nrf-pinctrl.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/pwm/pwm.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/common/freq.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/arm/nordic/override.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/adc/nrf-saadc-v3.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/adc/nrf-saadc-v2.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/adc/nrf-saadc.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/dts/vendor/nordic/nrf52840_partition.dtsi \
+ /Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840-pinctrl.dtsi

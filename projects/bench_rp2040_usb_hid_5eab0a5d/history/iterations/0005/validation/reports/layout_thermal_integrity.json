@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "layout-thermal-precheck",
+    "release_authoritative": false
+  },
+  "failures": [],
+  "gate": "layout_thermal_integrity",
+  "metrics": {
+    "board_area_mm2": 1071.0,
+    "layers": 2,
+    "peak_current_a": 0.0,
+    "sensitive_components": 1,
+    "thermal_risk_components": 0
+  },
+  "status": "pass"
+}

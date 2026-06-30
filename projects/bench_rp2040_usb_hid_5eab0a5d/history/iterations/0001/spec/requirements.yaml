@@ -1,0 +1,55 @@
+requirements:
+  performance:
+  - id: REQ-01
+    text: USB HID report rate ≥ 1000 Hz (1 ms polling)
+  - id: REQ-02
+    text: USB enumeration within 500 ms of power-on
+  reliability:
+  - id: REQ-03
+    text: No USB disconnect events under sustained HID traffic
+  raw_inputs:
+  - id: req_input_0001
+    text: RP2040 USB HID device with 2 MB QSPI flash and USB-C connector
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: compute.mcu.family
+    spec_path: compute.mcu.family
+    value: RP2040
+    field_type: string
+    source_span: RP2040
+    affected_gates: &id001
+    - pin_symbol_footprint
+    - firmware_pinmap
+    - native_zephyr_build
+    status: lowered
+  active_unresolved: []
+  compiler_ir:
+    version: requirements_ir_v1
+    input_id: req_input_0001
+    lowered_fields:
+    - spec_path: compute.mcu.family
+      value: RP2040
+      field_type: string
+      source_span: RP2040
+      affected_gates: *id001
+      status: lowered
+    unresolved_assumptions:
+    - source: motor driver topology retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    - source: cooling condition retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    unsupported_constraints: []
+    required_human_approvals: []
+    affected_gates:
+    - firmware_pinmap
+    - native_zephyr_build
+    - pin_symbol_footprint

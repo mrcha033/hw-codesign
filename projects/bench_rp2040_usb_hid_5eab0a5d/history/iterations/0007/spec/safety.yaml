@@ -1,0 +1,6 @@
+safety:
+  regulatory:
+  - CE
+  - FCC_B
+  isolation_required: false
+  esd_protection: required

@@ -1,0 +1,33 @@
+{
+  "artifacts": [],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "name": "tscircuit",
+    "offline": true,
+    "returncode": 0,
+    "stderr": "No footprint specified for component: <chip#5(.RobotController>.F1) />\nComponent LD1 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\nComponent R4 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\n",
+    "stdout": "Building 1 file(s)...\nBuilding projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs...\nGenerating circuit JSON...\nDispatch phase complete. Created 11 sub-solvers.\nCircuit JSON written to dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json\nAll pins on J1 are underspecified (no pinAttributes set)\nAll pins on F1 are underspecified (no pinAttributes set)\nAll pins on Q1 are underspecified (no pinAttributes set)\nAll pins on U2 are underspecified (no pinAttributes set)\nAll pins on BT1 are underspecified (no pinAttributes set)\nAll pins on U3 are underspecified (no pinAttributes set)\nAll pins on LD1 are underspecified (no pinAttributes set)\nAll pins on U1 are underspecified (no pinAttributes set)\nAll pins on U5 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on R1 are underspecified (no pinAttributes set)\nAll pins on R2 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on D1 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nF1 has no pin with requires_power=true\nQ1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nBT1 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nLD1 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU5 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nF1 has no pin with requires_ground=true\nQ1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nBT1 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nLD1 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU5 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u26a0 Build completed with errors\nBuild exiting with code 0: build finished successfully\n",
+    "version": "0.1.1491"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "compile_prerequisite_failed",
+      "details": {},
+      "message": "Prerequisite compile gate did not pass",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "tscircuit_netlist_extract",
+  "metrics": {},
+  "status": "blocked"
+}

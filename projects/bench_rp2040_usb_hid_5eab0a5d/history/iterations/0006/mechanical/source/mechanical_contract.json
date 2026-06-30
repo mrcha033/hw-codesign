@@ -1,0 +1,157 @@
+{
+  "board": {
+    "component_height_map": [
+      {
+        "category": "power_input",
+        "height_mm": 4.0,
+        "ref": "J1",
+        "x_mm": 3.0,
+        "y_mm": 10.0
+      },
+      {
+        "category": "tvs",
+        "height_mm": 4.0,
+        "ref": "D1",
+        "x_mm": 10.0,
+        "y_mm": 10.0
+      },
+      {
+        "category": "regulator_3v3",
+        "height_mm": 4.0,
+        "ref": "U1",
+        "x_mm": 3.0,
+        "y_mm": 15.0
+      },
+      {
+        "category": "mcu",
+        "height_mm": 4.0,
+        "ref": "U2",
+        "x_mm": 18.0,
+        "y_mm": 4.0
+      },
+      {
+        "category": "flash",
+        "height_mm": 4.0,
+        "ref": "U3",
+        "x_mm": 33.0,
+        "y_mm": 2.0
+      },
+      {
+        "category": "crystal_12m",
+        "height_mm": 4.0,
+        "ref": "X1",
+        "x_mm": 33.0,
+        "y_mm": 10.0
+      },
+      {
+        "category": "debug_header",
+        "height_mm": 4.0,
+        "ref": "J2",
+        "x_mm": 18.0,
+        "y_mm": 12.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C1",
+        "x_mm": 3.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C2",
+        "x_mm": 7.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "bulk_cap",
+        "height_mm": 4.0,
+        "ref": "C3",
+        "x_mm": 11.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "bulk_cap",
+        "height_mm": 4.0,
+        "ref": "C4",
+        "x_mm": 9.0,
+        "y_mm": 15.0
+      }
+    ],
+    "height_mm": 21.0,
+    "max_component_height_bottom_mm": 1.0,
+    "max_component_height_top_mm": 3.5,
+    "origin_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "thickness_mm": 1.6,
+    "width_mm": 51.0
+  },
+  "clearances": {
+    "assembly_mm": 0.5,
+    "insertion_mm": 1.0,
+    "max_connector_edge_distance_mm": 6.0,
+    "tolerance_mm": 0.2
+  },
+  "connector_component_refs": [
+    "J1"
+  ],
+  "connector_cutouts": [],
+  "connector_retention": {},
+  "contract_version": 1,
+  "enclosure": {
+    "internal_mm": [
+      51.0,
+      25.0,
+      9.0
+    ],
+    "wall_thickness_mm": 2.0
+  },
+  "fixtures": {
+    "frame_brackets": {
+      "enabled": false
+    },
+    "mounting_plate": {
+      "enabled": false
+    }
+  },
+  "mounting_holes": [
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 2.5,
+      "y_mm": 2.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 48.5,
+      "y_mm": 2.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 2.5,
+      "y_mm": 18.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 48.5,
+      "y_mm": 18.5
+    }
+  ],
+  "provenance": {
+    "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+    "role_set_hash": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+    "source_spec_hash": "83b561f7a3de9ccbf9056a4568126323ddf2989cf5d05ea30b44a14a04645698"
+  },
+  "selected_variant": "bare_pcb",
+  "variants": [
+    {
+      "gasket": false,
+      "lid_style": "none",
+      "name": "bare_pcb",
+      "ventilation": "none"
+    }
+  ]
+}

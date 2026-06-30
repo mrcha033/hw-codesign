@@ -1,0 +1,14 @@
+{
+  "board": {
+    "design_settings": {
+      "rules": {
+        "min_clearance": 0.15,
+        "min_track_width": 0.15
+      }
+    }
+  },
+  "meta": {
+    "filename": "bench_sensor_logger_usb_5eab0a5d.kicad_pro",
+    "version": 1
+  }
+}

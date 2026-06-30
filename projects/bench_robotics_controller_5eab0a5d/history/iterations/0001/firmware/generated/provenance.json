@@ -1,0 +1,13 @@
+{
+  "backend": "reference",
+  "command": [],
+  "compiler_version": null,
+  "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+  "release_eligible": false,
+  "role_set_hash": "c2a3d03d056e912ec67eed10acf01ddbbbadb1d105ea40acf0027d10dc81bea0",
+  "source_spec_hash": "4c00ea48ba78f77fe0983933289c335ad8e51d0912c46eb5701c706a8e5f1307",
+  "timestamp": "1970-01-01T00:00:00+00:00",
+  "tool_versions": {
+    "python": "3.14.6"
+  }
+}

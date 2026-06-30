@@ -1,0 +1,6 @@
+name: bench_rp2040_usb_hid_5eab0a5d
+description: Raspberry Pi RP2040 USB device — HID/CDC with external 2MB QSPI flash
+  and USB-C
+version: 0.1.0
+template: rp2040_usb_device
+created_at: '2026-06-21'

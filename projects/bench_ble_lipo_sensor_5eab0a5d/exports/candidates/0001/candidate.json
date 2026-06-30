@@ -1,0 +1,4797 @@
+{
+  "candidate_only": true,
+  "checks": {
+    "reports": [
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "spec_schema",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "requirements_lowering",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "semantic_electrical",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "mechanical_fit",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "firmware_pinmap",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "mechanical_connector_retention",
+        "metrics": {
+          "connectors_exposed": true,
+          "errors": 0,
+          "high_vibration": false,
+          "missing_connector_refs": [],
+          "required": false,
+          "required_connector_refs": [
+            "J1"
+          ],
+          "retained_connector_refs": [],
+          "retention_method": "",
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "mechanical_connector_cutouts",
+        "metrics": {
+          "alignment_failure_refs": [],
+          "connector_refs": [
+            "J1"
+          ],
+          "errors": 0,
+          "interface_refs": [
+            "J1"
+          ],
+          "max_connector_edge_distance_mm": 5.0,
+          "missing_component_refs": [],
+          "missing_cutout_refs": [],
+          "out_of_bounds_refs": [],
+          "required": true,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "mechanical_mounting_integrity",
+        "metrics": {
+          "assembly_clearance_mm": 0.8,
+          "collision_refs": [],
+          "errors": 0,
+          "holes_checked": 4,
+          "invalid_hole_indices": [],
+          "manufacturing_clearance_mm": 0.15,
+          "oracle_boundary": "center-point screw/standoff keepout precheck; native CAD and board DRC remain authoritative for courtyard and fastener geometry",
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "firmware_modules",
+        "metrics": {
+          "isr_count": 0,
+          "module_count": 0,
+          "required_behaviors": [],
+          "total_stack_bytes": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+        ],
+        "backend": {
+          "mutates_database": false,
+          "name": "ComponentResolver"
+        },
+        "failures": [],
+        "gate": "component_resolution",
+        "metrics": {
+          "critical_roles": 9,
+          "requested": 19,
+          "resolved": 19,
+          "supplier_provider": "curated"
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml"
+        ],
+        "backend": {
+          "normalized_contract": "supplier_offer_v1",
+          "provider": "curated"
+        },
+        "failures": [
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for J1 at curated",
+            "path": "J1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for F1 at curated",
+            "path": "F1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for Q1 at curated",
+            "path": "Q1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for U2 at curated",
+            "path": "U2",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for BT1 at curated",
+            "path": "BT1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for U3 at curated",
+            "path": "U3",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for LD1 at curated",
+            "path": "LD1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for U1 at curated",
+            "path": "U1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for U5 at curated",
+            "path": "U5",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for J2 at curated",
+            "path": "J2",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for R1 at curated",
+            "path": "R1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for R2 at curated",
+            "path": "R2",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for R3 at curated",
+            "path": "R3",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for R4 at curated",
+            "path": "R4",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for C1 at curated",
+            "path": "C1",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for C2 at curated",
+            "path": "C2",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for C3 at curated",
+            "path": "C3",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for C4 at curated",
+            "path": "C4",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "supplier_availability_unknown",
+            "details": {},
+            "message": "Current availability is not evidenced for D1 at curated",
+            "path": "D1",
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "supplier_availability",
+        "metrics": {
+          "components_checked": 19,
+          "provider": "curated"
+        },
+        "status": "blocked"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml"
+        ],
+        "backend": {},
+        "failures": [],
+        "gate": "datasheet_evidence",
+        "metrics": {
+          "components_checked": 19
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "bom",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "sourcing",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+        ],
+        "backend": {
+          "deterministic": true,
+          "name": "sourcing-resilience-contract"
+        },
+        "failures": [],
+        "gate": "sourcing_resilience",
+        "metrics": {
+          "alternate_roles": 0,
+          "checked_alternates": 0,
+          "critical_roles": 9,
+          "role_set": "ble_sensor_node",
+          "single_source_justified_roles": 9,
+          "supplier_provider": "curated"
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [
+          {
+            "category": "BOM_ERROR",
+            "code": "symbol_pin_missing",
+            "details": {},
+            "message": "J2.6 is absent from curated symbol contract",
+            "path": "J2",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "symbol_pin_missing",
+            "details": {},
+            "message": "J2.7 is absent from curated symbol contract",
+            "path": "J2",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "BOM_ERROR",
+            "code": "symbol_pin_missing",
+            "details": {},
+            "message": "J2.8 is absent from curated symbol contract",
+            "path": "J2",
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "component_provenance",
+        "metrics": {
+          "components_checked": 19
+        },
+        "status": "fail"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "pin_symbol_footprint",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "power_tree_integrity",
+        "metrics": {
+          "errors": 0,
+          "power_loads_checked": 9,
+          "source_nets": [
+            "USB_FUSED",
+            "USB_PROT",
+            "USB_VBUS",
+            "V3V3",
+            "VBAT"
+          ],
+          "transfer_components": 4,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "authority": "heuristic",
+          "name": "power-integrity-estimator"
+        },
+        "failures": [],
+        "gate": "power_integrity_estimate",
+        "metrics": {
+          "coverage": {
+            "V3V3": {
+              "bulk": [
+                "C4"
+              ],
+              "declared_peak_current_a": 0.2,
+              "decoupling": [
+                "C1",
+                "C2"
+              ],
+              "high_current_connector_loads": [],
+              "loads": [
+                "U1",
+                "U3",
+                "U5"
+              ]
+            },
+            "VBAT": {
+              "bulk": [
+                "C3"
+              ],
+              "declared_peak_current_a": 0.3,
+              "decoupling": [],
+              "high_current_connector_loads": [],
+              "loads": [
+                "U3"
+              ]
+            }
+          },
+          "errors": 0,
+          "oracle_boundary": "Heuristic decoupling and bulk-cap coverage only; transient, impedance, and stability still require simulation or bench evidence.",
+          "rails_checked": 2,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "interface_integrity",
+        "metrics": {
+          "can_pair_present": false,
+          "errors": 0,
+          "i2c_nets_checked": 2,
+          "usb_bridge_present": true,
+          "usb_nets_checked": 4,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/semantic/semantic_schematic.json",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/semantic/semantic_schematic.py"
+        ],
+        "backend": {
+          "deterministic": true,
+          "name": "semantic_schematic_dsl"
+        },
+        "failures": [],
+        "gate": "semantic_schematic_roundtrip",
+        "metrics": {
+          "code_roundtrip_exact": true,
+          "components": 19,
+          "nets": 23,
+          "pin_name_connections": 88
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+        ],
+        "backend": {
+          "deterministic": true,
+          "name": "support-circuit-contract"
+        },
+        "failures": [],
+        "gate": "support_circuit_completeness",
+        "metrics": {
+          "components": 19,
+          "critical_roles": 9,
+          "net_contract_checks": 9,
+          "resolved_critical_roles": 9,
+          "role_set": "ble_sensor_node"
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [],
+        "gate": "hw_sw_parity",
+        "metrics": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/app/prj.conf",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/tests/test_ble_adv.c",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/tests/test_i2c_sensors.c",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/tests/test_usb_connection.c"
+        ],
+        "backend": {
+          "deterministic": true,
+          "name": "firmware-interface-contract"
+        },
+        "failures": [],
+        "gate": "firmware_interface_contract",
+        "metrics": {
+          "config_options": [
+            "CONFIG_BT=y",
+            "CONFIG_BT_PERIPHERAL=y",
+            "CONFIG_GPIO=y",
+            "CONFIG_I2C=y",
+            "CONFIG_SENSOR=y",
+            "CONFIG_USB_DEVICE_STACK=y"
+          ],
+          "pinmap_signals": [
+            "CHG_STAT",
+            "FUEL_ALRT",
+            "I2C_SCL",
+            "I2C_SDA",
+            "LED_BLE",
+            "SWDCLK",
+            "SWO",
+            "TEMP_INT",
+            "UART_RX",
+            "UART_TX",
+            "USB_DM",
+            "USB_DP"
+          ],
+          "required_interfaces": [
+            "i2c",
+            "usb",
+            "ble"
+          ],
+          "test_files": [
+            "test_ble_adv.c",
+            "test_i2c_sensors.c",
+            "test_usb_connection.c"
+          ]
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "deterministic": true,
+          "name": "reference-ir-erc"
+        },
+        "failures": [],
+        "gate": "ir_erc",
+        "metrics": {
+          "components": 19,
+          "nets": 23
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_pcb"
+        ],
+        "backend": {
+          "deterministic": true,
+          "name": "reference-ir-drc"
+        },
+        "failures": [],
+        "gate": "ir_pcb_sanity",
+        "metrics": {
+          "footprints": 19,
+          "layers": 2,
+          "pads": 88,
+          "segments": 55
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/reference/build/bringup_tests"
+        ],
+        "backend": {
+          "name": "reference-host-bsp",
+          "returncode": 0,
+          "stderr": ""
+        },
+        "failures": [],
+        "gate": "reference_firmware_build",
+        "metrics": {},
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "deterministic": true,
+          "name": "placement-proposal",
+          "release_authoritative": false
+        },
+        "failures": [
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "J1",
+                "F1"
+              ]
+            },
+            "message": "J1 and F1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "J1",
+                "D1"
+              ]
+            },
+            "message": "J1 and D1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "Q1",
+                "U2"
+              ]
+            },
+            "message": "Q1 and U2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "U2",
+                "LD1"
+              ]
+            },
+            "message": "U2 and LD1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "BT1",
+                "U3"
+              ]
+            },
+            "message": "BT1 and U3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "U3",
+                "R4"
+              ]
+            },
+            "message": "U3 and R4 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "U3",
+                "C3"
+              ]
+            },
+            "message": "U3 and C3 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "U5",
+                "J2"
+              ]
+            },
+            "message": "U5 and J2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "R1",
+                "D1"
+              ]
+            },
+            "message": "R1 and D1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "estimated_courtyard_overlap",
+            "details": {
+              "refs": [
+                "R2",
+                "D1"
+              ]
+            },
+            "message": "R2 and D1 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "warning"
+          },
+          {
+            "category": "MECHANICAL_ERROR",
+            "code": "decoupling_proximity_deferred",
+            "details": {
+              "ref": "C1"
+            },
+            "message": "C1 decoupling proximity not enforced: Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "info"
+          }
+        ],
+        "gate": "placement_constraints",
+        "metrics": {
+          "authoritative": false,
+          "constraints": 10,
+          "cost": 0,
+          "cost_breakdown": {},
+          "errors": 0,
+          "finding_counts": {
+            "decoupling_proximity_deferred": 1,
+            "estimated_courtyard_overlap": 10
+          },
+          "method": "constraint_driven_placement_proposal",
+          "placements": 19,
+          "solver_iterations": 0,
+          "warnings": 10
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "deterministic": true,
+          "name": "layout-thermal-precheck",
+          "release_authoritative": false
+        },
+        "failures": [],
+        "gate": "layout_thermal_integrity",
+        "metrics": {
+          "board_area_mm2": 1750.0,
+          "layers": 2,
+          "peak_current_a": 0.3,
+          "sensitive_components": 3,
+          "thermal_risk_components": 3
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "deterministic": true,
+          "name": "layout-signal-precheck",
+          "release_authoritative": false
+        },
+        "failures": [],
+        "gate": "layout_signal_integrity",
+        "metrics": {
+          "noisy_power_components": 3,
+          "rf_components": 1,
+          "rf_edge_distance_max_mm": 8.0,
+          "rf_noisy_keepout_mm": 10.0,
+          "usb_connectors": 1,
+          "usb_devices": 1,
+          "usb_esd_components": 1,
+          "usb_esd_max_connector_distance_mm": 15.0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/assembly_drawing.svg",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_5eab0a5d-Edge_Cuts.gm1",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_5eab0a5d-F_Cu.gtl",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_5eab0a5d-board_outline.dxf",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/bench_ble_lipo_sensor_5eab0a5d.drl",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/bom.csv",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/drill.zip",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/gerbers.zip",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/panelization.json",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/reference-fabrication/fabrication/pick_and_place.csv"
+        ],
+        "backend": {
+          "candidate_only": true,
+          "name": "reference-fabrication",
+          "release_eligible": false
+        },
+        "failures": [],
+        "gate": "reference_fabrication",
+        "metrics": {
+          "artifact_count": 10,
+          "candidate_only": true
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json"
+        ],
+        "backend": {
+          "command": [
+            "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+            "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+            "build",
+            "projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+            "--ignore-config",
+            "--disable-parts-engine"
+          ],
+          "name": "tscircuit",
+          "offline": true,
+          "returncode": 0,
+          "stderr": "No footprint specified for component: <chip#5(.RobotController>.F1) />\nComponent LD1 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\nComponent R4 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\n",
+          "stdout": "Building 1 file(s)...\nBuilding projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs...\nGenerating circuit JSON...\nDispatch phase complete. Created 11 sub-solvers.\nCircuit JSON written to dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json\nAll pins on J1 are underspecified (no pinAttributes set)\nAll pins on F1 are underspecified (no pinAttributes set)\nAll pins on Q1 are underspecified (no pinAttributes set)\nAll pins on U2 are underspecified (no pinAttributes set)\nAll pins on BT1 are underspecified (no pinAttributes set)\nAll pins on U3 are underspecified (no pinAttributes set)\nAll pins on LD1 are underspecified (no pinAttributes set)\nAll pins on U1 are underspecified (no pinAttributes set)\nAll pins on U5 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on R1 are underspecified (no pinAttributes set)\nAll pins on R2 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on D1 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nF1 has no pin with requires_power=true\nQ1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nBT1 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nLD1 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU5 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nF1 has no pin with requires_ground=true\nQ1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nBT1 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nLD1 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU5 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u26a0 Build completed with errors\nBuild exiting with code 0: build finished successfully\n",
+          "version": "0.1.1491"
+        },
+        "failures": [
+          {
+            "category": "EDA_ERROR",
+            "code": "compiled_circuit_contains_errors",
+            "details": {
+              "count": 3,
+              "types": [
+                "pcb_component_outside_board_error",
+                "pcb_missing_footprint_error"
+              ]
+            },
+            "message": "tscircuit emitted Circuit JSON error elements",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "tscircuit_compile",
+        "metrics": {},
+        "status": "fail"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "command": [
+            "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+            "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+            "build",
+            "projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+            "--ignore-config",
+            "--disable-parts-engine"
+          ],
+          "name": "tscircuit",
+          "offline": true,
+          "returncode": 0,
+          "stderr": "No footprint specified for component: <chip#5(.RobotController>.F1) />\nComponent LD1 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\nComponent R4 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\n",
+          "stdout": "Building 1 file(s)...\nBuilding projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs...\nGenerating circuit JSON...\nDispatch phase complete. Created 11 sub-solvers.\nCircuit JSON written to dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json\nAll pins on J1 are underspecified (no pinAttributes set)\nAll pins on F1 are underspecified (no pinAttributes set)\nAll pins on Q1 are underspecified (no pinAttributes set)\nAll pins on U2 are underspecified (no pinAttributes set)\nAll pins on BT1 are underspecified (no pinAttributes set)\nAll pins on U3 are underspecified (no pinAttributes set)\nAll pins on LD1 are underspecified (no pinAttributes set)\nAll pins on U1 are underspecified (no pinAttributes set)\nAll pins on U5 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on R1 are underspecified (no pinAttributes set)\nAll pins on R2 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on D1 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nF1 has no pin with requires_power=true\nQ1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nBT1 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nLD1 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU5 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nF1 has no pin with requires_ground=true\nQ1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nBT1 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nLD1 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU5 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u26a0 Build completed with errors\nBuild exiting with code 0: build finished successfully\n",
+          "version": "0.1.1491"
+        },
+        "failures": [
+          {
+            "category": "EDA_ERROR",
+            "code": "compile_prerequisite_failed",
+            "details": {},
+            "message": "Prerequisite compile gate did not pass",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "tscircuit_netlist_extract",
+        "metrics": {},
+        "status": "blocked"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "command": [
+            "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+            "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+            "build",
+            "projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+            "--ignore-config",
+            "--disable-parts-engine"
+          ],
+          "name": "tscircuit",
+          "offline": true,
+          "returncode": 0,
+          "stderr": "No footprint specified for component: <chip#5(.RobotController>.F1) />\nComponent LD1 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\nComponent R4 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\n",
+          "stdout": "Building 1 file(s)...\nBuilding projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs...\nGenerating circuit JSON...\nDispatch phase complete. Created 11 sub-solvers.\nCircuit JSON written to dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json\nAll pins on J1 are underspecified (no pinAttributes set)\nAll pins on F1 are underspecified (no pinAttributes set)\nAll pins on Q1 are underspecified (no pinAttributes set)\nAll pins on U2 are underspecified (no pinAttributes set)\nAll pins on BT1 are underspecified (no pinAttributes set)\nAll pins on U3 are underspecified (no pinAttributes set)\nAll pins on LD1 are underspecified (no pinAttributes set)\nAll pins on U1 are underspecified (no pinAttributes set)\nAll pins on U5 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on R1 are underspecified (no pinAttributes set)\nAll pins on R2 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on D1 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nF1 has no pin with requires_power=true\nQ1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nBT1 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nLD1 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU5 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nF1 has no pin with requires_ground=true\nQ1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nBT1 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nLD1 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU5 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u26a0 Build completed with errors\nBuild exiting with code 0: build finished successfully\n",
+          "version": "0.1.1491"
+        },
+        "failures": [
+          {
+            "category": "EDA_ERROR",
+            "code": "compile_prerequisite_failed",
+            "details": {},
+            "message": "Prerequisite compile gate did not pass",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "tscircuit_graph_parity",
+        "metrics": {},
+        "status": "blocked"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "command": [
+            "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+            "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+            "build",
+            "projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+            "--ignore-config",
+            "--disable-parts-engine"
+          ],
+          "name": "tscircuit",
+          "offline": true,
+          "returncode": 0,
+          "stderr": "No footprint specified for component: <chip#5(.RobotController>.F1) />\nComponent LD1 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\nComponent R4 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\n",
+          "stdout": "Building 1 file(s)...\nBuilding projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs...\nGenerating circuit JSON...\nDispatch phase complete. Created 11 sub-solvers.\nCircuit JSON written to dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json\nAll pins on J1 are underspecified (no pinAttributes set)\nAll pins on F1 are underspecified (no pinAttributes set)\nAll pins on Q1 are underspecified (no pinAttributes set)\nAll pins on U2 are underspecified (no pinAttributes set)\nAll pins on BT1 are underspecified (no pinAttributes set)\nAll pins on U3 are underspecified (no pinAttributes set)\nAll pins on LD1 are underspecified (no pinAttributes set)\nAll pins on U1 are underspecified (no pinAttributes set)\nAll pins on U5 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on R1 are underspecified (no pinAttributes set)\nAll pins on R2 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on D1 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nF1 has no pin with requires_power=true\nQ1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nBT1 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nLD1 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU5 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nF1 has no pin with requires_ground=true\nQ1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nBT1 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nLD1 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU5 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u26a0 Build completed with errors\nBuild exiting with code 0: build finished successfully\n",
+          "version": "0.1.1491"
+        },
+        "failures": [
+          {
+            "category": "EDA_ERROR",
+            "code": "compile_prerequisite_failed",
+            "details": {},
+            "message": "Prerequisite compile gate did not pass",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "tscircuit_footprint_parity",
+        "metrics": {},
+        "status": "blocked"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "command": [
+            "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+            "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+            "build",
+            "projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+            "--ignore-config",
+            "--disable-parts-engine"
+          ],
+          "name": "tscircuit",
+          "offline": true,
+          "returncode": 0,
+          "stderr": "No footprint specified for component: <chip#5(.RobotController>.F1) />\nComponent LD1 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\nComponent R4 extends outside board boundaries by 6mm. Try moving it 7mm left to fit within the board edge.\n",
+          "stdout": "Building 1 file(s)...\nBuilding projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs...\nGenerating circuit JSON...\nDispatch phase complete. Created 11 sub-solvers.\nCircuit JSON written to dist/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs/circuit.json\nAll pins on J1 are underspecified (no pinAttributes set)\nAll pins on F1 are underspecified (no pinAttributes set)\nAll pins on Q1 are underspecified (no pinAttributes set)\nAll pins on U2 are underspecified (no pinAttributes set)\nAll pins on BT1 are underspecified (no pinAttributes set)\nAll pins on U3 are underspecified (no pinAttributes set)\nAll pins on LD1 are underspecified (no pinAttributes set)\nAll pins on U1 are underspecified (no pinAttributes set)\nAll pins on U5 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on R1 are underspecified (no pinAttributes set)\nAll pins on R2 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on D1 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nF1 has no pin with requires_power=true\nQ1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nBT1 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nLD1 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU5 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nF1 has no pin with requires_ground=true\nQ1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nBT1 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nLD1 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU5 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u26a0 Build completed with errors\nBuild exiting with code 0: build finished successfully\n",
+          "version": "0.1.1491"
+        },
+        "failures": [
+          {
+            "category": "EDA_ERROR",
+            "code": "compile_prerequisite_failed",
+            "details": {},
+            "message": "Prerequisite compile gate did not pass",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "tscircuit_layout_completeness",
+        "metrics": {},
+        "status": "blocked"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/backend-validation/tscircuit/fabrication/gerbers.zip",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/backend-validation/tscircuit/fabrication/drill.zip",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/backend-validation/tscircuit/fabrication/pick_and_place.csv",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/backend-validation/tscircuit/fabrication/bom.csv",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/exports/candidates/backend-validation/tscircuit/mechanical/board.step"
+        ],
+        "backend": {
+          "deterministic_archive": true,
+          "electronics_backend": "tscircuit",
+          "export_bridge": "compiled_graph_to_kicad",
+          "name": "kicad-cli"
+        },
+        "failures": [],
+        "gate": "tscircuit_manufacturing_export",
+        "metrics": {
+          "bom": true,
+          "drill_files": 2,
+          "gerber_files": 8,
+          "position_file": true
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_pcb",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.dsn",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.ses",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/routing.json"
+        ],
+        "backend": {
+          "command": [
+            "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+            "-Djava.awt.headless=true",
+            "-jar",
+            "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+            "-de",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.dsn",
+            "-do",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.ses",
+            "-mp",
+            "20",
+            "-mt",
+            "4",
+            "-l",
+            "en"
+          ],
+          "log_tail": "2026-06-30 12:10:51.182 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-06-30 12:10:51.206 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-06-30 12:10:52.335 INFO   [C272CB\\147EB4] Job 'C272CB\\147EB4' started at 2026-06-30T03:10:52.334777Z.\n2026-06-30 12:10:52.361 INFO   New version available: v2.2.4\n2026-06-30 12:10:53.298 INFO   [C272CB\\147EB4] Auto-router pass #1 on board '334e31fb62f9eab2ae4ca6ac4c3d7bcd' was completed in 0.89 seconds with the score of 989.11 (1 unrouted).\n2026-06-30 12:10:53.383 INFO   [C272CB\\147EB4] Auto-router pass #2 on board '74412ac93500c5ef56a686d1755a6979' was completed in 0.07 seconds with the score of 996.10, using 0.95 CPU seconds and the job allocated 0.68 GB of memory so far.\n2026-06-30 12:10:53.392 INFO   [C272CB\\147EB4] Auto-router pass #3 on board '2d04c3eba73690ef4da9f21d8d6dce4c' was completed in 0.00 seconds with the score of 996.10, using 0.95 CPU seconds and the job allocated 0.68 GB of memory so far.\n2026-06-30 12:10:53.402 INFO   [C272CB\\147EB4] Auto-router session completed: started with 47 unrouted nets, completed in 1.04 seconds, final score: 996.10, using 0.95 total CPU seconds, 0.68 GB total allocated, and 85.95 MB peak heap usage.\n\n",
+          "name": "freerouting",
+          "returncode": 0,
+          "tools": {
+            "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+            "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+            "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+          },
+          "version": "2.2.4"
+        },
+        "failures": [],
+        "gate": "autoroute",
+        "metrics": {
+          "max_passes": 20,
+          "unrouted": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_erc.json"
+        ],
+        "backend": {
+          "available": true,
+          "command": [
+            "kicad-cli",
+            "sch",
+            "erc",
+            "--format",
+            "json",
+            "--output",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_erc.json",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_sch"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Found 6 violations\nSaved ERC Report to /Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_erc.json\n"
+        },
+        "failures": [],
+        "gate": "native_erc",
+        "metrics": {
+          "footprint_link_issues": 6,
+          "violations": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_drc.json"
+        ],
+        "backend": {
+          "available": true,
+          "command": [
+            "kicad-cli",
+            "pcb",
+            "drc",
+            "--format",
+            "json",
+            "--severity-error",
+            "--output",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_drc.json",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_pcb"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Found 0 violations\nFound 0 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/reports/kicad_drc.json\n"
+        },
+        "failures": [],
+        "gate": "native_drc",
+        "metrics": {
+          "violations": 0
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "name": "kicad-cli"
+        },
+        "failures": [],
+        "gate": "kicad_library_crosscheck",
+        "metrics": {
+          "issues": 0,
+          "method": "native_erc_drc_library_resolution"
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {},
+        "failures": [
+          {
+            "category": "TOOL_ERROR",
+            "code": "tool_unavailable",
+            "details": {},
+            "message": "cadquery-ocp is not installed",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "native_mechanical_validation",
+        "metrics": {},
+        "status": "blocked"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "available": false,
+          "command": [
+            "cmake",
+            "-S",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/app",
+            "-B",
+            "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/build",
+            "-G",
+            "Ninja",
+            "-DBOARD=nrf52840dk/nrf52840",
+            "-DZEPHYR_MODULES=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal_nordic",
+            "-DPython3_EXECUTABLE=/Users/mrcha033/Documents/hw-cli/.venv/bin/python3",
+            "-DBOARD_ROOT=/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr",
+            "-DZEPHYR_CMSIS_6_MODULE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+            "-DZEPHYR_CMSIS_6_CMAKE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/cmsis_6"
+          ],
+          "returncode": null,
+          "stderr": "cmake timed out after 600s",
+          "stdout": ""
+        },
+        "failures": [
+          {
+            "category": "TOOL_ERROR",
+            "code": "tool_unavailable",
+            "details": {
+              "command": [
+                "cmake",
+                "-S",
+                "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/app",
+                "-B",
+                "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/build",
+                "-G",
+                "Ninja",
+                "-DBOARD=nrf52840dk/nrf52840",
+                "-DZEPHYR_MODULES=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal_nordic",
+                "-DPython3_EXECUTABLE=/Users/mrcha033/Documents/hw-cli/.venv/bin/python3",
+                "-DBOARD_ROOT=/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr",
+                "-DZEPHYR_CMSIS_6_MODULE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+                "-DZEPHYR_CMSIS_6_CMAKE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/cmsis_6"
+              ]
+            },
+            "message": "cmake timed out after 600s",
+            "path": null,
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "native_zephyr_build",
+        "metrics": {},
+        "status": "blocked"
+      },
+      {
+        "artifacts": [
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/physical/qualification_plan.json",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/validation/physical/qualification_plan.md"
+        ],
+        "backend": {
+          "digital_only": false,
+          "name": "physical-qualification-ledger"
+        },
+        "failures": [
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "assembly_quality",
+              "evidence_required": [
+                "photos",
+                "assembly_checklist",
+                "bom_lot_trace"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+            "path": "validation.physical_evidence.assembly_inspection",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "bringup",
+              "evidence_required": [
+                "bench_supply_log",
+                "rail_voltage_measurements",
+                "thermal_image_optional"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+            "path": "validation.physical_evidence.current_limited_power_up",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "firmware_co_design",
+              "evidence_required": [
+                "flash_log",
+                "interface_probe_log",
+                "firmware_revision_hash"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+            "path": "validation.physical_evidence.firmware_interface_bringup",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "thermal",
+              "evidence_required": [
+                "thermal_camera_capture",
+                "load_profile_log",
+                "ambient_temperature_log"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+            "path": "validation.physical_evidence.thermal_load_profile",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "emi_emc",
+              "evidence_required": [
+                "emi_prescan_report",
+                "test_setup_photos",
+                "cable_configuration"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+            "path": "validation.physical_evidence.emi_emc_prescan",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "si_pi",
+              "evidence_required": [
+                "oscilloscope_captures",
+                "probe_points",
+                "load_state_log"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+            "path": "validation.physical_evidence.signal_power_integrity_probe",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "mechanical_reliability",
+              "evidence_required": [
+                "vibration_test_log",
+                "post_test_inspection_photos",
+                "connector_retention_measurements"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+            "path": "validation.physical_evidence.vibration_connector_retention",
+            "requires_user_decision": true,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_evidence_missing",
+            "details": {
+              "category": "environmental_safety",
+              "evidence_required": [
+                "ingress_test_report_or_waiver",
+                "esd_test_log_or_waiver",
+                "enclosure_photos"
+              ]
+            },
+            "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+            "path": "validation.physical_evidence.ingress_esd_abuse_check",
+            "requires_user_decision": true,
+            "severity": "error"
+          }
+        ],
+        "gate": "physical_qualification",
+        "metrics": {
+          "approved_passed": 0,
+          "failed": 0,
+          "missing_or_unapproved": 8,
+          "required_tests": 8
+        },
+        "status": "blocked"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "deterministic": true,
+          "name": "candidate-critic"
+        },
+        "failures": [
+          {
+            "category": "RELEASE_ERROR",
+            "code": "physical_oracle_gap_open",
+            "details": {
+              "gap_categories": [
+                "assembly_quality",
+                "bringup",
+                "emi_emc",
+                "environmental_safety",
+                "firmware_co_design",
+                "mechanical_reliability",
+                "si_pi",
+                "thermal"
+              ],
+              "physical_qualification_status": "blocked",
+              "required_tests": 8
+            },
+            "message": "Candidate still requires external physical qualification evidence; this is not a software gate failure",
+            "path": "validation.physical",
+            "requires_user_decision": false,
+            "severity": "warning"
+          }
+        ],
+        "gate": "candidate_critic",
+        "metrics": {
+          "backend": "tscircuit",
+          "critic_version": "candidate_critic_v0",
+          "errors": 0,
+          "include_external": true,
+          "native_toolchain_gates_not_run": [],
+          "physical_gap_categories": [
+            "assembly_quality",
+            "bringup",
+            "emi_emc",
+            "environmental_safety",
+            "firmware_co_design",
+            "mechanical_reliability",
+            "si_pi",
+            "thermal"
+          ],
+          "warnings": 1
+        },
+        "status": "pass"
+      },
+      {
+        "artifacts": [],
+        "backend": {
+          "deterministic": true,
+          "name": "structural_dependency_graph"
+        },
+        "failures": [
+          {
+            "category": "RELEASE_ERROR",
+            "code": "dependency_prerequisite_not_passed",
+            "details": {
+              "gate": "sourcing_resilience",
+              "prerequisite": "component_provenance",
+              "prerequisite_status": "fail"
+            },
+            "message": "sourcing_resilience passed before prerequisite component_provenance passed",
+            "path": "gates.sourcing_resilience",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "dependency_prerequisite_not_passed",
+            "details": {
+              "gate": "pin_symbol_footprint",
+              "prerequisite": "component_provenance",
+              "prerequisite_status": "fail"
+            },
+            "message": "pin_symbol_footprint passed before prerequisite component_provenance passed",
+            "path": "gates.pin_symbol_footprint",
+            "requires_user_decision": false,
+            "severity": "error"
+          },
+          {
+            "category": "RELEASE_ERROR",
+            "code": "dependency_prerequisite_not_passed",
+            "details": {
+              "gate": "power_tree_integrity",
+              "prerequisite": "component_provenance",
+              "prerequisite_status": "fail"
+            },
+            "message": "power_tree_integrity passed before prerequisite component_provenance passed",
+            "path": "gates.power_tree_integrity",
+            "requires_user_decision": false,
+            "severity": "error"
+          }
+        ],
+        "gate": "design_dependency_graph",
+        "metrics": {
+          "blocked_or_unpassed_nodes": [
+            "component_provenance",
+            "native_mechanical_validation",
+            "native_zephyr_build",
+            "physical_qualification",
+            "supplier_availability"
+          ],
+          "declared_edges": 88,
+          "evaluated_edges": 64,
+          "nodes": 45
+        },
+        "status": "fail"
+      }
+    ],
+    "status": "blocked"
+  },
+  "generated": {
+    "backend": "tscircuit",
+    "component_resolution": [
+      {
+        "component_id": "usb4105_gf_a",
+        "data": {
+          "constraints": [
+            "usb2"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usb4105_gf_a",
+              "content_sha256": null,
+              "id": "datasheet_usb4105_gf_a",
+              "kind": "datasheet",
+              "locator": "USB4105-GF-A",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "library_id": "Connector_USB:USB_C_GCT_USB4105",
+            "verified": true
+          },
+          "id": "usb4105_gf_a",
+          "lifecycle": "active",
+          "manufacturer": "GCT",
+          "mpn": "USB4105-GF-A",
+          "package": "USB-C-16",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VBUS",
+              "number": "1",
+              "voltage_domain": "USB_5V"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D+",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D-",
+              "number": "4"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USB4105-GF-A"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "library_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_usb4105_gf_a"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J1",
+        "resolution": "curated",
+        "role": "power_input"
+      },
+      {
+        "component_id": "littelfuse_0498080",
+        "data": {
+          "constraints": [
+            "service_fuse"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "littelfuse_0498080",
+              "content_sha256": null,
+              "id": "datasheet_littelfuse_0498080",
+              "kind": "datasheet",
+              "locator": "Littelfuse-0498080.M",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "HW_Curated:MIDI_Fuse",
+            "verified": true
+          },
+          "id": "littelfuse_0498080",
+          "lifecycle": "active",
+          "manufacturer": "Littelfuse",
+          "mpn": "Littelfuse-0498080.M",
+          "package": "MIDI",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "OUT",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "0498080.M"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "littelfuse_0498080",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "0498080.M",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "littelfuse_0498080",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "0498080.M"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "HW_Curated:Fuse_2",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_littelfuse_0498080"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "littelfuse_0498080",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "0498080.M",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "littelfuse_0498080",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "0498080.M"
+            },
+            "stock": null
+          }
+        },
+        "ref": "F1",
+        "resolution": "curated",
+        "role": "fuse"
+      },
+      {
+        "component_id": "lm74700qdbvrq1",
+        "data": {
+          "constraints": [
+            "reverse_polarity_controller"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "lm74700qdbvrq1",
+              "content_sha256": null,
+              "id": "datasheet_lm74700qdbvrq1",
+              "kind": "datasheet",
+              "locator": "LM74700QDBVRQ1",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+            "verified": true
+          },
+          "id": "lm74700qdbvrq1",
+          "lifecycle": "active",
+          "manufacturer": "Texas Instruments",
+          "mpn": "LM74700QDBVRQ1",
+          "package": "SOT-23-6",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "ANODE",
+              "number": "1"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "CATHODE",
+              "number": "2"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "LM74700QDBVRQ1"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "lm74700qdbvrq1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "LM74700QDBVRQ1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "lm74700qdbvrq1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "LM74700QDBVRQ1"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3"
+            ],
+            "library_id": "HW_Curated:LM74700",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_lm74700qdbvrq1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "lm74700qdbvrq1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "LM74700QDBVRQ1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "lm74700qdbvrq1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "LM74700QDBVRQ1"
+            },
+            "stock": null
+          }
+        },
+        "ref": "Q1",
+        "resolution": "curated",
+        "role": "reverse_polarity"
+      },
+      {
+        "component_id": "bq24079rgtt",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "bq24079rgtt",
+              "content_sha256": null,
+              "id": "datasheet_bq24079rgtt",
+              "kind": "datasheet",
+              "locator": "BQ24079RGTT",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-8",
+            "verified": true
+          },
+          "id": "bq24079rgtt",
+          "lifecycle": "active",
+          "manufacturer": "Texas Instruments",
+          "mpn": "BQ24079RGTT",
+          "package": "SOT-23-8",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "EN1",
+              "number": "3"
+            },
+            {
+              "electrical_type": "input",
+              "name": "EN2",
+              "number": "4"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "OUT",
+              "number": "5"
+            },
+            {
+              "electrical_type": "output",
+              "name": "STAT",
+              "number": "6"
+            },
+            {
+              "electrical_type": "input",
+              "name": "TE",
+              "number": "7"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "ISET",
+              "number": "8"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "BQ24079RGTT"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "bq24079rgtt",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "BQ24079RGTT",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "bq24079rgtt",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "BQ24079RGTT"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Battery_Management:BQ24079",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_bq24079rgtt"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "bq24079rgtt",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "BQ24079RGTT",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "bq24079rgtt",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "BQ24079RGTT"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U2",
+        "resolution": "curated",
+        "role": "charger"
+      },
+      {
+        "component_id": "jst_ph_2pin",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "jst_ph_2pin",
+              "content_sha256": null,
+              "id": "datasheet_jst_ph_2pin",
+              "kind": "datasheet",
+              "locator": "S2B-PH-K-S",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal",
+            "verified": true
+          },
+          "id": "jst_ph_2pin",
+          "lifecycle": "active",
+          "manufacturer": "JST",
+          "mpn": "S2B-PH-K-S",
+          "package": "TH-2Pin",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VBAT",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "S2B-PH-K-S"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "jst_ph_2pin",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "S2B-PH-K-S",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "jst_ph_2pin",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "S2B-PH-K-S"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Connector:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_jst_ph_2pin"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "jst_ph_2pin",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "S2B-PH-K-S",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "jst_ph_2pin",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "S2B-PH-K-S"
+            },
+            "stock": null
+          }
+        },
+        "ref": "BT1",
+        "resolution": "curated",
+        "role": "battery"
+      },
+      {
+        "component_id": "bq27441drzr_g1a",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "bq27441drzr_g1a",
+              "content_sha256": null,
+              "id": "datasheet_bq27441drzr_g1a",
+              "kind": "datasheet",
+              "locator": "BQ27441DRZR-G1A",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9"
+            ],
+            "library_id": "Package_SON:VSON-9_2x3mm_P0.5mm",
+            "verified": true
+          },
+          "id": "bq27441drzr_g1a",
+          "lifecycle": "active",
+          "manufacturer": "Texas Instruments",
+          "mpn": "BQ27441DRZR-G1A",
+          "package": "VSON-9",
+          "pins": [
+            {
+              "electrical_type": "open_drain",
+              "name": "SDA",
+              "number": "1"
+            },
+            {
+              "electrical_type": "open_drain",
+              "name": "SCL",
+              "number": "2"
+            },
+            {
+              "electrical_type": "output",
+              "name": "GPO",
+              "number": "3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "4",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SRN",
+              "number": "5"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SRP",
+              "number": "6"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "BAT",
+              "number": "7"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VCC",
+              "number": "8"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "REGIN",
+              "number": "9"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "BQ27441DRZR-G1A"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "bq27441drzr_g1a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "BQ27441DRZR-G1A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "bq27441drzr_g1a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "BQ27441DRZR-G1A"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9"
+            ],
+            "library_id": "Battery_Management:BQ27441",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_bq27441drzr_g1a"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "bq27441drzr_g1a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "BQ27441DRZR-G1A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "bq27441drzr_g1a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "BQ27441DRZR-G1A"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U3",
+        "resolution": "curated",
+        "role": "fuel_gauge"
+      },
+      {
+        "component_id": "ap2112k_33trg1",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "ap2112k_33trg1",
+              "content_sha256": null,
+              "id": "datasheet_ap2112k_33trg1",
+              "kind": "datasheet",
+              "locator": "AP2112K-3.3TRG1",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-5",
+            "verified": true
+          },
+          "id": "ap2112k_33trg1",
+          "lifecycle": "active",
+          "manufacturer": "Diodes Incorporated",
+          "mpn": "AP2112K-3.3TRG1",
+          "package": "SOT-23-5",
+          "pins": [
+            {
+              "electrical_type": "input",
+              "name": "EN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VIN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "NC",
+              "number": "4"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "VOUT",
+              "number": "5"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "AP2112K-3.3TRG1"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "AP2112K-3.3TRG1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "ap2112k_33trg1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "AP2112K-3.3TRG1"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Regulator_Linear:AP2112K-3.3",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_ap2112k_33trg1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "AP2112K-3.3TRG1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "ap2112k_33trg1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "AP2112K-3.3TRG1"
+            },
+            "stock": null
+          }
+        },
+        "ref": "LD1",
+        "resolution": "curated",
+        "role": "regulator_3v3"
+      },
+      {
+        "component_id": "nrf52840_qiaa",
+        "data": {
+          "constraints": [
+            "ble_mcu",
+            "integral_pcb_antenna_required",
+            "rf_decoupling_required"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "nrf52840_qiaa",
+              "content_sha256": null,
+              "id": "datasheet_nrf52840_qiaa",
+              "kind": "datasheet",
+              "locator": "nRF52840-QIAA",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "38",
+              "39",
+              "40",
+              "41",
+              "42",
+              "43",
+              "44",
+              "45",
+              "46",
+              "47",
+              "48",
+              "49",
+              "50",
+              "51",
+              "52",
+              "53",
+              "54",
+              "55",
+              "56",
+              "57",
+              "58",
+              "59",
+              "60",
+              "61",
+              "62",
+              "63",
+              "64",
+              "65",
+              "66",
+              "67",
+              "68",
+              "69",
+              "70",
+              "71",
+              "72",
+              "73"
+            ],
+            "library_id": "Nordic_nRF52840:nRF52840-QIAA",
+            "verified": true
+          },
+          "id": "nrf52840_qiaa",
+          "lifecycle": "active",
+          "manufacturer": "Nordic Semiconductor",
+          "mpn": "nRF52840-QIAA",
+          "package": "aQFN-73",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "XL1",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "XL2",
+              "number": "2"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "3",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "4",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.02_AIN0",
+              "number": "5"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.03_AIN1",
+              "number": "6"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.04_AIN2",
+              "number": "7"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.05_AIN3",
+              "number": "8"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.06",
+              "number": "9"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.07_TRACECLK",
+              "number": "10"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.08",
+              "number": "11"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.09",
+              "number": "12"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.08",
+              "number": "13"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.09_NFC1",
+              "number": "14"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.10_NFC2",
+              "number": "15"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.11_TRACEDATA2",
+              "number": "16"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.12_TRACEDATA1",
+              "number": "17"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.13",
+              "number": "18"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.14",
+              "number": "19"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.15",
+              "number": "20"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.16",
+              "number": "21"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.17",
+              "number": "22"
+            },
+            {
+              "electrical_type": "input",
+              "name": "NRESET",
+              "number": "23"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.19",
+              "number": "24"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.20",
+              "number": "25"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.21_TRACEDATA3",
+              "number": "26"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.22",
+              "number": "27"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.23",
+              "number": "28"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.24",
+              "number": "29"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.25",
+              "number": "30"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.26",
+              "number": "31"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.27",
+              "number": "32"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.28_AIN4",
+              "number": "33"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.29_AIN5",
+              "number": "34"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.30_AIN6",
+              "number": "35"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.31_AIN7",
+              "number": "36"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.00_TRACEDATA0",
+              "number": "37"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.01",
+              "number": "38"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.02",
+              "number": "39"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.03",
+              "number": "40"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.04",
+              "number": "41"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.05",
+              "number": "42"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.06",
+              "number": "43"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P1.07",
+              "number": "44"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DEC1",
+              "number": "45"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DEC2",
+              "number": "46"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DEC3",
+              "number": "47"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DEC4",
+              "number": "48"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DCC",
+              "number": "49"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DCCH",
+              "number": "50"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DEC5",
+              "number": "51"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DEC6",
+              "number": "52"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "ANT",
+              "number": "53"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDP\u0410",
+              "number": "54",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "55",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "56",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "57",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDMAIN",
+              "number": "58",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "59",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "60",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "61",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "DECUSB",
+              "number": "62"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D-",
+              "number": "63"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D+",
+              "number": "64"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VBUS",
+              "number": "65"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.00_XL1",
+              "number": "66"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "P0.01_XL2",
+              "number": "67"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SWDCLK",
+              "number": "68"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SWDIO",
+              "number": "69"
+            },
+            {
+              "electrical_type": "output",
+              "name": "SWO",
+              "number": "70"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "71",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "72",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "73",
+              "voltage_domain": "V3V3"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "nRF52840-QIAA"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "nrf52840_qiaa",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "nRF52840-QIAA",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "nrf52840_qiaa",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "nRF52840-QIAA"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "38",
+              "39",
+              "40",
+              "41",
+              "42",
+              "43",
+              "44",
+              "45",
+              "46",
+              "47",
+              "48",
+              "49",
+              "50",
+              "51",
+              "52",
+              "53",
+              "54",
+              "55",
+              "56",
+              "57",
+              "58",
+              "59",
+              "60",
+              "61",
+              "62",
+              "63",
+              "64",
+              "65",
+              "66",
+              "67",
+              "68",
+              "69",
+              "70",
+              "71",
+              "72",
+              "73"
+            ],
+            "library_id": "Nordic_nRF52840:nRF52840-QIAA",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_nrf52840_qiaa"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "nrf52840_qiaa",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "nRF52840-QIAA",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "nrf52840_qiaa",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "nRF52840-QIAA"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U1",
+        "resolution": "curated",
+        "role": "mcu"
+      },
+      {
+        "component_id": "sht31_dis_b",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "sht31_dis_b",
+              "content_sha256": null,
+              "id": "datasheet_sht31_dis_b",
+              "kind": "datasheet",
+              "locator": "SHT31-DIS-B2.5KS",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Package_DFN_QFN:DFN-8-1EP_2x2.5mm_P0.5mm",
+            "verified": true
+          },
+          "id": "sht31_dis_b",
+          "lifecycle": "active",
+          "manufacturer": "Sensirion",
+          "mpn": "SHT31-DIS-B2.5KS",
+          "package": "DFN-8",
+          "pins": [
+            {
+              "electrical_type": "open_drain",
+              "name": "SDA",
+              "number": "1"
+            },
+            {
+              "electrical_type": "input",
+              "name": "ADDR",
+              "number": "2"
+            },
+            {
+              "electrical_type": "output",
+              "name": "ALERT",
+              "number": "3"
+            },
+            {
+              "electrical_type": "open_drain",
+              "name": "SCL",
+              "number": "4"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "5",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "input",
+              "name": "nRESET",
+              "number": "6"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "R",
+              "number": "7"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "VSS",
+              "number": "8",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "SHT31-DIS-B2.5KS"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "sht31_dis_b",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "SHT31-DIS-B2.5KS",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "sht31_dis_b",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "SHT31-DIS-B2.5KS"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Sensor_Humidity:SHT31x",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_sht31_dis_b"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "sht31_dis_b",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "SHT31-DIS-B2.5KS",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "sht31_dis_b",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-28",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "SHT31-DIS-B2.5KS"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U5",
+        "resolution": "curated",
+        "role": "env_sensor"
+      },
+      {
+        "component_id": "samtec_ftsh_105",
+        "data": {
+          "constraints": [
+            "swd"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "samtec_ftsh_105",
+              "content_sha256": null,
+              "id": "datasheet_samtec_ftsh_105",
+              "kind": "datasheet",
+              "locator": "Samtec-FTSH-105-01-L-DV-K",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "library_id": "Connector_Samtec:FTSH-105",
+            "verified": true
+          },
+          "id": "samtec_ftsh_105",
+          "lifecycle": "active",
+          "manufacturer": "Samtec",
+          "mpn": "Samtec-FTSH-105-01-L-DV-K",
+          "package": "FTSH-10",
+          "pins": [
+            {
+              "electrical_type": "power_out",
+              "name": "VREF",
+              "number": "1",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SWDIO",
+              "number": "2"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SWCLK",
+              "number": "4"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "NRST",
+              "number": "5"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "FTSH-105-01-L-DV-K"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "samtec_ftsh_105",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "FTSH-105-01-L-DV-K",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "samtec_ftsh_105",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "FTSH-105-01-L-DV-K"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Connector_Generic:Conn_02x05_Odd_Even",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_samtec_ftsh_105"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "samtec_ftsh_105",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "FTSH-105-01-L-DV-K",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "samtec_ftsh_105",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "FTSH-105-01-L-DV-K"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J2",
+        "resolution": "curated",
+        "role": "debug"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R1",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R2",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "rc0603_1k",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_1k",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_1k",
+              "kind": "datasheet",
+              "locator": "RC0603FR-071KL",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_1k",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-071KL",
+          "package": "R0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-071KL"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_1k",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-071KL",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_1k",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-16",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-071KL"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_1k"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_1k",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-071KL",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_1k",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-16",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-071KL"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R3",
+        "resolution": "curated",
+        "role": "led_resistor"
+      },
+      {
+        "component_id": "rc0603_10k",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_10k",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_10k",
+              "kind": "datasheet",
+              "locator": "RC0603FR-0710KL",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_10k",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-0710KL",
+          "package": "R0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-0710KL"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_10k",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-0710KL",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_10k",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-16",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-0710KL"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_10k"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_10k",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-0710KL",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_10k",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-16",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-0710KL"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R4",
+        "resolution": "curated",
+        "role": "charge_set"
+      },
+      {
+        "component_id": "grm188_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm188_100n",
+              "kind": "datasheet",
+              "locator": "GRM188R71C104KA01D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R71C104KA01D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R71C104KA01D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C1",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm188_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm188_100n",
+              "kind": "datasheet",
+              "locator": "GRM188R71C104KA01D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R71C104KA01D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R71C104KA01D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C2",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm32_10u_50v",
+        "data": {
+          "constraints": [
+            "fifty_volt_bulk"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm32_10u_50v",
+              "content_sha256": null,
+              "id": "datasheet_grm32_10u_50v",
+              "kind": "datasheet",
+              "locator": "GRM32ER71H106KA12L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_1210_3225Metric",
+            "verified": true
+          },
+          "id": "grm32_10u_50v",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM32ER71H106KA12L",
+          "package": "1210",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM32ER71H106KA12L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm32_10u_50v",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM32ER71H106KA12L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm32_10u_50v",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM32ER71H106KA12L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm32_10u_50v"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm32_10u_50v",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM32ER71H106KA12L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm32_10u_50v",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM32ER71H106KA12L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C3",
+        "resolution": "curated",
+        "role": "capacitor_10u_50v"
+      },
+      {
+        "component_id": "grm32_10u_50v",
+        "data": {
+          "constraints": [
+            "fifty_volt_bulk"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm32_10u_50v",
+              "content_sha256": null,
+              "id": "datasheet_grm32_10u_50v",
+              "kind": "datasheet",
+              "locator": "GRM32ER71H106KA12L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_1210_3225Metric",
+            "verified": true
+          },
+          "id": "grm32_10u_50v",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM32ER71H106KA12L",
+          "package": "1210",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM32ER71H106KA12L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm32_10u_50v",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM32ER71H106KA12L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm32_10u_50v",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM32ER71H106KA12L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_grm32_10u_50v"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm32_10u_50v",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM32ER71H106KA12L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm32_10u_50v",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM32ER71H106KA12L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C4",
+        "resolution": "curated",
+        "role": "capacitor_10u_50v"
+      },
+      {
+        "component_id": "usblc6_2sc6",
+        "data": {
+          "constraints": [
+            "usb_esd"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usblc6_2sc6",
+              "content_sha256": null,
+              "id": "datasheet_usblc6_2sc6",
+              "kind": "datasheet",
+              "locator": "USBLC6-2SC6",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+            "verified": true
+          },
+          "id": "usblc6_2sc6",
+          "lifecycle": "active",
+          "manufacturer": "STMicroelectronics",
+          "mpn": "USBLC6-2SC6",
+          "package": "SOT-23-6",
+          "pins": [
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_OUT",
+              "number": "2"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_IN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_OUT",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USBLC6-2SC6"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Power_Protection:USBLC6-2SC6",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+          "datasheet_evidence_ids": [
+            "datasheet_usblc6_2sc6"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml",
+          "role_set_sha256": "02e4e307857793bcfbfd950f1119fe0402d6b414a6c63d0e60e4f33cd10515ee",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          }
+        },
+        "ref": "D1",
+        "resolution": "curated",
+        "role": "tvs"
+      }
+    ],
+    "files": {
+      "bom": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/bom.csv"
+      ],
+      "electronics": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/intent/board.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/intent/sensor_bus.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/intent/connectors.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/intent/power_tree.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/intent/ble_node.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/electrical_graph.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/semantic/semantic_schematic.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/semantic/semantic_schematic.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_pcb",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_pro",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.kicad_sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/bench_ble_lipo_sensor_5eab0a5d.sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/generated/kicad/routing.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.tsx",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/electronics/source/tscircuit/source_manifest.json"
+      ],
+      "firmware": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/generated/board.cmake",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/generated/devicetree.overlay",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/generated/kconfig.defconfig",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/generated/pinmap.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/generated/pinmap.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/app/src/main.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/tests/test_ble_adv.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/tests/test_i2c_sensors.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/tests/test_usb_connection.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/zephyr/boards/arm/ble_sensor_node/ble_sensor_node.dts",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/firmware/reference/CMakeLists.txt"
+      ],
+      "mechanical": [
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/assembly.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/connector_cutouts.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/enclosure.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/enclosure_variants.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/fixtures.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/mechanical_contract.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/bench_ble_lipo_sensor_5eab0a5d/mechanical/source/source_manifest.json"
+      ]
+    },
+    "resolution_report": {
+      "artifacts": [
+        "/Users/mrcha033/Documents/hw-cli/parts/role_sets/ble_sensor_node.yaml"
+      ],
+      "backend": {
+        "mutates_database": false,
+        "name": "ComponentResolver"
+      },
+      "failures": [],
+      "gate": "component_resolution",
+      "metrics": {
+        "critical_roles": 9,
+        "requested": 19,
+        "resolved": 19,
+        "supplier_provider": "curated"
+      },
+      "status": "pass"
+    },
+    "status": "generated"
+  },
+  "iteration_id": "0001",
+  "release_eligible": false,
+  "status": "candidate"
+}

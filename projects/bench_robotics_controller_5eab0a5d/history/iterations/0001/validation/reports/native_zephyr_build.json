@@ -1,0 +1,54 @@
+{
+  "artifacts": [],
+  "backend": {
+    "available": false,
+    "command": [
+      "cmake",
+      "-S",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/zephyr/app",
+      "-B",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/zephyr/build",
+      "-G",
+      "Ninja",
+      "-DBOARD=nucleo_h743zi/stm32h743xx",
+      "-DZEPHYR_MODULES=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+      "-DPython3_EXECUTABLE=/Users/mrcha033/Documents/hw-cli/.venv/bin/python3",
+      "-DBOARD_ROOT=/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/zephyr",
+      "-DZEPHYR_CMSIS_6_MODULE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+      "-DZEPHYR_CMSIS_6_CMAKE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/cmsis_6"
+    ],
+    "returncode": null,
+    "stderr": "cmake timed out after 600s",
+    "stdout": ""
+  },
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "tool_unavailable",
+      "details": {
+        "command": [
+          "cmake",
+          "-S",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/zephyr/app",
+          "-B",
+          "/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/zephyr/build",
+          "-G",
+          "Ninja",
+          "-DBOARD=nucleo_h743zi/stm32h743xx",
+          "-DZEPHYR_MODULES=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/stm32;/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+          "-DPython3_EXECUTABLE=/Users/mrcha033/Documents/hw-cli/.venv/bin/python3",
+          "-DBOARD_ROOT=/Users/mrcha033/Documents/hw-cli/projects/bench_robotics_controller_5eab0a5d/firmware/zephyr",
+          "-DZEPHYR_CMSIS_6_MODULE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/hal/cmsis_6",
+          "-DZEPHYR_CMSIS_6_CMAKE_DIR=/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/modules/cmsis_6"
+        ]
+      },
+      "message": "cmake timed out after 600s",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_zephyr_build",
+  "metrics": {},
+  "status": "blocked"
+}

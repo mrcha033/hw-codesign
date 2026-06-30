@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_5eab0a5d/validation/reports/kicad_erc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "sch",
+      "erc",
+      "--format",
+      "json",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_5eab0a5d/validation/reports/kicad_erc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_5eab0a5d/electronics/generated/kicad/bench_sensor_logger_usb_5eab0a5d.kicad_sch"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 5 violations\nSaved ERC Report to /Users/mrcha033/Documents/hw-cli/projects/bench_sensor_logger_usb_5eab0a5d/validation/reports/kicad_erc.json\n"
+  },
+  "failures": [],
+  "gate": "native_erc",
+  "metrics": {
+    "footprint_link_issues": 5,
+    "violations": 0
+  },
+  "status": "pass"
+}

@@ -1,0 +1,3 @@
+/dts-v1/;
+#include <espressif/esp32s3.dtsi>
+/ { model = "HW Co-design ESP32-S3 Sensor Data Logger"; compatible = "hw,sensor-data-logger"; chosen { zephyr,console = &usart3; }; };

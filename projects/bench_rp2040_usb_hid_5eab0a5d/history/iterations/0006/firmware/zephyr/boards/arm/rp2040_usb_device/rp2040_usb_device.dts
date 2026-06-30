@@ -1,0 +1,3 @@
+/dts-v1/;
+#include <raspberrypi/rp2040.dtsi>
+/ { model = "HW Co-design RP2040 USB Device"; compatible = "hw,rp2040-usb-device"; chosen { zephyr,console = &uart0; }; };

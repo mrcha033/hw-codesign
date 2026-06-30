@@ -1,0 +1,6 @@
+test_plan:
+  gate_checks:
+  - usb_enumeration_hid
+  - usb_cdc_enumeration
+  - flash_xip_boot
+  - swd_debug_attach

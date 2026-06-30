@@ -1,0 +1,242 @@
+(pcb "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/bench_rp2040_usb_hid_5eab0a5d.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.3")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  51000 -21000  0 -21000  0 0  51000 0  51000 -21000)
+    )
+    (plane GND (polygon B.Cu 0  1000 -1000  50000 -1000  50000 -20000  1000 -20000  1000 -1000))
+    (plane GND (polygon F.Cu 0  1000 -1000  50000 -1000  50000 -20000  1000 -20000  1000 -1000))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Connector_USB:USB_C_GCT_USB4105
+      (place J1 3000 -10000 front 0 (PN "USB-C POWER"))
+    )
+    (component "Package_TO_SOT_SMD:SOT-23-6"
+      (place D1 10000 -10000 front 0 (PN "USB ESD"))
+    )
+    (component "Package_TO_SOT_SMD:SOT-23-5"
+      (place U1 3000 -15000 front 0 (PN "3V3 LDO"))
+    )
+    (component "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"
+      (place U2 18000 -4000 front 0 (PN RP2040))
+    )
+    (component "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+      (place U3 33000 -2000 front 0 (PN "2MB QSPI"))
+    )
+    (component "Crystal:Crystal_SMD_HC-49S"
+      (place X1 33000 -10000 front 0 (PN "12MHz XTAL"))
+      (place C1 3000 -5000 front 0 (PN 100nF))
+      (place C2 7000 -5000 front 0 (PN 100nF))
+      (place C3 11000 -5000 front 0 (PN 10uF))
+      (place C4 9000 -15000 front 0 (PN "10uF USB_IN"))
+    )
+    (component Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical
+      (place J2 18000 -12000 front 0 (PN "SWD 10-pin"))
+    )
+    (component MountingHole:MountingHole_2.2mm_Pad
+      (place H1 2500 -2500 front 0 (PN MountingHole))
+      (place H2 48500 -2500 front 0 (PN MountingHole))
+      (place H3 2500 -18500 front 0 (PN MountingHole))
+      (place H4 48500 -18500 front 0 (PN MountingHole))
+    )
+  )
+  (library
+    (image Connector_USB:USB_C_GCT_USB4105
+      (outline (path signal 200  -1000 1000  8000 1000  8000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+    )
+    (image "Package_TO_SOT_SMD:SOT-23-6"
+      (outline (path signal 200  -1000 1000  10000 1000  10000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+    )
+    (image "Package_TO_SOT_SMD:SOT-23-5"
+      (outline (path signal 200  -1000 1000  6000 1000  6000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+    )
+    (image "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"
+      (outline (path signal 200  -1000 1000  14000 1000  14000 -6000  -1000 -6000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+      (pin Round[A]Pad_750.000000_um 6 10000 0)
+      (pin Round[A]Pad_750.000000_um 11 12000 0)
+      (pin Round[A]Pad_750.000000_um 12 0 -2000)
+      (pin Round[A]Pad_750.000000_um 16 2000 -2000)
+      (pin Round[A]Pad_750.000000_um 17 4000 -2000)
+      (pin Round[A]Pad_750.000000_um 18 6000 -2000)
+      (pin Round[A]Pad_750.000000_um 33 8000 -2000)
+      (pin Round[A]Pad_750.000000_um 34 10000 -2000)
+      (pin Round[A]Pad_750.000000_um 40 12000 -2000)
+      (pin Round[A]Pad_750.000000_um 41 0 -4000)
+      (pin Round[A]Pad_750.000000_um 44 2000 -4000)
+      (pin Round[A]Pad_750.000000_um 45 4000 -4000)
+      (pin Round[A]Pad_750.000000_um 46 6000 -4000)
+      (pin Round[A]Pad_750.000000_um 47 8000 -4000)
+      (pin Round[A]Pad_750.000000_um 48 10000 -4000)
+    )
+    (image "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+      (outline (path signal 200  -1000 1000  14000 1000  14000 -4000  -1000 -4000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+      (pin Round[A]Pad_750.000000_um 6 10000 0)
+      (pin Round[A]Pad_750.000000_um 7 12000 0)
+      (pin Round[A]Pad_750.000000_um 8 0 -2000)
+    )
+    (image "Crystal:Crystal_SMD_HC-49S"
+      (outline (path signal 200  -1000 1000  4000 1000  4000 -3000  -1000 -3000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+    )
+    (image Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical
+      (outline (path signal 200  -1000 1000  14000 1000  14000 -4000  -1000 -4000  -1000 1000))
+      (pin Round[A]Pad_750.000000_um 1 0 0)
+      (pin Round[A]Pad_750.000000_um 2 2000 0)
+      (pin Round[A]Pad_750.000000_um 3 4000 0)
+      (pin Round[A]Pad_750.000000_um 4 6000 0)
+      (pin Round[A]Pad_750.000000_um 5 8000 0)
+      (pin Round[A]Pad_750.000000_um 6 10000 0)
+      (pin Round[A]Pad_750.000000_um 7 12000 0)
+      (pin Round[A]Pad_750.000000_um 8 0 -2000)
+      (pin Round[A]Pad_750.000000_um 9 2000 -2000)
+      (pin Round[A]Pad_750.000000_um 10 4000 -2000)
+    )
+    (image MountingHole:MountingHole_2.2mm_Pad
+      (keepout "" (circle F.Cu 2700))
+      (keepout "" (circle B.Cu 2700))
+    )
+    (padstack Round[A]Pad_750.000000_um
+      (shape (circle F.Cu 750))
+      (shape (circle B.Cu 750))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J1-4 D1-5 U1-2 U2-16 U2-33 U2-34 U3-4 J2-3 J2-5 J2-6 J2-7 J2-8 J2-9 J2-10
+        C1-2 C2-2 C3-2 C4-2)
+    )
+    (net QSPI_CLK
+      (pins U2-5 U3-6)
+    )
+    (net QSPI_CS
+      (pins U2-6 U3-1)
+    )
+    (net QSPI_D2
+      (pins U2-2 U3-3)
+    )
+    (net QSPI_D3
+      (pins U2-1 U3-7)
+    )
+    (net QSPI_MISO
+      (pins U2-3 U3-2)
+    )
+    (net QSPI_MOSI
+      (pins U2-4 U3-5)
+    )
+    (net SWCLK
+      (pins U2-40 J2-4)
+    )
+    (net SWDIO
+      (pins U2-41 J2-2)
+    )
+    (net USB_DM
+      (pins D1-4 U2-11)
+    )
+    (net USB_DM_RAW
+      (pins J1-3 D1-3)
+    )
+    (net USB_DP
+      (pins D1-2 U2-12)
+    )
+    (net USB_DP_RAW
+      (pins J1-2 D1-1)
+    )
+    (net USB_VBUS
+      (pins J1-1 U1-1 C4-1)
+    )
+    (net V3V3
+      (pins U1-3 U2-44 U2-45 U2-46 U2-47 U2-48 U3-8 J2-1 C1-1 C2-1 C3-1)
+    )
+    (net XIN
+      (pins U2-17 X1-1)
+    )
+    (net XOUT
+      (pins U2-18 X1-2)
+    )
+    (class kicad_default GND QSPI_CLK QSPI_CS QSPI_D2 QSPI_D3 QSPI_MISO QSPI_MOSI
+      SWCLK SWDIO USB_DM USB_DM_RAW USB_DP USB_DP_RAW USB_VBUS V3V3 XIN XOUT
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 200  9000 -5000  9000 -10000)(net GND)(type route))
+    (wire (path B.Cu 200  13000 -5000  12000 -5000  12000 -6000  9000 -6000  9000 -5000)(net GND)(type route))
+    (wire (path B.Cu 200  5000 -5000  6000 -5000  6000 -6000  9000 -6000  9000 -5000)(net GND)(type route))
+    (wire (path B.Cu 200  11000 -15000  10000 -15000  10000 -14000  9000 -14000  9000 -10000)(net GND)(type route))
+    (wire (path B.Cu 200  5000 -15000  6000 -15000  6000 -14000  9000 -14000)(net GND)(type route))
+    (wire (path B.Cu 200  20000 -6000  19000 -6000  19000 -7000  12000 -7000  12000 -6000)(net GND)(type route))
+    (wire (path B.Cu 200  18000 -10000  18000 -9000  19000 -9000  19000 -7000  18000 -7000)(net GND)(type route))
+    (wire (path B.Cu 200  18000 -14000  18000 -13000  19000 -13000  19000 -11000  18000 -11000
+            18000 -10000)(net GND)(type route))
+    (wire (path B.Cu 200  20000 -14000  19000 -14000  19000 -13000)(net GND)(type route))
+    (wire (path B.Cu 200  22000 -14000  20000 -14000)(net GND)(type route))
+    (wire (path B.Cu 200  22000 -12000  22000 -14000)(net GND)(type route))
+    (wire (path B.Cu 200  26000 -12000  25000 -12000  25000 -13000  22000 -13000  22000 -12000)(net GND)(type route))
+    (wire (path B.Cu 200  28000 -12000  26000 -12000)(net GND)(type route))
+    (wire (path B.Cu 200  30000 -12000  28000 -12000)(net GND)(type route))
+    (wire (path B.Cu 200  28000 -6000  28000 -7000  29000 -7000  29000 -9000  28000 -9000
+            28000 -12000)(net GND)(type route))
+    (wire (path B.Cu 200  26000 -6000  28000 -6000)(net GND)(type route))
+    (wire (path B.Cu 200  39000 -2000  38000 -2000  38000 -3000  29000 -3000  29000 -7000)(net GND)(type route))
+  )
+)

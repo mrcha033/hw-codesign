@@ -1,0 +1,38 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J2.6 is absent from curated symbol contract",
+      "path": "J2",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J2.7 is absent from curated symbol contract",
+      "path": "J2",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J2.8 is absent from curated symbol contract",
+      "path": "J2",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "component_provenance",
+  "metrics": {
+    "components_checked": 19
+  },
+  "status": "fail"
+}

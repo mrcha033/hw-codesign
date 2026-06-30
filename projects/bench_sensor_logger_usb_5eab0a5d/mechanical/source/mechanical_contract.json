@@ -1,0 +1,199 @@
+{
+  "board": {
+    "component_height_map": [
+      {
+        "category": "power_input",
+        "height_mm": 7.0,
+        "ref": "J1",
+        "x_mm": 18.0,
+        "y_mm": 4.0
+      },
+      {
+        "category": "fuse",
+        "height_mm": 3.0,
+        "ref": "F1",
+        "x_mm": 26.0,
+        "y_mm": 4.0
+      },
+      {
+        "category": "reverse_polarity",
+        "height_mm": 3.0,
+        "ref": "Q1",
+        "x_mm": 34.0,
+        "y_mm": 4.0
+      },
+      {
+        "category": "tvs",
+        "height_mm": 3.0,
+        "ref": "D1",
+        "x_mm": 30.0,
+        "y_mm": 10.0
+      },
+      {
+        "category": "regulator",
+        "height_mm": 3.0,
+        "ref": "U3",
+        "x_mm": 44.0,
+        "y_mm": 12.0
+      },
+      {
+        "category": "mcu",
+        "height_mm": 2.5,
+        "ref": "U1",
+        "x_mm": 44.0,
+        "y_mm": 44.0
+      },
+      {
+        "category": "imu",
+        "height_mm": 3.0,
+        "ref": "U2",
+        "x_mm": 18.0,
+        "y_mm": 28.0
+      },
+      {
+        "category": "debug",
+        "height_mm": 3.0,
+        "ref": "J2",
+        "x_mm": 58.0,
+        "y_mm": 44.0
+      },
+      {
+        "category": "pullup",
+        "height_mm": 3.0,
+        "ref": "R1",
+        "x_mm": 18.0,
+        "y_mm": 38.0
+      },
+      {
+        "category": "pullup",
+        "height_mm": 3.0,
+        "ref": "R2",
+        "x_mm": 27.0,
+        "y_mm": 38.0
+      },
+      {
+        "category": "pullup",
+        "height_mm": 3.0,
+        "ref": "R3",
+        "x_mm": 50.0,
+        "y_mm": 25.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 3.0,
+        "ref": "C1",
+        "x_mm": 35.0,
+        "y_mm": 39.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 3.0,
+        "ref": "C2",
+        "x_mm": 44.0,
+        "y_mm": 39.0
+      },
+      {
+        "category": "bulk_cap",
+        "height_mm": 3.0,
+        "ref": "C9",
+        "x_mm": 56.0,
+        "y_mm": 14.0
+      }
+    ],
+    "height_mm": 50.0,
+    "max_component_height_bottom_mm": 2.0,
+    "max_component_height_top_mm": 10.0,
+    "origin_mm": [
+      3.0,
+      3.0,
+      3.2
+    ],
+    "thickness_mm": 1.6,
+    "width_mm": 70.0
+  },
+  "clearances": {
+    "assembly_mm": 0.8,
+    "insertion_mm": 1.5,
+    "max_connector_edge_distance_mm": 5.0,
+    "tolerance_mm": 0.2
+  },
+  "connector_component_refs": [
+    "J1"
+  ],
+  "connector_cutouts": [
+    {
+      "center_z_mm": 8.0,
+      "component_present": true,
+      "electrical_category": "power_input",
+      "enclosure_position_mm": [
+        21.0,
+        7.0
+      ],
+      "opening_mm": [
+        10.0,
+        7.0
+      ],
+      "pcb_position_mm": [
+        18.0,
+        4.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J1",
+      "side": "front"
+    }
+  ],
+  "connector_retention": {},
+  "contract_version": 1,
+  "enclosure": {
+    "internal_mm": [
+      76.0,
+      56.0,
+      18.0
+    ],
+    "wall_thickness_mm": 2.0
+  },
+  "fixtures": {
+    "frame_brackets": {
+      "enabled": false
+    },
+    "mounting_plate": {
+      "enabled": false
+    }
+  },
+  "mounting_holes": [
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 4.0,
+      "y_mm": 4.0
+    },
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 66.0,
+      "y_mm": 4.0
+    },
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 4.0,
+      "y_mm": 46.0
+    },
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 66.0,
+      "y_mm": 46.0
+    }
+  ],
+  "provenance": {
+    "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+    "role_set_hash": "6ce4c2ddd3220c07c9155e8703540101b0d67bbb0381df3cde0f6e29b4412b17",
+    "source_spec_hash": "d0c317caf797cb6bfaf68c6a6fe220ae15b57655fb2761739d26c6fb0ef83bff"
+  },
+  "selected_variant": "desktop",
+  "variants": [
+    {
+      "gasket": false,
+      "lid_style": "snap",
+      "name": "desktop",
+      "ventilation": "side_slots"
+    }
+  ]
+}

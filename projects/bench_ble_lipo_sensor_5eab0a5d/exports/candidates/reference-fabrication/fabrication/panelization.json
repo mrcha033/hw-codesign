@@ -1,0 +1,14 @@
+{
+  "board_height_mm": 35.0,
+  "board_width_mm": 50.0,
+  "boards_per_panel": 16,
+  "candidate_only": true,
+  "columns": 4,
+  "method": "v_score",
+  "note": "Reference panelization spec \u2014 verify with fab before ordering",
+  "panel_height_mm": 165.0,
+  "panel_width_mm": 225.0,
+  "rail_width_mm": 5.0,
+  "rows": 4,
+  "v_score_depth_fraction": 0.33
+}

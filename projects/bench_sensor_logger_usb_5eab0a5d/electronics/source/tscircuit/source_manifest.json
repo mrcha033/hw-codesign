@@ -1,0 +1,60 @@
+{
+  "backend": "tscircuit",
+  "backend_release_capable": true,
+  "compiler_version": "0.1.1491",
+  "contract_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "pcb_disabled": false,
+  "provenance": {
+    "backend": "tscircuit",
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/bench_sensor_logger_usb_5eab0a5d/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "compiler_version": "0.1.1491",
+    "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+    "release_eligible": false,
+    "role_set_hash": "6ce4c2ddd3220c07c9155e8703540101b0d67bbb0381df3cde0f6e29b4412b17",
+    "source_spec_hash": "d0c317caf797cb6bfaf68c6a6fe220ae15b57655fb2761739d26c6fb0ef83bff",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "release_blocking_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "routing_disabled": false,
+  "source_release_eligible": false,
+  "sources": [
+    {
+      "path": "board.compiler.mjs",
+      "sha256": "796109eccbd6fd71e5aadd918b90b9a77ab447c4eda73a8ddf1892b59262bb64"
+    },
+    {
+      "path": "board.tsx",
+      "sha256": "04f565e2b51b336163f23e8be236af77b6547eb2df0d00d705aa00c2515b1c28"
+    }
+  ],
+  "unsupported_footprints": [
+    {
+      "footprint": "HW_Curated:MIDI_Fuse",
+      "ref": "F1"
+    }
+  ]
+}

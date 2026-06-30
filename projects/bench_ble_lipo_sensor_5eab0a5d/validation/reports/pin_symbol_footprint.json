@@ -1,0 +1,11 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "pin_symbol_footprint",
+  "metrics": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "status": "pass"
+}

@@ -1,0 +1,19 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "support-circuit-contract"
+  },
+  "failures": [],
+  "gate": "support_circuit_completeness",
+  "metrics": {
+    "components": 14,
+    "critical_roles": 7,
+    "net_contract_checks": 7,
+    "resolved_critical_roles": 7,
+    "role_set": "sensor_data_logger"
+  },
+  "status": "pass"
+}

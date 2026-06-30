@@ -1,0 +1,4 @@
+if BOARD_RP2040_USB_DEVICE
+config BOARD
+  default "rp2040_usb_device"
+endif

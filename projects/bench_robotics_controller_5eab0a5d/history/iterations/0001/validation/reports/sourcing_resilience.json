@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/robotics_controller.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "sourcing-resilience-contract"
+  },
+  "failures": [],
+  "gate": "sourcing_resilience",
+  "metrics": {
+    "alternate_roles": 0,
+    "checked_alternates": 0,
+    "critical_roles": 13,
+    "role_set": "robotics_controller",
+    "single_source_justified_roles": 13,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}

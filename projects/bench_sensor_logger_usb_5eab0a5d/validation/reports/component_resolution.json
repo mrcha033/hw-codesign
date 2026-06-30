@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml"
+  ],
+  "backend": {
+    "mutates_database": false,
+    "name": "ComponentResolver"
+  },
+  "failures": [],
+  "gate": "component_resolution",
+  "metrics": {
+    "critical_roles": 7,
+    "requested": 14,
+    "resolved": 14,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}

@@ -1,0 +1,2 @@
+# Load Zephyr board defconfig descriptions.
+osource "/Users/mrcha033/Documents/hw-cli/.toolchains/zephyr/boards/nordic/nrf52840dk/Kconfig.defconfig"

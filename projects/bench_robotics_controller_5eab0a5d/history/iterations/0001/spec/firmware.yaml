@@ -1,0 +1,18 @@
+firmware:
+  framework: zephyr
+  target: nucleo_h743zi/stm32h743xx
+  outputs:
+  - devicetree_overlay
+  - pinmap
+  - board_definition
+  - driver_stubs
+  - bringup_tests
+  modules:
+  - id: motor_estop_watchdog
+    behavior: timeout_shutdown
+    trigger:
+      signal: ESTOP_IN
+      timeout_ms: 100
+    action:
+      disable_all: motor_enables
+      assert: FAULT_LED

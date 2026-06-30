@@ -1,0 +1,774 @@
+{
+  "board": {
+    "component_height_map": [
+      {
+        "category": "power_input",
+        "height_mm": 12.0,
+        "ref": "J1",
+        "x_mm": 20.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "fuse",
+        "height_mm": 4.0,
+        "ref": "F1",
+        "x_mm": 38.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "reverse_polarity",
+        "height_mm": 4.0,
+        "ref": "Q1",
+        "x_mm": 56.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "tvs",
+        "height_mm": 4.0,
+        "ref": "D1",
+        "x_mm": 74.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "efuse",
+        "height_mm": 4.0,
+        "ref": "U3",
+        "x_mm": 92.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "regulator",
+        "height_mm": 4.0,
+        "ref": "U4",
+        "x_mm": 112.0,
+        "y_mm": 18.0
+      },
+      {
+        "category": "regulator",
+        "height_mm": 4.0,
+        "ref": "U5",
+        "x_mm": 132.0,
+        "y_mm": 18.0
+      },
+      {
+        "category": "mcu",
+        "height_mm": 2.0,
+        "ref": "U1",
+        "x_mm": 70.0,
+        "y_mm": 37.0
+      },
+      {
+        "category": "imu",
+        "height_mm": 4.0,
+        "ref": "U2",
+        "x_mm": 22.0,
+        "y_mm": 48.0
+      },
+      {
+        "category": "can",
+        "height_mm": 4.0,
+        "ref": "U6",
+        "x_mm": 90.0,
+        "y_mm": 27.0
+      },
+      {
+        "category": "estop",
+        "height_mm": 13.0,
+        "ref": "J2",
+        "x_mm": 140.0,
+        "y_mm": 95.0
+      },
+      {
+        "category": "safety_gate",
+        "height_mm": 4.0,
+        "ref": "Q2",
+        "x_mm": 124.0,
+        "y_mm": 48.0
+      },
+      {
+        "category": "can_connector",
+        "height_mm": 11.0,
+        "ref": "J3",
+        "x_mm": 80.0,
+        "y_mm": 5.0
+      },
+      {
+        "category": "termination",
+        "height_mm": 4.0,
+        "ref": "R1",
+        "x_mm": 104.0,
+        "y_mm": 20.0
+      },
+      {
+        "category": "debug",
+        "height_mm": 4.0,
+        "ref": "J4",
+        "x_mm": 104.0,
+        "y_mm": 69.0
+      },
+      {
+        "category": "usb",
+        "height_mm": 8.0,
+        "ref": "J5",
+        "x_mm": 120.0,
+        "y_mm": 95.0
+      },
+      {
+        "category": "usb_esd",
+        "height_mm": 4.0,
+        "ref": "D2",
+        "x_mm": 120.0,
+        "y_mm": 86.0
+      },
+      {
+        "category": "discharge",
+        "height_mm": 4.0,
+        "ref": "R4",
+        "x_mm": 60.0,
+        "y_mm": 27.0
+      },
+      {
+        "category": "pullup",
+        "height_mm": 4.0,
+        "ref": "R2",
+        "x_mm": 42.0,
+        "y_mm": 48.0
+      },
+      {
+        "category": "pullup",
+        "height_mm": 4.0,
+        "ref": "R3",
+        "x_mm": 58.0,
+        "y_mm": 48.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 12.0,
+        "ref": "J11",
+        "x_mm": 9.0,
+        "y_mm": 7.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J12",
+        "x_mm": 9.0,
+        "y_mm": 22.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J13",
+        "x_mm": 9.0,
+        "y_mm": 37.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J14",
+        "x_mm": 9.0,
+        "y_mm": 52.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J15",
+        "x_mm": 9.0,
+        "y_mm": 67.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J16",
+        "x_mm": 9.0,
+        "y_mm": 82.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 12.0,
+        "ref": "J17",
+        "x_mm": 151.0,
+        "y_mm": 7.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J18",
+        "x_mm": 151.0,
+        "y_mm": 22.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J19",
+        "x_mm": 151.0,
+        "y_mm": 37.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J20",
+        "x_mm": 151.0,
+        "y_mm": 52.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J21",
+        "x_mm": 151.0,
+        "y_mm": 67.0
+      },
+      {
+        "category": "motor_io",
+        "height_mm": 4.0,
+        "ref": "J22",
+        "x_mm": 151.0,
+        "y_mm": 82.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C1",
+        "x_mm": 24.0,
+        "y_mm": 76.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C2",
+        "x_mm": 46.0,
+        "y_mm": 76.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C3",
+        "x_mm": 68.0,
+        "y_mm": 76.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C4",
+        "x_mm": 90.0,
+        "y_mm": 76.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C5",
+        "x_mm": 112.0,
+        "y_mm": 76.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C6",
+        "x_mm": 24.0,
+        "y_mm": 89.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C7",
+        "x_mm": 46.0,
+        "y_mm": 89.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 4.0,
+        "ref": "C8",
+        "x_mm": 68.0,
+        "y_mm": 89.0
+      },
+      {
+        "category": "bulk_cap",
+        "height_mm": 4.0,
+        "ref": "C9",
+        "x_mm": 90.0,
+        "y_mm": 89.0
+      },
+      {
+        "category": "bulk_cap",
+        "height_mm": 4.0,
+        "ref": "C10",
+        "x_mm": 112.0,
+        "y_mm": 89.0
+      }
+    ],
+    "height_mm": 100.0,
+    "max_component_height_bottom_mm": 3.0,
+    "max_component_height_top_mm": 18.0,
+    "origin_mm": [
+      3.0,
+      3.0,
+      6.4
+    ],
+    "thickness_mm": 1.6,
+    "width_mm": 160.0
+  },
+  "clearances": {
+    "assembly_mm": 1.0,
+    "insertion_mm": 2.0,
+    "max_connector_edge_distance_mm": 10.0,
+    "tolerance_mm": 0.25
+  },
+  "connector_component_refs": [
+    "J1",
+    "J11",
+    "J12",
+    "J13",
+    "J14",
+    "J15",
+    "J16",
+    "J17",
+    "J18",
+    "J19",
+    "J2",
+    "J20",
+    "J21",
+    "J22",
+    "J3",
+    "J5"
+  ],
+  "connector_cutouts": [
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "power_input",
+      "enclosure_position_mm": [
+        23.0,
+        8.0
+      ],
+      "opening_mm": [
+        14.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        20.0,
+        5.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J1",
+      "side": "front"
+    },
+    {
+      "center_z_mm": 10.5,
+      "component_present": true,
+      "electrical_category": "can_connector",
+      "enclosure_position_mm": [
+        83.0,
+        8.0
+      ],
+      "opening_mm": [
+        12.0,
+        9.0
+      ],
+      "pcb_position_mm": [
+        80.0,
+        5.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J3",
+      "side": "front"
+    },
+    {
+      "center_z_mm": 9.5,
+      "component_present": true,
+      "electrical_category": "usb",
+      "enclosure_position_mm": [
+        123.0,
+        98.0
+      ],
+      "opening_mm": [
+        12.0,
+        8.0
+      ],
+      "pcb_position_mm": [
+        120.0,
+        95.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J5",
+      "side": "rear"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "estop",
+      "enclosure_position_mm": [
+        143.0,
+        98.0
+      ],
+      "opening_mm": [
+        14.0,
+        11.0
+      ],
+      "pcb_position_mm": [
+        140.0,
+        95.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J2",
+      "side": "rear"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        12.0,
+        10.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        9.0,
+        7.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J11",
+      "side": "left"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        12.0,
+        25.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        9.0,
+        22.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J12",
+      "side": "left"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        12.0,
+        40.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        9.0,
+        37.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J13",
+      "side": "left"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        12.0,
+        55.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        9.0,
+        52.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J14",
+      "side": "left"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        12.0,
+        70.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        9.0,
+        67.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J15",
+      "side": "left"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        12.0,
+        85.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        9.0,
+        82.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J16",
+      "side": "left"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        154.0,
+        10.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        151.0,
+        7.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J17",
+      "side": "right"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        154.0,
+        25.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        151.0,
+        22.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J18",
+      "side": "right"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        154.0,
+        40.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        151.0,
+        37.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J19",
+      "side": "right"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        154.0,
+        55.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        151.0,
+        52.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J20",
+      "side": "right"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        154.0,
+        70.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        151.0,
+        67.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J21",
+      "side": "right"
+    },
+    {
+      "center_z_mm": 11.0,
+      "component_present": true,
+      "electrical_category": "motor_io",
+      "enclosure_position_mm": [
+        154.0,
+        85.0
+      ],
+      "opening_mm": [
+        12.0,
+        10.0
+      ],
+      "pcb_position_mm": [
+        151.0,
+        82.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J22",
+      "side": "right"
+    }
+  ],
+  "connector_retention": {
+    "anchor": "frame_brackets",
+    "connector_refs": [
+      "J1",
+      "J2",
+      "J3",
+      "J5",
+      "J11",
+      "J12",
+      "J13",
+      "J14",
+      "J15",
+      "J16",
+      "J17",
+      "J18",
+      "J19",
+      "J20",
+      "J21",
+      "J22"
+    ],
+    "enabled": true,
+    "pull_test_n": 30.0,
+    "retention": "tie_bar"
+  },
+  "contract_version": 1,
+  "enclosure": {
+    "internal_mm": [
+      166.0,
+      106.0,
+      28.0
+    ],
+    "wall_thickness_mm": 2.4
+  },
+  "fixtures": {
+    "cable_retention": {
+      "anchor": "frame_brackets",
+      "connector_refs": [
+        "J1",
+        "J2",
+        "J3",
+        "J5",
+        "J11",
+        "J12",
+        "J13",
+        "J14",
+        "J15",
+        "J16",
+        "J17",
+        "J18",
+        "J19",
+        "J20",
+        "J21",
+        "J22"
+      ],
+      "enabled": true,
+      "pull_test_n": 30.0,
+      "retention": "tie_bar"
+    },
+    "frame_brackets": {
+      "enabled": true,
+      "height_mm": 20.0,
+      "thickness_mm": 3.0,
+      "width_mm": 18.0
+    },
+    "mounting_plate": {
+      "edge_margin_mm": 8.0,
+      "enabled": true,
+      "thickness_mm": 3.0
+    }
+  },
+  "mounting_holes": [
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 6.0,
+      "y_mm": 6.0
+    },
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 154.0,
+      "y_mm": 6.0
+    },
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 6.0,
+      "y_mm": 94.0
+    },
+    {
+      "diameter_mm": 3.2,
+      "x_mm": 154.0,
+      "y_mm": 94.0
+    }
+  ],
+  "provenance": {
+    "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+    "role_set_hash": "c2a3d03d056e912ec67eed10acf01ddbbbadb1d105ea40acf0027d10dc81bea0",
+    "source_spec_hash": "4c00ea48ba78f77fe0983933289c335ad8e51d0912c46eb5701c706a8e5f1307"
+  },
+  "selected_variant": "sealed",
+  "variants": [
+    {
+      "gasket": true,
+      "lid_style": "screw",
+      "name": "sealed",
+      "ventilation": "none"
+    },
+    {
+      "gasket": false,
+      "lid_style": "screw",
+      "name": "vented",
+      "ventilation": "side_slots"
+    },
+    {
+      "gasket": false,
+      "lid_style": "snap",
+      "name": "service",
+      "ventilation": "top_slots"
+    }
+  ]
+}

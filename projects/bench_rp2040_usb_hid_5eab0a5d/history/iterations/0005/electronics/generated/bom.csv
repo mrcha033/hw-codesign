@@ -1,0 +1,12 @@
+reference,category,mpn,quantity,risk
+J1,power_input,USB4105-GF-A,1,normal
+D1,tvs,USBLC6-2SC6,1,normal
+U1,regulator_3v3,AP2112K-3.3TRG1,1,normal
+U2,mcu,RP2040,1,normal
+U3,flash,W25Q16JVSSIQ,1,normal
+X1,crystal_12m,ABM8-12.000MHZ-B2-T,1,normal
+J2,debug_header,61201021621,1,normal
+C1,decoupling,GRM155R71C104KA88D,1,normal
+C2,decoupling,GRM155R71C104KA88D,1,normal
+C3,bulk_cap,GRM188R60J106ME47D,1,normal
+C4,bulk_cap,GRM188R60J106ME47D,1,normal

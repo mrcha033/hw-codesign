@@ -1,0 +1,40 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "placement-proposal",
+    "release_authoritative": false
+  },
+  "failures": [
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U1",
+          "C2"
+        ]
+      },
+      "message": "U1 and C2 estimated courtyards overlap (coarse estimate; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    }
+  ],
+  "gate": "placement_constraints",
+  "metrics": {
+    "authoritative": false,
+    "constraints": 10,
+    "cost": 0,
+    "cost_breakdown": {},
+    "errors": 0,
+    "finding_counts": {
+      "estimated_courtyard_overlap": 1
+    },
+    "method": "constraint_driven_placement_proposal",
+    "placements": 14,
+    "solver_iterations": 0,
+    "warnings": 1
+  },
+  "status": "pass"
+}

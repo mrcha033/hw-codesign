@@ -1,0 +1,106 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: STM32H7 motor controller 12 channels 24V CAN bus emergency stop 4-layer
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: actuation.motor_channels
+    spec_path: actuation.motor_channels
+    value: 12
+    field_type: integer
+    source_span: 12 channel
+    affected_gates: &id001
+    - electrical_semantics
+    - power_budget
+    - firmware_pinmap
+    - thermal_integrity
+    status: lowered
+  - id: req_0002
+    source: compute.mcu.family
+    spec_path: compute.mcu.family
+    value: STM32H7
+    field_type: string
+    source_span: STM32H7
+    affected_gates: &id002
+    - pin_symbol_footprint
+    - firmware_pinmap
+    - native_zephyr_build
+    status: lowered
+  - id: req_0003
+    source: manufacturing.pcb.layers
+    spec_path: manufacturing.pcb.layers
+    value: 4
+    field_type: integer
+    source_span: 4-layer
+    affected_gates: &id003
+    - layout_signal_integrity
+    - native_drc
+    - manufacturing_export
+    status: lowered
+  - id: req_0004
+    source: sensing.e_stop
+    spec_path: sensing.e_stop
+    value: required
+    field_type: enum
+    source_span: emergency stop
+    affected_gates: &id004
+    - electrical_semantics
+    - firmware_pinmap
+    - firmware_interface_contract
+    status: lowered
+  active_unresolved: []
+  compiler_ir:
+    version: requirements_ir_v1
+    input_id: req_input_0001
+    lowered_fields:
+    - spec_path: actuation.motor_channels
+      value: 12
+      field_type: integer
+      source_span: 12 channel
+      affected_gates: *id001
+      status: lowered
+    - spec_path: compute.mcu.family
+      value: STM32H7
+      field_type: string
+      source_span: STM32H7
+      affected_gates: *id002
+      status: lowered
+    - spec_path: manufacturing.pcb.layers
+      value: 4
+      field_type: integer
+      source_span: 4-layer
+      affected_gates: *id003
+      status: lowered
+    - spec_path: sensing.e_stop
+      value: required
+      field_type: enum
+      source_span: emergency stop
+      affected_gates: *id004
+      status: lowered
+    unresolved_assumptions:
+    - source: motor driver topology retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    - source: cooling condition retained from documented assumption
+      status: retained_from_spec_assumption
+      release_blocking: false
+      required_human_approvals: []
+      affected_gates:
+      - release_preparation
+    unsupported_constraints: []
+    required_human_approvals: []
+    affected_gates:
+    - electrical_semantics
+    - firmware_interface_contract
+    - firmware_pinmap
+    - layout_signal_integrity
+    - manufacturing_export
+    - native_drc
+    - native_zephyr_build
+    - pin_symbol_footprint
+    - power_budget
+    - thermal_integrity

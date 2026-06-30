@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-30T12:10:22",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/932b95f7-6b73-52cd-82a7-167a03889e8b",
+            "violations": [
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol F1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.5969
+                            },
+                            "uuid": "e9c9e1a8-e1b9-5e56-8c9d-f11b08bbfc5e"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'USB_C_GCT_USB4105' not found in library 'Connector_USB'",
+                    "items": [
+                        {
+                            "description": "Symbol J1 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.6985
+                            },
+                            "uuid": "c7d534e5-54a1-5737-8719-6b51f11951f6"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'FTSH-105' not found in library 'Connector_Samtec'",
+                    "items": [
+                        {
+                            "description": "Symbol J2 [Conn_01x05]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.8509
+                            },
+                            "uuid": "bf1a75ea-273c-51d7-ba21-386b8333318f"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'LGA-14' not found in library 'Package_LGA'",
+                    "items": [
+                        {
+                            "description": "Symbol U2 [Conn_01x05]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.3335
+                            },
+                            "uuid": "74fd0e7e-4dd1-5de9-8adf-b4bab928e858"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'VQFN-16' not found in library 'Package_DFN_QFN'",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [Conn_01x03]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 1.4605
+                            },
+                            "uuid": "919189a8-97ab-5350-876f-8d1978ae6b14"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                }
+            ]
+        }
+    ],
+    "source": "bench_sensor_logger_usb_5eab0a5d.kicad_sch"
+}

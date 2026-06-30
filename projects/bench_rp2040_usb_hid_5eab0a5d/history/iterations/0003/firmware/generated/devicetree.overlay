@@ -1,0 +1,19 @@
+/ {
+  chosen { zephyr,console = &uart0; };
+};
+
+/* usb_hid_stack */
+/* usb_hid_stack: usb stack binding via tinyusb */
+
+
+/* usb_cdc_stack */
+/* usb_cdc_stack: usb stack binding via tinyusb */
+
+
+/* flash_xip */
+/* flash_xip: qspi stack binding via pico-sdk */
+
+
+/* pio_ws2812 */
+/* pio_ws2812: pio stack binding via pico-sdk */
+

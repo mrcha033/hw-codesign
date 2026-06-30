@@ -1,0 +1,4666 @@
+{
+  "component_provenance": {
+    "C1": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+      "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_grm155_100n"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "grm155_100n",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM155R71C104KA88D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM155R71C104KA88D"
+        },
+        "stock": null
+      }
+    },
+    "C2": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+      "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_grm155_100n"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "grm155_100n",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM155R71C104KA88D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM155R71C104KA88D"
+        },
+        "stock": null
+      }
+    },
+    "C3": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+      "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_grm188_10u"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "grm188_10u",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM188R60J106ME47D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM188R60J106ME47D"
+        },
+        "stock": null
+      }
+    },
+    "C4": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+      "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_grm188_10u"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "grm188_10u",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM188R60J106ME47D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM188R60J106ME47D"
+        },
+        "stock": null
+      }
+    },
+    "D1": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+      "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_usblc6_2sc6"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "usblc6_2sc6",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "USBLC6-2SC6",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "usblc6_2sc6",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "USBLC6-2SC6"
+        },
+        "stock": null
+      }
+    },
+    "J1": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+      "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_usb4105_gf_a"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "usb4105_gf_a",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "USB4105-GF-A",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "usb4105_gf_a",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "USB4105-GF-A"
+        },
+        "stock": null
+      }
+    },
+    "J2": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+      "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_conn_2x05_2p54"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "conn_2x05_2p54",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "61201021621",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "conn_2x05_2p54",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "61201021621"
+        },
+        "stock": null
+      }
+    },
+    "U1": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+      "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_ap2112k_33trg1"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "ap2112k_33trg1",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "AP2112K-3.3TRG1",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "ap2112k_33trg1",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "AP2112K-3.3TRG1"
+        },
+        "stock": null
+      }
+    },
+    "U2": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+      "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_rp2040"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "rp2040",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RP2040",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "rp2040",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "RP2040"
+        },
+        "stock": null
+      }
+    },
+    "U3": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+      "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_w25q16jv"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "w25q16jv",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "W25Q16JVSSIQ",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "w25q16jv",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "W25Q16JVSSIQ"
+        },
+        "stock": null
+      }
+    },
+    "X1": {
+      "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+      "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+      "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+      "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+      "datasheet_evidence_ids": [
+        "datasheet_abm8_12m"
+      ],
+      "resolver": "in_repo_curated_v2",
+      "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+      "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+      "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+      "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+      "supplier_provider": "curated",
+      "supplier_record": {
+        "availability": "unknown",
+        "component_id": "abm8_12m",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "ABM8-12.000MHZ-B2-T",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "abm8_12m",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "ABM8-12.000MHZ-B2-T"
+        },
+        "stock": null
+      }
+    }
+  },
+  "component_resolution": [
+    {
+      "component_id": "usb4105_gf_a",
+      "data": {
+        "constraints": [
+          "usb2"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "usb4105_gf_a",
+            "content_sha256": null,
+            "id": "datasheet_usb4105_gf_a",
+            "kind": "datasheet",
+            "locator": "USB4105-GF-A",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "library_id": "Connector_USB:USB_C_GCT_USB4105",
+          "verified": true
+        },
+        "id": "usb4105_gf_a",
+        "lifecycle": "active",
+        "manufacturer": "GCT",
+        "mpn": "USB4105-GF-A",
+        "package": "USB-C-16",
+        "pins": [
+          {
+            "electrical_type": "power_in",
+            "name": "VBUS",
+            "number": "1",
+            "voltage_domain": "USB_5V"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "2",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "D+",
+            "number": "3"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "D-",
+            "number": "4"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-15",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "USB4105-GF-A"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "usb4105_gf_a",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "USB4105-GF-A",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-15",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "USB4105-GF-A"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "library_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+        "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_usb4105_gf_a"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "usb4105_gf_a",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "USB4105-GF-A",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-15",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "USB4105-GF-A"
+          },
+          "stock": null
+        }
+      },
+      "ref": "J1",
+      "resolution": "curated",
+      "role": "power_input"
+    },
+    {
+      "component_id": "usblc6_2sc6",
+      "data": {
+        "constraints": [
+          "usb_esd"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "usblc6_2sc6",
+            "content_sha256": null,
+            "id": "datasheet_usblc6_2sc6",
+            "kind": "datasheet",
+            "locator": "USBLC6-2SC6",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+          "verified": true
+        },
+        "id": "usblc6_2sc6",
+        "lifecycle": "active",
+        "manufacturer": "STMicroelectronics",
+        "mpn": "USBLC6-2SC6",
+        "package": "SOT-23-6",
+        "pins": [
+          {
+            "electrical_type": "bidirectional",
+            "name": "DP_IN",
+            "number": "1"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "DP_OUT",
+            "number": "2"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "DM_IN",
+            "number": "3"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "DM_OUT",
+            "number": "4"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "5",
+            "voltage_domain": "GND"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-15",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "USBLC6-2SC6"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "usblc6_2sc6",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "USBLC6-2SC6",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-15",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "USBLC6-2SC6"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "library_id": "Power_Protection:USBLC6-2SC6",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+        "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_usblc6_2sc6"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "usblc6_2sc6",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "USBLC6-2SC6",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-15",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "USBLC6-2SC6"
+          },
+          "stock": null
+        }
+      },
+      "ref": "D1",
+      "resolution": "curated",
+      "role": "tvs"
+    },
+    {
+      "component_id": "ap2112k_33trg1",
+      "data": {
+        "constraints": [],
+        "datasheet_evidence": [
+          {
+            "component_id": "ap2112k_33trg1",
+            "content_sha256": null,
+            "id": "datasheet_ap2112k_33trg1",
+            "kind": "datasheet",
+            "locator": "AP2112K-3.3TRG1",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "library_id": "Package_TO_SOT_SMD:SOT-23-5",
+          "verified": true
+        },
+        "id": "ap2112k_33trg1",
+        "lifecycle": "active",
+        "manufacturer": "Diodes Incorporated",
+        "mpn": "AP2112K-3.3TRG1",
+        "package": "SOT-23-5",
+        "pins": [
+          {
+            "electrical_type": "input",
+            "name": "EN",
+            "number": "1"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "2",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "power_in",
+            "name": "VIN",
+            "number": "3"
+          },
+          {
+            "electrical_type": "no_connect",
+            "name": "NC",
+            "number": "4"
+          },
+          {
+            "electrical_type": "power_out",
+            "name": "VOUT",
+            "number": "5"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-16",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "AP2112K-3.3TRG1"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "ap2112k_33trg1",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "AP2112K-3.3TRG1",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "AP2112K-3.3TRG1"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "library_id": "Regulator_Linear:AP2112K-3.3",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+        "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_ap2112k_33trg1"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "ap2112k_33trg1",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "AP2112K-3.3TRG1",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "AP2112K-3.3TRG1"
+          },
+          "stock": null
+        }
+      },
+      "ref": "U1",
+      "resolution": "curated",
+      "role": "regulator_3v3"
+    },
+    {
+      "component_id": "rp2040",
+      "data": {
+        "constraints": [
+          "dual_core_cortex_m0plus",
+          "native_usb_fs",
+          "pio_programmable_io",
+          "qspi_xip_flash_required"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "rp2040",
+            "content_sha256": null,
+            "id": "datasheet_rp2040",
+            "kind": "datasheet",
+            "locator": "RP2040",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "backend_footprints": {
+            "tscircuit": "rp2040_qfn56"
+          },
+          "expected_pads": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57"
+          ],
+          "library_id": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+          "verified": true
+        },
+        "id": "rp2040",
+        "lifecycle": "active",
+        "manufacturer": "Raspberry Pi Ltd",
+        "mpn": "RP2040",
+        "package": "QFN-56",
+        "pins": [
+          {
+            "electrical_type": "power_in",
+            "name": "VDD",
+            "number": "1",
+            "voltage_domain": "V3V3"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "VSS",
+            "number": "2",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "USB_DM",
+            "number": "3"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "USB_DP",
+            "number": "4"
+          },
+          {
+            "electrical_type": "passive",
+            "name": "XIN",
+            "number": "5"
+          },
+          {
+            "electrical_type": "output",
+            "name": "QSPI_SCLK",
+            "number": "6"
+          },
+          {
+            "electrical_type": "output",
+            "name": "QSPI_CS",
+            "number": "7"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "QSPI_SD0",
+            "number": "8"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "QSPI_SD1",
+            "number": "9"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "QSPI_SD2",
+            "number": "10"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "QSPI_SD3",
+            "number": "11"
+          },
+          {
+            "electrical_type": "input",
+            "name": "RUN",
+            "number": "12"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO23",
+            "number": "13"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO25",
+            "number": "14"
+          },
+          {
+            "electrical_type": "input",
+            "name": "SWCLK",
+            "number": "15"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "SWDIO",
+            "number": "16"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO0",
+            "number": "17"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO1",
+            "number": "18"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO2",
+            "number": "19"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO3",
+            "number": "20"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO4",
+            "number": "21"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "GPIO5",
+            "number": "22"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "RP2040"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "rp2040",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "RP2040",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "rp2040",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "RP2040"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56"
+          ],
+          "library_id": "MCU_RaspberryPi:RP2040",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+        "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_rp2040"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "rp2040",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "RP2040",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "rp2040",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "RP2040"
+          },
+          "stock": null
+        }
+      },
+      "ref": "U2",
+      "resolution": "curated",
+      "role": "mcu"
+    },
+    {
+      "component_id": "w25q16jv",
+      "data": {
+        "constraints": [
+          "qspi_compatible",
+          "xip_capable",
+          "rp2040_compatible_command_set"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "w25q16jv",
+            "content_sha256": null,
+            "id": "datasheet_w25q16jv",
+            "kind": "datasheet",
+            "locator": "W25Q16JVSSIQ",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "backend_footprints": {
+            "tscircuit": "w25q16jv_soic8"
+          },
+          "expected_pads": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ],
+          "library_id": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+          "verified": true
+        },
+        "id": "w25q16jv",
+        "lifecycle": "active",
+        "manufacturer": "Winbond Electronics",
+        "mpn": "W25Q16JVSSIQ",
+        "package": "SOIC-8",
+        "pins": [
+          {
+            "electrical_type": "input",
+            "name": "CS",
+            "number": "1"
+          },
+          {
+            "electrical_type": "output",
+            "name": "DO",
+            "number": "2"
+          },
+          {
+            "electrical_type": "input",
+            "name": "WP",
+            "number": "3"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "4",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "input",
+            "name": "DI",
+            "number": "5"
+          },
+          {
+            "electrical_type": "input",
+            "name": "CLK",
+            "number": "6"
+          },
+          {
+            "electrical_type": "input",
+            "name": "HOLD",
+            "number": "7"
+          },
+          {
+            "electrical_type": "power_in",
+            "name": "VCC",
+            "number": "8",
+            "voltage_domain": "V3V3"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "W25Q16JVSSIQ"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "w25q16jv",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "W25Q16JVSSIQ",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "w25q16jv",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "W25Q16JVSSIQ"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ],
+          "library_id": "Memory_Flash:W25Q16JV",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+        "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_w25q16jv"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "w25q16jv",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "W25Q16JVSSIQ",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "w25q16jv",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "W25Q16JVSSIQ"
+          },
+          "stock": null
+        }
+      },
+      "ref": "U3",
+      "resolution": "curated",
+      "role": "flash"
+    },
+    {
+      "component_id": "abm8_12m",
+      "data": {
+        "constraints": [
+          "12mhz_xosc",
+          "usb_timing_qualified",
+          "10ppm_stability"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "abm8_12m",
+            "content_sha256": null,
+            "id": "datasheet_abm8_12m",
+            "kind": "datasheet",
+            "locator": "ABM8-12.000MHZ-B2-T",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2"
+          ],
+          "library_id": "Crystal:Crystal_SMD_HC-49S",
+          "verified": true
+        },
+        "id": "abm8_12m",
+        "lifecycle": "active",
+        "manufacturer": "Abracon",
+        "mpn": "ABM8-12.000MHZ-B2-T",
+        "package": "HC-49S-SMD",
+        "pins": [
+          {
+            "electrical_type": "passive",
+            "name": "XIN",
+            "number": "1"
+          },
+          {
+            "electrical_type": "passive",
+            "name": "XOUT",
+            "number": "2"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "ABM8-12.000MHZ-B2-T"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "abm8_12m",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "ABM8-12.000MHZ-B2-T",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "abm8_12m",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "ABM8-12.000MHZ-B2-T"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2"
+          ],
+          "library_id": "Device:Crystal",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+        "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_abm8_12m"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "abm8_12m",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "ABM8-12.000MHZ-B2-T",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "abm8_12m",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "ABM8-12.000MHZ-B2-T"
+          },
+          "stock": null
+        }
+      },
+      "ref": "X1",
+      "resolution": "curated",
+      "role": "crystal_12m"
+    },
+    {
+      "component_id": "conn_2x05_2p54",
+      "data": {
+        "constraints": [
+          "swd_10pin_cortex_debug",
+          "jtag_compatible"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "conn_2x05_2p54",
+            "content_sha256": null,
+            "id": "datasheet_conn_2x05_2p54",
+            "kind": "datasheet",
+            "locator": "61201021621",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ],
+          "library_id": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+          "verified": true
+        },
+        "id": "conn_2x05_2p54",
+        "lifecycle": "active",
+        "manufacturer": "W\u00fcrth Elektronik",
+        "mpn": "61201021621",
+        "package": "PinHeader-2x5-2.54mm",
+        "pins": [
+          {
+            "electrical_type": "power_in",
+            "name": "VCC",
+            "number": "1"
+          },
+          {
+            "electrical_type": "bidirectional",
+            "name": "SWDIO",
+            "number": "2"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "3",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "input",
+            "name": "SWDCLK",
+            "number": "4"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "5",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "output",
+            "name": "SWO",
+            "number": "6"
+          },
+          {
+            "electrical_type": "no_connect",
+            "name": "KEY",
+            "number": "7"
+          },
+          {
+            "electrical_type": "no_connect",
+            "name": "NC",
+            "number": "8"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "9",
+            "voltage_domain": "GND"
+          },
+          {
+            "electrical_type": "input",
+            "name": "RESET",
+            "number": "10"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "61201021621"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "conn_2x05_2p54",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "61201021621",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "61201021621"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ],
+          "library_id": "Connector_Generic:Conn_02x05_Odd_Even",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_conn_2x05_2p54"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "conn_2x05_2p54",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "61201021621",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "61201021621"
+          },
+          "stock": null
+        }
+      },
+      "ref": "J2",
+      "resolution": "curated",
+      "role": "debug_header"
+    },
+    {
+      "component_id": "grm155_100n",
+      "data": {
+        "constraints": [
+          "decoupling"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "grm155_100n",
+            "content_sha256": null,
+            "id": "datasheet_grm155_100n",
+            "kind": "datasheet",
+            "locator": "GRM155R71C104KA88D",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2"
+          ],
+          "library_id": "Capacitor_SMD:C_0402_1005Metric",
+          "verified": true
+        },
+        "id": "grm155_100n",
+        "lifecycle": "active",
+        "manufacturer": "Murata",
+        "mpn": "GRM155R71C104KA88D",
+        "package": "0402",
+        "pins": [
+          {
+            "electrical_type": "passive",
+            "name": "VCC",
+            "number": "1"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "2",
+            "voltage_domain": "GND"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "GRM155R71C104KA88D"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM155R71C104KA88D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM155R71C104KA88D"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2"
+          ],
+          "library_id": "Device:C",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm155_100n"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM155R71C104KA88D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM155R71C104KA88D"
+          },
+          "stock": null
+        }
+      },
+      "ref": "C1",
+      "resolution": "curated",
+      "role": "capacitor_100n"
+    },
+    {
+      "component_id": "grm155_100n",
+      "data": {
+        "constraints": [
+          "decoupling"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "grm155_100n",
+            "content_sha256": null,
+            "id": "datasheet_grm155_100n",
+            "kind": "datasheet",
+            "locator": "GRM155R71C104KA88D",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2"
+          ],
+          "library_id": "Capacitor_SMD:C_0402_1005Metric",
+          "verified": true
+        },
+        "id": "grm155_100n",
+        "lifecycle": "active",
+        "manufacturer": "Murata",
+        "mpn": "GRM155R71C104KA88D",
+        "package": "0402",
+        "pins": [
+          {
+            "electrical_type": "passive",
+            "name": "VCC",
+            "number": "1"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "2",
+            "voltage_domain": "GND"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "GRM155R71C104KA88D"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM155R71C104KA88D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM155R71C104KA88D"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2"
+          ],
+          "library_id": "Device:C",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm155_100n"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM155R71C104KA88D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM155R71C104KA88D"
+          },
+          "stock": null
+        }
+      },
+      "ref": "C2",
+      "resolution": "curated",
+      "role": "capacitor_100n"
+    },
+    {
+      "component_id": "grm188_10u",
+      "data": {
+        "constraints": [
+          "bulk_capacitor"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "grm188_10u",
+            "content_sha256": null,
+            "id": "datasheet_grm188_10u",
+            "kind": "datasheet",
+            "locator": "GRM188R60J106ME47D",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2"
+          ],
+          "library_id": "Capacitor_SMD:C_0603_1608Metric",
+          "verified": true
+        },
+        "id": "grm188_10u",
+        "lifecycle": "active",
+        "manufacturer": "Murata",
+        "mpn": "GRM188R60J106ME47D",
+        "package": "0603",
+        "pins": [
+          {
+            "electrical_type": "passive",
+            "name": "VCC",
+            "number": "1"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "2",
+            "voltage_domain": "GND"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "GRM188R60J106ME47D"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM188R60J106ME47D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM188R60J106ME47D"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2"
+          ],
+          "library_id": "Device:C",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm188_10u"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM188R60J106ME47D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM188R60J106ME47D"
+          },
+          "stock": null
+        }
+      },
+      "ref": "C3",
+      "resolution": "curated",
+      "role": "capacitor_10u_50v"
+    },
+    {
+      "component_id": "grm188_10u",
+      "data": {
+        "constraints": [
+          "bulk_capacitor"
+        ],
+        "datasheet_evidence": [
+          {
+            "component_id": "grm188_10u",
+            "content_sha256": null,
+            "id": "datasheet_grm188_10u",
+            "kind": "datasheet",
+            "locator": "GRM188R60J106ME47D",
+            "review_status": "approved",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer",
+            "supports": [
+              "identity",
+              "pins",
+              "symbol",
+              "package",
+              "footprint"
+            ],
+            "uri": null
+          }
+        ],
+        "footprint": {
+          "expected_pads": [
+            "1",
+            "2"
+          ],
+          "library_id": "Capacitor_SMD:C_0603_1608Metric",
+          "verified": true
+        },
+        "id": "grm188_10u",
+        "lifecycle": "active",
+        "manufacturer": "Murata",
+        "mpn": "GRM188R60J106ME47D",
+        "package": "0603",
+        "pins": [
+          {
+            "electrical_type": "passive",
+            "name": "VCC",
+            "number": "1"
+          },
+          {
+            "electrical_type": "ground",
+            "name": "GND",
+            "number": "2",
+            "voltage_domain": "GND"
+          }
+        ],
+        "resolution_provenance": {
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer_datasheet"
+        },
+        "review_status": "approved",
+        "sourcing": {
+          "status": "resolved",
+          "supplier_skus": [
+            "GRM188R60J106ME47D"
+          ]
+        },
+        "supplier_offer": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM188R60J106ME47D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM188R60J106ME47D"
+          },
+          "stock": null
+        },
+        "symbol": {
+          "expected_pins": [
+            "1",
+            "2"
+          ],
+          "library_id": "Device:C",
+          "verified": true
+        }
+      },
+      "provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm188_10u"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM188R60J106ME47D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM188R60J106ME47D"
+          },
+          "stock": null
+        }
+      },
+      "ref": "C4",
+      "resolution": "curated",
+      "role": "capacitor_10u_50v"
+    }
+  ],
+  "component_resolution_report": {
+    "artifacts": [
+      "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml"
+    ],
+    "backend": {
+      "mutates_database": false,
+      "name": "ComponentResolver"
+    },
+    "failures": [],
+    "gate": "component_resolution",
+    "metrics": {
+      "critical_roles": 5,
+      "requested": 11,
+      "resolved": 11,
+      "supplier_provider": "curated"
+    },
+    "status": "pass"
+  },
+  "components": [
+    {
+      "category": "power_input",
+      "component_id": "usb4105_gf_a",
+      "constraints": [
+        "usb2"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "usb4105_gf_a",
+          "content_sha256": null,
+          "id": "datasheet_usb4105_gf_a",
+          "kind": "datasheet",
+          "locator": "USB4105-GF-A",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-15",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Connector_USB:USB_C_GCT_USB4105",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "library_id": "Connector_USB:USB_C_GCT_USB4105",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "GCT",
+      "mpn": "USB4105-GF-A",
+      "package": "USB-C-16",
+      "pcb_position_mm": [
+        3.0,
+        10.0
+      ],
+      "pins": [
+        {
+          "name": "VBUS",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "USB_5V"
+        },
+        {
+          "name": "DP",
+          "net": "USB_DP_RAW",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "DM",
+          "net": "USB_DM_RAW",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "4",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J1",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+        "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_usb4105_gf_a"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "usb4105_gf_a",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "USB4105-GF-A",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-15",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "USB4105-GF-A"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "USB4105-GF-A"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "usb4105_gf_a",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "USB4105-GF-A",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "usb4105_gf_a",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "USB4105-GF-A"
+        },
+        "stock": null
+      },
+      "supplier_sku": "USB4105-GF-A",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "library_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+        "verified": true
+      },
+      "value": "USB-C POWER"
+    },
+    {
+      "category": "tvs",
+      "component_id": "usblc6_2sc6",
+      "constraints": [
+        "usb_esd"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "usblc6_2sc6",
+          "content_sha256": null,
+          "id": "datasheet_usblc6_2sc6",
+          "kind": "datasheet",
+          "locator": "USBLC6-2SC6",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-15",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "STMicroelectronics",
+      "mpn": "USBLC6-2SC6",
+      "package": "SOT-23-6",
+      "pcb_position_mm": [
+        10.0,
+        10.0
+      ],
+      "pins": [
+        {
+          "name": "DP_IN",
+          "net": "USB_DP_RAW",
+          "number": "1",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "DP_OUT",
+          "net": "USB_DP",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "DM_IN",
+          "net": "USB_DM_RAW",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "DM_OUT",
+          "net": "USB_DM",
+          "number": "4",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "5",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "D1",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+        "database_file_sha256": "ec3e3c7e396330ad5d9900b674eb87966e5fa7f4742d67181a36248f6b2a365b",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_usblc6_2sc6"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "usblc6_2sc6",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "USBLC6-2SC6",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-15",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "USBLC6-2SC6"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "USBLC6-2SC6"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "usblc6_2sc6",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "USBLC6-2SC6",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "usblc6_2sc6",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "USBLC6-2SC6"
+        },
+        "stock": null
+      },
+      "supplier_sku": "USBLC6-2SC6",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "library_id": "Power_Protection:USBLC6-2SC6",
+        "verified": true
+      },
+      "value": "USB ESD"
+    },
+    {
+      "category": "regulator_3v3",
+      "component_id": "ap2112k_33trg1",
+      "constraints": [],
+      "datasheet_evidence": [
+        {
+          "component_id": "ap2112k_33trg1",
+          "content_sha256": null,
+          "id": "datasheet_ap2112k_33trg1",
+          "kind": "datasheet",
+          "locator": "AP2112K-3.3TRG1",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-16",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "library_id": "Package_TO_SOT_SMD:SOT-23-5",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Diodes Incorporated",
+      "mpn": "AP2112K-3.3TRG1",
+      "package": "SOT-23-5",
+      "pcb_position_mm": [
+        3.0,
+        15.0
+      ],
+      "pins": [
+        {
+          "name": "VIN",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "USB_5V"
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "VOUT",
+          "net": "V3V3",
+          "number": "3",
+          "role": "power_out",
+          "voltage_domain": "V3V3"
+        }
+      ],
+      "ref": "U1",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+        "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_ap2112k_33trg1"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "ap2112k_33trg1",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "AP2112K-3.3TRG1",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "AP2112K-3.3TRG1"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "AP2112K-3.3TRG1"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "ap2112k_33trg1",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "AP2112K-3.3TRG1",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "ap2112k_33trg1",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "AP2112K-3.3TRG1"
+        },
+        "stock": null
+      },
+      "supplier_sku": "AP2112K-3.3TRG1",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "library_id": "Regulator_Linear:AP2112K-3.3",
+        "verified": true
+      },
+      "value": "3V3 LDO"
+    },
+    {
+      "category": "mcu",
+      "component_id": "rp2040",
+      "constraints": [
+        "dual_core_cortex_m0plus",
+        "native_usb_fs",
+        "pio_programmable_io",
+        "qspi_xip_flash_required"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "rp2040",
+          "content_sha256": null,
+          "id": "datasheet_rp2040",
+          "kind": "datasheet",
+          "locator": "RP2040",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+      "footprint_metadata": {
+        "backend_footprints": {
+          "tscircuit": "rp2040_qfn56"
+        },
+        "expected_pads": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "47",
+          "48",
+          "49",
+          "50",
+          "51",
+          "52",
+          "53",
+          "54",
+          "55",
+          "56",
+          "57"
+        ],
+        "library_id": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Raspberry Pi Ltd",
+      "mpn": "RP2040",
+      "package": "QFN-56",
+      "pcb_position_mm": [
+        18.0,
+        4.0
+      ],
+      "pins": [
+        {
+          "name": "QSPI_SD3",
+          "net": "QSPI_D3",
+          "number": "1",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "QSPI_SD2",
+          "net": "QSPI_D2",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "QSPI_SD1",
+          "net": "QSPI_MISO",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "QSPI_SD0",
+          "net": "QSPI_MOSI",
+          "number": "4",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "QSPI_SCK",
+          "net": "QSPI_CLK",
+          "number": "5",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "name": "QSPI_SS_N",
+          "net": "QSPI_CS",
+          "number": "6",
+          "role": "output",
+          "voltage_domain": null
+        },
+        {
+          "name": "USB_DM",
+          "net": "USB_DM",
+          "number": "11",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "USB_DP",
+          "net": "USB_DP",
+          "number": "12",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "TESTEN",
+          "net": "GND",
+          "number": "16",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "XIN",
+          "net": "XIN",
+          "number": "17",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "name": "XOUT",
+          "net": "XOUT",
+          "number": "18",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "33",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "34",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "SWCLK",
+          "net": "SWCLK",
+          "number": "40",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "name": "SWDIO",
+          "net": "SWDIO",
+          "number": "41",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "DVDD",
+          "net": "V3V3",
+          "number": "44",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "45",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "46",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "47",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "VDD",
+          "net": "V3V3",
+          "number": "48",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        }
+      ],
+      "ref": "U2",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+        "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_rp2040"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "rp2040",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "RP2040",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "rp2040",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "RP2040"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "RP2040"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "rp2040",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RP2040",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "rp2040",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "RP2040"
+        },
+        "stock": null
+      },
+      "supplier_sku": "RP2040",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "47",
+          "48",
+          "49",
+          "50",
+          "51",
+          "52",
+          "53",
+          "54",
+          "55",
+          "56"
+        ],
+        "library_id": "MCU_RaspberryPi:RP2040",
+        "verified": true
+      },
+      "value": "RP2040"
+    },
+    {
+      "category": "flash",
+      "component_id": "w25q16jv",
+      "constraints": [
+        "qspi_compatible",
+        "xip_capable",
+        "rp2040_compatible_command_set"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "w25q16jv",
+          "content_sha256": null,
+          "id": "datasheet_w25q16jv",
+          "kind": "datasheet",
+          "locator": "W25Q16JVSSIQ",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+      "footprint_metadata": {
+        "backend_footprints": {
+          "tscircuit": "w25q16jv_soic8"
+        },
+        "expected_pads": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "library_id": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Winbond Electronics",
+      "mpn": "W25Q16JVSSIQ",
+      "package": "SOIC-8",
+      "pcb_position_mm": [
+        33.0,
+        2.0
+      ],
+      "pins": [
+        {
+          "name": "~CS",
+          "net": "QSPI_CS",
+          "number": "1",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "name": "IO1",
+          "net": "QSPI_MISO",
+          "number": "2",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "~WP",
+          "net": "QSPI_D2",
+          "number": "3",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "4",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "IO0",
+          "net": "QSPI_MOSI",
+          "number": "5",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "CLK",
+          "net": "QSPI_CLK",
+          "number": "6",
+          "role": "input",
+          "voltage_domain": null
+        },
+        {
+          "name": "~HOLD",
+          "net": "QSPI_D3",
+          "number": "7",
+          "role": "bidirectional",
+          "voltage_domain": null
+        },
+        {
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "8",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        }
+      ],
+      "ref": "U3",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+        "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_w25q16jv"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "w25q16jv",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "W25Q16JVSSIQ",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "w25q16jv",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "W25Q16JVSSIQ"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "W25Q16JVSSIQ"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "w25q16jv",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "W25Q16JVSSIQ",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "w25q16jv",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "W25Q16JVSSIQ"
+        },
+        "stock": null
+      },
+      "supplier_sku": "W25Q16JVSIQ",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "library_id": "Memory_Flash:W25Q16JV",
+        "verified": true
+      },
+      "value": "2MB QSPI"
+    },
+    {
+      "category": "crystal_12m",
+      "component_id": "abm8_12m",
+      "constraints": [
+        "12mhz_xosc",
+        "usb_timing_qualified",
+        "10ppm_stability"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "abm8_12m",
+          "content_sha256": null,
+          "id": "datasheet_abm8_12m",
+          "kind": "datasheet",
+          "locator": "ABM8-12.000MHZ-B2-T",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Crystal:Crystal_SMD_HC-49S",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2"
+        ],
+        "library_id": "Crystal:Crystal_SMD_HC-49S",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Abracon",
+      "mpn": "ABM8-12.000MHZ-B2-T",
+      "package": "HC-49S-SMD",
+      "pcb_position_mm": [
+        33.0,
+        10.0
+      ],
+      "pins": [
+        {
+          "name": "XIN",
+          "net": "XIN",
+          "number": "1",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "name": "XOUT",
+          "net": "XOUT",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        }
+      ],
+      "ref": "X1",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/usb_hid_controller.yaml",
+        "database_file_sha256": "e7236830e4ab3ccb990ab181137cb1d4ff0e168194b77d257c85120a240f6ed6",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_abm8_12m"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "abm8_12m",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "ABM8-12.000MHZ-B2-T",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "abm8_12m",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "ABM8-12.000MHZ-B2-T"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "ABM8-12.000MHZ-B2-T"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "abm8_12m",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "ABM8-12.000MHZ-B2-T",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "abm8_12m",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "ABM8-12.000MHZ-B2-T"
+        },
+        "stock": null
+      },
+      "supplier_sku": "ABM8-12.000MHZ-B2-T",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2"
+        ],
+        "library_id": "Device:Crystal",
+        "verified": true
+      },
+      "value": "12MHz XTAL"
+    },
+    {
+      "category": "debug_header",
+      "component_id": "conn_2x05_2p54",
+      "constraints": [
+        "swd_10pin_cortex_debug",
+        "jtag_compatible"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "conn_2x05_2p54",
+          "content_sha256": null,
+          "id": "datasheet_conn_2x05_2p54",
+          "kind": "datasheet",
+          "locator": "61201021621",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "library_id": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "W\u00fcrth Elektronik",
+      "mpn": "61201021621",
+      "package": "PinHeader-2x5-2.54mm",
+      "pcb_position_mm": [
+        18.0,
+        12.0
+      ],
+      "pins": [
+        {
+          "name": "P1",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "P2",
+          "net": "SWDIO",
+          "number": "2",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "name": "P3",
+          "net": "GND",
+          "number": "3",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "P4",
+          "net": "SWCLK",
+          "number": "4",
+          "role": "passive",
+          "voltage_domain": null
+        },
+        {
+          "name": "P5",
+          "net": "GND",
+          "number": "5",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "P6",
+          "net": "GND",
+          "number": "6",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "P7",
+          "net": "GND",
+          "number": "7",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "P8",
+          "net": "GND",
+          "number": "8",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "P9",
+          "net": "GND",
+          "number": "9",
+          "role": "ground",
+          "voltage_domain": "GND"
+        },
+        {
+          "name": "P10",
+          "net": "GND",
+          "number": "10",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "J2",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_conn_2x05_2p54"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "conn_2x05_2p54",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "61201021621",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "61201021621"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "61201021621"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "conn_2x05_2p54",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "61201021621",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "conn_2x05_2p54",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "61201021621"
+        },
+        "stock": null
+      },
+      "supplier_sku": "61201021621",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "library_id": "Connector_Generic:Conn_02x05_Odd_Even",
+        "verified": true
+      },
+      "value": "SWD 10-pin"
+    },
+    {
+      "category": "decoupling",
+      "component_id": "grm155_100n",
+      "constraints": [
+        "decoupling"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "grm155_100n",
+          "content_sha256": null,
+          "id": "datasheet_grm155_100n",
+          "kind": "datasheet",
+          "locator": "GRM155R71C104KA88D",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Capacitor_SMD:C_0402_1005Metric",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2"
+        ],
+        "library_id": "Capacitor_SMD:C_0402_1005Metric",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM155R71C104KA88D",
+      "package": "0402",
+      "pcb_position_mm": [
+        3.0,
+        5.0
+      ],
+      "pins": [
+        {
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C1",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm155_100n"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM155R71C104KA88D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM155R71C104KA88D"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "GRM155R71C104KA88D"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "grm155_100n",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM155R71C104KA88D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM155R71C104KA88D"
+        },
+        "stock": null
+      },
+      "supplier_sku": "GRM155R71C104KA88D",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2"
+        ],
+        "library_id": "Device:C",
+        "verified": true
+      },
+      "value": "100nF"
+    },
+    {
+      "category": "decoupling",
+      "component_id": "grm155_100n",
+      "constraints": [
+        "decoupling"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "grm155_100n",
+          "content_sha256": null,
+          "id": "datasheet_grm155_100n",
+          "kind": "datasheet",
+          "locator": "GRM155R71C104KA88D",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Capacitor_SMD:C_0402_1005Metric",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2"
+        ],
+        "library_id": "Capacitor_SMD:C_0402_1005Metric",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM155R71C104KA88D",
+      "package": "0402",
+      "pcb_position_mm": [
+        7.0,
+        5.0
+      ],
+      "pins": [
+        {
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C2",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm155_100n"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM155R71C104KA88D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM155R71C104KA88D"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "GRM155R71C104KA88D"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "grm155_100n",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM155R71C104KA88D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm155_100n",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM155R71C104KA88D"
+        },
+        "stock": null
+      },
+      "supplier_sku": "GRM155R71C104KA88D",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2"
+        ],
+        "library_id": "Device:C",
+        "verified": true
+      },
+      "value": "100nF"
+    },
+    {
+      "category": "bulk_cap",
+      "component_id": "grm188_10u",
+      "constraints": [
+        "bulk_capacitor"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "grm188_10u",
+          "content_sha256": null,
+          "id": "datasheet_grm188_10u",
+          "kind": "datasheet",
+          "locator": "GRM188R60J106ME47D",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2"
+        ],
+        "library_id": "Capacitor_SMD:C_0603_1608Metric",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R60J106ME47D",
+      "package": "0603",
+      "pcb_position_mm": [
+        11.0,
+        5.0
+      ],
+      "pins": [
+        {
+          "name": "VCC",
+          "net": "V3V3",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "V3V3"
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C3",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm188_10u"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM188R60J106ME47D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM188R60J106ME47D"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "GRM188R60J106ME47D"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "grm188_10u",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM188R60J106ME47D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM188R60J106ME47D"
+        },
+        "stock": null
+      },
+      "supplier_sku": "GRM188R60J106ME47D",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2"
+        ],
+        "library_id": "Device:C",
+        "verified": true
+      },
+      "value": "10uF"
+    },
+    {
+      "category": "bulk_cap",
+      "component_id": "grm188_10u",
+      "constraints": [
+        "bulk_capacitor"
+      ],
+      "datasheet_evidence": [
+        {
+          "component_id": "grm188_10u",
+          "content_sha256": null,
+          "id": "datasheet_grm188_10u",
+          "kind": "datasheet",
+          "locator": "GRM188R60J106ME47D",
+          "review_status": "approved",
+          "reviewed_at": "2026-06-21",
+          "source": "manufacturer",
+          "supports": [
+            "identity",
+            "pins",
+            "symbol",
+            "package",
+            "footprint"
+          ],
+          "uri": null
+        }
+      ],
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "footprint_metadata": {
+        "expected_pads": [
+          "1",
+          "2"
+        ],
+        "library_id": "Capacitor_SMD:C_0603_1608Metric",
+        "verified": true
+      },
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R60J106ME47D",
+      "package": "0603",
+      "pcb_position_mm": [
+        9.0,
+        15.0
+      ],
+      "pins": [
+        {
+          "name": "VCC",
+          "net": "USB_VBUS",
+          "number": "1",
+          "role": "power_in",
+          "voltage_domain": "USB_5V"
+        },
+        {
+          "name": "GND",
+          "net": "GND",
+          "number": "2",
+          "role": "ground",
+          "voltage_domain": "GND"
+        }
+      ],
+      "ref": "C4",
+      "resolution": "curated",
+      "resolution_provenance": {
+        "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+        "database_file_sha256": "3da1d087b1bdab80d807626d6aab29189b226f35e03d471576f8c15566018661",
+        "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+        "datasheet_catalog_sha256": "672d91caee2212c0eb4c711843b9470a48be62688bc9412608e83eae262db930",
+        "datasheet_evidence_ids": [
+          "datasheet_grm188_10u"
+        ],
+        "resolver": "in_repo_curated_v2",
+        "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml",
+        "role_set_sha256": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+        "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+        "supplier_catalog_sha256": "328691c71d874c1d9a18e1cfa1abcfdbd6f5ff77628e7efed409b99a99439e9a",
+        "supplier_provider": "curated",
+        "supplier_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provider": "curated",
+          "sku": "GRM188R60J106ME47D",
+          "source_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provenance": {
+              "reviewed_at": "2026-06-21",
+              "source": "curated_component_db"
+            },
+            "stock": null,
+            "supplier_sku": "GRM188R60J106ME47D"
+          },
+          "stock": null
+        }
+      },
+      "review_status": "approved",
+      "sourcing": {
+        "status": "resolved",
+        "supplier_skus": [
+          "GRM188R60J106ME47D"
+        ]
+      },
+      "substitute_mpn": null,
+      "supplier_offer": {
+        "availability": "unknown",
+        "component_id": "grm188_10u",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM188R60J106ME47D",
+        "source_record": {
+          "availability": "unknown",
+          "component_id": "grm188_10u",
+          "observed_at": null,
+          "provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "curated_component_db"
+          },
+          "stock": null,
+          "supplier_sku": "GRM188R60J106ME47D"
+        },
+        "stock": null
+      },
+      "supplier_sku": "GRM188R60J106ME47D",
+      "symbol": {
+        "expected_pins": [
+          "1",
+          "2"
+        ],
+        "library_id": "Device:C",
+        "verified": true
+      },
+      "value": "10uF USB_IN"
+    }
+  ],
+  "datasheet_evidence_report": {
+    "artifacts": [
+      "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml"
+    ],
+    "backend": {},
+    "failures": [],
+    "gate": "datasheet_evidence",
+    "metrics": {
+      "components_checked": 11
+    },
+    "status": "pass"
+  },
+  "design_basis": {
+    "architecture": "rp2040_qspi_usb_device",
+    "board_carries_motor_power": false,
+    "external_flash_required": true,
+    "mcu_family": "RP2040",
+    "usb_native": true
+  },
+  "nets": [
+    {
+      "connected_pins": [
+        "C1.2",
+        "C2.2",
+        "C3.2",
+        "C4.2",
+        "D1.5",
+        "J1.4",
+        "J2.10",
+        "J2.3",
+        "J2.5",
+        "J2.6",
+        "J2.7",
+        "J2.8",
+        "J2.9",
+        "U1.2",
+        "U2.16",
+        "U2.33",
+        "U2.34",
+        "U3.4"
+      ],
+      "name": "GND",
+      "required_track_width_mm": 0.2,
+      "signal_class": "ground",
+      "voltage_domain": "GND"
+    },
+    {
+      "connected_pins": [
+        "U2.5",
+        "U3.6"
+      ],
+      "name": "QSPI_CLK",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.6",
+        "U3.1"
+      ],
+      "name": "QSPI_CS",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.2",
+        "U3.3"
+      ],
+      "name": "QSPI_D2",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.1",
+        "U3.7"
+      ],
+      "name": "QSPI_D3",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.3",
+        "U3.2"
+      ],
+      "name": "QSPI_MISO",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.4",
+        "U3.5"
+      ],
+      "name": "QSPI_MOSI",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "J2.4",
+        "U2.40"
+      ],
+      "name": "SWCLK",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "J2.2",
+        "U2.41"
+      ],
+      "name": "SWDIO",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "D1.4",
+        "U2.11"
+      ],
+      "name": "USB_DM",
+      "required_track_width_mm": 0.15,
+      "signal_class": "usb",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "D1.3",
+        "J1.3"
+      ],
+      "name": "USB_DM_RAW",
+      "required_track_width_mm": 0.15,
+      "signal_class": "usb",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "D1.2",
+        "U2.12"
+      ],
+      "name": "USB_DP",
+      "required_track_width_mm": 0.15,
+      "signal_class": "usb",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "D1.1",
+        "J1.2"
+      ],
+      "name": "USB_DP_RAW",
+      "required_track_width_mm": 0.15,
+      "signal_class": "usb",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "C4.1",
+        "J1.1",
+        "U1.1"
+      ],
+      "name": "USB_VBUS",
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "USB_5V"
+    },
+    {
+      "connected_pins": [
+        "C1.1",
+        "C2.1",
+        "C3.1",
+        "J2.1",
+        "U1.3",
+        "U2.44",
+        "U2.45",
+        "U2.46",
+        "U2.47",
+        "U2.48",
+        "U3.8"
+      ],
+      "name": "V3V3",
+      "required_track_width_mm": 0.5,
+      "signal_class": "power",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.17",
+        "X1.1"
+      ],
+      "name": "XIN",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    },
+    {
+      "connected_pins": [
+        "U2.18",
+        "X1.2"
+      ],
+      "name": "XOUT",
+      "required_track_width_mm": 0.15,
+      "signal_class": "signal",
+      "voltage_domain": "V3V3"
+    }
+  ],
+  "placement": {
+    "board_height_mm": 21.0,
+    "board_width_mm": 51.0,
+    "constraints": [
+      {
+        "derived_from": "mechanical.envelope + manufacturing.pcb.min_clearance_mm",
+        "enforced": true,
+        "kind": "board_keepout",
+        "params": {
+          "edge_margin_mm": 0.127,
+          "height_mm": 21.0,
+          "width_mm": 51.0
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[0] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 2.5,
+          "y_mm": 2.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[1] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 48.5,
+          "y_mm": 2.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[2] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 2.5,
+          "y_mm": 18.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "mechanical.mounting_holes[3] + mechanical.assembly_clearance_mm",
+        "enforced": true,
+        "kind": "mounting_hole_keepout",
+        "params": {
+          "keepout_radius_mm": 1.6,
+          "x_mm": 48.5,
+          "y_mm": 18.5
+        },
+        "rationale": "",
+        "target_ref": null
+      },
+      {
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "max_distance_mm": 12.0,
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ],
+          "target_ref": null
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C1"
+      },
+      {
+        "derived_from": "graph decoupling component pins + decoupling_target_ref",
+        "enforced": false,
+        "kind": "decoupling_proximity",
+        "params": {
+          "max_distance_mm": 12.0,
+          "power_nets": [
+            "GND",
+            "V3V3"
+          ],
+          "target_ref": null
+        },
+        "rationale": "Cap-to-IC association is not modelled in the netlist; proximity enforcement is deferred.",
+        "target_ref": "C2"
+      }
+    ],
+    "cost": 0,
+    "cost_breakdown": {},
+    "placements": {
+      "C1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "",
+        "ref": "C1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 3.0,
+        "y_mm": 5.0
+      },
+      "C2": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "",
+        "ref": "C2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 7.0,
+        "y_mm": 5.0
+      },
+      "C3": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "",
+        "ref": "C3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 11.0,
+        "y_mm": 5.0
+      },
+      "C4": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "",
+        "ref": "C4",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 9.0,
+        "y_mm": 15.0
+      },
+      "D1": {
+        "courtyard_h_mm": 6.708,
+        "courtyard_w_mm": 6.708,
+        "rationale": "",
+        "ref": "D1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 10.0,
+        "y_mm": 10.0
+      },
+      "J1": {
+        "courtyard_h_mm": 6.0,
+        "courtyard_w_mm": 6.0,
+        "rationale": "",
+        "ref": "J1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 3.0,
+        "y_mm": 10.0
+      },
+      "J2": {
+        "courtyard_h_mm": 9.487,
+        "courtyard_w_mm": 9.487,
+        "rationale": "",
+        "ref": "J2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 18.0,
+        "y_mm": 12.0
+      },
+      "U1": {
+        "courtyard_h_mm": 5.196,
+        "courtyard_w_mm": 5.196,
+        "rationale": "",
+        "ref": "U1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 3.0,
+        "y_mm": 15.0
+      },
+      "U2": {
+        "courtyard_h_mm": 13.416,
+        "courtyard_w_mm": 13.416,
+        "rationale": "",
+        "ref": "U2",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 18.0,
+        "y_mm": 4.0
+      },
+      "U3": {
+        "courtyard_h_mm": 8.485,
+        "courtyard_w_mm": 8.485,
+        "rationale": "",
+        "ref": "U3",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 33.0,
+        "y_mm": 2.0
+      },
+      "X1": {
+        "courtyard_h_mm": 4.243,
+        "courtyard_w_mm": 4.243,
+        "rationale": "",
+        "ref": "X1",
+        "rotation_deg": 0.0,
+        "side": "top",
+        "source": "rp2040_usb_hid_anchor",
+        "x_mm": 33.0,
+        "y_mm": 10.0
+      }
+    },
+    "solver": {
+      "authoritative": false,
+      "iterations": 0,
+      "method": "deterministic_constraint_cost_search"
+    }
+  },
+  "provenance": {
+    "backend": "tscircuit",
+    "command": [],
+    "compiler_version": null,
+    "component_db_hash": "0c4ed6bb646afa0b220dbf917fbbf9f8e360fc272ecdf7e31cec2bc595721153",
+    "release_eligible": false,
+    "role_set_hash": "13d0d5f618235c5f66ef565235e9a72730c332e20471c4d4aaecc319973f6e1c",
+    "source_spec_hash": "06aa39ee4f9c1f18a97f96c4415a384e3d4928edddea9c6a605935a03c9ca479",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "supplier_availability_report": {
+    "artifacts": [
+      "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml"
+    ],
+    "backend": {
+      "normalized_contract": "supplier_offer_v1",
+      "provider": "curated"
+    },
+    "failures": [
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for J1 at curated",
+        "path": "J1",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for D1 at curated",
+        "path": "D1",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for U1 at curated",
+        "path": "U1",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for U2 at curated",
+        "path": "U2",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for U3 at curated",
+        "path": "U3",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for X1 at curated",
+        "path": "X1",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for J2 at curated",
+        "path": "J2",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for C1 at curated",
+        "path": "C1",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for C2 at curated",
+        "path": "C2",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for C3 at curated",
+        "path": "C3",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "BOM_ERROR",
+        "code": "supplier_availability_unknown",
+        "details": {},
+        "message": "Current availability is not evidenced for C4 at curated",
+        "path": "C4",
+        "requires_user_decision": false,
+        "severity": "error"
+      }
+    ],
+    "gate": "supplier_availability",
+    "metrics": {
+      "components_checked": 11,
+      "provider": "curated"
+    },
+    "status": "blocked"
+  }
+}

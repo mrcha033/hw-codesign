@@ -1,0 +1,127 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-30T12:10:58",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/2d1d81ff-af06-533f-aac8-a1d05ac3d753",
+            "violations": [
+                {
+                    "description": "The current configuration does not include the footprint library 'HW_Curated'",
+                    "items": [
+                        {
+                            "description": "Symbol F1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.7493
+                            },
+                            "uuid": "27932e01-d7a0-53af-b0ab-5148445edfd1"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'USB_C_GCT_USB4105' not found in library 'Connector_USB'",
+                    "items": [
+                        {
+                            "description": "Symbol J1 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.8509
+                            },
+                            "uuid": "f3eb5e61-c68f-510c-8d17-4421479215a0"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'FTSH-105' not found in library 'Connector_Samtec'",
+                    "items": [
+                        {
+                            "description": "Symbol J2 [Conn_01x08]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.0287
+                            },
+                            "uuid": "7790e337-4b97-58ba-abcc-7e44b7a5859f"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'VSON-9_2x3mm_P0.5mm' not found in library 'Package_SON'",
+                    "items": [
+                        {
+                            "description": "Symbol U3 [Conn_01x09]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 2.0701
+                            },
+                            "uuid": "f0a55526-f236-530d-9581-b326bd75c8fb"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'DFN-8-1EP_2x2.5mm_P0.5mm' not found in library 'Package_DFN_QFN'",
+                    "items": [
+                        {
+                            "description": "Symbol U5 [Conn_01x08]",
+                            "pos": {
+                                "x": 0.8763,
+                                "y": 2.2987
+                            },
+                            "uuid": "cfbfbb0b-45b0-57af-a1b9-c6a13487410d"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the footprint library 'Nordic_nRF52840'",
+                    "items": [
+                        {
+                            "description": "Symbol U1 [Conn_01x18]",
+                            "pos": {
+                                "x": 2.8194,
+                                "y": 1.0541
+                            },
+                            "uuid": "9243c5ac-4564-5080-b01e-866a6c356317"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                }
+            ]
+        }
+    ],
+    "source": "bench_ble_lipo_sensor_5eab0a5d.kicad_sch"
+}

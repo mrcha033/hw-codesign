@@ -1,0 +1,42 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/bench_rp2040_usb_hid_5eab0a5d.kicad_pcb",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/bench_rp2040_usb_hid_5eab0a5d.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/bench_rp2040_usb_hid_5eab0a5d.ses",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/routing.json"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/bench_rp2040_usb_hid_5eab0a5d.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_5eab0a5d/electronics/generated/kicad/bench_rp2040_usb_hid_5eab0a5d.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-06-30 12:33:25.734 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-06-30 12:33:25.762 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-06-30 12:33:26.901 INFO   [6E4949\\9A2F60] Job '6E4949\\9A2F60' started at 2026-06-30T03:33:26.901423Z.\n2026-06-30 12:33:27.524 INFO   [6E4949\\9A2F60] Auto-router pass #1 on board '60492f1645a6446639760d7a6028e719' was completed in 0.57 seconds with the score of 985.50 (1 unrouted).\n2026-06-30 12:33:27.598 INFO   [6E4949\\9A2F60] Auto-router pass #2 on board '06df5f0ca0a83fe120d6257553394bd6' was completed in 0.06 seconds with the score of 996.53.\n2026-06-30 12:33:27.604 INFO   [6E4949\\9A2F60] Auto-router pass #3 on board '5ce8378f5a1a15e66188b858bd8f02ea' was completed in 0.00 seconds with the score of 996.53.\n2026-06-30 12:33:27.610 INFO   [6E4949\\9A2F60] Auto-router session completed: started with 26 unrouted nets, completed in 0.68 seconds, final score: 996.53, using 0.00 total CPU seconds, 0.00 GB total allocated, and 0.00 MB peak heap usage.\n2026-06-30 12:33:28.003 INFO   New version available: v2.2.4\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
+  "failures": [],
+  "gate": "autoroute",
+  "metrics": {
+    "max_passes": 20,
+    "unrouted": 0
+  },
+  "status": "pass"
+}

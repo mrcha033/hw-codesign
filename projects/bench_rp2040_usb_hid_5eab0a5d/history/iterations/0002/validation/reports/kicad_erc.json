@@ -1,0 +1,67 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-06-30T12:32:06",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/1627aa95-14d5-52a5-8b3d-68f0844e0e4f",
+            "violations": [
+                {
+                    "description": "Footprint 'USB_C_GCT_USB4105' not found in library 'Connector_USB'",
+                    "items": [
+                        {
+                            "description": "Symbol J1 [Conn_01x04]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.6985
+                            },
+                            "uuid": "84a08f90-f48f-5f57-920a-7b8e6db05c50"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "Footprint 'Crystal_SMD_HC-49S' not found in library 'Crystal'",
+                    "items": [
+                        {
+                            "description": "Symbol X1 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.8415
+                            },
+                            "uuid": "2ea183f0-f5e8-56f8-9710-807a64c690ba"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                }
+            ]
+        }
+    ],
+    "source": "bench_rp2040_usb_hid_5eab0a5d.kicad_sch"
+}

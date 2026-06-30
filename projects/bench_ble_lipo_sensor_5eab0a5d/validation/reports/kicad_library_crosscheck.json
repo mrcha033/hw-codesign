@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "external_gate_not_run",
+      "details": {},
+      "message": "KiCad library cross-check was not requested",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "kicad_library_crosscheck",
+  "metrics": {},
+  "status": "blocked"
+}
