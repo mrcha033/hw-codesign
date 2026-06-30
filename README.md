@@ -158,9 +158,10 @@ PYTHONPATH=src python3 -m hw_codesign.cli --root . design-until-release quadrupe
 
 ## Known limits
 
-- The `reference` backend is candidate-only. `tscircuit` and `kicad` are fabrication-release-eligible;
-  `python_netlist` is netlist-release-eligible (`netlist/compiled_netlist.json`);
-  `atopile` is HDL-source-release-eligible (`source/atopile/design.ato`). All release paths
+- The `reference` backend is candidate-only. The canonical fabrication backends are
+  `tscircuit` (Circuit JSON -> KiCad bridge) and native `kicad`; `python_netlist`
+  is netlist-release-eligible (`netlist/compiled_netlist.json`); `atopile` is
+  HDL-source-release-eligible (`source/atopile/design.ato`). All release paths
   require every configured gate to pass.
 - Digital gates cannot certify load thermals, EMI/EMC, vibration, abuse safety, ingress
   protection, transients, or connector life. These gaps are stated explicitly in every generated

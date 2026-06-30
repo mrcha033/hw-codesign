@@ -130,9 +130,11 @@
 - `reference` is candidate-only; no release path regardless of gate status
 
 `hw_get_capabilities` exposes this split as a machine-readable contract:
-`fabrication_release_backends` is limited to `tscircuit` and `kicad`;
-`python_netlist` appears under `netlist_release_backends`; `atopile` appears
-under `source_release_backends`.
+`canonical_fabrication_backends` and `fabrication_release_backends` are limited
+to `tscircuit` and `kicad`; `canonical_fabrication_flow` identifies the two
+manufacturing paths as tscircuit -> Circuit JSON -> KiCad bridge and native
+KiCad. `python_netlist` appears only under `netlist_release_backends`; `atopile`
+appears only under `source_release_backends`.
 
 See [validation-contract.md](validation-contract.md) for the full gate inventory and
 release eligibility rules.

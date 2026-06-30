@@ -706,6 +706,7 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
         "type": "object",
         "required": [
             "status", "backends", "release_tiers", "release_eligible_backends",
+            "canonical_fabrication_backends", "canonical_fabrication_flow",
             "fabrication_release_backends", "netlist_release_backends",
             "source_release_backends", "candidate_only_backends",
             "external_tools", "missing_external_gates", "platform_root",
@@ -716,6 +717,8 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
             "backends":                    {"type": "object", "additionalProperties": True},
             "release_tiers":               {"type": "object", "additionalProperties": {"type": "string"}},
             "release_eligible_backends":   {"type": "array", "items": {"type": "string"}},
+            "canonical_fabrication_backends": {"type": "array", "items": {"type": "string"}},
+            "canonical_fabrication_flow":   {"type": "object", "additionalProperties": {"type": "string"}},
             "fabrication_release_backends": {"type": "array", "items": {"type": "string"}},
             "netlist_release_backends":    {"type": "array", "items": {"type": "string"}},
             "source_release_backends":     {"type": "array", "items": {"type": "string"}},

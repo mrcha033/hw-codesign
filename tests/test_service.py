@@ -464,6 +464,11 @@ def test_get_capabilities_partitions_release_tiers(service, project):
         "kicad": "fabrication",
     }
     assert set(result["release_eligible_backends"]) == {"tscircuit", "kicad", "python_netlist", "atopile"}
+    assert result["canonical_fabrication_backends"] == ["tscircuit", "kicad"]
+    assert result["canonical_fabrication_flow"] == {
+        "tscircuit": "tscircuit -> Circuit JSON -> KiCad manufacturing bridge",
+        "kicad": "native KiCad schematic/PCB -> KiCad CLI manufacturing export",
+    }
     assert set(result["fabrication_release_backends"]) == {"tscircuit", "kicad"}
     assert result["netlist_release_backends"] == ["python_netlist"]
     assert result["source_release_backends"] == ["atopile"]

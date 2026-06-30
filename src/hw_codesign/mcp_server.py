@@ -123,7 +123,7 @@ def create_server(root: Path | str | None = None):
         return _enrich(result,
             release_eligible=False,
             candidate_only=True,
-            release_blocking_failures=["reference backend is candidate-only — switch to tscircuit, kicad, python_netlist, or atopile for a release-eligible backend"],
+            release_blocking_failures=["reference backend is candidate-only; use tscircuit or kicad for fabrication, python_netlist for netlist, or atopile for HDL-source release"],
         )
 
     @_tool(name=_TR["hw_generate_electronics_source"].name)

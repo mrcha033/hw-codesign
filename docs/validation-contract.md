@@ -29,8 +29,11 @@ skipped. A required adapter stage that did not run is injected as a blocked
 A generated candidate is promoted to a release only when all of the following
 are true:
 
-1. The electronics backend is release-capable (`tscircuit`, `kicad`,
-   `python_netlist`, or `atopile`).
+1. The electronics backend is release-capable for the requested tier. Fabrication
+   release is limited to the canonical fabrication backends: `tscircuit`
+   through Circuit JSON -> KiCad bridge, or native `kicad`. `python_netlist`
+   and `atopile` are lower-tier netlist/source release paths, not fabrication
+   backends.
 2. Every supplied and required gate report has status `pass`.
 3. Every critical assumption marked `requires_user_review` has been resolved.
 4. Every required release artifact exists.

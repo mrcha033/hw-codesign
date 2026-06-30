@@ -42,6 +42,7 @@ _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
 _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
 _RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist", "atopile"})
 _FABRICATION_RELEASE_BACKENDS = frozenset({"tscircuit", "kicad"})
+_CANONICAL_FABRICATION_BACKENDS = ("tscircuit", "kicad")
 _RELEASE_TIER_BY_BACKEND: dict[str, str] = {
     "reference": "candidate",
     "python_netlist": "netlist",
@@ -3980,7 +3981,7 @@ class HardwareService:
             release_blocking.append(f"backend '{backend}' is candidate-only")
         release_blocking.extend(r["gate"] for r in reports if r["status"] != "pass")
         if blocking_gates and not backend_release_eligible:
-            recommendation = f"Backend '{backend}' is candidate-only — switch to tscircuit, kicad, python_netlist, or atopile."
+            recommendation = f"Backend '{backend}' is candidate-only; use tscircuit or kicad for fabrication, python_netlist for netlist, or atopile for HDL-source release."
         elif blocking_gates:
             recommendation = f"{len(blocking_gates)} gate(s) blocking. Use hw_generate_repair_plan to identify fixes."
         else:
@@ -4334,6 +4335,11 @@ class HardwareService:
             "backends": backends,
             "release_tiers": dict(_RELEASE_TIER_BY_BACKEND),
             "release_eligible_backends": [n for n, b in backends.items() if b["release_eligible"]],
+            "canonical_fabrication_backends": list(_CANONICAL_FABRICATION_BACKENDS),
+            "canonical_fabrication_flow": {
+                "tscircuit": "tscircuit -> Circuit JSON -> KiCad manufacturing bridge",
+                "kicad": "native KiCad schematic/PCB -> KiCad CLI manufacturing export",
+            },
             "fabrication_release_backends": [n for n in backends if n in _FABRICATION_RELEASE_BACKENDS],
             "netlist_release_backends": [n for n, b in backends.items() if b["release_tier"] == "netlist"],
             "source_release_backends": [n for n, b in backends.items() if b["release_tier"] == "hdl_source"],
