@@ -165,23 +165,18 @@
   "gate": "design_dependency_graph",
   "metrics": {
     "blocked_or_unpassed_nodes": [
-      "firmware_interface_contract",
-      "firmware_modules",
-      "firmware_pinmap",
-      "hw_sw_parity",
       "ir_pcb_sanity",
       "native_mechanical_validation",
       "native_zephyr_build",
       "physical_qualification",
       "power_integrity_estimate",
       "power_tree_integrity",
-      "reference_firmware_build",
       "semantic_electrical",
       "sourcing_resilience",
       "supplier_availability"
     ],
     "declared_edges": 88,
-    "evaluated_edges": 38,
+    "evaluated_edges": 52,
     "nodes": 45
   },
   "status": "fail"

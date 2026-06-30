@@ -105,6 +105,8 @@ def _module_summary(m: dict[str, Any]) -> str:
         return f"state_machine: {len(states)} states, {len(m.get('transitions', []))} transitions"
     if behavior == "sensor_poll":
         return f"sensor_poll: {m.get('sensor','?')} on {m.get('bus','i2c').upper()} every {m.get('poll_interval_ms', 100)}ms"
+    if behavior == "interface_stack":
+        return f"interface_stack: {m.get('stack','?')} via {m.get('library','project')}"
     return behavior
 
 

@@ -1129,6 +1129,22 @@ class Validator:
                         f"firmware.modules.{mid}.poll_interval_ms",
                     ))
 
+            if behavior == "interface_stack":
+                missing_nets = sorted(
+                    str(net)
+                    for net in mod.get("required_nets", [])
+                    if str(net) not in firmware_signal_space
+                )
+                if missing_nets:
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR,
+                        "firmware_stack_net_missing",
+                        f"Module '{mid}' declares stack nets not present in the firmware pinmap or hardware graph",
+                        f"firmware.modules.{mid}.required_nets",
+                        missing_nets=missing_nets,
+                        known_signals=sorted(firmware_signal_space),
+                    ))
+
             # Render to get stack info
             try:
                 from .backends.firmware_modules import render_module

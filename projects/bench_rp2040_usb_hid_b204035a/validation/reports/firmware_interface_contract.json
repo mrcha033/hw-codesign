@@ -1,26 +1,45 @@
 {
-  "artifacts": [],
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/zephyr/app/prj.conf",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/zephyr/tests/test_qspi_flash_xip.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/zephyr/tests/test_swd_attach.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/zephyr/tests/test_usb_cdc_console.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/bench_rp2040_usb_hid_b204035a/firmware/zephyr/tests/test_usb_hid_enumeration.c"
+  ],
   "backend": {
     "deterministic": true,
     "name": "firmware-interface-contract"
   },
-  "failures": [
-    {
-      "category": "FIRMWARE_ERROR",
-      "code": "firmware_config_missing",
-      "details": {},
-      "message": "Generated firmware config is missing",
-      "path": "firmware/zephyr/app/prj.conf",
-      "requires_user_decision": false,
-      "severity": "error"
-    }
-  ],
+  "failures": [],
   "gate": "firmware_interface_contract",
   "metrics": {
-    "config_options": [],
-    "pinmap_signals": [],
-    "required_interfaces": [],
-    "test_files": []
+    "config_options": [
+      "CONFIG_GPIO=y",
+      "CONFIG_SPI=y",
+      "CONFIG_USB_CDC_ACM=y",
+      "CONFIG_USB_DEVICE_STACK=y"
+    ],
+    "pinmap_signals": [
+      "QSPI_CLK",
+      "QSPI_CS",
+      "QSPI_D2",
+      "QSPI_D3",
+      "QSPI_MISO",
+      "QSPI_MOSI",
+      "USB_DM",
+      "USB_DP",
+      "XIN",
+      "XOUT"
+    ],
+    "required_interfaces": [
+      "usb"
+    ],
+    "test_files": [
+      "test_qspi_flash_xip.c",
+      "test_swd_attach.c",
+      "test_usb_cdc_console.c",
+      "test_usb_hid_enumeration.c"
+    ]
   },
-  "status": "fail"
+  "status": "pass"
 }

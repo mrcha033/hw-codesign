@@ -349,6 +349,27 @@ def firmware_profile(spec: dict[str, Any], graph: dict[str, Any]) -> dict[str, A
             "prj_conf": "CONFIG_GPIO=y\nCONFIG_I2C=y\nCONFIG_UART_CONSOLE=y\nCONFIG_USB_DEVICE_STACK=y\n",
             "tests": {"test_i2c_imu.c": "/* Bring-up test stub: verify IMU identity and samples. */\n", "test_usb_console.c": "/* Bring-up test stub: verify USB console enumeration. */\n"},
         }
+    if architecture in {"rp2040_qspi_usb_device", "rp2040_usb_hid_qspi_flash"}:
+        return {
+            "project": "rp2040_usb_device",
+            "reference_project": "rp2040_usb_device_bsp",
+            "board_name": "rp2040_usb_device",
+            "board_arch": "arm",
+            "dts_include": "#include <raspberrypi/rp2040.dtsi>",
+            "model": "HW Co-design RP2040 USB Device",
+            "compatible": "hw,rp2040-usb-device",
+            "console_node": "&uart0",
+            "defconfig": "CONFIG_SOC_SERIES_RP2XXX=y\nCONFIG_SOC_RP2040=y\nCONFIG_BOARD_RP2040_USB_DEVICE=y\n",
+            "kconfig_board": 'config BOARD_RP2040_USB_DEVICE\n  bool "RP2040 USB Device"\n',
+            "kconfig_default": 'if BOARD_RP2040_USB_DEVICE\nconfig BOARD\n  default "rp2040_usb_device"\nendif\n',
+            "prj_conf": "CONFIG_GPIO=y\nCONFIG_SPI=y\nCONFIG_USB_DEVICE_STACK=y\nCONFIG_USB_CDC_ACM=y\n",
+            "tests": {
+                "test_usb_hid_enumeration.c": "/* Bring-up test stub: verify full-speed USB HID enumeration. */\n",
+                "test_usb_cdc_console.c": "/* Bring-up test stub: verify USB CDC-ACM console enumeration. */\n",
+                "test_qspi_flash_xip.c": "/* Bring-up test stub: verify external QSPI flash identity and XIP boot path. */\n",
+                "test_swd_attach.c": "/* Bring-up test stub: verify SWD debug attach before field firmware load. */\n",
+            },
+        }
     return {
         "project": "robot_controller",
         "reference_project": "robot_controller_bsp",
@@ -387,7 +408,8 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     write_json(generated / "pinmap.json", assignments)
     pinmap = "#pragma once\n\n" + "\n".join(f'#define PIN_{item["signal"]} "{item["mcu_pin"]}"' for item in assignments) + "\n"
     atomic_write_text(generated / "pinmap.h", pinmap)
-    overlay_lines = ["/ {\n  chosen { zephyr,console = &usart3; };\n};"]
+    console_node = profile.get("console_node", "&usart3")
+    overlay_lines = [f"/ {{\n  chosen {{ zephyr,console = {console_node}; }};\n}};"]
     atomic_write_text(generated / "board.cmake", "# Generated Zephyr board integration entrypoint.\n")
     atomic_write_text(generated / "kconfig.defconfig", "# Generated project defaults.\n")
     # Collect module-level kconfig additions so prj.conf is written once
@@ -446,7 +468,7 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
         atomic_write_text(tests / name, content)
     board_dir = project / "firmware" / "zephyr" / "boards" / profile["board_arch"] / profile["board_name"]
     board_name = profile["board_name"]
-    atomic_write_text(board_dir / f"{board_name}.dts", f'/dts-v1/;\n{profile["dts_include"]}\n/ {{ model = "{profile["model"]}"; compatible = "{profile["compatible"]}"; chosen {{ zephyr,console = &usart3; }}; }};\n')
+    atomic_write_text(board_dir / f"{board_name}.dts", f'/dts-v1/;\n{profile["dts_include"]}\n/ {{ model = "{profile["model"]}"; compatible = "{profile["compatible"]}"; chosen {{ zephyr,console = {console_node}; }}; }};\n')
     atomic_write_text(board_dir / f"{board_name}_defconfig", profile["defconfig"])
     atomic_write_text(board_dir / "Kconfig.board", profile["kconfig_board"])
     atomic_write_text(board_dir / "Kconfig.defconfig", profile["kconfig_default"])

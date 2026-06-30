@@ -1,18 +1,11 @@
 {
   "artifacts": [],
   "backend": {},
-  "failures": [
-    {
-      "category": "FIRMWARE_ERROR",
-      "code": "missing_pinmap",
-      "details": {},
-      "message": "Generate firmware before checking the pinmap",
-      "path": null,
-      "requires_user_decision": false,
-      "severity": "error"
-    }
-  ],
+  "failures": [],
   "gate": "firmware_pinmap",
-  "metrics": {},
-  "status": "fail"
+  "metrics": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "status": "pass"
 }

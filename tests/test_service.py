@@ -84,6 +84,40 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     assert 'footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"' in board
 
 
+def test_rp2040_firmware_profile_and_stack_modules_are_graph_grounded(service):
+    project = "rp2040_usb_device_firmware_check"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_all(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+
+    board_dir = path / "firmware" / "zephyr" / "boards" / "arm" / "rp2040_usb_device"
+    dts = (board_dir / "rp2040_usb_device.dts").read_text(encoding="utf-8")
+    defconfig = (board_dir / "rp2040_usb_device_defconfig").read_text(encoding="utf-8")
+    prj_conf = (path / "firmware" / "zephyr" / "app" / "prj.conf").read_text(encoding="utf-8")
+    pin_signals = {item["signal"] for item in pinmap}
+
+    assert "rp2040.dtsi" in dts
+    assert "zephyr,console = &uart0" in dts
+    assert "stm32h743" not in dts.lower()
+    assert "CONFIG_SOC_RP2040=y" in defconfig
+    assert "CONFIG_SPI=y" in prj_conf
+    assert "CONFIG_USB_DEVICE_STACK=y" in prj_conf
+    assert {"USB_DP", "USB_DM", "QSPI_CLK", "QSPI_D2", "QSPI_D3"} <= pin_signals
+    assert (path / "firmware" / "modules" / "usb_hid_stack.c").is_file()
+
+    modules_report = service.validator.check_firmware_modules(
+        spec["firmware"]["modules"],
+        pinmap,
+        spec=spec,
+        graph=graph,
+    )
+    assert modules_report.status.value == "pass"
+    assert modules_report.metrics["module_count"] == 4
+
+
 def test_kicad_schematic_preserves_duplicate_power_pins(tmp_path):
     graph = {
         "components": [{

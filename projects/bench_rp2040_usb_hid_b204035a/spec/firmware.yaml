@@ -4,11 +4,39 @@ firmware:
   toolchain: arm-none-eabi-gcc
   modules:
   - id: usb_hid_stack
+    behavior: interface_stack
+    stack: usb
+    library: tinyusb
+    required_nets: [USB_DP, USB_DM]
+    required_tests: [usb_hid_enumeration]
+    init_order: 30
+    stack_size_bytes: 2048
     description: TinyUSB HID stack implementing keyboard + mouse composite device
   - id: usb_cdc_stack
+    behavior: interface_stack
+    stack: usb
+    library: tinyusb
+    required_nets: [USB_DP, USB_DM]
+    required_tests: [usb_cdc_enumeration]
+    init_order: 31
+    stack_size_bytes: 2048
     description: TinyUSB CDC-ACM UART-over-USB for debug console
   - id: flash_xip
+    behavior: interface_stack
+    stack: qspi
+    library: pico-sdk
+    required_nets: [QSPI_CLK, QSPI_CS, QSPI_MOSI, QSPI_MISO, QSPI_D2, QSPI_D3]
+    required_tests: [flash_xip_boot]
+    init_order: 10
+    stack_size_bytes: 1024
     description: XIP boot loader stub for W25Q16JV QSPI flash
   - id: pio_ws2812
+    behavior: interface_stack
+    stack: pio
+    library: pico-sdk
+    required_nets: []
+    required_tests: []
+    init_order: 80
+    stack_size_bytes: 512
     description: PIO state machine driver for WS2812 RGB LED (optional)
   ota: false

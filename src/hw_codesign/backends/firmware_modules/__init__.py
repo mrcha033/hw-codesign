@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import periodic_transmit, sensor_poll, state_machine, timeout_shutdown
+from . import interface_stack, periodic_transmit, sensor_poll, state_machine, timeout_shutdown
 from ._base import ModuleOutput
 
 _RENDERERS = {
@@ -10,6 +10,7 @@ _RENDERERS = {
     "periodic_transmit": periodic_transmit.render,
     "state_machine": state_machine.render,
     "sensor_poll": sensor_poll.render,
+    "interface_stack": interface_stack.render,
 }
 
 BEHAVIOR_DESCRIPTIONS: dict[str, str] = {
@@ -28,6 +29,11 @@ BEHAVIOR_DESCRIPTIONS: dict[str, str] = {
     "sensor_poll": (
         "Scheduled ADC/I2C/SPI read: polls a sensor every poll_interval_ms and writes "
         "readings into a fixed-size ring buffer."
+    ),
+    "interface_stack": (
+        "Firmware stack binding: declares USB, QSPI/SPI, PIO, or similar stack ownership "
+        "over graph-grounded nets, required bring-up tests, and init order. It is an "
+        "interface contract stub, not behavior-level firmware proof."
     ),
 }
 
@@ -118,6 +124,20 @@ BEHAVIOR_SCHEMAS: dict[str, dict[str, Any]] = {
             "address":          {"type": "string", "description": "I2C address or SPI CS index (e.g. 0x68)"},
             "poll_interval_ms": {"type": "integer", "default": 100},
             "ring_buf_entries": {"type": "integer", "default": 16},
+        },
+    },
+    "interface_stack": {
+        "type": "object",
+        "required": ["id", "behavior", "stack", "required_nets"],
+        "properties": {
+            "id":                {"type": "string"},
+            "behavior":          {"type": "string", "const": "interface_stack"},
+            "stack":             {"type": "string", "description": "Firmware stack or peripheral family, e.g. usb, qspi, pio"},
+            "library":           {"type": "string", "description": "Implementation library or SDK binding, e.g. tinyusb, pico-sdk"},
+            "required_nets":     {"type": "array", "items": {"type": "string"}},
+            "required_tests":    {"type": "array", "items": {"type": "string"}},
+            "init_order":        {"type": "integer", "default": 50},
+            "stack_size_bytes":  {"type": "integer", "default": 1024},
         },
     },
 }
