@@ -355,6 +355,28 @@ def test_public_tool_schemas_validate_runtime_release_envelope():
     ).validate(ref_output)
 
 
+def test_mcp_envelope_drops_unauthorized_release_claims():
+    from hw_codesign.mcp_server import _enrich, _mcp_envelope_for_tool
+
+    unsafe = {
+        "status": "pass",
+        "release_eligible": True,
+        "candidate_only": False,
+        "release_blocking_failures": [],
+    }
+
+    assert _enrich(unsafe)["release_eligible"] is False
+    ordinary = _mcp_envelope_for_tool("hw_generate_all", unsafe)
+    assert ordinary["release_eligible"] is False
+    assert ordinary["candidate_only"] is True
+    assert ordinary["release_blocking_failures"] == ["hw_check_release_gate must pass before release"]
+
+    authoritative = _mcp_envelope_for_tool("hw_check_release_gate", unsafe)
+    assert authoritative["release_eligible"] is True
+    assert authoritative["candidate_only"] is False
+    assert authoritative["release_blocking_failures"] == []
+
+
 def test_tscircuit_real_compile_and_graph_parity(tmp_path):
     import pytest
     root = Path(__file__).parents[1]

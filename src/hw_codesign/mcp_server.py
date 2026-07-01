@@ -10,16 +10,33 @@ from .contracts import TOOL_REGISTRY as _TR
 from .service import HardwareService
 
 _DEFAULT_RELEASE_BLOCKERS = ["hw_check_release_gate must pass before release"]
+_RELEASE_ELIGIBLE_TOOL_NAMES = {"hw_check_release_gate", "hw_export_release_bundle"}
 
 
 def _enrich(result: dict[str, Any], **extra: Any) -> dict[str, Any]:
-    """Merge envelope fields into a tool result, always overriding for safety-critical contract fields."""
+    """Merge envelope fields into a tool result, overriding safety-critical contract fields by default."""
     envelope = {
         "release_eligible": False,
         "candidate_only": True,
         "release_blocking_failures": list(_DEFAULT_RELEASE_BLOCKERS),
     }
-    return {**envelope, **result, **extra}
+    return {**result, **envelope, **extra}
+
+
+def _mcp_envelope_for_tool(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    claimed_release_eligible = bool(result.get("release_eligible", False))
+    release_eligible = claimed_release_eligible if name in _RELEASE_ELIGIBLE_TOOL_NAMES else False
+    candidate_only = True if claimed_release_eligible and not release_eligible else bool(result.get("candidate_only", not release_eligible))
+    return _enrich(
+        result,
+        release_eligible=release_eligible,
+        candidate_only=candidate_only,
+        release_blocking_failures=(
+            list(result.get("release_blocking_failures", []))
+            if release_eligible or result.get("release_blocking_failures")
+            else list(_DEFAULT_RELEASE_BLOCKERS)
+        ),
+    )
 
 
 def create_server(root: Path | str | None = None):
@@ -36,7 +53,7 @@ def create_server(root: Path | str | None = None):
             @wraps(fn)
             def wrapped(*args, **kwargs):
                 result = fn(*args, **kwargs)
-                return _enrich(result) if isinstance(result, dict) else result
+                return _mcp_envelope_for_tool(name, result) if isinstance(result, dict) else result
 
             return server.tool(name=name)(wrapped)
 
