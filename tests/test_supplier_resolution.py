@@ -238,6 +238,7 @@ def test_project_role_override_selects_curated_alternative(service, project):
     system["electronics"].setdefault("role_overrides", {})["resistor_4k7"] = {
         "component_id": "rc0603_10k",
         "resolution": "curated",
+        "approved": True,
         "reason": "Lower pull-up current candidate selected from curated alternatives.",
     }
     write_yaml(spec_path, system)
@@ -255,6 +256,27 @@ def test_project_role_override_selects_curated_alternative(service, project):
     assert provenance["source"] == "project_spec.electronics.role_overrides.resistor_4k7"
     assert provenance["base_component_id"] == "rc0603_4k7"
     assert provenance["required_reviews"] == ["i2c_rise_time"]
+    assert provenance["approved"] is True
+
+
+def test_project_role_override_requires_declared_review_approval(service, project):
+    spec_path = service.workspace.require_project(project) / "spec" / "system.yaml"
+    system = read_yaml(spec_path)
+    system["electronics"].setdefault("role_overrides", {})["resistor_4k7"] = {
+        "component_id": "rc0603_10k",
+        "resolution": "curated",
+        "reason": "Lower pull-up current candidate selected from curated alternatives.",
+    }
+    write_yaml(spec_path, system)
+
+    result = service.generate_electronics_only(project)
+    failures = result["resolution_report"]["failures"]
+
+    assert result["resolution_report"]["status"] == "fail"
+    failure = next(item for item in failures if item["code"] == "role_override_review_required")
+    assert failure["details"]["role"] == "resistor_4k7"
+    assert failure["details"]["component_id"] == "rc0603_10k"
+    assert failure["details"]["required_reviews"] == ["i2c_rise_time"]
 
 
 def test_project_role_override_rejects_unlisted_component(service, project):

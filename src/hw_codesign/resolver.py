@@ -148,6 +148,20 @@ class ComponentResolver:
                 if requested_resolution and requested_resolution != rule_resolution:
                     failures.append(Failure(FailureCategory.BOM_ERROR, "role_override_resolution_mismatch", f"Role override for {role} requests {requested_resolution}, but the role set allows {rule_resolution}", path=f"electronics.role_overrides.{role}"))
                     continue
+                required_reviews = list((override_rule or {}).get("required_reviews") or [])
+                if required_reviews and override.get("approved") is not True:
+                    failures.append(Failure(
+                        FailureCategory.BOM_ERROR,
+                        "role_override_review_required",
+                        f"Role override for {role} changes an engineering contract and requires explicit approval",
+                        path=f"electronics.role_overrides.{role}",
+                        details={
+                            "role": role,
+                            "component_id": override_id,
+                            "required_reviews": required_reviews,
+                        },
+                    ))
+                    continue
                 selection = {**selection, "component_id": override_id, "resolution": rule_resolution}
             resolution = selection.get("resolution", "unresolved")
             stored_part = database.get(selection.get("component_id"))
@@ -186,6 +200,7 @@ class ComponentResolver:
                     "base_component_id": base_selection.get("component_id"),
                     "allowed_by_role_set": str(role_path),
                     "required_reviews": list((override_rule or {}).get("required_reviews") or []),
+                    "approved": override.get("approved") is True,
                     "reason": override.get("reason"),
                 }
             resolved.append(ResolvedComponent(instance["ref"], role, part["id"], resolution, part, provenance))

@@ -103,7 +103,8 @@
   contracts when declared drop-in, and not have known unavailable supplier evidence
 - Manufacturer datasheet review evidence hashed into resolved component provenance
 - `role_overrides` in `system.yaml` lets a project select a curated alternative for any role;
-  the resolver enforces that the override names a listed alternative
+  the resolver enforces that the override names a listed alternative and explicitly approves
+  any role-set `required_reviews` before generation accepts the substitution
 
 ## Design space exploration and grounding
 

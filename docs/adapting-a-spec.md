@@ -76,7 +76,9 @@ A board with materially different topology is extension work. At minimum:
    roles and allowed component choices. Use the `alternatives` section only for
    explicitly curated options, with compatibility notes and required engineering
    reviews so `design-space` can rank them without treating them as automatic
-   drop-in replacements.
+   drop-in replacements. A project `role_overrides` substitution that references
+   an alternative with `required_reviews` must set `approved: true`; otherwise
+   `component_resolution` fails before generating the substituted graph.
 3. Add or extend a project template under `src/hw_codesign/templates/`.
 4. Update generators where the new topology cannot be expressed by the existing
    robotics-controller assumptions.
