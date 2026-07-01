@@ -38,6 +38,9 @@
   USB-ESD, high-current-loop, and thermal-zone costs
 - Hard-blocks on off-board components, coincident centers, and connectors placed on the wrong
   board half; advisory warnings on coarse courtyard overlap estimation
+- `ir_pcb_sanity` cross-checks generated KiCad copper-layer declarations and copper-layer usage
+  against the manufacturing stackup, so a 2-layer candidate cannot silently carry inner-layer
+  zones or routes
 - `layout_thermal_integrity` and `layout_signal_integrity` are gated checks that block
   high-current designs on under-layered stackups, thermal-risk components placed next to
   sensitive devices, and misplaced RF antenna or USB ESD components

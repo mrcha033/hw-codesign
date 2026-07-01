@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import re
 import subprocess
 from collections import defaultdict
 from pathlib import Path
@@ -234,6 +235,35 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
     if spec["manufacturing"]["pcb"]["min_clearance_mm"] < 0.15:
         failures.append(Failure(FailureCategory.EDA_ERROR, "drc_clearance", "Manufacturing clearance is below the supported profile"))
     text = pcb.read_text(encoding="utf-8") if pcb.is_file() else ""
+    expected_copper_layers = set(_kicad_stackup(spec)[1])
+    declared_copper_layers = set(_declared_kicad_copper_layers(text))
+    used_copper_layers = set(_used_kicad_copper_layers(text))
+    extra_declared_layers = sorted(declared_copper_layers - expected_copper_layers)
+    missing_declared_layers = sorted(expected_copper_layers - declared_copper_layers)
+    invalid_used_layers = sorted(used_copper_layers - expected_copper_layers)
+    if extra_declared_layers or missing_declared_layers:
+        failures.append(Failure(
+            FailureCategory.EDA_ERROR,
+            "pcb_stackup_layer_mismatch",
+            "KiCad board copper stackup does not match the manufacturing layer profile",
+            details={
+                "expected_copper_layers": sorted(expected_copper_layers),
+                "declared_copper_layers": sorted(declared_copper_layers),
+                "extra_declared_layers": extra_declared_layers,
+                "missing_declared_layers": missing_declared_layers,
+            },
+        ))
+    if invalid_used_layers:
+        failures.append(Failure(
+            FailureCategory.EDA_ERROR,
+            "pcb_layer_not_in_stackup",
+            "KiCad board uses copper layers outside the manufacturing stackup",
+            details={
+                "expected_copper_layers": sorted(expected_copper_layers),
+                "used_copper_layers": sorted(used_copper_layers),
+                "invalid_used_layers": invalid_used_layers,
+            },
+        ))
     segment_count = text.count("(segment")
     expected_pads = sum(len(item.get("pins", [])) for item in graph["components"])
     if text.count("(pad ") < expected_pads:
@@ -248,7 +278,43 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
     routing_complete = routing.get("status") == "pass" and routing.get("signal_routing") == "complete"
     if not routing_complete and segment_count < len(routable_nets):
         failures.append(Failure(FailureCategory.EDA_ERROR, "routing_incomplete", "PCB signal routing is deferred or incomplete", details={"nets": len(routable_nets), "segments": segment_count, "routing_status": routing.get("status")}))
-    return GateReport("ir_pcb_sanity", Status.FAIL if failures else Status.PASS, failures, metrics={"footprints": len(graph["components"]), "pads": expected_pads, "segments": segment_count, "layers": spec["manufacturing"]["pcb"]["layers"]}, artifacts=[str(pcb)], backend={"name": "reference-ir-drc", "deterministic": True})
+    return GateReport(
+        "ir_pcb_sanity",
+        Status.FAIL if failures else Status.PASS,
+        failures,
+        metrics={
+            "footprints": len(graph["components"]),
+            "pads": expected_pads,
+            "segments": segment_count,
+            "layers": spec["manufacturing"]["pcb"]["layers"],
+            "expected_copper_layers": sorted(expected_copper_layers),
+            "declared_copper_layers": sorted(declared_copper_layers),
+            "used_copper_layers": sorted(used_copper_layers),
+        },
+        artifacts=[str(pcb)],
+        backend={"name": "reference-ir-drc", "deterministic": True},
+    )
+
+
+def _declared_kicad_copper_layers(board_text: str) -> list[str]:
+    return [
+        match.group(1)
+        for match in re.finditer(r'\(\s*\d+\s+"([^"]+\.Cu)"\s+(?:signal|power)\b', board_text)
+    ]
+
+
+def _used_kicad_copper_layers(board_text: str) -> list[str]:
+    used: set[str] = set()
+    for match in re.finditer(r'\(layer\s+"([^"]+)"\)', board_text):
+        layer = match.group(1)
+        if layer.endswith(".Cu"):
+            used.add(layer)
+    for match in re.finditer(r'\(layers\s+([^)]+)\)', board_text):
+        for layer in re.findall(r'"([^"]+)"', match.group(1)):
+            if layer.endswith(".Cu"):
+                used.add(layer)
+    used.discard("*.Cu")
+    return sorted(used)
 
 
 def export_fabrication(project: Path, spec: dict[str, Any], graph: dict[str, Any], release: Path) -> list[str]:

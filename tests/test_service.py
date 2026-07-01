@@ -44,6 +44,32 @@ def test_robotics_controller_kicad_artifacts_keep_four_layer_stackup(service, pr
     assert '(net_name "V5") (layer "In2.Cu")' in board
 
 
+def test_ir_pcb_sanity_rejects_layers_outside_stackup(service):
+    project = "sensor_logger_bad_layer_artifact"
+    service.create_project(project, template="sensor_data_logger")
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    board_path = path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb"
+    board = board_path.read_text(encoding="utf-8")
+    board = board.replace('    (31 "B.Cu" signal)', '    (2 "In1.Cu" power)\n    (31 "B.Cu" signal)', 1)
+    board = board.replace(
+        '  (gr_rect',
+        '  (zone (net 1) (net_name "GND") (layer "In1.Cu") (polygon (pts (xy 1 1) (xy 2 1) (xy 2 2) (xy 1 2))))\n  (gr_rect',
+        1,
+    )
+    board_path.write_text(board, encoding="utf-8")
+
+    report = internal_drc(path, spec, graph)
+
+    assert report.status.value == "fail"
+    codes = {failure.code for failure in report.failures}
+    assert "pcb_stackup_layer_mismatch" in codes
+    assert "pcb_layer_not_in_stackup" in codes
+    assert "In1.Cu" in report.metrics["declared_copper_layers"]
+
+
 def test_kicad_artifact_selection_prefers_canonical_board(service):
     project = "rp2040_kicad_stale_duplicate_check"
     service.create_project(project, template="rp2040_usb_device")
