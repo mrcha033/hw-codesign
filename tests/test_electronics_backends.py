@@ -286,6 +286,38 @@ def test_kicad_manufacturing_gate_requires_and_exports_all_artifacts(service, pr
     assert (release / "fabrication" / "bom.csv").stat().st_size > 0
 
 
+def test_kicad_manufacturing_export_uses_board_declared_stackup(service, monkeypatch):
+    project = "sensor_logger_kicad_export_layers"
+    service.create_project(project, template="sensor_data_logger")
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    captured_layers: list[str] = []
+
+    def fake_run_tool(executable, arguments, cwd):
+        output = arguments[arguments.index("--output") + 1]
+        output_path = project_path.__class__(output)
+        if "gerbers" in arguments:
+            captured_layers.append(arguments[arguments.index("--layers") + 1])
+            output_path.mkdir(parents=True, exist_ok=True)
+            (output_path / "board-F_Cu.gbr").write_text("gerber", encoding="utf-8")
+        elif "drill" in arguments:
+            output_path.mkdir(parents=True, exist_ok=True)
+            (output_path / "board.drl").write_text("drill", encoding="utf-8")
+        else:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text("reference,x,y\nU1,1,2\n" if "pos" in arguments else "step", encoding="utf-8")
+        return ToolResult([executable, *arguments], 0, "", "", True)
+
+    monkeypatch.setattr("hw_codesign.backends.kicad.run_tool", fake_run_tool)
+    release = project_path / "exports" / "candidates" / "manufacturing-layer-test"
+    report = service.kicad.export_manufacturing(project_path, release)
+
+    assert report.status == "pass"
+    assert captured_layers == ["F.Cu,B.Cu,F.Mask,B.Mask,F.Silkscreen,B.Silkscreen,Edge.Cuts"]
+    assert "In1.Cu" not in report.metrics["export_layers"]
+    assert "In2.Cu" not in report.metrics["export_layers"]
+
+
 def test_tscircuit_manufacturing_bridge_replaces_placeholder_gate(service, project, monkeypatch):
     _set_backend(service, project, "tscircuit")
     service.generate_all(project)

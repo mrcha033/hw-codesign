@@ -237,7 +237,15 @@ class KiCadBackend(ElectronicsBackendAdapter):
         native = fabrication / "native_kicad"
         shutil.rmtree(native, ignore_errors=True)
         native.mkdir(parents=True)
-        gerber = run_tool("kicad-cli", ["pcb", "export", "gerbers", "--output", str(native), "--layers", "F.Cu,In1.Cu,In2.Cu,B.Cu,F.Mask,B.Mask,F.Silkscreen,B.Silkscreen,Edge.Cuts", str(board)], project)
+        export_layers = [
+            *_declared_copper_layers(board.read_text(encoding="utf-8")),
+            "F.Mask",
+            "B.Mask",
+            "F.Silkscreen",
+            "B.Silkscreen",
+            "Edge.Cuts",
+        ]
+        gerber = run_tool("kicad-cli", ["pcb", "export", "gerbers", "--output", str(native), "--layers", ",".join(export_layers), str(board)], project)
         if not gerber.available or gerber.returncode != 0:
             report = tool_report("fabrication_export", gerber)
             report.status = Status.BLOCKED if not gerber.available else Status.FAIL
@@ -271,7 +279,7 @@ class KiCadBackend(ElectronicsBackendAdapter):
             return GateReport("fabrication_export", Status.FAIL, [Failure(FailureCategory.EDA_ERROR, "bom_export_missing", "Resolved BOM must exist before manufacturing export")])
         shutil.copy2(bom_source, fabrication / "bom.csv")
         artifacts = [str(fabrication / "gerbers.zip"), str(fabrication / "drill.zip"), str(fabrication / "pick_and_place.csv"), str(fabrication / "bom.csv"), str(step)]
-        return GateReport("fabrication_export", Status.PASS, metrics={"gerber_files": len(gerbers), "drill_files": len(drills), "position_file": True, "bom": True}, artifacts=artifacts, backend={"name": "kicad-cli", "deterministic_archive": True})
+        return GateReport("fabrication_export", Status.PASS, metrics={"gerber_files": len(gerbers), "drill_files": len(drills), "position_file": True, "bom": True, "export_layers": export_layers}, artifacts=artifacts, backend={"name": "kicad-cli", "deterministic_archive": True})
 
     @staticmethod
     def _design_file(project: Path, pattern: str) -> Path | None:
@@ -286,3 +294,11 @@ class KiCadBackend(ElectronicsBackendAdapter):
         source_match = next(iter(sorted(source.glob(pattern))), None) if source.is_dir() else None
         generated_match = next(iter(sorted(generated.glob(pattern))), None) if generated.is_dir() else None
         return source_match or generated_match
+
+
+def _declared_copper_layers(board_text: str) -> list[str]:
+    layers = [
+        match.group(1)
+        for match in re.finditer(r'\(\s*\d+\s+"([^"]+\.Cu)"\s+(?:signal|power)\b', board_text)
+    ]
+    return layers or ["F.Cu", "B.Cu"]
