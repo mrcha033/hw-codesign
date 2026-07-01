@@ -1090,6 +1090,7 @@ class Validator:
         pinmap: list[dict[str, Any]],
         spec: dict[str, Any] | None = None,
         graph: dict[str, Any] | None = None,
+        module_dir: Path | str | None = None,
     ) -> GateReport:
         from .backends.firmware_modules import _RENDERERS
         failures: list[Failure] = []
@@ -1101,6 +1102,8 @@ class Validator:
         _ISR_BUDGET = 8
         _STACK_BUDGET_BYTES = 65536
         required_behaviors: list[str] = []
+        rendered_module_ids: set[str] = set()
+        module_artifact_dir = Path(module_dir) if module_dir is not None else None
         graph = graph or {}
         graph_nets = {
             str(net.get("name"))
@@ -1232,9 +1235,38 @@ class Validator:
             try:
                 from .backends.firmware_modules import render_module
                 output = render_module(mod)
+                rendered_module_ids.add(output.id)
                 total_stack += output.stack_size_bytes
                 if output.is_isr:
                     isr_count += 1
+                if module_artifact_dir is not None:
+                    expected_artifacts = {
+                        "c_source": (module_artifact_dir / f"{output.id}.c", output.c_source),
+                        "h_source": (module_artifact_dir / f"{output.id}.h", output.h_source),
+                    }
+                    for artifact_type, (artifact_path, expected_text) in expected_artifacts.items():
+                        if not artifact_path.is_file():
+                            failures.append(_failure(
+                                FailureCategory.FIRMWARE_ERROR,
+                                "firmware_module_artifact_missing",
+                                f"Rendered firmware module '{output.id}' is missing {artifact_type}",
+                                "firmware.modules",
+                                module_id=output.id,
+                                artifact_type=artifact_type,
+                                artifact_path=str(artifact_path),
+                            ))
+                            continue
+                        actual_text = artifact_path.read_text(encoding="utf-8")
+                        if actual_text != expected_text:
+                            failures.append(_failure(
+                                FailureCategory.FIRMWARE_ERROR,
+                                "firmware_module_artifact_stale",
+                                f"Rendered firmware module '{output.id}' {artifact_type} does not match the current spec",
+                                "firmware.modules",
+                                module_id=output.id,
+                                artifact_type=artifact_type,
+                                artifact_path=str(artifact_path),
+                            ))
             except Exception as exc:
                 failures.append(_failure(
                     FailureCategory.FIRMWARE_ERROR, "module_render_error",
@@ -1312,6 +1344,8 @@ class Validator:
             "isr_count": isr_count,
             "total_stack_bytes": total_stack,
             "required_behaviors": required_behaviors,
+            "artifact_check_enabled": module_artifact_dir is not None,
+            "rendered_module_ids": sorted(rendered_module_ids),
         }
         return report
 

@@ -76,9 +76,11 @@
 
 - Agents author firmware behavior modules via `hw_design_firmware_module`: four parametric
   behaviors (`timeout_shutdown`, `periodic_transmit`, `state_machine`, `sensor_poll`); each
-  emits a `.c` file under `firmware/modules/` with matching Zephyr config entries
+  emits `.c` and `.h` files under `firmware/modules/` with matching Zephyr config entries
 - `firmware_modules` gate validates that every referenced signal exists in the pinmap and that
-  motor/e-stop specs include a `timeout_shutdown` behavior that disables motor outputs
+  motor/e-stop specs include a `timeout_shutdown` behavior that disables motor outputs; when
+  project artifacts are available, it also verifies generated module sources still match the
+  current module spec
 - `sensor_poll` behavior is checked against the hardware graph: a module cannot poll over a
   bus that is absent from the schematic/pinmap, and explicit sensor targets must resolve to
   a graph component

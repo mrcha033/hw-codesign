@@ -409,11 +409,42 @@ def test_firmware_modules_pass_generated_estop_shutdown_behavior(service, projec
     pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
     modules = service.read_spec(project)["firmware"]["modules"]
 
-    report = service.validator.check_firmware_modules(modules, pinmap, spec=service.read_spec(project), graph=graph)
+    report = service.validator.check_firmware_modules(
+        modules,
+        pinmap,
+        spec=service.read_spec(project),
+        graph=graph,
+        module_dir=project_path / "firmware" / "modules",
+    )
 
     assert report.status == "pass"
     assert "estop_motor_shutdown" in report.metrics["required_behaviors"]
+    assert report.metrics["artifact_check_enabled"] is True
     assert (project_path / "firmware" / "modules" / "motor_estop_watchdog.c").is_file()
+
+
+def test_firmware_modules_reject_missing_or_stale_generated_artifacts(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    modules = service.read_spec(project)["firmware"]["modules"]
+    module_dir = project_path / "firmware" / "modules"
+    (module_dir / "motor_estop_watchdog.c").unlink()
+    (module_dir / "motor_estop_watchdog.h").write_text("/* stale generated header */\n", encoding="utf-8")
+
+    report = service.validator.check_firmware_modules(
+        modules,
+        pinmap,
+        spec=service.read_spec(project),
+        graph=graph,
+        module_dir=module_dir,
+    )
+
+    assert report.status == "fail"
+    codes = {item.code for item in report.failures}
+    assert "firmware_module_artifact_missing" in codes
+    assert "firmware_module_artifact_stale" in codes
 
 
 def test_hw_sw_parity_rejects_wrong_mcu_pin_name(service, project):

@@ -597,7 +597,7 @@ class HardwareService:
         reports.append(self.validator.check_mechanical_connector_cutouts(spec, graph))
         reports.append(self.validator.check_mechanical_mounting_integrity(spec, graph))
         fw_modules = spec.get("firmware", {}).get("modules", [])
-        reports.append(self.validator.check_firmware_modules(fw_modules, pinmap, spec=spec, graph=graph))
+        reports.append(self.validator.check_firmware_modules(fw_modules, pinmap, spec=spec, graph=graph, module_dir=path / "firmware" / "modules"))
         if graph_path.exists():
             if graph.get("component_resolution_report"):
                 reports.append(self._report_from_dict(graph["component_resolution_report"]))
@@ -4843,7 +4843,7 @@ class HardwareService:
         pinmap = _json.loads(pinmap_path.read_text(encoding="utf-8")) if pinmap_path.is_file() else []
         graph_path = path / "electronics" / "generated" / "electrical_graph.json"
         graph = _json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.is_file() else {"components": [], "nets": []}
-        gate_report = self.validator.check_firmware_modules(fw.get("modules", []), pinmap, spec=spec, graph=graph)
+        gate_report = self.validator.check_firmware_modules(fw.get("modules", []), pinmap, spec=spec, graph=graph, module_dir=path / "firmware" / "modules")
         persist_report(path, gate_report)
 
         artifacts = [str(c_path), str(h_path)]
