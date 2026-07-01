@@ -2,155 +2,193 @@
   "artifacts": [
     {
       "path": "docs/assembly_drawing.pdf",
-      "sha256": "fe194b7a1f906e498f789bf5a3751534c18021af44c620c580201db68b85b5e5"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/bringup_guide.md",
-      "sha256": "b5d47baee40ea6992ff48eabc96589bc51784860a35e00d1b17913a8159daa91"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/bringup_guide.pdf",
-      "sha256": "b2aff8cf6cb37a90ae4d9562ae0c907b0eacca4c1c32a7e1ee9b6d0c739efb64"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/design_report.md",
-      "sha256": "78ca2511cb99a91e55b26ed28dae86b1ca3b18549c7712ea9d51fa251134902d"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/design_report.pdf",
-      "sha256": "b793877ce9d59aa559bad01fc92c032b1d987b8a7c97843d351e373968eb2c87"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/known_risks.md",
-      "sha256": "d670b9d261c2892820288fa530e76076ae199ebe032e09f0a1aa5cc280f1e8de"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/layout_preview.pdf",
-      "sha256": "73532e73f6b2879caf9ad336efce59319815916befe4f3ace8b2bb68e5a8ebc3"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/schematic.pdf",
-      "sha256": "519809dc375516cec28f5bfdbfcaff3e9b3e90481a7eefd019f60d59093d4deb"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/validation_report.json",
-      "sha256": "cc6f3ffee03e8af3a6093fa790f7801e44c279320c5be38a0e08124df3bc4905"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "docs/validation_report.pdf",
-      "sha256": "14a41b4f02201ffa9cf0fbffd84c96667638dc219ef20ebb8ab05f665fc69cc8"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/assembly_drawing.pdf",
-      "sha256": "fe194b7a1f906e498f789bf5a3751534c18021af44c620c580201db68b85b5e5"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/assembly_drawing.svg",
-      "sha256": "f166c44317ad65937d0ce950b55fb2ea553245f727741d6ea052302de7ded439"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/bom.csv",
-      "sha256": "3e9988169f22b2188caf2daa4b59222288bb7d2e704cf9cffd0e92363cee300c"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/drill.zip",
-      "sha256": "264142968ed4af16fbf2a5c1aaba418a0a8270bb3aa7d77b839ee23c68d4d983"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/gerbers.zip",
-      "sha256": "608b810478b5ce644968b8554415a3ce3131e4bdcfb48d7ab16c4f43083da605"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-B_Cu.gbl",
-      "sha256": "007d64f31fa22c4ae17ea119e7dda6576a2cacc907d1d327cebf3fd17473a7bc"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-B_Mask.gbs",
-      "sha256": "6219b8b2ce681a77c328d0a5c863ed7845ed3ff9fe6bb5018bb70f8310119b67"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-Edge_Cuts.gm1",
-      "sha256": "1de1e5d500f1c1419faef96b524a14d55bf51bf27225f5dc60fe16766c6d68f1"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-F_Cu.gtl",
-      "sha256": "dc9121b71a033df0e1c5c128a44608b2c1cb103f05794b49a1a883031022dc81"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-F_Mask.gts",
-      "sha256": "9872258b7a73aabaaf5e5cf5661e68a2c5cd7d767e9a782c20a09554a9936724"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-In1_Cu.g1",
-      "sha256": "2cbbfe41334436f3a0a7f571fbb0d2be2cd9e727e17f7b800514d2d48e61e147"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-In2_Cu.g2",
-      "sha256": "b2c949839b41397e64d0ee728553de368bf731d0c3368b98f9f80670e07a1c21"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-b_silkscreen.gbo",
-      "sha256": "57b59e9ba61d9a5390df4834a24cdca5c4b53dd1455ebcedd4f54d799c1f157b"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-drl_map.pdf",
-      "sha256": "f6b6fa5c028acf18a45b7e20dd68f1838a856e5443389e9a0fc46802c98bffaa"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-f_silkscreen.gto",
-      "sha256": "3aa4e468051c721411efbbd84f4c2390db1ff3989dda197b15301c30e9ee2b9c"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller-job.gbrjob",
-      "sha256": "bcf2719a0b6b049947d8337250cd5f0e6482cbcdbf75379ec371d4da8e8c3d16"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/native_kicad/quadruped_robot_controller.drl",
-      "sha256": "f763309044e036c9aa9f991291710d7bbe3200172be6f6bd5ae12d3409cdef60"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/pick_and_place.csv",
-      "sha256": "e33cffd92dc80cad6eb0bb97ce80747aa7cb7666ae55d9a8430c04c0de845f85"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/quadruped_robot_controller-Edge_Cuts.gm1",
-      "sha256": "76c2b07cf11fc34d0a3995d72726f797aae223a781125bca4bbbdbc12fc529f0"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "fabrication/quadruped_robot_controller.drl",
-      "sha256": "3235d5405b105599bf42367a703b50e055c513baac72ca0e9448933a7cda56a6"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "firmware/build_instructions.md",
-      "sha256": "88dc08607a0b30eaa2dc448983938cb18d6a1640b11bf2be6947db5c52c61a48"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "firmware/devicetree.overlay",
-      "sha256": "9c6510a5b7f9f1155325b848cfcdf6c11a446074c271a619836b4419494ae6b3"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "firmware/pinmap.h",
-      "sha256": "61858b06c4f5829a2ed332b9e58f04636015d494590a4604dd5e4fd2ae1f9750"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "firmware/source.zip",
-      "sha256": "29707f8316f55e4027625d86aae42c49be163fd9cb39a28dbd0729f34eb3ed63"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "mechanical/assembly.step",
-      "sha256": "b20c69e9abdd9d19b66d417f14b1129e0877b8aa894d4649623751b429aa465e"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "mechanical/board.step",
-      "sha256": "bf37af0f4b845228265edcec33d167da3c208ad7279a36e84b844f2c7f1a013a"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "mechanical/enclosure.step",
-      "sha256": "c2612ebb21d8315037d84e07cfd37e39ad973e9e0f46dad72e87f75b3a58c338"
+      "source": "release_manifest",
+      "exists": false
     },
     {
       "path": "mechanical/enclosure.stl",
-      "sha256": "d56c5654045632c78d0dc6bb3fa879b0a7224a4f8980f13a05b72e5f9178112d"
+      "source": "release_manifest",
+      "exists": false
     }
   ],
   "assumptions": {
@@ -158,7 +196,7 @@
     "unresolved_critical": 0,
     "unresolved_critical_names": []
   },
-  "bundle_hash": "6af21957984bfef2590c2160763fd65365ac7f7b226e28b1d73218f9b34db250",
+  "bundle_hash": "ce56edb63a75a000f3130b8c75e10ec23335c7049283e2b26a877aaadd543b05",
   "bundle_version": "1.0",
   "candidates": [],
   "comments": [],

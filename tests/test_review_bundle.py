@@ -104,6 +104,37 @@ def test_export_review_bundle_paths_are_portable(service, project):
     assert probe["backend"]["command"][0] == "<host-path>/tool"
 
 
+def test_export_review_records_gate_artifact_integrity(service, project):
+    service.generate_all(project)
+    service.run_all_checks(project, include_external=False)
+    project_path = service.workspace.require_project(project)
+    reports = project_path / "validation" / "reports"
+    existing = reports / "artifact_probe.txt"
+    missing = reports / "missing_artifact.txt"
+    existing.write_text("review evidence\n", encoding="utf-8")
+    report = {
+        "gate": "artifact_probe",
+        "status": "blocked",
+        "failures": [],
+        "metrics": {},
+        "artifacts": [str(existing), str(missing)],
+        "backend": {},
+    }
+    (reports / "artifact_probe.json").write_text(json.dumps(report), encoding="utf-8")
+
+    result = service.export_review(project)
+    bundle = json.loads(Path(result["file"]).read_text(encoding="utf-8"))
+
+    Draft202012Validator(_schema()).validate(bundle)
+    records = {item["path"]: item for item in bundle["artifacts"] if item["source"] == "gate:artifact_probe"}
+    existing_path = f"projects/{project}/validation/reports/artifact_probe.txt"
+    missing_path = f"projects/{project}/validation/reports/missing_artifact.txt"
+    assert records[existing_path]["exists"] is True
+    assert records[existing_path]["bytes"] == len("review evidence\n")
+    assert re.fullmatch(r"[0-9a-f]{64}", records[existing_path]["sha256"])
+    assert records[missing_path] == {"path": missing_path, "source": "gate:artifact_probe", "exists": False}
+
+
 def test_export_review_bundle_hash_excludes_generated_at(service, project):
     service.generate_all(project)
     service.run_all_checks(project, include_external=False)
@@ -345,5 +376,4 @@ def test_upload_review_rejects_non_http_destination(service, project):
     result = service.upload_review(project, destination="file:///tmp/out.json")
     assert result["status"] == "blocked"
     assert result["code"] == "invalid_destination"
-
 

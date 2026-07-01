@@ -205,13 +205,16 @@
     },
     "artifacts": {
       "type": "array",
-      "description": "Release artifact list (path + sha256) from the most recent release manifest.",
+      "description": "Review artifact evidence collected from gate reports and the latest release manifest. Missing references are preserved with exists=false.",
       "items": {
         "type": "object",
-        "required": ["path", "sha256"],
+        "required": ["path", "source", "exists"],
         "additionalProperties": true,
         "properties": {
           "path":   { "type": "string" },
+          "source": { "type": "string" },
+          "exists": { "type": "boolean" },
+          "bytes":  { "type": "integer" },
           "sha256": { "type": "string" }
         }
       }

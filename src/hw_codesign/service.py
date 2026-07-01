@@ -213,6 +213,28 @@ def _portable_review_string(value: str, workspace_root: Path) -> str:
     return value
 
 
+def _review_artifact_record(reference: str, workspace_root: Path, project_path: Path, source: str) -> dict[str, Any]:
+    portable_path = _portable_review_string(reference, workspace_root)
+    candidates: list[Path] = []
+    raw_path = Path(reference)
+    normalized = reference.replace("\\", "/")
+    if raw_path.is_absolute():
+        candidates.append(raw_path)
+    else:
+        if normalized.startswith("projects/"):
+            candidates.append(workspace_root / normalized)
+        candidates.append(project_path / reference)
+        candidates.append(workspace_root / reference)
+
+    resolved = next((candidate for candidate in candidates if candidate.is_file()), None)
+    record: dict[str, Any] = {"path": portable_path, "source": source, "exists": resolved is not None}
+    if resolved is not None:
+        record["path"] = _portable_review_string(str(resolved), workspace_root)
+        record["bytes"] = resolved.stat().st_size
+        record["sha256"] = sha256(resolved)
+    return record
+
+
 class HardwareService:
     def __init__(self, root: Path | str):
         self.root = Path(root).resolve()
@@ -5089,7 +5111,7 @@ class HardwareService:
         path = self.workspace.require_project(project)
         spec = self.read_spec(project)
         reports_dir = path / "validation" / "reports"
-        gate_reports = sorted(
+        raw_gate_reports = sorted(
             [
                 report
                 for item in sorted(reports_dir.glob("*.json"))
@@ -5099,6 +5121,15 @@ class HardwareService:
             ],
             key=lambda r: r["gate"],
         )
+        artifacts_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+        for report in raw_gate_reports:
+            source = f"gate:{report.get('gate', 'unknown')}"
+            for artifact in report.get("artifacts", []):
+                if not isinstance(artifact, str):
+                    continue
+                record = _review_artifact_record(artifact, self.workspace.root, path, source)
+                artifacts_by_key[(record["source"], record["path"])] = record
+        gate_reports = raw_gate_reports
         gate_reports = _portable_review_value(gate_reports, self.workspace.root)
 
         # Placement summary from graph if available.
@@ -5188,7 +5219,6 @@ class HardwareService:
 
         # Release summary — read most recent exports/r*/manifest.json.
         release_summary = None
-        artifacts: list[dict[str, Any]] = []
         exports_dir = path / "exports"
         if exports_dir.is_dir():
             release_dirs = sorted(d for d in exports_dir.iterdir() if d.is_dir() and d.name.startswith("r"))
@@ -5202,8 +5232,12 @@ class HardwareService:
                         "release_id": latest.name,
                         "artifact_count": len(artifact_list),
                     }
-                    # Keep only stable (path, sha256) pairs — no bytes/mtime.
-                    artifacts = [{"path": a["path"], "sha256": a["sha256"]} for a in artifact_list if "path" in a and "sha256" in a]
+                    for artifact in artifact_list:
+                        if not isinstance(artifact, dict) or not isinstance(artifact.get("path"), str):
+                            continue
+                        record = _review_artifact_record(str(latest / artifact["path"]), self.workspace.root, path, "release_manifest")
+                        artifacts_by_key[(record["source"], record["path"])] = record
+        artifacts = [artifacts_by_key[key] for key in sorted(artifacts_by_key)]
 
         # Canonical content (generated_at excluded from hash for determinism).
         canonical: dict[str, Any] = {
