@@ -98,7 +98,8 @@
   promotion, and stale `available` claims are also caught by the `sourcing` validator
 - `sourcing_resilience` gate: critical roles must have a curated alternative listed in the role
   set or an explicit single-source justification; listed alternates must exist in the curated
-  component database, be active, and not have known unavailable supplier evidence
+  component database, be active, match the selected part's actual pin/symbol/footprint
+  contracts when declared drop-in, and not have known unavailable supplier evidence
 - Manufacturer datasheet review evidence hashed into resolved component provenance
 - `role_overrides` in `system.yaml` lets a project select a curated alternative for any role;
   the resolver enforces that the override names a listed alternative

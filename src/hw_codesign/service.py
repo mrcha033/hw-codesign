@@ -2298,6 +2298,35 @@ class HardwareService:
         justified_roles: list[str] = []
         checked_alternates = 0
 
+        def _pin_numbers(part: dict[str, Any]) -> list[str]:
+            return sorted(str(pin.get("number")) for pin in part.get("pins", []) if pin.get("number") is not None)
+
+        def _expected_pins(part: dict[str, Any]) -> list[str]:
+            return sorted(str(pin) for pin in part.get("symbol", {}).get("expected_pins", []))
+
+        def _expected_pads(part: dict[str, Any]) -> list[str]:
+            return sorted(str(pad) for pad in part.get("footprint", {}).get("expected_pads", []))
+
+        def _actual_alternate_mismatches(selected_part: dict[str, Any], alternate_part: dict[str, Any]) -> dict[str, Any]:
+            mismatches: dict[str, Any] = {}
+            selected_footprint = selected_part.get("footprint", {}).get("library_id")
+            alternate_footprint = alternate_part.get("footprint", {}).get("library_id")
+            if selected_footprint != alternate_footprint:
+                mismatches["footprint_library_id"] = {"selected": selected_footprint, "alternate": alternate_footprint}
+            selected_pads = _expected_pads(selected_part)
+            alternate_pads = _expected_pads(alternate_part)
+            if selected_pads != alternate_pads:
+                mismatches["footprint_expected_pads"] = {"selected": selected_pads, "alternate": alternate_pads}
+            selected_symbol_pins = _expected_pins(selected_part)
+            alternate_symbol_pins = _expected_pins(alternate_part)
+            if selected_symbol_pins != alternate_symbol_pins:
+                mismatches["symbol_expected_pins"] = {"selected": selected_symbol_pins, "alternate": alternate_symbol_pins}
+            selected_pin_numbers = _pin_numbers(selected_part)
+            alternate_pin_numbers = _pin_numbers(alternate_part)
+            if selected_pin_numbers != alternate_pin_numbers:
+                mismatches["component_pin_numbers"] = {"selected": selected_pin_numbers, "alternate": alternate_pin_numbers}
+            return mismatches
+
         for role in sorted(critical_roles):
             selected_id = (selected_roles.get(role) or {}).get("component_id") or resolved_roles.get(role)
             if not selected_id:
@@ -2355,6 +2384,22 @@ class HardwareService:
                                 "lifecycle": alternate_part.get("lifecycle"),
                             },
                         ))
+                    selected_part = component_database.get(selected_id)
+                    if selected_part:
+                        actual_mismatches = _actual_alternate_mismatches(selected_part, alternate_part)
+                        if actual_mismatches:
+                            failures.append(Failure(
+                                FailureCategory.BOM_ERROR,
+                                "critical_alternate_actual_contract_mismatch",
+                                f"Critical role {role} alternate {alternate_id} claims exact compatibility but differs from selected component metadata",
+                                path=f"electronics.role_set.alternatives.{role}",
+                                details={
+                                    "role": role,
+                                    "selected_component_id": selected_id,
+                                    "alternate_component_id": alternate_id,
+                                    "mismatches": actual_mismatches,
+                                },
+                            ))
                     supplier_record = supplier_records.get(alternate_id)
                     if not supplier_record:
                         failures.append(Failure(

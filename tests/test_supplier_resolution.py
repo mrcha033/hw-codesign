@@ -200,6 +200,38 @@ def test_sourcing_resilience_rejects_unavailable_curated_alternate(service, proj
     assert "critical_alternate_supplier_unavailable" in {failure.code for failure in report.failures}
 
 
+def test_sourcing_resilience_rejects_self_attested_incompatible_alternate(service, project, monkeypatch):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = yaml.safe_load((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    role_data = read_yaml(service.parts_root / "role_sets" / "robotics_controller.yaml")
+    role_data.setdefault("alternatives", {})["mcu"] = [{
+        "component_id": "rc0603_10k",
+        "resolution": "curated",
+        "compatibility": {"pin_numbers": "exact", "footprint": "exact"},
+        "rationale": "Synthetic bad alternate: declaration claims exact compatibility but metadata is not drop-in.",
+    }]
+    supplier_records = service._design_space_supplier_records(service.read_spec(project)["sourcing"]["provider"])
+    supplier_records["rc0603_10k"] = {
+        "component_id": "rc0603_10k",
+        "availability": "available",
+        "supplier_sku": "RC0603FR-0710KL",
+        "observed_at": "2026-06-21T00:00:00Z",
+    }
+    monkeypatch.setattr(service, "_design_space_supplier_records", lambda provider: supplier_records)
+
+    report = service._sourcing_resilience_report(service.read_spec(project), graph, role_data_override=role_data)
+
+    assert report.status == "fail"
+    mismatch = next(
+        failure for failure in report.failures
+        if failure.code == "critical_alternate_actual_contract_mismatch"
+    )
+    assert mismatch.details["selected_component_id"] == "stm32h743vit6"
+    assert mismatch.details["alternate_component_id"] == "rc0603_10k"
+    assert {"footprint_library_id", "footprint_expected_pads", "symbol_expected_pins"} <= set(mismatch.details["mismatches"])
+
+
 def test_project_role_override_selects_curated_alternative(service, project):
     spec_path = service.workspace.require_project(project) / "spec" / "system.yaml"
     system = read_yaml(spec_path)
