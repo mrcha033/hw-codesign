@@ -271,6 +271,22 @@ def test_power_integrity_estimate_rejects_missing_decoupling(service, project):
     assert "rail_decoupling_missing" in {item.code for item in report.failures}
 
 
+def test_power_integrity_estimate_rejects_cap_without_ground_return(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    decoupling = next(component for component in graph["components"] if component.get("category") == "decoupling")
+    ground_pin = next(pin for pin in decoupling["pins"] if pin.get("net") == "GND")
+    ground_pin["net"] = "V3V3"
+
+    report = service.validator.check_power_integrity_estimate(graph, service.read_spec(project))
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "capacitor_ground_return_missing")
+    assert failure.details["ref"] == decoupling["ref"]
+    assert "GND" not in failure.details["present_nets"]
+
+
 def test_interface_integrity_passes_generated_robotics_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)

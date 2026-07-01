@@ -41,9 +41,10 @@
 - `layout_thermal_integrity` and `layout_signal_integrity` are gated checks that block
   high-current designs on under-layered stackups, thermal-risk components placed next to
   sensitive devices, and misplaced RF antenna or USB ESD components
-- `power_integrity_estimate` checks rail-level decoupling/bulk-cap coverage and flags
-  high-current connector rails without bulk capacitance; it remains a heuristic precheck,
-  not a substitute for transient simulation or bench measurements
+- `power_integrity_estimate` checks rail-level decoupling/bulk-cap coverage, verifies
+  modeled rail capacitors have a ground return, and flags high-current connector rails
+  without bulk capacitance; it remains a heuristic precheck, not a substitute for
+  transient simulation or bench measurements
 - Decoupling proximity is enforced when generated components declare a `decoupling_target_ref`;
   generic rail caps without a target remain visible as deferred rather than guessed
 - Not authoritative: native ERC/DRC and the mechanical interference gate remain the

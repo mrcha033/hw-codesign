@@ -758,6 +758,26 @@ class Validator:
         transfer_categories = {"fuse", "reverse_polarity", "efuse", "regulator", "charger", "tvs", "safety_gate"}
         coverage: dict[str, dict[str, Any]] = {}
 
+        for component in components:
+            if component.get("category") not in capacitor_categories:
+                continue
+            nets = _component_nets(component)
+            capacitor_power_nets = sorted(
+                net for net in nets
+                if _infer_power_domain(net) not in {None, "GND"}
+            )
+            if capacitor_power_nets and "GND" not in nets:
+                failures.append(_failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "capacitor_ground_return_missing",
+                    f"{component.get('ref', '?')} is modelled as a rail capacitor but has no ground return",
+                    "electronics.components",
+                    ref=component.get("ref"),
+                    component_category=component.get("category"),
+                    power_nets=capacitor_power_nets,
+                    present_nets=sorted(nets),
+                ))
+
         for rail in rail_names:
             loads = sorted({
                 str(component.get("ref"))
