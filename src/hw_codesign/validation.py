@@ -1398,7 +1398,11 @@ class Validator:
                     "requirements.unresolved",
                     requirement_id=item.get("id"),
                     requirement_category=item.get("category"),
+                    field_type=item.get("field_type"),
+                    assumption_key=item.get("assumption_key"),
                     reason=item.get("reason"),
+                    required_human_approvals=item.get("required_human_approvals", []),
+                    affected_gates=item.get("affected_gates", []),
                 ))
         return self._report("requirements_lowering", failures)
 

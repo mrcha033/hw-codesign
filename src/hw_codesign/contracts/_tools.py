@@ -283,7 +283,7 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
 
     "hw_update_requirements": ToolDef(
         name="hw_update_requirements",
-        description="Deterministically lower natural-language requirements text into the typed spec.",
+        description="Compile natural-language requirements text into typed spec fields plus unresolved assumptions, unsupported constraints, required approvals, and affected gates.",
         input_schema={
             "type": "object",
             "properties": {

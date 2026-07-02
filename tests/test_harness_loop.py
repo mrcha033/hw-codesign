@@ -26,6 +26,9 @@ def test_update_requirements_persists_unlowered_constraints(service, project):
     assert result["status"] == "generated"
     assert result["has_unresolved_constraints"] is True
     assert result["unsupported_constraints"]
+    assert result["unresolved_assumptions"]
+    assert "approve_assumption_motor_type" in result["required_human_approvals"]
+    assert "approve_assumption_cooling" in result["required_human_approvals"]
     spec = service.read_spec(project)
     unresolved = spec.get("requirements", {}).get("active_unresolved", [])
     assert unresolved, "Unresolved constraints must be persisted to spec/requirements.yaml"
@@ -33,7 +36,39 @@ def test_update_requirements_persists_unlowered_constraints(service, project):
     assert all(item["status"] == "unresolved" for item in unresolved)
     assert all(item["required_human_approvals"] for item in unresolved)
     assert all(item["affected_gates"] for item in unresolved)
-    assert spec["requirements"]["compiler_ir"]["input_id"] == "req_input_0001"
+    categories = {item["category"] for item in unresolved}
+    assert {"ip_protection", "bus_protocol", "motor_driver_topology", "cooling_condition"} <= categories
+    ir = spec["requirements"]["compiler_ir"]
+    assert ir["input_id"] == "req_input_0001"
+    assumptions = {item["assumption_key"]: item for item in ir["unresolved_assumptions"]}
+    assert {"motor_type", "cooling"} <= set(assumptions)
+    assert assumptions["motor_type"]["release_blocking"] is True
+    assert assumptions["cooling"]["affected_gates"]
+
+
+def test_update_requirements_resolves_explicit_topology_and_cooling_from_brief(service, project):
+    result = service.update_requirements(project, "16 channel 24V battery external driver forced cooling")
+
+    assert result["status"] == "generated"
+    assert result["has_unresolved_constraints"] is False
+    assert result["unresolved_assumptions"] == []
+    assert "approve_assumption_motor_type" not in result["required_human_approvals"]
+    assert "approve_assumption_cooling" not in result["required_human_approvals"]
+    spec = service.read_spec(project)
+    ir = spec["requirements"]["compiler_ir"]
+    assert ir["unresolved_assumptions"] == []
+    assert all(item.get("kind") != "retained_assumption" for item in ir["tokens"])
+
+
+def test_update_requirements_marks_retained_assumptions_as_unresolved(service, project):
+    result = service.update_requirements(project, "16 channel 24V battery")
+
+    assert result["has_unresolved_constraints"] is True
+    assert result["unsupported_constraints"] == []
+    assert {
+        "motor driver topology retained from documented assumption",
+        "cooling condition retained from documented assumption",
+    } <= set(result["unresolved_assumptions"])
 
 
 def test_requirements_lowering_gate_blocks_release(service, project):

@@ -37,9 +37,33 @@
           "id": {"type": "string"},
           "source": {"type": "string", "minLength": 1},
           "category": {"type": "string", "minLength": 1},
+          "field_type": {"enum": ["unsupported_constraint", "retained_assumption"]},
           "status": {"enum": ["unresolved", "waived"]},
           "release_blocking": {"type": "boolean"},
-          "reason": {"type": "string", "minLength": 1}
+          "reason": {"type": "string", "minLength": 1},
+          "required_human_approvals": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "affected_gates": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "assumption_key": {"type": "string"},
+          "source_span": {"type": ["string", "null"]},
+          "source_range": {
+            "oneOf": [
+              {"type": "null"},
+              {
+                "type": "object",
+                "required": ["start", "end"],
+                "properties": {
+                  "start": {"type": "integer", "minimum": 0},
+                  "end": {"type": "integer", "minimum": 0}
+                }
+              }
+            ]
+          }
         }
       }
     },

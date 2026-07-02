@@ -263,6 +263,7 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
             "changed_files",
             "unresolved_requirements",
             "unsupported_constraints",
+            "unresolved_assumptions",
             "compiler_ir",
             "required_human_approvals",
             "affected_gates",
@@ -276,6 +277,7 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
             "changed_files":              {"type": "array", "items": {"type": "string"}},
             "unresolved_requirements":    {"type": "array", "items": {"type": "string"}},
             "unsupported_constraints":    {"type": "array", "items": {"type": "string"}},
+            "unresolved_assumptions":     {"type": "array", "items": {"type": "string"}},
             "required_human_approvals":   {"type": "array", "items": {"type": "string"}},
             "affected_gates":             {"type": "array", "items": {"type": "string"}},
             "compiler_ir": {

@@ -356,11 +356,6 @@ class HardwareService:
         write_yaml(system_path, system_file)
         write_yaml(firmware_path, firmware_file)
         write_yaml(manufacturing_path, manufacturing_file)
-        unresolved_ambiguous = []
-        if not re.search(r"(?:external|onboard|외장|온보드).*(?:driver|드라이버)", requirements_text, re.IGNORECASE):
-            unresolved_ambiguous.append("motor driver topology retained from documented assumption")
-        if not re.search(r"(?:forced|passive|팬|자연 냉각)", requirements_text, re.IGNORECASE):
-            unresolved_ambiguous.append("cooling condition retained from documented assumption")
         _unsupported: list[tuple[str, str, str]] = [
             (r"\bIP\s*6[0-9]\b", "ip_protection", "IP ingress protection rating (e.g. IP67) — not lowered into spec"),
             (r"\bCAN-?FD\b", "bus_protocol", "CAN-FD bus variant — not lowered into spec"),
@@ -385,6 +380,47 @@ class HardwareService:
             "manufacturing_service": ["component_provenance", "manufacturing_export", "artifact_integrity"],
             "pcb_stackup": ["layout_signal_integrity", "native_drc", "manufacturing_export"],
         }
+        _retained_assumption_rules: list[dict[str, Any]] = [
+            {
+                "assumption_key": "motor_type",
+                "category": "motor_driver_topology",
+                "source": "motor driver topology retained from documented assumption",
+                "specified_pattern": r"(?:external|onboard|integrated|외장|온보드).*(?:driver|드라이버)|(?:driver|드라이버).*(?:external|onboard|integrated|외장|온보드)",
+                "affected_gates": ["electrical_semantics", "power_budget", "firmware_interface_contract", "physical_qualification"],
+            },
+            {
+                "assumption_key": "cooling",
+                "category": "cooling_condition",
+                "source": "cooling condition retained from documented assumption",
+                "specified_pattern": r"(?:forced|passive|fan|팬|자연 냉각)",
+                "affected_gates": ["layout_thermal_integrity", "mechanical_fit", "physical_qualification"],
+            },
+        ]
+        assumptions = _assumptions_as_dict(system_file.get("assumptions", {}))
+        retained_assumption_items: list[dict[str, Any]] = []
+        for rule in _retained_assumption_rules:
+            assumption_key = rule["assumption_key"]
+            if assumption_key not in assumptions:
+                continue
+            if re.search(rule["specified_pattern"], requirements_text, re.IGNORECASE):
+                continue
+            assumption = assumptions.get(assumption_key, {})
+            release_blocking = bool(assumption.get("critical") or assumption.get("requires_user_review"))
+            retained_assumption_items.append({
+                "source": rule["source"],
+                "source_span": None,
+                "source_range": None,
+                "category": rule["category"],
+                "field_type": "retained_assumption",
+                "status": "unresolved",
+                "release_blocking": release_blocking,
+                "reason": f"Requirement brief did not resolve spec assumption {assumption_key!r}",
+                "assumption_key": assumption_key,
+                "assumption_value": assumption.get("value"),
+                "assumption_confidence": assumption.get("confidence"),
+                "required_human_approvals": [f"approve_assumption_{assumption_key}"] if release_blocking else [],
+                "affected_gates": rule["affected_gates"],
+            })
         matched = [
             {"category": cat, "label": label, "match": match}
             for pat, cat, label in _unsupported
@@ -406,6 +442,7 @@ class HardwareService:
             }
             for item in matched
         ]
+        active_unresolved_items = [*unresolved_items, *retained_assumption_items]
         req_file = read_yaml(req_path)
         if "requirements" not in req_file:
             req_file["requirements"] = {"raw_inputs": [], "active_lowered": [], "active_unresolved": []}
@@ -419,16 +456,16 @@ class HardwareService:
         ]
         req_file["requirements"]["active_unresolved"] = [
             {"id": f"req_unresolved_{i:04d}", **item}
-            for i, item in enumerate(unresolved_items, start=1)
+            for i, item in enumerate(active_unresolved_items, start=1)
         ]
         affected_gates = sorted({
             gate
-            for item in [*lowered_fields, *unresolved_items]
+            for item in [*lowered_fields, *active_unresolved_items]
             for gate in item.get("affected_gates", [])
         })
         required_human_approvals = sorted({
             approval
-            for item in unresolved_items
+            for item in active_unresolved_items
             for approval in item.get("required_human_approvals", [])
         })
         lowered_tokens = [
@@ -467,30 +504,27 @@ class HardwareService:
             {
                 "id": f"req_token_assumption_{i:04d}",
                 "kind": "retained_assumption",
-                "status": "retained_from_spec_assumption",
-                "source": item,
-                "source_span": None,
-                "source_range": None,
-                "release_blocking": False,
-                "affected_gates": ["release_preparation"],
-                "required_human_approvals": [],
+                "status": item["status"],
+                "category": item["category"],
+                "field_type": item["field_type"],
+                "source": item["source"],
+                "source_span": item.get("source_span"),
+                "source_range": item.get("source_range"),
+                "release_blocking": item["release_blocking"],
+                "reason": item["reason"],
+                "assumption_key": item["assumption_key"],
+                "assumption_value": item.get("assumption_value"),
+                "assumption_confidence": item.get("assumption_confidence"),
+                "affected_gates": item.get("affected_gates", []),
+                "required_human_approvals": item.get("required_human_approvals", []),
             }
-            for i, item in enumerate(unresolved_ambiguous, start=1)
+            for i, item in enumerate(retained_assumption_items, start=1)
         ]
         compiler_ir = {
             "version": "requirements_ir_v1",
             "input_id": input_id,
             "lowered_fields": sorted(lowered_fields, key=lambda item: item["spec_path"]),
-            "unresolved_assumptions": [
-                {
-                    "source": item,
-                    "status": "retained_from_spec_assumption",
-                    "release_blocking": False,
-                    "required_human_approvals": [],
-                    "affected_gates": ["release_preparation"],
-                }
-                for item in unresolved_ambiguous
-            ],
+            "unresolved_assumptions": retained_assumption_items,
             "unsupported_constraints": unresolved_items,
             "tokens": [*lowered_tokens, *unresolved_tokens, *assumption_tokens],
             "required_human_approvals": required_human_approvals,
@@ -500,12 +534,13 @@ class HardwareService:
         write_yaml(req_path, req_file)
         return {
             "status": "generated",
-            "has_unresolved_constraints": bool(unsupported_constraints),
+            "has_unresolved_constraints": bool(active_unresolved_items),
             "mode": "replace_active_requirements",
             "changed_paths": sorted(set(changed)),
             "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)],
-            "unresolved_requirements": unresolved_ambiguous,
+            "unresolved_requirements": [item["source"] for item in active_unresolved_items],
             "unsupported_constraints": unsupported_constraints,
+            "unresolved_assumptions": [item["source"] for item in retained_assumption_items],
             "compiler_ir": compiler_ir,
             "required_human_approvals": required_human_approvals,
             "affected_gates": affected_gates,
