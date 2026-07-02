@@ -665,6 +665,17 @@ class Validator:
             for pin in pins:
                 number = str(pin.get("number"))
                 footprint_only_no_connect = pin.get("footprint_only") is True and pin.get("role") == "no_connect"
+                if _pin_is_no_connect(pin) and pin.get("net"):
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "no_connect_pin_wired",
+                        f"{ref}.{number} is declared no-connect but is wired to {pin.get('net')}",
+                        ref,
+                        ref=ref,
+                        pin_number=number,
+                        pin_name=pin.get("name"),
+                        net=pin.get("net"),
+                    ))
                 if number not in symbol_pins and not footprint_only_no_connect:
                     failures.append(_failure(FailureCategory.BOM_ERROR, "symbol_pin_missing", f"{ref}.{number} is absent from curated symbol contract", ref))
                 if number not in pads:
@@ -1490,6 +1501,15 @@ def _component_pin_role_contract_failures(component: dict[str, Any]) -> list[Fai
 def _pin_sort_key(value: str) -> tuple[int, int | str]:
     text = str(value)
     return (0, int(text)) if text.isdigit() else (1, text)
+
+
+def _pin_is_no_connect(pin: dict[str, Any]) -> bool:
+    return (
+        str(pin.get("role", "")).lower() == "no_connect"
+        or str(pin.get("electrical_type", "")).lower() == "no_connect"
+        or str(pin.get("name", "")).upper() in {"NC", "DNC", "N/C", "NO_CONNECT"}
+        or pin.get("generated_no_connect") is True
+    )
 
 
 def _rail_nominal_voltages(spec: dict[str, Any]) -> dict[str, float]:

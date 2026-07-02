@@ -83,6 +83,27 @@ def test_component_provenance_rejects_unmapped_expected_symbol_and_pad(service, 
     assert removed in failures["footprint_pad_unmapped"].details["missing_pads"]
 
 
+def test_component_provenance_rejects_wired_no_connect_pin(service, project):
+    service.generate_all(project)
+    graph_path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    components = deepcopy(graph["components"])
+    no_connect = next(
+        (component, pin)
+        for component in components
+        for pin in component.get("pins", [])
+        if pin.get("role") == "no_connect"
+    )
+    no_connect[1]["net"] = "GND"
+
+    report = service.validator.check_component_metadata(components)
+
+    failures = {failure.code: failure for failure in report.failures}
+    assert report.status.value == "fail"
+    assert "no_connect_pin_wired" in failures
+    assert failures["no_connect_pin_wired"].details["net"] == "GND"
+
+
 def test_iteration_writes_candidate_only_bundle(service, project):
     result = service.run_design_iteration(project, include_external=False)
     candidate = Path(result["candidate"]["path"])
@@ -174,6 +195,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "wrong_pinout_contract",
         "wrong_footprint_contract",
         "missing_expected_pin_mapping",
+        "wired_no_connect_pin",
         "missing_support_circuit",
         "miswired_support_circuit",
         "bad_power_assumption",

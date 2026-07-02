@@ -4,8 +4,8 @@ from collections import defaultdict
 from typing import Any
 
 
-def pin(number: str | int, name: str, net: str, role: str) -> dict[str, Any]:
-    return {"number": str(number), "name": name, "net": net, "role": role, "voltage_domain": _domain(net) if role in {"power_in", "power_out", "ground"} else None}
+def pin(number: str | int, name: str, net: str | None, role: str) -> dict[str, Any]:
+    return {"number": str(number), "name": name, "net": net, "role": role, "voltage_domain": _domain(net) if net and role in {"power_in", "power_out", "ground"} else None}
 
 
 def component(ref: str, category: str, value: str, mpn: str, footprint: str, pins: list[dict[str, Any]], **metadata: Any) -> dict[str, Any]:
@@ -70,7 +70,8 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = []
     for name in sorted(endpoints):
         signal_class = net_classes.get(name, "analog" if name.endswith("CURRENT") else "signal")
@@ -147,7 +148,8 @@ def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -238,7 +240,7 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(1, "EN", "V3V3", "input"),
             pin(2, "GND", "GND", "ground"),
             pin(3, "VIN", "VBAT", "power_in"),
-            pin(4, "NC", "GND", "ground"),
+            pin(4, "NC", None, "no_connect"),
             pin(5, "VOUT", "V3V3", "power_out"),
         ], manufacturer="Diodes Incorporated"),
         component("U1", "mcu", "nRF52840", "nRF52840-QIAA", "Nordic_nRF52840:nRF52840-QIAA", mcu_pins, manufacturer="Nordic Semiconductor"),
@@ -289,7 +291,8 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -410,7 +413,7 @@ def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(1, "EN", "V3V3", "input"),
             pin(2, "GND", "GND", "ground"),
             pin(3, "VIN", "USB_VBUS", "power_in"),
-            pin(4, "NC", "GND", "ground"),
+            pin(4, "NC", None, "no_connect"),
             pin(5, "VOUT", "V3V3", "power_out"),
         ], manufacturer="Diodes Incorporated"),
         component("U3", "flash", "16Mbit QSPI Flash", "W25Q16JVSSIQ", "SOIC-8", [
@@ -471,7 +474,8 @@ def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -529,7 +533,7 @@ def build_lora_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(1, "EN",   "V3V3", "input"),
             pin(2, "GND",  "GND",  "ground"),
             pin(3, "VIN",  "VBAT", "power_in"),
-            pin(4, "NC",   "GND",  "ground"),
+            pin(4, "NC",   None,   "no_connect"),
             pin(5, "VOUT", "V3V3", "power_out"),
         ], manufacturer="Diodes Incorporated"),
         component("U3", "lora_radio", "SX1276 LoRa", "SX1276IMLTRT", "QFN-28", [
@@ -607,7 +611,8 @@ def build_lora_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -724,7 +729,7 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(1, "EN",   "V3V3", "input"),
             pin(2, "GND",  "GND",  "ground"),
             pin(3, "VIN",  "V5",   "power_in"),
-            pin(4, "NC",   "GND",  "ground"),
+            pin(4, "NC",   None,   "no_connect"),
             pin(5, "VOUT", "V3V3", "power_out"),
         ], manufacturer="Diodes Incorporated"),
         component("U6", "can", "CAN PHY", "TCAN1042HGVDRQ1", "SOIC8", [
@@ -791,7 +796,8 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = []
     for name in sorted(endpoints):
         signal_class = net_classes.get(name, "analog" if name.endswith("CURR") else "signal")
@@ -907,7 +913,8 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -1013,7 +1020,8 @@ def build_avr_32u4_hid_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -1142,7 +1150,8 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -1262,7 +1271,8 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -1389,7 +1399,8 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -1484,7 +1495,8 @@ def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
     nets = [
         {
             "name": name,
@@ -1566,14 +1578,17 @@ def build_graph_from_spec(spec: dict[str, Any]) -> dict[str, Any]:
     net_classes: dict[str, str] = dict(_WELL_KNOWN_NET_CLASSES)
     for item in extra_components:
         for item_pin in item["pins"]:
-            net = item_pin["net"]
+            net = item_pin.get("net")
+            if not net:
+                continue
             if net not in net_classes and (net.endswith("H") or net.endswith("L")):
                 net_classes[net] = "can"
 
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in all_components:
         for item_pin in item["pins"]:
-            endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
 
     nets = []
     for name in sorted(endpoints):

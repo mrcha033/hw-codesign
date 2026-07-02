@@ -2863,6 +2863,28 @@ class HardwareService:
             ["symbol_pin_unmapped", "footprint_pad_unmapped"],
         )
 
+        components_wired_nc = deepcopy(graph["components"])
+        wired_nc = None
+        for item in components_wired_nc:
+            for pin in item.get("pins", []):
+                if pin.get("role") == "no_connect" or str(pin.get("name", "")).upper() in {"NC", "DNC"}:
+                    pin["net"] = "GND"
+                    wired_nc = f"{item.get('ref')}.{pin.get('number')}"
+                    break
+            if wired_nc:
+                break
+        record(
+            "wired_no_connect_pin",
+            "pinout_package_grounding",
+            f"Wired no-connect package pin {wired_nc or '<unavailable>'} to GND",
+            self.validator.check_component_metadata(components_wired_nc) if wired_nc else GateReport(
+                "component_provenance",
+                Status.FAIL,
+                [Failure(FailureCategory.BOM_ERROR, "benchmark_fixture_unavailable", "No no-connect pin was available to wire")],
+            ),
+            ["no_connect_pin_wired"],
+        )
+
         components_bad_role = deepcopy(graph["components"])
         role_mutation = None
         for item in components_bad_role:
