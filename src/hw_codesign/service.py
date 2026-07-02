@@ -2847,6 +2847,22 @@ class HardwareService:
             ["footprint_pad_missing"],
         )
 
+        components_missing_pin_map = deepcopy(graph["components"])
+        for item in components_missing_pin_map:
+            if item.get("ref") == component["ref"]:
+                item["pins"] = [
+                    pin for pin in item.get("pins", [])
+                    if str(pin.get("number")) != component_pin
+                ]
+                break
+        record(
+            "missing_expected_pin_mapping",
+            "pinout_package_grounding",
+            f"Removed mapped pin {component['ref']}.{component_pin} while leaving curated symbol/pad contracts intact",
+            self.validator.check_component_metadata(components_missing_pin_map),
+            ["symbol_pin_unmapped", "footprint_pad_unmapped"],
+        )
+
         components_bad_role = deepcopy(graph["components"])
         role_mutation = None
         for item in components_bad_role:

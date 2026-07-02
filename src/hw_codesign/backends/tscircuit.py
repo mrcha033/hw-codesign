@@ -39,7 +39,11 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             if footprint_id and not tscircuit_footprint:
                 unsupported_footprints.append({"ref": item["ref"], "footprint": footprint_id})
             labels = {f"pin{pin['number']}": f"{self._identifier(pin['name'])}_{pin['number']}" for pin in item.get("pins", [])}
-            connections = {f"pin{pin['number']}": f"sel.net.{self._identifier(pin['net'])}" for pin in item.get("pins", [])}
+            connections = {
+                f"pin{pin['number']}": f"sel.net.{self._identifier(pin['net'])}"
+                for pin in item.get("pins", [])
+                if pin.get("net")
+            }
             labels_js = json.dumps(labels, sort_keys=True)
             conn_js = "{" + ", ".join(f"{json.dumps(key)}: {value}" for key, value in connections.items()) + "}"
             footprint_prop = f" footprint={json.dumps(tscircuit_footprint)}" if tscircuit_footprint else ""

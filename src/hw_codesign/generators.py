@@ -44,6 +44,7 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
             continue
         data = match.data
         component.update({"mpn": data["mpn"], "manufacturer": data["manufacturer"], "package": data["package"], "symbol": data["symbol"], "footprint": data["footprint"]["library_id"], "footprint_metadata": data["footprint"], "lifecycle": data["lifecycle"], "sourcing": data["sourcing"], "supplier_offer": data.get("supplier_offer"), "datasheet_evidence": data.get("datasheet_evidence", []), "constraints": data["constraints"], "review_status": data["review_status"], "resolution": match.resolution, "component_id": match.component_id, "resolution_provenance": match.provenance})
+        _complete_unmapped_package_pins(component)
     proposal = propose_placement(spec, graph)
     for component in graph["components"]:
         placement = proposal.placements[component["ref"]]
@@ -59,6 +60,35 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
     write_json(graph_path, graph)
     semantic_files = _write_semantic_schematic(project, spec, graph)
     return [str(intent / name) for name in files] + [str(graph_path), *semantic_files, *generate_kicad(project, spec, graph)], [item for item in graph["component_resolution"]], resolution_report.to_dict()
+
+
+def _complete_unmapped_package_pins(component: dict[str, Any]) -> None:
+    """Represent unused expected symbol/footprint pins as explicit no-connect pads."""
+    pins = component.get("pins") or []
+    mapped = {str(pin.get("number")) for pin in pins}
+    expected = {
+        str(pin)
+        for pin in component.get("symbol", {}).get("expected_pins", [])
+    } | {
+        str(pad)
+        for pad in component.get("footprint_metadata", {}).get("expected_pads", [])
+    }
+    for number in sorted(expected - mapped, key=_pin_sort_key):
+        pins.append({
+            "number": number,
+            "name": "NC",
+            "role": "no_connect",
+            "electrical_type": "no_connect",
+            "net": None,
+            "footprint_only": number not in {str(pin) for pin in component.get("symbol", {}).get("expected_pins", [])},
+            "generated_no_connect": True,
+        })
+    component["pins"] = pins
+
+
+def _pin_sort_key(value: str) -> tuple[int, int | str]:
+    text = str(value)
+    return (0, int(text)) if text.isdigit() else (1, text)
 
 
 def _write_semantic_schematic(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> list[str]:
@@ -402,8 +432,8 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     assignments = []
     if mcu:
         for item in mcu.get("pins", []):
-            net = item.get("net", "")
-            if net not in {"V3V3", "GND", "SWDIO", "SWCLK", "NRST"}:
+            net = item.get("net")
+            if net and net not in {"V3V3", "GND", "SWDIO", "SWCLK", "NRST"}:
                 assignments.append({"signal": net, "mcu_pin": item.get("mcu_pin", item["name"]), "net_name": net, "graph_pin": f"{mcu['ref']}.{item['number']}"})
     write_json(generated / "pinmap.json", assignments)
     pinmap = "#pragma once\n\n" + "\n".join(f'#define PIN_{item["signal"]} "{item["mcu_pin"]}"' for item in assignments) + "\n"

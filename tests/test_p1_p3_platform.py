@@ -64,6 +64,25 @@ def test_component_provenance_rejects_wrong_pin_role_contract(service, project):
     assert "component_pin_role_mismatch" in {failure.code for failure in report.failures}
 
 
+def test_component_provenance_rejects_unmapped_expected_symbol_and_pad(service, project):
+    service.generate_all(project)
+    graph_path = service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    components = deepcopy(graph["components"])
+    target = next(item for item in components if len(item.get("pins", [])) >= 2)
+    removed = str(target["pins"][-1]["number"])
+    target["pins"] = [pin for pin in target["pins"] if str(pin.get("number")) != removed]
+
+    report = service.validator.check_component_metadata(components)
+
+    failures = {failure.code: failure for failure in report.failures}
+    assert report.status.value == "fail"
+    assert "symbol_pin_unmapped" in failures
+    assert "footprint_pad_unmapped" in failures
+    assert removed in failures["symbol_pin_unmapped"].details["missing_pins"]
+    assert removed in failures["footprint_pad_unmapped"].details["missing_pads"]
+
+
 def test_iteration_writes_candidate_only_bundle(service, project):
     result = service.run_design_iteration(project, include_external=False)
     candidate = Path(result["candidate"]["path"])
@@ -154,6 +173,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
     assert {
         "wrong_pinout_contract",
         "wrong_footprint_contract",
+        "missing_expected_pin_mapping",
         "missing_support_circuit",
         "miswired_support_circuit",
         "bad_power_assumption",

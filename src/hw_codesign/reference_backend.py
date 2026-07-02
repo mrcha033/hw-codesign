@@ -96,7 +96,7 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
     fixed_positions = component_positions(graph)
     for i, item in enumerate(graph["components"]):
         x, y = fixed_positions.get(item["ref"], (10 + (i % 7) * 20, 10 + (i // 7) * 15))
-        high_current = any(item_pin["net"].startswith("VBAT") or item_pin["net"] == "VSYS" for item_pin in item["pins"])
+        high_current = any(str(item_pin.get("net") or "").startswith("VBAT") or item_pin.get("net") == "VSYS" for item_pin in item["pins"])
         pitch = 3.0 if high_current else 2.0
         columns = 1 if high_current else min(7, max(2, len(item["pins"])))
         pads = []
@@ -104,9 +104,13 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
         for pin_index, item_pin in enumerate(item["pins"]):
             px = (pin_index % columns) * pitch * (-1 if mirror_x else 1)
             py = (pin_index // columns) * pitch
-            net_id = net_ids[item_pin["net"]]
-            pad_positions[item_pin["net"]].append((x + px, y + py))
-            pads.append(f'    (pad "{item_pin["number"]}" thru_hole circle (at {px:.3f} {py:.3f}) (size 0.75 0.75) (drill 0.35) (layers "*.Cu" "*.Mask") (net {net_id} "{item_pin["net"]}"))')
+            net_name = item_pin.get("net")
+            net_clause = ""
+            if net_name in net_ids:
+                net_id = net_ids[net_name]
+                pad_positions[net_name].append((x + px, y + py))
+                net_clause = f' (net {net_id} "{net_name}")'
+            pads.append(f'    (pad "{item_pin["number"]}" thru_hole circle (at {px:.3f} {py:.3f}) (size 0.75 0.75) (drill 0.35) (layers "*.Cu" "*.Mask"){net_clause})')
         body_width = max(4.0, (columns - 1) * pitch + 2.0)
         body_height = max(3.0, ((len(item["pins"]) - 1) // columns) * pitch + 2.0)
         body_start_x, body_end_x = (-body_width + 1.0, 1.0) if mirror_x else (-1.0, body_width)

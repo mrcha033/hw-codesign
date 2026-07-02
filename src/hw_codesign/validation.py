@@ -640,9 +640,32 @@ class Validator:
                 failures.append(_failure(FailureCategory.BOM_ERROR, "duplicate_pin_number", f"{ref} has duplicate pin numbers", ref))
             symbol_pins = set(map(str, symbol.get("expected_pins", [])))
             pads = set(map(str, footprint.get("expected_pads", [])))
+            missing_symbol_pins = sorted(symbol_pins - set(numbers), key=_pin_sort_key)
+            missing_footprint_pads = sorted(pads - set(numbers), key=_pin_sort_key)
+            if missing_symbol_pins:
+                failures.append(_failure(
+                    FailureCategory.BOM_ERROR,
+                    "symbol_pin_unmapped",
+                    f"{ref} omits curated symbol pins from the component pin map",
+                    ref,
+                    missing_pins=missing_symbol_pins,
+                    expected_pins=sorted(symbol_pins, key=_pin_sort_key),
+                    mapped_pins=sorted(set(numbers), key=_pin_sort_key),
+                ))
+            if missing_footprint_pads:
+                failures.append(_failure(
+                    FailureCategory.BOM_ERROR,
+                    "footprint_pad_unmapped",
+                    f"{ref} omits curated footprint pads from the component pin map",
+                    ref,
+                    missing_pads=missing_footprint_pads,
+                    expected_pads=sorted(pads, key=_pin_sort_key),
+                    mapped_pins=sorted(set(numbers), key=_pin_sort_key),
+                ))
             for pin in pins:
                 number = str(pin.get("number"))
-                if number not in symbol_pins:
+                footprint_only_no_connect = pin.get("footprint_only") is True and pin.get("role") == "no_connect"
+                if number not in symbol_pins and not footprint_only_no_connect:
                     failures.append(_failure(FailureCategory.BOM_ERROR, "symbol_pin_missing", f"{ref}.{number} is absent from curated symbol contract", ref))
                 if number not in pads:
                     failures.append(_failure(FailureCategory.BOM_ERROR, "footprint_pad_missing", f"{ref}.{number} is absent from curated footprint contract", ref))
@@ -1077,7 +1100,7 @@ class Validator:
             for component in graph.get("components", [])
             if component.get("category") == "mcu"
             for pin in component.get("pins", [])
-            if pin.get("role") not in {"power_in", "power_out", "ground"} and pin.get("net") not in ignored_mcu_nets
+            if pin.get("role") not in {"power_in", "power_out", "ground", "no_connect"} and pin.get("net") and pin.get("net") not in ignored_mcu_nets
         }
         for net in sorted(required_nets):
             if net not in firmware_nets:
@@ -1462,6 +1485,11 @@ def _component_pin_role_contract_failures(component: dict[str, Any]) -> list[Fai
                 observed=[{"number": pin.get("number"), "name": pin.get("name"), "voltage_domain": pin.get("voltage_domain")} for pin in role_matches],
             ))
     return failures
+
+
+def _pin_sort_key(value: str) -> tuple[int, int | str]:
+    text = str(value)
+    return (0, int(text)) if text.isdigit() else (1, text)
 
 
 def _rail_nominal_voltages(spec: dict[str, Any]) -> dict[str, float]:
