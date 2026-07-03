@@ -288,7 +288,7 @@ class HardwareService:
 
         _PATTERNS: list[tuple[str, list[str], Any, str]] = [
             (r"(\d+)\s*(?:채널|channel)", ["actuation", "motor_channels"], int, "integer"),
-            (r"(?:각\s*채널\s*)?(?:피크\s*)?(\d+(?:\.\d+)?)\s*A", ["actuation", "motor_channel_peak_current_a"], float, "number"),
+            (r"(?:각\s*채널\s*)?(?:(?:피크|peak)\s*(\d+(?:\.\d+)?)\s*A|(\d+(?:\.\d+)?)\s*A\s*(?:피크|peak))", ["actuation", "motor_channel_peak_current_a"], float, "number"),
             (r"(\d+(?:\.\d+)?)\s*V\s*(?:배터리|battery)", ["system", "supply", "battery", "pack_voltage_nominal"], float, "number"),
             (r"(STM32H7\w*|ESP32S3|RP2040)", ["compute", "mcu", "family"], str.upper, "string"),
             (r"(\d+)\s*[- ]?layer", ["manufacturing", "pcb", "layers"], int, "integer"),
@@ -305,25 +305,60 @@ class HardwareService:
             "firmware": ["firmware_interface_contract", "firmware_pinmap", "native_zephyr_build"],
             "sensing": ["electrical_semantics", "firmware_pinmap", "firmware_interface_contract"],
         }
+        conflicting_items: list[dict[str, Any]] = []
+
+        def _matched_value(match: re.Match[str]) -> str:
+            for group in match.groups():
+                if group is not None:
+                    return group
+            return match.group(0)
+
         for pattern, keys, convert, field_type in _PATTERNS:
-            match = re.search(pattern, requirements_text, flags=re.IGNORECASE)
-            if match:
-                target = _ROOTS[keys[0]]
-                for key in keys[:-1]:
-                    target = target[key]
-                value = convert(match.group(1))
-                target[keys[-1]] = value
-                spec_path = ".".join(keys)
-                changed.append(spec_path)
-                lowered_fields.append({
-                    "spec_path": spec_path,
-                    "value": value,
-                    "field_type": field_type,
+            matches = list(re.finditer(pattern, requirements_text, flags=re.IGNORECASE))
+            if not matches:
+                continue
+            spec_path = ".".join(keys)
+            parsed = [
+                {
+                    "value": convert(_matched_value(match)),
                     "source_span": match.group(0),
                     "source_range": _source_range(match),
+                }
+                for match in matches
+            ]
+            distinct_values = {item["value"] for item in parsed}
+            if len(distinct_values) > 1:
+                approval_id = "approve_or_lower_conflict_" + re.sub(r"[^a-z0-9]+", "_", spec_path.lower()).strip("_")
+                conflicting_items.append({
+                    "source": f"Conflicting values for {spec_path}: " + ", ".join(str(value) for value in sorted(distinct_values, key=str)),
+                    "source_span": "; ".join(item["source_span"] for item in parsed),
+                    "source_range": {"start": min(item["source_range"]["start"] for item in parsed), "end": max(item["source_range"]["end"] for item in parsed)},
+                    "category": "conflicting_requirement",
+                    "field_type": "conflicting_lowered_field",
+                    "status": "unresolved",
+                    "release_blocking": True,
+                    "reason": f"Multiple values were specified for typed field {spec_path}; refusing to choose one silently",
+                    "spec_path": spec_path,
+                    "conflicts": parsed,
+                    "required_human_approvals": [approval_id],
                     "affected_gates": _AFFECTED_GATES_BY_ROOT.get(keys[0], []),
-                    "status": "lowered",
                 })
+                continue
+            target = _ROOTS[keys[0]]
+            for key in keys[:-1]:
+                target = target[key]
+            value = parsed[0]["value"]
+            target[keys[-1]] = value
+            changed.append(spec_path)
+            lowered_fields.append({
+                "spec_path": spec_path,
+                "value": value,
+                "field_type": field_type,
+                "source_span": parsed[0]["source_span"],
+                "source_range": parsed[0]["source_range"],
+                "affected_gates": _AFFECTED_GATES_BY_ROOT.get(keys[0], []),
+                "status": "lowered",
+            })
 
         lowered_text = requirements_text.lower()
         if "zephyr" in lowered_text:
@@ -442,7 +477,7 @@ class HardwareService:
             }
             for item in matched
         ]
-        active_unresolved_items = [*unresolved_items, *retained_assumption_items]
+        active_unresolved_items = [*unresolved_items, *conflicting_items, *retained_assumption_items]
         req_file = read_yaml(req_path)
         if "requirements" not in req_file:
             req_file["requirements"] = {"raw_inputs": [], "active_lowered": [], "active_unresolved": []}
@@ -500,6 +535,25 @@ class HardwareService:
             }
             for i, item in enumerate(unresolved_items, start=1)
         ]
+        conflict_tokens = [
+            {
+                "id": f"req_token_conflict_{i:04d}",
+                "kind": "conflicting_lowered_field",
+                "status": item["status"],
+                "category": item["category"],
+                "field_type": item["field_type"],
+                "source": item["source"],
+                "source_span": item.get("source_span"),
+                "source_range": item.get("source_range"),
+                "release_blocking": item["release_blocking"],
+                "reason": item["reason"],
+                "spec_path": item["spec_path"],
+                "conflicts": item.get("conflicts", []),
+                "affected_gates": item.get("affected_gates", []),
+                "required_human_approvals": item.get("required_human_approvals", []),
+            }
+            for i, item in enumerate(conflicting_items, start=1)
+        ]
         assumption_tokens = [
             {
                 "id": f"req_token_assumption_{i:04d}",
@@ -526,7 +580,8 @@ class HardwareService:
             "lowered_fields": sorted(lowered_fields, key=lambda item: item["spec_path"]),
             "unresolved_assumptions": retained_assumption_items,
             "unsupported_constraints": unresolved_items,
-            "tokens": [*lowered_tokens, *unresolved_tokens, *assumption_tokens],
+            "conflicting_fields": conflicting_items,
+            "tokens": [*lowered_tokens, *unresolved_tokens, *conflict_tokens, *assumption_tokens],
             "required_human_approvals": required_human_approvals,
             "affected_gates": affected_gates,
         }
@@ -540,6 +595,7 @@ class HardwareService:
             "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)],
             "unresolved_requirements": [item["source"] for item in active_unresolved_items],
             "unsupported_constraints": unsupported_constraints,
+            "conflicting_requirements": [item["source"] for item in conflicting_items],
             "unresolved_assumptions": [item["source"] for item in retained_assumption_items],
             "compiler_ir": compiler_ir,
             "required_human_approvals": required_human_approvals,

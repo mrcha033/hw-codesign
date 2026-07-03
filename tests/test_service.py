@@ -302,7 +302,7 @@ def test_design_until_release_blocks_reference_pipeline(service, project):
 
 
 def test_natural_language_requirements_update_structured_spec(service, project):
-    result = service.update_requirements(project, "16 channel 24V battery, peak 6A, STM32H7, IMU, emergency stop, Zephyr, 6-layer")
+    result = service.update_requirements(project, "16 channel 24V battery, peak 6A, STM32H7, IMU, emergency stop, Zephyr, 6-layer, external driver, forced cooling")
     spec = service.read_spec(project)
     assert result["status"] == "generated"
     assert spec["actuation"]["motor_channels"] == 16
@@ -369,8 +369,9 @@ def test_unsupported_constraints_persist_to_spec_and_block_validation(service, p
     unresolved = spec["requirements"]["active_unresolved"]
     assert all(item["required_human_approvals"] for item in unresolved)
     assert all(item["affected_gates"] for item in unresolved)
-    assert all(item["source_range"]["end"] > item["source_range"]["start"] for item in unresolved)
-    assert all(item["field_type"] == "unsupported_constraint" for item in unresolved)
+    unsupported_unresolved = [item for item in unresolved if item["field_type"] == "unsupported_constraint"]
+    assert all(item["source_range"]["end"] > item["source_range"]["start"] for item in unsupported_unresolved)
+    assert unsupported_unresolved
     assert spec["requirements"]["compiler_ir"]["unsupported_constraints"]
     unresolved_tokens = [item for item in spec["requirements"]["compiler_ir"]["tokens"] if item["kind"] == "unsupported_constraint"]
     assert {item["category"] for item in unresolved_tokens} >= {"ip_protection", "bus_protocol", "functional_safety", "current_rating", "manufacturing_service", "pcb_stackup"}
@@ -388,7 +389,7 @@ def test_update_requirements_replaces_active_unresolved_constraints(service, pro
     r1 = service.update_requirements(project, "IP67 impedance-controlled")
     assert r1["mode"] == "replace_active_requirements"
     assert service.read_spec(project).get("requirements", {}).get("active_unresolved")
-    service.update_requirements(project, "16 channel 24V battery, Zephyr")
+    service.update_requirements(project, "16 channel 24V battery, Zephyr, external driver, forced cooling")
     spec = service.read_spec(project)
     assert spec.get("requirements", {}).get("active_unresolved", []) == []
     assert len(spec["requirements"]["raw_inputs"]) == 2, "raw_inputs must accumulate across calls"

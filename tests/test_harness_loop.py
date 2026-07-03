@@ -71,6 +71,41 @@ def test_update_requirements_marks_retained_assumptions_as_unresolved(service, p
     } <= set(result["unresolved_assumptions"])
 
 
+def test_update_requirements_rejects_conflicting_lowered_fields(service, project):
+    original_layers = service.read_spec(project)["manufacturing"]["pcb"]["layers"]
+
+    result = service.update_requirements(project, "16 channel 24V battery external driver forced cooling 4-layer or 6-layer")
+
+    assert result["has_unresolved_constraints"] is True
+    assert result["conflicting_requirements"]
+    spec = service.read_spec(project)
+    assert spec["manufacturing"]["pcb"]["layers"] == original_layers
+    conflicts = spec["requirements"]["compiler_ir"]["conflicting_fields"]
+    assert conflicts[0]["spec_path"] == "manufacturing.pcb.layers"
+    assert {item["value"] for item in conflicts[0]["conflicts"]} == {4, 6}
+    unresolved = spec["requirements"]["active_unresolved"]
+    assert any(item["field_type"] == "conflicting_lowered_field" for item in unresolved)
+    checks = service.run_all_checks(project, include_external=False)
+    lowering = next(report for report in checks["reports"] if report["gate"] == "requirements_lowering")
+    assert lowering["status"] != "pass"
+    assert "unlowered_requirement" in {failure["code"] for failure in lowering["failures"]}
+
+
+def test_update_requirements_does_not_lower_continuous_current_as_peak(service, project):
+    original_peak = service.read_spec(project)["actuation"]["motor_channel_peak_current_a"]
+
+    result = service.update_requirements(project, "16 channel 24V battery external driver forced cooling 8A continuous")
+
+    assert result["has_unresolved_constraints"] is True
+    assert result["unsupported_constraints"]
+    spec = service.read_spec(project)
+    assert spec["actuation"]["motor_channel_peak_current_a"] == original_peak
+    lowered_paths = {item["spec_path"] for item in spec["requirements"]["compiler_ir"]["lowered_fields"]}
+    assert "actuation.motor_channel_peak_current_a" not in lowered_paths
+    unresolved_categories = {item["category"] for item in spec["requirements"]["active_unresolved"]}
+    assert "current_rating" in unresolved_categories
+
+
 def test_requirements_lowering_gate_blocks_release(service, project):
     service.update_requirements(project, "16 channel 24V battery, IP67, CAN-FD")
     checks = service.run_all_checks(project, include_external=False)
