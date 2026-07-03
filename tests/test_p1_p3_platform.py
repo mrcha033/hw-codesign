@@ -242,6 +242,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "connector_cutout_misaligned",
         "component_on_mounting_hole",
         "missing_sourcing_resilience_strategy",
+        "single_source_review_missing",
         "missing_curated_alternate_component",
         "unavailable_or_obsolete_part",
         "stale_supplier_evidence",

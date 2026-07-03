@@ -34,11 +34,11 @@
       "type": "object",
       "additionalProperties": {
         "type": "object",
-        "required": ["reason", "mitigation"],
+        "required": ["reason", "mitigation", "required_reviews"],
         "properties": {
           "reason": {"type": "string"},
           "mitigation": {"type": "string"},
-          "required_reviews": {"type": "array", "items": {"type": "string"}}
+          "required_reviews": {"type": "array", "items": {"type": "string"}, "minItems": 1}
         }
       }
     },

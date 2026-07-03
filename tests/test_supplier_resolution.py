@@ -158,6 +158,23 @@ def test_sourcing_resilience_rejects_unjustified_critical_roles(service, project
     assert "critical_role_resilience_missing" in {failure.code for failure in report.failures}
 
 
+def test_sourcing_resilience_rejects_single_source_without_required_reviews(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = yaml.safe_load((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    role_data = read_yaml(service.parts_root / "role_sets" / "robotics_controller.yaml")
+    role_data.setdefault("alternatives", {}).pop("power_input", None)
+    role_data["single_source_justifications"]["power_input"] = {
+        **role_data["single_source_justifications"]["power_input"],
+        "required_reviews": [],
+    }
+
+    report = service._sourcing_resilience_report(service.read_spec(project), graph, role_data_override=role_data)
+
+    assert report.status == "fail"
+    assert "critical_role_single_source_review_missing" in {failure.code for failure in report.failures}
+
+
 def test_sourcing_resilience_rejects_missing_curated_alternate(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)

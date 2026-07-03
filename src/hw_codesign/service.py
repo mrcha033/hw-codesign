@@ -2500,8 +2500,27 @@ class HardwareService:
                 continue
 
             justification = single_source.get(role) or {}
-            if justification.get("reason") and justification.get("mitigation"):
+            required_reviews = justification.get("required_reviews")
+            has_review_evidence = (
+                isinstance(required_reviews, list)
+                and bool(required_reviews)
+                and all(isinstance(review, str) and review for review in required_reviews)
+            )
+            if justification.get("reason") and justification.get("mitigation") and has_review_evidence:
                 justified_roles.append(role)
+            elif justification.get("reason") and justification.get("mitigation"):
+                failures.append(Failure(
+                    FailureCategory.BOM_ERROR,
+                    "critical_role_single_source_review_missing",
+                    f"Critical role {role} single-source mitigation lacks required review evidence",
+                    path=f"electronics.role_set.single_source_justifications.{role}.required_reviews",
+                    details={
+                        "role_set": role_set_name,
+                        "role": role,
+                        "selected_component_id": selected_id,
+                        "required_reviews": required_reviews,
+                    },
+                ))
             else:
                 failures.append(Failure(
                     FailureCategory.BOM_ERROR,
@@ -3388,6 +3407,20 @@ class HardwareService:
             )
 
             critical_role = sorted(role_data["critical_roles"])[0]
+            role_data_weak_single_source = deepcopy(role_data)
+            role_data_weak_single_source.setdefault("alternatives", {}).pop(critical_role, None)
+            single_source = role_data_weak_single_source.setdefault("single_source_justifications", {})
+            weak_justification = deepcopy(single_source.get(critical_role) or {})
+            weak_justification["required_reviews"] = []
+            single_source[critical_role] = weak_justification
+            record(
+                "single_source_review_missing",
+                "component_availability_lifecycle",
+                f"Removed required review evidence from the single-source mitigation for {critical_role}",
+                self._sourcing_resilience_report(spec, graph, role_data_override=role_data_weak_single_source),
+                ["critical_role_single_source_review_missing"],
+            )
+
             role_data_missing_alternate = deepcopy(role_data)
             role_data_missing_alternate.setdefault("alternatives", {})[critical_role] = [{
                 "component_id": "__MISSING_CURATED_ALTERNATE__",
