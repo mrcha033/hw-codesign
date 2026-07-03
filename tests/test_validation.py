@@ -581,3 +581,41 @@ def test_firmware_sensor_poll_rejects_unresolved_sensor_target(service, project)
 
     assert report.status == "fail"
     assert "firmware_sensor_target_missing" in {item.code for item in report.failures}
+
+
+def test_firmware_periodic_transmit_rejects_missing_transport(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    module = {
+        "id": "phantom_uart_telemetry",
+        "behavior": "periodic_transmit",
+        "transport": "uart",
+        "interval_ms": 100,
+        "frame": {"id": "0x10", "dlc": 4, "content": "status"},
+    }
+
+    report = service.validator.check_firmware_modules([module], pinmap, spec=service.read_spec(project), graph=graph)
+
+    assert report.status == "fail"
+    assert "firmware_transport_missing" in {item.code for item in report.failures}
+
+
+def test_firmware_periodic_transmit_rejects_can_fd_dlc_without_can_fd_contract(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    pinmap = json.loads((project_path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8"))
+    module = {
+        "id": "oversized_can_telemetry",
+        "behavior": "periodic_transmit",
+        "transport": "can",
+        "interval_ms": 100,
+        "frame": {"id": "0x100", "dlc": 64, "content": "status"},
+    }
+
+    report = service.validator.check_firmware_modules([module], pinmap, spec=service.read_spec(project), graph=graph)
+
+    assert report.status == "fail"
+    assert "firmware_can_frame_dlc_unsupported" in {item.code for item in report.failures}

@@ -1177,6 +1177,14 @@ class Validator:
 
         def hardware_has_bus(bus: str) -> bool:
             bus = bus.lower()
+            if bus == "can":
+                return (
+                    {"CANH", "CANL"} <= graph_nets
+                    or {"CAN_RX", "CAN_TX"} <= firmware_signal_space
+                    or "can" in component_labels
+                )
+            if bus == "uart":
+                return any(signal.upper().startswith(("UART", "USART")) for signal in firmware_signal_space)
             if bus == "i2c":
                 return "i2c" in graph_signal_classes or any(signal.upper().startswith("I2C") for signal in firmware_signal_space)
             if bus == "spi":
@@ -1224,6 +1232,47 @@ class Validator:
                         f"firmware.modules.{mid}.trigger.timeout_ms",
                     ))
                 isr_count += 1  # timer ISR
+
+            if behavior == "periodic_transmit":
+                transport = str(mod.get("transport", "can")).lower()
+                if transport not in {"can", "uart", "i2c"}:
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR,
+                        "firmware_transport_unsupported",
+                        f"Module '{mid}' requests unsupported transport '{transport}'",
+                        f"firmware.modules.{mid}.transport",
+                        transport=transport,
+                        supported_transports=["can", "uart", "i2c"],
+                    ))
+                elif not hardware_has_bus(transport):
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR,
+                        "firmware_transport_missing",
+                        f"Module '{mid}' transmits over {transport.upper()}, but the hardware graph exposes no matching bus",
+                        f"firmware.modules.{mid}.transport",
+                        transport=transport,
+                        known_signals=sorted(firmware_signal_space),
+                    ))
+                interval_ms = mod.get("interval_ms")
+                if interval_ms is not None and int(interval_ms) < 1:
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR,
+                        "invalid_transmit_interval",
+                        f"Module '{mid}' interval_ms must be >= 1",
+                        f"firmware.modules.{mid}.interval_ms",
+                    ))
+                frame = mod.get("frame") or {}
+                dlc = frame.get("dlc")
+                if transport == "can" and dlc is not None and int(dlc) > 8:
+                    failures.append(_failure(
+                        FailureCategory.FIRMWARE_ERROR,
+                        "firmware_can_frame_dlc_unsupported",
+                        f"Module '{mid}' declares CAN DLC {dlc}, but the current hardware/firmware contract supports classical CAN frames only",
+                        f"firmware.modules.{mid}.frame.dlc",
+                        transport=transport,
+                        dlc=int(dlc),
+                        max_classical_can_dlc=8,
+                    ))
 
             if behavior == "sensor_poll":
                 bus = str(mod.get("bus", "i2c")).lower()

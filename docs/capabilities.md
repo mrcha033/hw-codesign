@@ -88,6 +88,9 @@
 - `sensor_poll` behavior is checked against the hardware graph: a module cannot poll over a
   bus that is absent from the schematic/pinmap, and explicit sensor targets must resolve to
   a graph component
+- `periodic_transmit` behavior is checked against the hardware graph: CAN/UART/I2C transports
+  must exist in the schematic/pinmap, and CAN frames are limited to classical 8-byte DLC unless
+  a future CAN-FD contract is added
 - `firmware_interface_contract` verifies generated Zephyr config, motor PWM channel coverage,
   and bring-up stubs cover required board interfaces (I2C, CAN, USB, e-stop fail-safe, motor
   PWM, BLE) before firmware build gates can promote the candidate

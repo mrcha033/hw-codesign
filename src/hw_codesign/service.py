@@ -3627,6 +3627,25 @@ class HardwareService:
             ["firmware_sensor_bus_missing"],
         )
 
+        record(
+            "firmware_periodic_transmit_missing_transport",
+            "firmware_co_design",
+            "Added a periodic_transmit firmware module for UART telemetry when no matching UART hardware exists",
+            self.validator.check_firmware_modules(
+                [{
+                    "id": "phantom_uart_telemetry",
+                    "behavior": "periodic_transmit",
+                    "transport": "uart",
+                    "interval_ms": 100,
+                    "frame": {"id": "0x10", "dlc": 4, "content": "status"},
+                }],
+                pinmap,
+                spec=spec,
+                graph=graph,
+            ),
+            ["firmware_transport_missing"],
+        )
+
         if int(spec.get("actuation", {}).get("motor_channels", 0) or 0) > 0 and spec.get("safety", {}).get("emergency_stop", {}).get("required"):
             record(
                 "missing_firmware_estop_shutdown_behavior",

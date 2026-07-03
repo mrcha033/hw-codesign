@@ -253,6 +253,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "firmware_mcu_pin_mismatch",
         "firmware_motor_pwm_channel_missing",
         "firmware_sensor_poll_missing_bus",
+        "firmware_periodic_transmit_missing_transport",
         "missing_firmware_estop_shutdown_behavior",
         "missing_firmware_can_bringup",
         "dependency_graph_prerequisite_violation",
