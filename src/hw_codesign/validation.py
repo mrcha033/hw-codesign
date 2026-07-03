@@ -11,6 +11,7 @@ from .io import write_json
 from .mechanical_contract import build_mechanical_contract
 from .models import Failure, FailureCategory, GateReport, Status
 from .resolver import SUPPLIER_EVIDENCE_MAX_AGE_DAYS, _evidence_is_stale
+from .sourcing_policy import sourcing_waiver_failures
 
 
 CONNECTOR_CATEGORIES = {"power_input", "can_connector", "usb", "estop", "motor_io"}
@@ -579,10 +580,11 @@ class Validator:
             if component.get("lifecycle") != "active":
                 failures.append(_failure(FailureCategory.BOM_ERROR, "lifecycle_risk", f"{ref} is not marked active", "electronics.components"))
             sourcing = component.get("sourcing") or {}
-            if not component.get("manufacturer") or not sourcing.get("supplier_skus"):
+            if not component.get("manufacturer") or (sourcing.get("status") != "waived" and not sourcing.get("supplier_skus")):
                 failures.append(_failure(FailureCategory.BOM_ERROR, "missing_sourcing_metadata", f"{ref} lacks manufacturer or supplier SKU", "electronics.components"))
             if sourcing.get("status") not in {"resolved", "waived"}:
                 failures.append(_failure(FailureCategory.BOM_ERROR, "sourcing_unresolved", f"{ref} sourcing is not resolved or waived", "electronics.components"))
+            failures.extend(sourcing_waiver_failures(sourcing, path="electronics.components"))
             offer = component.get("supplier_offer") or {}
             if offer and sourcing.get("status") != "waived":
                 availability = offer.get("availability")
@@ -687,8 +689,10 @@ class Validator:
                 if pin.get("role") in {"power_in", "power_out", "ground"} and not pin.get("voltage_domain"):
                     failures.append(_failure(FailureCategory.ELECTRICAL_SEMANTIC_ERROR, "power_pin_domain_missing", f"{ref}.{number} lacks a voltage domain", ref))
             failures.extend(_component_pin_role_contract_failures(component))
-            if component.get("sourcing", {}).get("status") not in {"resolved", "waived"}:
+            sourcing = component.get("sourcing", {})
+            if sourcing.get("status") not in {"resolved", "waived"}:
                 failures.append(_failure(FailureCategory.BOM_ERROR, "sourcing_unresolved", f"{ref} sourcing is unresolved", ref))
+            failures.extend(sourcing_waiver_failures(sourcing, path=ref))
         report = self._report("component_provenance", failures)
         report.metrics = {"components_checked": len(components)}
         return report

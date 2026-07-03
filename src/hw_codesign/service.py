@@ -3503,6 +3503,18 @@ class HardwareService:
             ["lifecycle_risk", "sourcing_unresolved"],
         )
 
+        unreviewed_waiver_components = deepcopy(graph["components"])
+        waived_component = unreviewed_waiver_components[0]
+        waived_component["lifecycle"] = "active"
+        waived_component["sourcing"] = {"status": "waived", "supplier_skus": []}
+        record(
+            "unreviewed_sourcing_waiver",
+            "component_availability_lifecycle",
+            f"Marked {waived_component.get('ref')} sourcing as waived without review evidence",
+            self.validator.check_sourcing(unreviewed_waiver_components),
+            ["sourcing_waiver_unreviewed"],
+        )
+
         stale_supplier_components = deepcopy(graph["components"])
         stale_supplier = stale_supplier_components[0]
         stale_supplier["lifecycle"] = "active"

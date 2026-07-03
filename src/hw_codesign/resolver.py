@@ -11,6 +11,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from .models import Failure, FailureCategory, GateReport, ResolvedComponent, Status
+from .sourcing_policy import sourcing_waiver_failures
 from .supplier_adapters import supplier_adapter
 
 # Supplier availability snapshots older than this are treated as missing evidence.
@@ -213,11 +214,15 @@ class ComponentResolver:
         for item in resolved:
             offer = item.data.get("supplier_offer")
             sourcing_waived = item.data.get("sourcing", {}).get("status") == "waived"
+            if sourcing_waived:
+                waiver_failures = sourcing_waiver_failures(item.data.get("sourcing", {}), path=item.ref)
+                if waiver_failures:
+                    availability_failed = True
+                    availability_failures.extend(waiver_failures)
+                continue
             if not offer:
                 availability_blocked = True
                 availability_failures.append(Failure(FailureCategory.BOM_ERROR, "supplier_record_missing", f"No {provider} supplier record for {item.component_id}", path=item.ref))
-            elif sourcing_waived:
-                continue
             elif offer.get("availability") in {"out_of_stock", "discontinued"}:
                 availability_failed = True
                 availability_failures.append(Failure(FailureCategory.BOM_ERROR, "supplier_unavailable", f"{item.ref} is {offer['availability']} at {provider}", path=item.ref))

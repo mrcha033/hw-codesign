@@ -245,6 +245,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "single_source_review_missing",
         "missing_curated_alternate_component",
         "unavailable_or_obsolete_part",
+        "unreviewed_sourcing_waiver",
         "stale_supplier_evidence",
         "schematic_unknown_pin_endpoint",
         "component_pin_net_mismatch",

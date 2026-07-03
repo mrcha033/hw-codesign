@@ -26,7 +26,29 @@
           },
           "pins": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["number", "name", "electrical_type"]}},
           "lifecycle": {"enum": ["active", "nrnd", "obsolete"]},
-          "sourcing": {"type": "object", "required": ["status", "supplier_skus"], "properties": {"status": {"enum": ["resolved", "waived", "unresolved"]}, "supplier_skus": {"type": "array"}}},
+          "sourcing": {
+            "type": "object",
+            "required": ["status", "supplier_skus"],
+            "properties": {
+              "status": {"enum": ["resolved", "waived", "unresolved"]},
+              "supplier_skus": {"type": "array"},
+              "waiver": {
+                "type": "object",
+                "required": ["reason", "risk", "mitigation", "approved_by", "approved_at", "required_reviews"],
+                "properties": {
+                  "reason": {"type": "string", "minLength": 1},
+                  "risk": {"type": "string", "minLength": 1},
+                  "mitigation": {"type": "string", "minLength": 1},
+                  "approved_by": {"type": "string", "minLength": 1},
+                  "approved_at": {"type": "string", "minLength": 1},
+                  "required_reviews": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+                },
+                "additionalProperties": true
+              }
+            },
+            "if": {"properties": {"status": {"const": "waived"}}},
+            "then": {"required": ["waiver"]}
+          },
           "constraints": {"type": "array"},
           "resolution_provenance": {"type": "object", "required": ["source", "reviewed_at"]},
           "review_status": {"enum": ["approved", "pending", "rejected"]}

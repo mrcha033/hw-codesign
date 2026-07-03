@@ -109,6 +109,55 @@ def test_supplier_availability_distinguishes_fail_and_blocked(tmp_path):
     assert resolver.supplier_availability_report.status.value == "blocked"
 
 
+def test_reviewed_sourcing_waiver_allows_missing_supplier_record(tmp_path):
+    template_spec = _template_spec()
+    parts_root = _parts_copy(tmp_path)
+    graph = build_graph(template_spec)
+    component_path = parts_root / "components" / "robotics_controller.yaml"
+    database = yaml.safe_load(component_path.read_text(encoding="utf-8"))
+    waived_id = database["components"][0]["id"]
+    database["components"][0]["sourcing"] = {
+        "status": "waived",
+        "supplier_skus": [],
+        "waiver": {
+            "reason": "Prototype uses customer-consigned inventory",
+            "risk": "Distributor availability is not evidenced for this build",
+            "mitigation": "Block production release until sourced alternates are qualified",
+            "approved_by": "sourcing-review",
+            "approved_at": "2026-06-15",
+            "required_reviews": ["production_sourcing_review"],
+        },
+    }
+    component_path.write_text(yaml.safe_dump(database, sort_keys=False), encoding="utf-8")
+    records = [record for record in _available_records(parts_root, "digikey") if record["component_id"] != waived_id]
+    (parts_root / "suppliers" / "digikey.yaml").write_text(
+        yaml.safe_dump({"provider": "digikey", "records": records}, sort_keys=False), encoding="utf-8"
+    )
+    spec = copy.deepcopy(template_spec)
+    spec["sourcing"] = {"provider": "digikey"}
+
+    resolver = ComponentResolver(parts_root)
+    resolver.resolve(spec, "robotics_controller", graph["components"])
+
+    assert resolver.supplier_availability_report.status.value == "pass"
+
+
+def test_sourcing_validator_rejects_unreviewed_waiver(service):
+    component = {
+        "ref": "U1",
+        "lifecycle": "active",
+        "manufacturer": "Example",
+        "sourcing": {"status": "waived", "supplier_skus": []},
+        "pins": [{"number": "1", "name": "IO", "net": "N1"}],
+    }
+
+    sourcing = service.validator.check_sourcing([component])
+    provenance = service.validator.check_component_metadata([component])
+
+    assert "sourcing_waiver_unreviewed" in {failure.code for failure in sourcing.failures}
+    assert "sourcing_waiver_unreviewed" in {failure.code for failure in provenance.failures}
+
+
 def test_missing_evidence_and_duplicate_component_id_block_resolution(tmp_path):
     template_spec = _template_spec()
     parts_root = _parts_copy(tmp_path)
