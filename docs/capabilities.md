@@ -45,8 +45,9 @@
   high-current designs on under-layered stackups, thermal-risk components placed next to
   sensitive devices, and misplaced RF antenna or USB ESD components
 - `power_integrity_estimate` checks rail-level decoupling/bulk-cap coverage, verifies
-  modeled rail capacitors have a ground return, and flags high-current connector rails
-  without bulk capacitance; it remains a heuristic precheck, not a substitute for
+  modeled rail capacitors have a ground return, rejects declared rail peak current that
+  exceeds grounded regulator output-current evidence, and flags high-current connector
+  rails without bulk capacitance; it remains a heuristic precheck, not a substitute for
   transient simulation or bench measurements
 - Decoupling proximity is enforced when generated components declare a `decoupling_target_ref`
   or when rail/load metadata identifies a concrete powered component; caps with no grounded

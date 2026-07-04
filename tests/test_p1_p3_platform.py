@@ -232,6 +232,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "unreachable_power_rail",
         "regulator_voltage_order_violation",
         "missing_rail_decoupling",
+        "regulator_output_current_overload",
         "missing_i2c_pullup",
         "missing_can_termination",
         "missing_usb_esd_bridge",

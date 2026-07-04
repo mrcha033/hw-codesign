@@ -3189,6 +3189,24 @@ class HardwareService:
             ["rail_decoupling_missing"],
         )
 
+        spec_regulator_overload = deepcopy(spec)
+        v3v3_rail = next(
+            (
+                rail for rail in spec_regulator_overload.get("system", {}).get("supply", {}).get("rails", [])
+                if rail.get("name") == "V3V3"
+            ),
+            None,
+        )
+        if v3v3_rail:
+            v3v3_rail["current_peak_a"] = max(float(v3v3_rail.get("current_peak_a", 0.0) or 0.0), 4.0)
+            record(
+                "regulator_output_current_overload",
+                "power_integrity_grounding",
+                "Raised declared V3V3 peak current above the selected regulator output-current rating",
+                self.validator.check_power_integrity_estimate(graph, spec_regulator_overload),
+                ["regulator_output_current_exceeded"],
+            )
+
         graph_missing_i2c_pullups = deepcopy(graph)
         i2c_nets = [
             net.get("name")

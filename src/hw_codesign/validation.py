@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable
@@ -15,6 +16,13 @@ from .sourcing_policy import sourcing_waiver_failures
 
 
 CONNECTOR_CATEGORIES = {"power_input", "can_connector", "usb", "estop", "motor_io"}
+
+CURATED_REGULATOR_OUTPUT_CURRENT_A: dict[str, float] = {
+    "AP2112K-3.3TRG1": 0.6,
+    "LM22678TJ-5.0": 3.0,
+    "LM76005RNPR": 5.0,
+    "TPS62133RGTR": 3.0,
+}
 
 
 CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
@@ -861,6 +869,7 @@ class Validator:
         capacitor_categories = {"decoupling", "bulk_cap"}
         transfer_categories = {"fuse", "reverse_polarity", "efuse", "regulator", "charger", "tvs", "safety_gate"}
         coverage: dict[str, dict[str, Any]] = {}
+        regulator_current_limits: dict[str, dict[str, Any]] = {}
 
         for component in components:
             if component.get("category") not in capacitor_categories:
@@ -881,6 +890,38 @@ class Validator:
                     power_nets=capacitor_power_nets,
                     present_nets=sorted(nets),
                 ))
+
+        for component in components:
+            if not _component_category_matches(component, {"regulator"}):
+                continue
+            output_pins = [
+                pin for pin in component.get("pins", [])
+                if pin.get("role") == "power_out" and pin.get("net")
+            ]
+            current_limit_a = _component_output_current_limit_a(component)
+            if current_limit_a is None:
+                continue
+            for pin in output_pins:
+                rail = str(pin["net"])
+                requested_current_a = float(rail_current.get(rail, 0.0) or 0.0)
+                regulator_current_limits[str(component.get("ref", "?"))] = {
+                    "rail": rail,
+                    "mpn": component.get("mpn"),
+                    "output_current_limit_a": current_limit_a,
+                    "declared_peak_current_a": requested_current_a,
+                }
+                if requested_current_a > current_limit_a + 1e-9:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "regulator_output_current_exceeded",
+                        f"{component.get('ref', '?')} output current rating {current_limit_a:.2f} A is below declared {rail} peak current {requested_current_a:.2f} A",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        mpn=component.get("mpn"),
+                        rail=rail,
+                        output_current_limit_a=current_limit_a,
+                        declared_peak_current_a=requested_current_a,
+                    ))
 
         for rail in rail_names:
             loads = sorted({
@@ -954,6 +995,7 @@ class Validator:
                 "warnings": warning_count,
                 "rails_checked": len(coverage),
                 "coverage": coverage,
+                "regulator_current_limits": regulator_current_limits,
                 "oracle_boundary": "Heuristic decoupling and bulk-cap coverage only; transient, impedance, and stability still require simulation or bench evidence.",
             },
             backend={"name": "power-integrity-estimator", "authority": "heuristic"},
@@ -1691,6 +1733,46 @@ def _component_category_matches(component: dict[str, Any], categories: set[str])
     if "regulator" in categories and category.startswith("regulator_"):
         return True
     return bool(set(component.get("constraints", [])) & categories)
+
+
+def _component_output_current_limit_a(component: dict[str, Any]) -> float | None:
+    for key in ("max_output_current_a", "output_current_a", "current_limit_a"):
+        value = _number(component.get(key))
+        if value is not None:
+            return value
+    for container_key in ("electrical_limits", "ratings", "datasheet_limits"):
+        container = component.get(container_key)
+        if not isinstance(container, dict):
+            continue
+        for key in ("max_output_current_a", "output_current_a", "current_limit_a"):
+            value = _number(container.get(key))
+            if value is not None:
+                return value
+    for constraint in component.get("constraints", []):
+        value = _current_limit_from_constraint(str(constraint))
+        if value is not None:
+            return value
+    mpn = str(component.get("mpn") or "").upper()
+    return CURATED_REGULATOR_OUTPUT_CURRENT_A.get(mpn)
+
+
+def _current_limit_from_constraint(text: str) -> float | None:
+    normalized = text.strip().lower().replace("-", "_")
+    match = re.search(r"(?P<value>\d+(?:p\d+|\.\d+)?)\s*(?P<unit>ma|a)_(?:max|output|rated|limit)\b", normalized)
+    if not match:
+        match = re.search(r"(?P<value>\d+(?:p\d+|\.\d+)?)\s*(?P<unit>ma|a)\b", normalized)
+    if not match:
+        return None
+    value = float(match.group("value").replace("p", "."))
+    if match.group("unit") == "ma":
+        value /= 1000.0
+    return value
+
+
+def _number(value: Any) -> float | None:
+    if isinstance(value, (int, float)):
+        return float(value)
+    return None
 
 
 def _component_has_nets(component: dict[str, Any], required_nets: set[str]) -> bool:

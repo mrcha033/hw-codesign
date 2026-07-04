@@ -320,6 +320,25 @@ def test_power_integrity_estimate_passes_generated_graph(service, project):
     assert report.status == "pass"
     assert report.metrics["rails_checked"] > 0
     assert "V3V3" in report.metrics["coverage"]
+    assert report.metrics["regulator_current_limits"]["U5"]["output_current_limit_a"] == 3.0
+
+
+def test_power_integrity_estimate_rejects_regulator_current_overload(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    spec = deepcopy(service.read_spec(project))
+    rail = next(item for item in spec["system"]["supply"]["rails"] if item["name"] == "V3V3")
+    rail["current_peak_a"] = 4.0
+
+    report = service.validator.check_power_integrity_estimate(graph, spec)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "regulator_output_current_exceeded")
+    assert failure.details["ref"] == "U5"
+    assert failure.details["rail"] == "V3V3"
+    assert failure.details["output_current_limit_a"] == 3.0
+    assert failure.details["declared_peak_current_a"] == 4.0
 
 
 def test_power_integrity_estimate_rejects_missing_decoupling(service, project):
