@@ -414,6 +414,25 @@ def test_interface_integrity_rejects_missing_i2c_pullups(service, project):
     assert "i2c_pullup_missing" in {item.code for item in report.failures}
 
 
+def test_interface_integrity_rejects_i2c_pullup_wrong_voltage_rail(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    for component in bad_graph["components"]:
+        if component.get("category") != "pullup":
+            continue
+        supply_pin = next(pin for pin in component["pins"] if pin.get("net") == "V3V3")
+        supply_pin["net"] = "V5"
+
+    report = service.validator.check_interface_integrity(bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "i2c_pullup_voltage_mismatch")
+    assert failure.details["pullup_rails"] == ["V5"]
+    assert failure.details["endpoint_supply_nets"] == ["V3V3"]
+
+
 def test_interface_integrity_rejects_missing_can_termination(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)

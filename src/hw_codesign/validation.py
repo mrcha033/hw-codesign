@@ -1050,13 +1050,18 @@ class Validator:
             if net.get("signal_class") == "i2c" or str(name).upper().startswith("I2C")
         )
         for net_name in i2c_nets:
-            pullup_refs = sorted(
-                str(component.get("ref"))
-                for component in components
+            pullup_components = [
+                component for component in components
                 if _component_category_matches(component, {"pullup"})
                 and net_name in _component_nets(component)
-                and any(_is_positive_supply_net(pin.get("net"), nets_by_name) for pin in component.get("pins", []))
-            )
+            ]
+            pullup_rails = sorted({
+                str(pin.get("net"))
+                for component in pullup_components
+                for pin in component.get("pins", [])
+                if pin.get("net") != net_name and _is_positive_supply_net(pin.get("net"), nets_by_name)
+            })
+            pullup_refs = sorted(str(component.get("ref")) for component in pullup_components if pullup_rails)
             if not pullup_refs:
                 failures.append(_failure(
                     FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
@@ -1064,6 +1069,18 @@ class Validator:
                     f"I2C net {net_name} has no pull-up to a positive logic rail",
                     "electronics.components",
                     net_name=net_name,
+                ))
+            endpoint_supply_nets = _signal_endpoint_supply_nets(net_name, nets_by_name, components, excluded_categories={"pullup"})
+            if pullup_rails and endpoint_supply_nets and not (set(pullup_rails) & set(endpoint_supply_nets)):
+                failures.append(_failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "i2c_pullup_voltage_mismatch",
+                    f"I2C net {net_name} pull-up rail does not match the powered endpoint rail",
+                    "electronics.components",
+                    net_name=net_name,
+                    pullup_refs=pullup_refs,
+                    pullup_rails=pullup_rails,
+                    endpoint_supply_nets=endpoint_supply_nets,
                 ))
 
         can_high = "CANH" in net_names
@@ -1864,6 +1881,34 @@ def _is_positive_supply_net(net_name: str | None, nets_by_name: dict[str, dict[s
     if net.get("signal_class") == "power":
         return True
     return (_infer_power_domain(net_name) or "") not in {"", "GND"}
+
+
+def _signal_endpoint_supply_nets(
+    net_name: str,
+    nets_by_name: dict[str, dict[str, Any]],
+    components: list[dict[str, Any]],
+    excluded_categories: set[str] | None = None,
+) -> list[str]:
+    excluded_categories = excluded_categories or set()
+    components_by_ref = {
+        str(component.get("ref")): component
+        for component in components
+        if component.get("ref")
+    }
+    endpoint_refs = {
+        str(endpoint).partition(".")[0]
+        for endpoint in nets_by_name.get(net_name, {}).get("connected_pins", [])
+        if "." in str(endpoint)
+    }
+    supply_nets: set[str] = set()
+    for ref in endpoint_refs:
+        component = components_by_ref.get(ref)
+        if not component or _component_category_matches(component, excluded_categories):
+            continue
+        for pin in component.get("pins", []):
+            if pin.get("role") == "power_in" and _is_positive_supply_net(pin.get("net"), nets_by_name):
+                supply_nets.add(str(pin["net"]))
+    return sorted(supply_nets)
 
 
 def persist_report(project_path: Path, report: GateReport) -> str:

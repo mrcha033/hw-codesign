@@ -3247,6 +3247,20 @@ class HardwareService:
                 self.validator.check_interface_integrity(graph_missing_i2c_pullups),
                 ["i2c_pullup_missing"],
             )
+            graph_wrong_i2c_pullup_rail = deepcopy(graph)
+            for component in graph_wrong_i2c_pullup_rail.get("components", []):
+                if component.get("category") != "pullup":
+                    continue
+                supply_pin = next((pin for pin in component.get("pins", []) if pin.get("net") == "V3V3"), None)
+                if supply_pin:
+                    supply_pin["net"] = "V5"
+            record(
+                "i2c_pullup_wrong_voltage_rail",
+                "interface_signal_integrity",
+                "Moved I2C pull-ups from the endpoint V3V3 rail to V5",
+                self.validator.check_interface_integrity(graph_wrong_i2c_pullup_rail),
+                ["i2c_pullup_voltage_mismatch"],
+            )
 
         if {"CANH", "CANL"} <= {net.get("name") for net in graph.get("nets", [])}:
             graph_missing_can_termination = deepcopy(graph)

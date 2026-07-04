@@ -14,6 +14,8 @@
 
 - Deterministic typed electrical graph with role-set resolver and curated component database;
   every resolved component has immutable provenance
+- `interface_integrity` checks bus support circuits, including missing I2C pull-ups and
+  pull-ups tied to a rail that does not match the powered I2C endpoints
 - Shared source-generation step plus six-gate backend contract (compile → netlist → graph parity
   → footprint parity → layout → manufacturing export) enforced across all adapters
 - Offline pinned **tscircuit 0.1.1491**: Circuit JSON netlist, pad, placement, routing, and
