@@ -239,6 +239,8 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "missing_can_termination",
         "wrong_can_termination_value",
         "missing_usb_esd_bridge",
+        "missing_usb_c_cc_pulldowns",
+        "wrong_usb_c_cc_pulldown_value",
         "usb_esd_far_from_connector",
         "hot_block_near_sensitive_logic",
         "connector_current_rating_violation",

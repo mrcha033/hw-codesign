@@ -3306,6 +3306,35 @@ class HardwareService:
                 ["usb_esd_bridge_missing"],
             )
 
+            graph_missing_usb_c_rd = deepcopy(graph)
+            graph_missing_usb_c_rd["components"] = [
+                component
+                for component in graph_missing_usb_c_rd.get("components", [])
+                if component.get("category") != "usb_cc_pulldown"
+            ]
+            record(
+                "missing_usb_c_cc_pulldowns",
+                "interface_signal_integrity",
+                "Removed USB-C CC Rd pulldowns so the sink cannot advertise attachment",
+                self.validator.check_interface_integrity(graph_missing_usb_c_rd),
+                ["usb_c_cc_pulldown_missing"],
+            )
+
+            graph_wrong_usb_c_rd = deepcopy(graph)
+            usb_c_rd = next(
+                (component for component in graph_wrong_usb_c_rd.get("components", []) if component.get("category") == "usb_cc_pulldown"),
+                None,
+            )
+            if usb_c_rd:
+                usb_c_rd["value"] = "10K"
+                record(
+                    "wrong_usb_c_cc_pulldown_value",
+                    "interface_signal_integrity",
+                    "Changed one USB-C CC Rd pulldown from 5.1k to 10k",
+                    self.validator.check_interface_integrity(graph_wrong_usb_c_rd),
+                    ["usb_c_cc_pulldown_value_invalid"],
+                )
+
             usb_esd_component = next(
                 (
                     component for component in graph.get("components", [])

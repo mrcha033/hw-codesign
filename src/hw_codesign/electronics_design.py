@@ -24,6 +24,44 @@ def component(ref: str, category: str, value: str, mpn: str, footprint: str, pin
     }
 
 
+def usb_c_connector_pins(*, raw_data: bool) -> list[dict[str, Any]]:
+    dp_net = "USB_DP_RAW" if raw_data else "USB_DP"
+    dm_net = "USB_DM_RAW" if raw_data else "USB_DM"
+    return [
+        pin(1, "VBUS", "USB_VBUS", "power_in"),
+        pin(2, "GND", "GND", "ground"),
+        pin(3, "D+", dp_net, "bidirectional"),
+        pin(4, "D-", dm_net, "bidirectional"),
+        pin(5, "CC1", "USB_CC1", "passive"),
+        pin(6, "CC2", "USB_CC2", "passive"),
+    ]
+
+
+def usb_c_rd_components(start_index: int) -> list[dict[str, Any]]:
+    return [
+        component(
+            f"R{start_index}",
+            "usb_cc_pulldown",
+            "5K1 USB-C Rd",
+            "RC0603FR-075K1L",
+            "R0603",
+            [pin(1, "A", "USB_CC1", "passive"), pin(2, "B", "GND", "ground")],
+            manufacturer="Yageo",
+            substitute_mpn="CRCW06035K10FKEA",
+        ),
+        component(
+            f"R{start_index + 1}",
+            "usb_cc_pulldown",
+            "5K1 USB-C Rd",
+            "RC0603FR-075K1L",
+            "R0603",
+            [pin(1, "A", "USB_CC2", "passive"), pin(2, "B", "GND", "ground")],
+            manufacturer="Yageo",
+            substitute_mpn="CRCW06035K10FKEA",
+        ),
+    ]
+
+
 def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
     channels = int(spec["actuation"]["motor_channels"])
     signal_nets = ["ESTOP_IN", "CAN_RX", "CAN_TX", "I2C_IMU_SCL", "I2C_IMU_SDA", "IMU_INT", "SWDIO", "SWCLK", "NRST", "USB_DP", "USB_DM"]
@@ -49,7 +87,8 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("J3", "can_connector", "CAN", "Molex-43650-0300", "MicroFit_3Pin", [pin(1, "CANH", "CANH", "bidirectional"), pin(2, "CANL", "CANL", "bidirectional"), pin(3, "GND", "GND", "ground")], manufacturer="Molex", substitute_mpn="Phoenix-1935174"),
         component("R1", "termination", "120R", "RC0603FR-07120RL", "R0603", [pin(1, "A", "CANH", "passive"), pin(2, "B", "CANL", "passive")], manufacturer="Yageo", substitute_mpn="CRCW0603120RFKEA"),
         component("J4", "debug", "SWD", "Samtec-FTSH-105-01-L-DV-K", "Cortex_Debug_10Pin", [pin(1, "VREF", "V3V3", "power_out"), pin(2, "SWDIO", "SWDIO", "bidirectional"), pin(3, "GND", "GND", "ground"), pin(4, "SWCLK", "SWCLK", "input"), pin(5, "NRST", "NRST", "bidirectional")], manufacturer="Samtec", substitute_mpn="Harwin-M50-3600542"),
-        component("J5", "usb", "USB-C", "USB4105-GF-A", "USB_C_16Pin", [pin(1, "VBUS", "USB_VBUS", "power_in"), pin(2, "GND", "GND", "ground"), pin(3, "D+", "USB_DP_RAW", "bidirectional"), pin(4, "D-", "USB_DM_RAW", "bidirectional")], manufacturer="GCT", substitute_mpn="USB4085-GF-A"),
+        component("J5", "usb", "USB-C", "USB4105-GF-A", "USB_C_16Pin", usb_c_connector_pins(raw_data=True), manufacturer="GCT", substitute_mpn="USB4085-GF-A"),
+        *usb_c_rd_components(5),
         component("D2", "usb_esd", "USB ESD", "USBLC6-2SC6", "SOT23-6", [pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"), pin(2, "DP_OUT", "USB_DP", "bidirectional"), pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"), pin(4, "DM_OUT", "USB_DM", "bidirectional"), pin(5, "GND", "GND", "ground")], manufacturer="STMicroelectronics", substitute_mpn="TPD2EUSB30DRTR"),
         component("R4", "discharge", "100K", "RC0603FR-07100KL", "R0603", [pin(1, "VBUS", "USB_VBUS", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Yageo", substitute_mpn="CRCW0603100KFKEA"),
         component("R2", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SCL", "I2C_IMU_SCL", "passive")], manufacturer="Yageo", substitute_mpn="CRCW06034K70FKEA"),
@@ -66,7 +105,7 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C9", "bulk_cap", "22uF", "GRM31CR61E226ME15L", "C1206", [pin(1, "VCC", "V5", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", substitute_mpn="CL31A226KAHNNNE"),
         component("C10", "bulk_cap", "10uF 50V", "GRM32ER71H106KA12L", "C1210", [pin(1, "VCC", "VSYS", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", substitute_mpn="C3225X7R1H106K250AB"),
     ))
-    net_classes = {"GND": "ground", "VBAT_RAW": "power", "VBAT_FUSED": "power", "VBAT": "power", "VSYS": "power", "V5": "power", "V3V3": "power", "USB_VBUS": "power", "CANH": "can", "CANL": "can"}
+    net_classes = {"GND": "ground", "VBAT_RAW": "power", "VBAT_FUSED": "power", "VBAT": "power", "VSYS": "power", "V5": "power", "V3V3": "power", "USB_VBUS": "power", "USB_CC1": "usb", "USB_CC2": "usb", "CANH": "can", "CANL": "can"}
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
@@ -81,12 +120,8 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
     components = [
-        component("J1", "power_input", "USB-C POWER", "USB4105-GF-A", "USB_C_16Pin", [
-            pin(1, "VBUS", "USB_VBUS", "power_in"),
-            pin(2, "GND", "GND", "ground"),
-            pin(3, "D+", "USB_DP_RAW", "bidirectional"),
-            pin(4, "D-", "USB_DM_RAW", "bidirectional"),
-        ], manufacturer="GCT"),
+        component("J1", "power_input", "USB-C POWER", "USB4105-GF-A", "USB_C_16Pin", usb_c_connector_pins(raw_data=True), manufacturer="GCT"),
+        *usb_c_rd_components(5),
         component("F1", "fuse", "500mA Fuse", "Littelfuse-0498080.M", "MIDI", [
             pin(1, "IN", "USB_VBUS", "passive"),
             pin(2, "OUT", "USB_FUSED", "passive"),
@@ -144,7 +179,7 @@ def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C2", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", decoupling_target_ref="U1"),
         component("C9", "bulk_cap", "22uF", "GRM31CR61E226ME15L", "C1206", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
     ]
-    net_classes = {"GND": "ground", "USB_VBUS": "power", "USB_FUSED": "power", "USB_PROT": "power", "V3V3": "power", "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb"}
+    net_classes = {"GND": "ground", "USB_VBUS": "power", "USB_FUSED": "power", "USB_PROT": "power", "V3V3": "power", "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb", "USB_CC1": "usb", "USB_CC2": "usb"}
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
@@ -196,12 +231,8 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
         {**pin(18, "USB_DM",  "USB_DM",   "bidirectional"),"mcu_pin": "D-"},
     ]
     components = [
-        component("J1", "power_input", "USB-C CHARGE", "USB4105-GF-A", "USB_C_16Pin", [
-            pin(1, "VBUS", "USB_VBUS", "power_in"),
-            pin(2, "GND", "GND", "ground"),
-            pin(3, "D+", "USB_DP_RAW", "bidirectional"),
-            pin(4, "D-", "USB_DM_RAW", "bidirectional"),
-        ], manufacturer="GCT"),
+        component("J1", "power_input", "USB-C CHARGE", "USB4105-GF-A", "USB_C_16Pin", usb_c_connector_pins(raw_data=True), manufacturer="GCT"),
+        *usb_c_rd_components(5),
         component("F1", "fuse", "500mA Fuse", "Littelfuse-0498080.M", "MIDI", [
             pin(1, "IN", "USB_VBUS", "passive"),
             pin(2, "OUT", "USB_FUSED", "passive"),
@@ -395,12 +426,8 @@ def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
         {**pin(22, "GPIO5",      "HID_GPIO5",  "bidirectional"),   "mcu_pin": "GPIO5"},
     ]
     components = [
-        component("J1", "power_input", "USB-C", "USB4105-GF-A", "USB_C_16Pin", [
-            pin(1, "VBUS", "USB_VBUS", "power_in"),
-            pin(2, "GND", "GND", "ground"),
-            pin(3, "D+", "USB_DP_RAW", "bidirectional"),
-            pin(4, "D-", "USB_DM_RAW", "bidirectional"),
-        ], manufacturer="GCT"),
+        component("J1", "power_input", "USB-C", "USB4105-GF-A", "USB_C_16Pin", usb_c_connector_pins(raw_data=True), manufacturer="GCT"),
+        *usb_c_rd_components(9),
         component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", [
             pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
             pin(2, "DP_OUT", "USB_DP", "bidirectional"),
@@ -871,12 +898,7 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(8, "RXD",      "UART_TX",   "input"),
         pin(4, "GND",      "GND",       "ground"),
     ]
-    usbc_pins = [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "DP",   "USB_DP",   "bidirectional"),
-        pin(3, "DM",   "USB_DM",   "bidirectional"),
-        pin(4, "GND",  "GND",      "ground"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=False)
     tvs_pins = [
         pin(1, "A",  "USB_DP",  "bidirectional"),
         pin(2, "K",  "GND",     "ground"),
@@ -892,6 +914,7 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
     components = [
         component("J1", "power_input",     "USB-C POWER",    "USB4105-GF-A",       "USB_C_16Pin",        usbc_pins),
+        *usb_c_rd_components(4),
         component("D1", "tvs",             "USB ESD",        "USBLC6-2SC6",        "SOT23-6",            tvs_pins),
         component("U1", "regulator_3v3",   "3V3 LDO",        "AP2112K-3.3TRG1",    "SOT23-5",            ldo_pins),
         component("U2", "mcu",             "ESP32-WROOM-32E","ESP32-WROOM-32E",     "SMD-38-Module",      mcu_pins),
@@ -962,12 +985,7 @@ def build_avr_32u4_hid_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(19, "PA3",     "GPIO_PA3",  "bidirectional"),
         pin(20, "PA4",     "GPIO_PA4",  "bidirectional"),
     ]
-    usbc_pins = [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "DP",   "USB_DP_RAW", "bidirectional"),
-        pin(3, "DM",   "USB_DM_RAW", "bidirectional"),
-        pin(4, "GND",  "GND",        "ground"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = [
         pin(1, "A",  "USB_DP_RAW", "bidirectional"),
         pin(2, "K",  "GND",         "ground"),
@@ -999,6 +1017,7 @@ def build_avr_32u4_hid_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
     components = [
         component("J1", "power_input",  "USB-C POWER",      "USB4105-GF-A",        "USB_C_16Pin",            usbc_pins),
+        *usb_c_rd_components(2),
         component("D1", "tvs",          "USB ESD",           "USBLC6-2SC6",         "SOT23-6",                tvs_pins),
         component("U1", "mcu",          "ATmega32U4",        "ATMEGA32U4-AU",        "TQFP-44",                mcu_pins),
         component("Y1", "crystal_16m",  "16MHz XTAL",        "ABM8-16.000MHZ-B2-T", "HC-49S-SMD",             xtal_pins),
@@ -1090,12 +1109,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(8, "RXD",      "UART_TX",  "input"),
         pin(4, "GND",      "GND",      "ground"),
     ]
-    usbc_pins = [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "DP",   "USB_DP",   "bidirectional"),
-        pin(3, "DM",   "USB_DM",   "bidirectional"),
-        pin(4, "GND",  "GND",      "ground"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=False)
     tvs_pins = [
         pin(1, "A",  "USB_DP",  "bidirectional"),
         pin(2, "K",  "GND",     "ground"),
@@ -1125,6 +1139,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
     components = [
         component("J1",  "power_input",       "USB-C POWER",     "USB4105-GF-A",        "USB_C_16Pin",         usbc_pins),
+        *usb_c_rd_components(4),
         component("D1",  "tvs",               "USB ESD",         "USBLC6-2SC6",         "SOT23-6",             tvs_pins),
         component("U1",  "regulator_3v3",     "3V3 LDO",         "AP2112K-3.3TRG1",     "SOT23-5",             ldo_pins),
         component("U2",  "mcu",               "STM32G030C8T6",   "STM32G030C8T6",        "LQFP-48",             mcu_pins),
@@ -1177,12 +1192,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    usbc_pins = [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "DP",   "USB_DP_RAW", "bidirectional"),
-        pin(3, "DM",   "USB_DM_RAW", "bidirectional"),
-        pin(4, "GND",  "GND",      "ground"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = [
         pin(1, "DP_IN",  "USB_DP_RAW", "bidirectional"),
         pin(2, "DP_OUT", "USB_DP",     "bidirectional"),
@@ -1249,6 +1259,7 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
     components = [
         component("J1",  "power_input",  "USB-C POWER",  "USB4105-GF-A",        "USB_C_16Pin",       usbc_pins),
+        *usb_c_rd_components(5),
         component("D1",  "tvs",          "USB ESD",      "USBLC6-2SC6",         "SOT23-6",           tvs_pins),
         component("U1",  "regulator_3v3","3V3 LDO",      "AP2112K-3.3TRG1",     "SOT23-5",           ldo_pins),
         component("U2",  "mcu",          "RP2040",        "RP2040",              "QFN-56",            mcu_pins),
@@ -1297,12 +1308,7 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    usbc_pins = [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "DP",   "USB_DP",   "bidirectional"),
-        pin(3, "DM",   "USB_DM",   "bidirectional"),
-        pin(4, "GND",  "GND",      "ground"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=False)
     tvs_pins = [
         pin(1, "A",  "USB_DP", "bidirectional"),
         pin(2, "K",  "GND",    "ground"),
@@ -1375,6 +1381,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
     components = [
         component("J1", "power_input",  "USB-C POWER",    "USB4105-GF-A",       "USB_C_16Pin",      usbc_pins),
+        *usb_c_rd_components(3),
         component("D1", "tvs",          "USB ESD",         "USBLC6-2SC6",        "SOT23-6",          tvs_pins),
         component("U1", "regulator_3v3","3V3 LDO",         "AP2112K-3.3TRG1",    "SOT23-5",          ldo_pins),
         component("U2", "mcu",          "SAMD21G18A",      "ATSAMD21G18A-AU",    "TQFP-48",          mcu_pins),
@@ -1425,12 +1432,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    usbc_pins = [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "DP",   "USB_DP",   "bidirectional"),
-        pin(3, "DM",   "USB_DM",   "bidirectional"),
-        pin(4, "GND",  "GND",      "ground"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=False)
     tvs_pins = [
         pin(1, "A",  "USB_DP", "bidirectional"),
         pin(2, "K",  "GND",    "ground"),
@@ -1477,6 +1479,7 @@ def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
     components = [
         component("J1", "power_input",    "USB-C POWER",  "USB4105-GF-A",       "USB_C_16Pin",    usbc_pins),
+        *usb_c_rd_components(2),
         component("D1", "tvs",            "USB ESD",      "USBLC6-2SC6",        "SOT23-6",        tvs_pins),
         component("U1", "regulator_3v3",  "3V3 LDO",      "AP2112K-3.3TRG1",    "SOT23-5",        ldo_pins),
         component("U2", "mcu",            "nRF52840-QIAA","nRF52840-QIAA",      "aQFN-73",        mcu_pins),

@@ -34,6 +34,7 @@ def role_for_component(component: dict[str, Any]) -> str:
         return "regulator_5v" if component["ref"] == "U4" else "regulator_3v3"
     if category == "termination": return "resistor_120r"
     if category == "discharge": return "resistor_100k"
+    if category == "usb_cc_pulldown": return "resistor_5k1"
     if category == "pullup": return "resistor_4k7"
     if category == "decoupling": return "capacitor_100n"
     if category == "bulk_cap": return "capacitor_22u" if component["ref"] == "C9" else "capacitor_10u_50v"

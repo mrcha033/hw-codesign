@@ -33,6 +33,8 @@ CURATED_REGULATOR_INPUT_VOLTAGE_RANGE_V: dict[str, tuple[float, float]] = {
 
 CAN_TERMINATION_OHMS = 120.0
 CAN_TERMINATION_TOLERANCE_OHMS = 12.0
+USB_C_RD_OHMS = 5100.0
+USB_C_RD_TOLERANCE_OHMS = 510.0
 
 
 CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
@@ -1179,6 +1181,64 @@ class Validator:
                     required_nets=sorted(usb_nets | {"GND"}),
                 ))
 
+        usb_c_connectors = [
+            component for component in components
+            if _component_category_matches(component, {"usb", "power_input"})
+            and _is_usb_c_connector(component)
+        ]
+        usb_c_cc_nets_checked: set[str] = set()
+        for connector in usb_c_connectors:
+            connector_pins_by_name = {str(pin.get("name", "")).upper(): pin for pin in connector.get("pins", [])}
+            for pin_name, expected_net in (("CC1", "USB_CC1"), ("CC2", "USB_CC2")):
+                cc_net = connector_pins_by_name.get(pin_name, {}).get("net")
+                if not cc_net:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "usb_c_cc_net_missing",
+                        f"USB-C connector {connector.get('ref', '?')} is missing {pin_name} sink configuration net",
+                        "electronics.components",
+                        ref=connector.get("ref"),
+                        pin_name=pin_name,
+                        expected_net=expected_net,
+                    ))
+                    continue
+                usb_c_cc_nets_checked.add(str(cc_net))
+                pulldown_candidates = [
+                    component for component in components
+                    if component is not connector
+                    and _component_has_nets(component, {str(cc_net), "GND"})
+                    and _component_resistance_ohms(component) is not None
+                ]
+                valid_pulldowns = [
+                    component for component in pulldown_candidates
+                    if abs((_component_resistance_ohms(component) or 0.0) - USB_C_RD_OHMS) <= USB_C_RD_TOLERANCE_OHMS
+                ]
+                if not pulldown_candidates:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "usb_c_cc_pulldown_missing",
+                        f"USB-C {pin_name} net {cc_net} has no Rd pulldown to ground",
+                        "electronics.components",
+                        ref=connector.get("ref"),
+                        pin_name=pin_name,
+                        net_name=cc_net,
+                        expected_ohms=USB_C_RD_OHMS,
+                    ))
+                elif not valid_pulldowns:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "usb_c_cc_pulldown_value_invalid",
+                        f"USB-C {pin_name} net {cc_net} pulldown is not approximately {USB_C_RD_OHMS:g} ohms",
+                        "electronics.components",
+                        ref=connector.get("ref"),
+                        pin_name=pin_name,
+                        net_name=cc_net,
+                        candidate_refs=[component.get("ref") for component in pulldown_candidates],
+                        candidate_ohms=[_component_resistance_ohms(component) for component in pulldown_candidates],
+                        expected_ohms=USB_C_RD_OHMS,
+                        tolerance_ohms=USB_C_RD_TOLERANCE_OHMS,
+                    ))
+
         report = self._report("interface_integrity", failures)
         report.metrics = {
             **report.metrics,
@@ -1186,6 +1246,8 @@ class Validator:
             "can_pair_present": can_high and can_low,
             "usb_nets_checked": len(present_usb_nets),
             "usb_bridge_present": usb_bridge_present,
+            "usb_c_connectors_checked": len(usb_c_connectors),
+            "usb_c_cc_nets_checked": len(usb_c_cc_nets_checked),
         }
         return report
 
@@ -1917,6 +1979,15 @@ def _resistance_ohms_from_text(value: Any) -> float | None:
     text = str(value or "").strip().lower().replace("ω", "r").replace("ohm", "r")
     if not text:
         return None
+    compact_match = re.search(r"(?<![a-z0-9])(?P<int>\d+)(?P<unit>[rkm])(?P<frac>\d+)(?![a-z0-9])", text)
+    if compact_match:
+        number = float(f"{compact_match.group('int')}.{compact_match.group('frac')}")
+        unit = compact_match.group("unit")
+        if unit == "k":
+            number *= 1000.0
+        elif unit == "m":
+            number *= 1_000_000.0
+        return number
     match = re.search(r"(?<![a-z0-9])(?P<int>\d+(?:\.\d+)?)(?:r(?P<frac>\d+))?(?P<unit>[rkm])?(?![a-z0-9])", text)
     if not match:
         return None
@@ -1937,6 +2008,11 @@ def _number(value: Any) -> float | None:
 
 def _component_has_nets(component: dict[str, Any], required_nets: set[str]) -> bool:
     return required_nets <= _component_nets(component)
+
+
+def _is_usb_c_connector(component: dict[str, Any]) -> bool:
+    text = " ".join(str(component.get(key) or "") for key in ("value", "mpn", "footprint")).upper()
+    return "USB-C" in text or "USB_C" in text or "USB4105" in text
 
 
 def _is_positive_supply_net(net_name: str | None, nets_by_name: dict[str, dict[str, Any]]) -> bool:

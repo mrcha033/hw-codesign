@@ -7,6 +7,7 @@ critical_roles:
 
 roles:
   power_input: {component_id: usb4105_gf_a, resolution: curated}
+  resistor_5k1: {component_id: rc0603_5k1, resolution: curated}
   tvs: {component_id: usblc6_2sc6, resolution: curated}
   mcu: {component_id: atmega32u4_au, resolution: curated}
   crystal_16m: {component_id: abm8_16m, resolution: curated}

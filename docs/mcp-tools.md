@@ -129,7 +129,7 @@ The public tool registry exposes this as the shared top-level
 ### Primary design workflow
 - `hw_design_candidate` — optionally lower a brief into the spec, generate all domains, run gates, return semantic-first representation and review bundle; always `release_eligible=false` until promotion gates pass
 - `hw_explore_design_space` — score alternatives across backend, component, mechanical, and supplier axes; writes `history/design_space/exploration.json`
-- `hw_run_grounding_benchmark` — adversarial check over pinout, footprint, support circuits, power tree, rail decoupling, layout, decoupling placement, RF, connector retention, connector cutout alignment, mounting keepout intrusion, sourcing, critical-role alternate integrity, firmware pin assignment, motor PWM channel coverage, firmware modules, and dependency order
+- `hw_run_grounding_benchmark` — adversarial check over pinout, footprint, support circuits including USB-C CC Rd, power tree, rail decoupling, layout, decoupling placement, RF, connector retention, connector cutout alignment, mounting keepout intrusion, sourcing, critical-role alternate integrity, firmware pin assignment, motor PWM channel coverage, firmware modules, and dependency order
 - `hw_generate_physical_qualification_plan` — write the external evidence contract (thermal, EMI/EMC, SI/PI, vibration, ingress, connector, assembly, bring-up)
 - `hw_record_physical_evidence` — record approved external qualification evidence; `physical_qualification` remains `blocked` until every test has an approved passing record
 

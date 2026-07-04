@@ -2,6 +2,7 @@ name: sensor_data_logger
 critical_roles: [power_input, fuse, reverse_polarity, tvs, regulator_3v3, mcu, imu]
 roles:
   power_input: {component_id: usb4105_gf_a, resolution: curated}
+  resistor_5k1: {component_id: rc0603_5k1, resolution: curated}
   fuse: {component_id: littelfuse_0498080, resolution: curated}
   reverse_polarity: {component_id: lm74700qdbvrq1, resolution: curated}
   tvs: {component_id: usblc6_2sc6, resolution: curated}

@@ -77,6 +77,8 @@ def component_positions(graph: dict[str, Any]) -> dict[str, tuple[float, float]]
         if "pcb_position_mm" in item:
             pos = item["pcb_position_mm"]
             positions[ref] = (float(pos[0]), float(pos[1]))
+        elif item.get("category") == "usb_cc_pulldown":
+            positions[ref] = _usb_c_rd_seed_position(item, graph, positions, table)
         elif ref in table:
             positions[ref] = table[ref][0]
         else:
@@ -88,9 +90,38 @@ def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
     """Provenance tag for each placed reference (mirrors ``component_positions``)."""
     table = _seed_table_for_graph(graph)
     return {
-        item["ref"]: table[item["ref"]][1] if item["ref"] in table else "grid_fallback"
+        item["ref"]: (
+            "usb_c_rd_connector_seed"
+            if item.get("category") == "usb_cc_pulldown" and item["ref"] not in table
+            else table[item["ref"]][1] if item["ref"] in table else "grid_fallback"
+        )
         for item in graph.get("components", [])
     }
+
+
+def _usb_c_rd_seed_position(
+    item: dict[str, Any],
+    graph: dict[str, Any],
+    positions: dict[str, tuple[float, float]],
+    table: dict[str, tuple[tuple[float, float], str]],
+) -> tuple[float, float]:
+    cc_nets = {pin.get("net") for pin in item.get("pins", []) if str(pin.get("net", "")).startswith("USB_CC")}
+    for connector in graph.get("components", []):
+        connector_ref = connector.get("ref")
+        if not connector_ref or connector_ref == item.get("ref"):
+            continue
+        connector_nets = {pin.get("net") for pin in connector.get("pins", [])}
+        if not (cc_nets & connector_nets):
+            continue
+        if connector_ref in positions:
+            x_mm, y_mm = positions[connector_ref]
+        elif connector_ref in table:
+            x_mm, y_mm = table[connector_ref][0]
+        else:
+            continue
+        x_offset = 4.0 if "USB_CC1" in cc_nets else 8.0
+        return (x_mm + x_offset, y_mm + 3.0)
+    return _grid_fallback(len(positions))
 
 
 _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {

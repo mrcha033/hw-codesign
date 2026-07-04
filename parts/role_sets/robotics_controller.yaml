@@ -17,6 +17,7 @@ roles:
   resistor_120r: {component_id: rc0603_120r, resolution: curated}
   debug: {component_id: samtec_ftsh_105, resolution: curated}
   usb: {component_id: usb4105_gf_a, resolution: curated}
+  resistor_5k1: {component_id: rc0603_5k1, resolution: curated}
   usb_esd: {component_id: usblc6_2sc6, resolution: curated}
   resistor_100k: {component_id: rc0603_100k, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}

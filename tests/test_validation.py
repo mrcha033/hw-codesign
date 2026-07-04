@@ -399,6 +399,8 @@ def test_interface_integrity_passes_generated_robotics_graph(service, project):
     assert report.metrics["i2c_nets_checked"] >= 2
     assert report.metrics["can_pair_present"] is True
     assert report.metrics["usb_bridge_present"] is True
+    assert report.metrics["usb_c_connectors_checked"] == 1
+    assert report.metrics["usb_c_cc_nets_checked"] == 2
 
 
 def test_interface_integrity_accepts_grounded_can_termination_value(service, project):
@@ -486,6 +488,36 @@ def test_interface_integrity_rejects_missing_usb_esd_bridge(service, project):
 
     assert report.status == "fail"
     assert "usb_esd_bridge_missing" in {item.code for item in report.failures}
+
+
+def test_interface_integrity_rejects_missing_usb_c_cc_pulldowns(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    bad_graph["components"] = [component for component in bad_graph["components"] if component["category"] != "usb_cc_pulldown"]
+
+    report = service.validator.check_interface_integrity(bad_graph)
+
+    assert report.status == "fail"
+    assert "usb_c_cc_pulldown_missing" in {item.code for item in report.failures}
+
+
+def test_interface_integrity_rejects_wrong_usb_c_cc_pulldown_value(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    pulldown = next(component for component in bad_graph["components"] if component["category"] == "usb_cc_pulldown")
+    pulldown["value"] = "10K"
+
+    report = service.validator.check_interface_integrity(bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "usb_c_cc_pulldown_value_invalid")
+    assert failure.details["candidate_refs"] == [pulldown["ref"]]
+    assert failure.details["candidate_ohms"] == [10000.0]
+    assert failure.details["expected_ohms"] == 5100.0
 
 
 def test_firmware_interface_contract_passes_generated_robotics_artifacts(service, project):
