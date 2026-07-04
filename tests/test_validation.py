@@ -266,6 +266,39 @@ def test_support_circuit_contract_rejects_miswired_protection(service, project):
     assert failure.details["missing_nets"] == ["VBAT"]
 
 
+def test_support_circuit_contract_requires_crystal_load_caps(service):
+    project = "rp2040_clock_contract"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    bad_graph["components"] = [component for component in bad_graph["components"] if component["category"] != "xtal_cap"]
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    assert "crystal_load_cap_missing" in {item.code for item in report.failures}
+
+
+def test_support_circuit_contract_rejects_ungrounded_crystal_load_cap(service):
+    project = "rp2040_clock_ground_contract"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    cap = next(component for component in bad_graph["components"] if component["category"] == "xtal_cap")
+    ground_pin = next(pin for pin in cap["pins"] if pin.get("net") == "GND")
+    ground_pin["net"] = "V3V3"
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "crystal_load_cap_ground_missing")
+    assert failure.details["candidate_refs"] == [cap["ref"]]
+
+
 def test_power_tree_integrity_passes_generated_robotics_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)

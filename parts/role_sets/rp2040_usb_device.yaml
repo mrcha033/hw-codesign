@@ -14,6 +14,7 @@ roles:
   mcu: {component_id: rp2040, resolution: curated}
   flash: {component_id: w25q16jv, resolution: curated}
   crystal_12m: {component_id: abm8_12m, resolution: curated}
+  xtal_cap: {component_id: grm216_22p, resolution: curated}
   capacitor_100n: {component_id: grm155_100n, resolution: curated}
   capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}

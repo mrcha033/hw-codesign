@@ -8,6 +8,7 @@ roles:
   mcu: {component_id: rp2040, resolution: curated}
   flash: {component_id: w25q16jv, resolution: curated}
   crystal: {component_id: abm8_12m, resolution: curated}
+  xtal_cap: {component_id: grm216_22p, resolution: curated}
   debug: {component_id: samtec_ftsh_105, resolution: curated}
   led_resistor: {component_id: rc0603_1k, resolution: curated}
   boot_resistor: {component_id: rc0603_10k, resolution: curated}

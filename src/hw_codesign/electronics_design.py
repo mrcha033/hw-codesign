@@ -62,6 +62,25 @@ def usb_c_rd_components(start_index: int) -> list[dict[str, Any]]:
     ]
 
 
+def crystal_load_caps(
+    first_ref: str,
+    second_ref: str,
+    xin_net: str,
+    xout_net: str,
+    *,
+    value: str = "22pF XTAL",
+    mpn: str = "GRM2165C1H220JA01D",
+    role: str | None = None,
+) -> list[dict[str, Any]]:
+    metadata = {"manufacturer": "Murata"}
+    if role:
+        metadata["role"] = role
+    return [
+        component(first_ref, "xtal_cap", value, mpn, "0805", [pin(1, "A", xin_net, "passive"), pin(2, "B", "GND", "ground")], **metadata),
+        component(second_ref, "xtal_cap", value, mpn, "0805", [pin(1, "A", xout_net, "passive"), pin(2, "B", "GND", "ground")], **metadata),
+    ]
+
+
 def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
     channels = int(spec["actuation"]["motor_channels"])
     signal_nets = ["ESTOP_IN", "CAN_RX", "CAN_TX", "I2C_IMU_SCL", "I2C_IMU_SDA", "IMU_INT", "SWDIO", "SWCLK", "NRST", "USB_DP", "USB_DM"]
@@ -457,6 +476,7 @@ def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(1, "XIN",  "XTAL_XIN",  "passive"),
             pin(2, "XOUT", "XTAL_XOUT", "passive"),
         ], manufacturer="Abracon"),
+        *crystal_load_caps("C6", "C7", "XTAL_XIN", "XTAL_XOUT"),
         component("J2", "debug", "SWD DEBUG", "Samtec-FTSH-105-01-L-DV-K", "Cortex_Debug_10Pin", [
             pin(1, "VREF",  "V3V3",  "power_out"),
             pin(2, "SWDIO", "SWDIO", "bidirectional"),
@@ -1265,6 +1285,7 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("U2",  "mcu",          "RP2040",        "RP2040",              "QFN-56",            mcu_pins),
         component("U3",  "flash",        "2MB QSPI",     "W25Q16JVSIQ",         "SOIC-8",            flash_pins),
         component("X1",  "crystal_12m",  "12MHz XTAL",   "ABM8-12.000MHZ-B2-T", "HC-49S-SMD",        xtal_pins),
+        *crystal_load_caps("C5", "C6", "XIN", "XOUT"),
         component("J2",  "debug_header", "SWD 10-pin",   "61201021621",          "PinHeader-2x5",     swd_pins),
         component("C1",  "decoupling",   "100nF",        "GRM155R71C104KA88D",  "0402",              decap_pins),
         component("C2",  "decoupling",   "100nF",        "GRM155R71C104KA88D",  "0402",              decap_pins),
@@ -1388,6 +1409,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("U3", "imu",          "LSM6DSOX",        "LSM6DSOXTR",         "LGA-14L",          imu_pins),
         component("U4", "env_sensor",   "BME280",          "BME280",             "LGA-8L-2x2.5mm",   env_sensor_pins),
         component("X1", "rtc_crystal",  "32.768kHz XTAL",  "MC-306 32.768KHZ",   "SMD-2Pin-Crystal", rtc_xtal_pins),
+        *crystal_load_caps("C4", "C5", "XIN32", "XOUT32", value="12pF RTC XTAL", mpn="GRM2165C1H120JA01D", role="rtc_xtal_cap"),
         component("J2", "debug_header", "SWD 10-pin",      "61201021621",         "PinHeader-2x5",    swd_pins),
         component("R1", "resistor_4k7", "4K7 SCL PU",      "RC0603FR-074K7L",    "0603",             i2c_pullup_scl_pins),
         component("R2", "resistor_4k7", "4K7 SDA PU",      "RC0603FR-074K7L",    "0603",             i2c_pullup_sda_pins),

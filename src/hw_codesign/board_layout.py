@@ -79,6 +79,8 @@ def component_positions(graph: dict[str, Any]) -> dict[str, tuple[float, float]]
             positions[ref] = (float(pos[0]), float(pos[1]))
         elif item.get("category") == "usb_cc_pulldown":
             positions[ref] = _usb_c_rd_seed_position(item, graph, positions, table)
+        elif item.get("category") == "xtal_cap":
+            positions[ref] = _xtal_cap_seed_position(item, graph, positions, table)
         elif ref in table:
             positions[ref] = table[ref][0]
         else:
@@ -93,6 +95,8 @@ def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
         item["ref"]: (
             "usb_c_rd_connector_seed"
             if item.get("category") == "usb_cc_pulldown" and item["ref"] not in table
+            else "crystal_load_cap_seed"
+            if item.get("category") == "xtal_cap" and item["ref"] not in table
             else table[item["ref"]][1] if item["ref"] in table else "grid_fallback"
         )
         for item in graph.get("components", [])
@@ -121,6 +125,32 @@ def _usb_c_rd_seed_position(
             continue
         x_offset = 4.0 if "USB_CC1" in cc_nets else 8.0
         return (x_mm + x_offset, y_mm + 3.0)
+    return _grid_fallback(len(positions))
+
+
+def _xtal_cap_seed_position(
+    item: dict[str, Any],
+    graph: dict[str, Any],
+    positions: dict[str, tuple[float, float]],
+    table: dict[str, tuple[tuple[float, float], str]],
+) -> tuple[float, float]:
+    cap_nets = {pin.get("net") for pin in item.get("pins", []) if pin.get("net") and pin.get("net") != "GND"}
+    for crystal in graph.get("components", []):
+        crystal_ref = crystal.get("ref")
+        category = str(crystal.get("category", ""))
+        if not crystal_ref or "crystal" not in category:
+            continue
+        crystal_nets = {pin.get("net") for pin in crystal.get("pins", []) if pin.get("net")}
+        if not (cap_nets & crystal_nets):
+            continue
+        if crystal_ref in positions:
+            x_mm, y_mm = positions[crystal_ref]
+        elif crystal_ref in table:
+            x_mm, y_mm = table[crystal_ref][0]
+        else:
+            continue
+        y_offset = -3.0 if any(str(net).endswith(("XIN", "XIN32")) for net in cap_nets) else 3.0
+        return (x_mm + 3.0, y_mm + y_offset)
     return _grid_fallback(len(positions))
 
 
@@ -177,6 +207,8 @@ _RP2040_USB_HID_ANCHORS: dict[str, tuple[float, float]] = {
     "U2": (18.0,  4.0),   # RP2040 MCU, center; pads (18-30, 4-8)
     "U3": (33.0,  2.0),   # 2 MB QSPI Flash, right of MCU; pads (33-45, 2-4)
     "X1": (33.0, 10.0),   # 12 MHz crystal, near MCU XIN/XOUT; pads (33-35, 10)
+    "C5": (36.0,  7.0),   # XIN load cap, beside crystal.
+    "C6": (36.0, 13.0),   # XOUT load cap, beside crystal.
     "J2": (18.0, 12.0),   # SWD 10-pin, below MCU; pads (18-30, 12-14)
     "C1": (3.0,   5.0),   # 100 nF decoupling; pads (3-5, 5)
     "C2": (7.0,   5.0),   # 100 nF decoupling; pads (7-9, 5)
@@ -192,12 +224,27 @@ def _rp2040_usb_hid_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
     }
 
 
+def _usb_hid_controller_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
+    anchors = dict(_RP2040_USB_HID_ANCHORS)
+    anchors.pop("X1", None)
+    anchors.pop("C5", None)
+    anchors["Y1"] = (33.0, 10.0)
+    anchors["C6"] = (36.0, 7.0)
+    anchors["C7"] = (36.0, 13.0)
+    return {
+        ref: (xy, "usb_hid_controller_anchor")
+        for ref, xy in anchors.items()
+    }
+
+
 def _seed_table_for_graph(graph: dict[str, Any]) -> dict[str, tuple[tuple[float, float], str]]:
     architecture = graph.get("design_basis", {}).get("architecture")
     if architecture == "nrf52840_ble_sensor":
         return _ble_sensor_node_seed_table()
     if architecture == "esp32s3_usb_i2c_sensor_data_logger":
         return _sensor_data_logger_seed_table()
-    if architecture in {"rp2040_usb_hid_qspi_flash", "rp2040_qspi_usb_device"}:
+    if architecture == "rp2040_usb_hid_qspi_flash":
+        return _usb_hid_controller_seed_table()
+    if architecture == "rp2040_qspi_usb_device":
         return _rp2040_usb_hid_seed_table()
     return _seed_table()

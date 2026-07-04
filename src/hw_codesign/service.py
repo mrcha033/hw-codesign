@@ -2378,6 +2378,58 @@ class HardwareService:
                 ))
         return failures
 
+    @staticmethod
+    def _crystal_load_cap_failures(graph: dict[str, Any]) -> list[Failure]:
+        components = graph.get("components", [])
+        failures: list[Failure] = []
+        for crystal in components:
+            category = str(crystal.get("category", ""))
+            if "crystal" not in category:
+                continue
+            crystal_nets = [
+                str(pin.get("net"))
+                for pin in crystal.get("pins", [])
+                if pin.get("net") and pin.get("net") != "GND"
+            ]
+            for net_name in sorted(set(crystal_nets)):
+                cap_candidates = [
+                    component for component in components
+                    if component is not crystal
+                    and role_for_component(component) in {"xtal_cap", "rtc_xtal_cap"}
+                    and net_name in {pin.get("net") for pin in component.get("pins", [])}
+                ]
+                grounded_caps = [
+                    component for component in cap_candidates
+                    if "GND" in {pin.get("net") for pin in component.get("pins", [])}
+                ]
+                if grounded_caps:
+                    continue
+                if cap_candidates:
+                    failures.append(Failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "crystal_load_cap_ground_missing",
+                        f"Crystal net {net_name} has load capacitance but no grounded return",
+                        path="electronics.components",
+                        details={
+                            "crystal_ref": crystal.get("ref"),
+                            "net_name": net_name,
+                            "candidate_refs": [component.get("ref") for component in cap_candidates],
+                        },
+                    ))
+                else:
+                    failures.append(Failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "crystal_load_cap_missing",
+                        f"Crystal net {net_name} has no grounded load capacitor",
+                        path="electronics.components",
+                        details={
+                            "crystal_ref": crystal.get("ref"),
+                            "net_name": net_name,
+                            "required_role": "xtal_cap",
+                        },
+                    ))
+        return failures
+
     def _sourcing_resilience_report(
         self,
         spec: dict[str, Any],
@@ -2668,6 +2720,7 @@ class HardwareService:
             for component in components_by_role.get(role, []):
                 net_contract_checks += 1
                 failures.extend(self._support_net_contract_failures(role_set_name, role, component, contract))
+        failures.extend(self._crystal_load_cap_failures(graph))
 
         return GateReport(
             "support_circuit_completeness",
@@ -3125,6 +3178,42 @@ class HardwareService:
                 ),
                 ["support_role_net_contract_failed"],
             )
+
+        crystal_components = [
+            component for component in graph.get("components", [])
+            if "crystal" in str(component.get("category", ""))
+        ]
+        if crystal_components:
+            graph_missing_xtal_caps = deepcopy(graph)
+            graph_missing_xtal_caps["components"] = [
+                component for component in graph_missing_xtal_caps.get("components", [])
+                if component.get("category") != "xtal_cap"
+            ]
+            record(
+                "missing_crystal_load_caps",
+                "support_circuit_completeness",
+                "Removed grounded load capacitors from crystal oscillator nets",
+                self._support_circuit_completeness_report(spec, graph_missing_xtal_caps),
+                ["crystal_load_cap_missing"],
+            )
+
+            graph_miswired_xtal_cap = deepcopy(graph)
+            xtal_cap = next(
+                (component for component in graph_miswired_xtal_cap.get("components", []) if component.get("category") == "xtal_cap"),
+                None,
+            )
+            if xtal_cap:
+                for pin in xtal_cap.get("pins", []):
+                    if pin.get("net") == "GND":
+                        pin["net"] = "V3V3"
+                        break
+                record(
+                    "miswired_crystal_load_cap_ground",
+                    "support_circuit_completeness",
+                    "Moved one crystal load capacitor ground return onto V3V3",
+                    self._support_circuit_completeness_report(spec, graph_miswired_xtal_cap),
+                    ["crystal_load_cap_ground_missing"],
+                )
 
         spec_bad_power = deepcopy(spec)
         spec_bad_power.setdefault("system", {}).setdefault("supply", {}).setdefault("battery", {})["pack_current_peak_a"] = 5

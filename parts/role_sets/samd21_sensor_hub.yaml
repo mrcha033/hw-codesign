@@ -14,6 +14,7 @@ roles:
   regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
   mcu: {component_id: atsamd21g18a_au, resolution: curated}
   rtc_crystal: {component_id: mc_306_32khz, resolution: curated}
+  rtc_xtal_cap: {component_id: grm216_12p, resolution: curated}
   imu: {component_id: lsm6dsoxtr, resolution: curated}
   env_sensor: {component_id: bme280, resolution: curated}
   capacitor_100n: {component_id: grm155_100n, resolution: curated}
