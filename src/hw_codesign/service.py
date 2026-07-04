@@ -3275,6 +3275,17 @@ class HardwareService:
                 self.validator.check_interface_integrity(graph_missing_can_termination),
                 ["can_termination_missing"],
             )
+            graph_wrong_can_termination = deepcopy(graph)
+            termination = next((component for component in graph_wrong_can_termination.get("components", []) if component.get("category") == "termination"), None)
+            if termination:
+                termination["value"] = "10k"
+                record(
+                    "wrong_can_termination_value",
+                    "interface_signal_integrity",
+                    "Changed CAN termination from 120 ohms to 10k while keeping the component across CANH/CANL",
+                    self.validator.check_interface_integrity(graph_wrong_can_termination),
+                    ["can_termination_value_invalid"],
+                )
 
         usb_required_nets = {"USB_DP_RAW", "USB_DM_RAW", "USB_DP", "USB_DM", "GND"}
         if usb_required_nets - {"GND"} <= {net.get("name") for net in graph.get("nets", [])}:

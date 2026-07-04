@@ -401,6 +401,18 @@ def test_interface_integrity_passes_generated_robotics_graph(service, project):
     assert report.metrics["usb_bridge_present"] is True
 
 
+def test_interface_integrity_accepts_grounded_can_termination_value(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    termination = next(component for component in graph["components"] if component["category"] == "termination")
+    termination["value"] = "0.12k"
+
+    report = service.validator.check_interface_integrity(graph)
+
+    assert report.status == "pass"
+
+
 def test_interface_integrity_rejects_missing_i2c_pullups(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)
@@ -444,6 +456,23 @@ def test_interface_integrity_rejects_missing_can_termination(service, project):
 
     assert report.status == "fail"
     assert "can_termination_missing" in {item.code for item in report.failures}
+
+
+def test_interface_integrity_rejects_wrong_can_termination_value(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    termination = next(component for component in bad_graph["components"] if component["category"] == "termination")
+    termination["value"] = "10k"
+
+    report = service.validator.check_interface_integrity(bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "can_termination_value_invalid")
+    assert failure.details["ref"] == termination["ref"]
+    assert failure.details["resistance_ohms"] == 10000.0
+    assert failure.details["expected_ohms"] == 120.0
 
 
 def test_interface_integrity_rejects_missing_usb_esd_bridge(service, project):

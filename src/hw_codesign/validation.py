@@ -31,6 +31,9 @@ CURATED_REGULATOR_INPUT_VOLTAGE_RANGE_V: dict[str, tuple[float, float]] = {
     "TPS62133RGTR": (3.0, 17.0),
 }
 
+CAN_TERMINATION_OHMS = 120.0
+CAN_TERMINATION_TOLERANCE_OHMS = 12.0
+
 
 CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
     "power_input": [
@@ -1095,7 +1098,12 @@ class Validator:
                 canl_present=can_low,
             ))
         if can_high and can_low:
-            if not any(_component_category_matches(component, {"termination"}) and _component_has_nets(component, {"CANH", "CANL"}) for component in components):
+            termination_components = [
+                component for component in components
+                if _component_category_matches(component, {"termination"})
+                and _component_has_nets(component, {"CANH", "CANL"})
+            ]
+            if not termination_components:
                 failures.append(_failure(
                     FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
                     "can_termination_missing",
@@ -1103,6 +1111,30 @@ class Validator:
                     "electronics.components",
                     required_nets=["CANH", "CANL"],
                 ))
+            for component in termination_components:
+                resistance_ohms = _component_resistance_ohms(component)
+                if resistance_ohms is None:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "can_termination_value_missing",
+                        f"{component.get('ref', '?')} terminates CANH/CANL but has no grounded resistance value",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        value=component.get("value"),
+                        expected_ohms=CAN_TERMINATION_OHMS,
+                    ))
+                elif abs(resistance_ohms - CAN_TERMINATION_OHMS) > CAN_TERMINATION_TOLERANCE_OHMS:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "can_termination_value_invalid",
+                        f"{component.get('ref', '?')} CAN termination is {resistance_ohms:g} ohms, expected approximately {CAN_TERMINATION_OHMS:g} ohms",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        value=component.get("value"),
+                        resistance_ohms=resistance_ohms,
+                        expected_ohms=CAN_TERMINATION_OHMS,
+                        tolerance_ohms=CAN_TERMINATION_TOLERANCE_OHMS,
+                    ))
             if not any(_component_category_matches(component, {"can"}) and _component_has_nets(component, {"CANH", "CANL"}) for component in components):
                 failures.append(_failure(
                     FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
@@ -1862,6 +1894,39 @@ def _current_limit_from_constraint(text: str) -> float | None:
     if match.group("unit") == "ma":
         value /= 1000.0
     return value
+
+
+def _component_resistance_ohms(component: dict[str, Any]) -> float | None:
+    for source in _rating_sources(component):
+        for key in ("resistance_ohms", "ohms", "resistance"):
+            value = _number(source.get(key))
+            if value is not None:
+                return value
+    for key in ("value", "mpn", "supplier_sku"):
+        value = _resistance_ohms_from_text(component.get(key))
+        if value is not None:
+            return value
+    for constraint in component.get("constraints", []):
+        value = _resistance_ohms_from_text(constraint)
+        if value is not None:
+            return value
+    return None
+
+
+def _resistance_ohms_from_text(value: Any) -> float | None:
+    text = str(value or "").strip().lower().replace("ω", "r").replace("ohm", "r")
+    if not text:
+        return None
+    match = re.search(r"(?<![a-z0-9])(?P<int>\d+(?:\.\d+)?)(?:r(?P<frac>\d+))?(?P<unit>[rkm])?(?![a-z0-9])", text)
+    if not match:
+        return None
+    number = float(f"{match.group('int')}.{match.group('frac')}" if match.group("frac") else match.group("int"))
+    unit = match.group("unit") or "r"
+    if unit == "k":
+        number *= 1000.0
+    elif unit == "m":
+        number *= 1_000_000.0
+    return number
 
 
 def _number(value: Any) -> float | None:

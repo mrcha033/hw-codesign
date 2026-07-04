@@ -140,7 +140,7 @@ This intentionally injects bad in-memory candidates, including wrong pinout,
 wrong footprint, missing or miswired support circuit, bad power budget,
 unreachable rail, regulator voltage-order violation, regulator input voltage range
 violation, missing or wrong-rail I2C pull-up,
-missing CAN termination, missing USB ESD bridge, hot block near sensitive logic,
+missing or wrong-value CAN termination, missing USB ESD bridge, hot block near sensitive logic,
 misplaced USB ESD placement, misplaced RF antenna/keepout, under-rated connector
 current, missing critical-role sourcing resilience, unavailable part, invalid net
 endpoint, component pin/net mismatch, firmware pinmap mismatch, missing e-stop

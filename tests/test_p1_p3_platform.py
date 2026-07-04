@@ -237,6 +237,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "missing_i2c_pullup",
         "i2c_pullup_wrong_voltage_rail",
         "missing_can_termination",
+        "wrong_can_termination_value",
         "missing_usb_esd_bridge",
         "usb_esd_far_from_connector",
         "hot_block_near_sensitive_logic",
