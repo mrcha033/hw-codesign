@@ -235,6 +235,61 @@ def test_generic_i2c_pullup_on_wrong_rail_fails_interface_integrity(service):
         assert failure.details["endpoint_supply_nets"] == ["V3V3"]
 
 
+@pytest.mark.parametrize(
+    "template",
+    [
+        "ble_sensor_node",
+        "usb_hid_controller",
+        "lora_sensor_node",
+        "bldc_esc",
+        "esp32_wifi_gateway",
+        "stm32g0_power_monitor",
+        "rp2040_usb_device",
+        "samd21_sensor_hub",
+        "nrf52840_dongle",
+    ],
+)
+def test_ap2112_regulators_match_curated_sot23_5_pin_contract(service, template):
+    project = f"{template}_ap2112_pin_contract_check"
+    service.create_project(project, template=template)
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    regulators = [
+        component
+        for component in graph["components"]
+        if component.get("mpn") == "AP2112K-3.3TRG1"
+    ]
+
+    assert regulators
+    metadata_report = service.validator.check_component_metadata(graph["components"])
+    for regulator in regulators:
+        pins = {pin["number"]: pin for pin in regulator["pins"]}
+        input_net = pins["3"]["net"]
+        assert {number: pins[number]["name"] for number in ("1", "2", "3", "4", "5")} == {
+            "1": "EN",
+            "2": "GND",
+            "3": "VIN",
+            "4": "NC",
+            "5": "VOUT",
+        }
+        assert pins["1"]["net"] == input_net
+        assert pins["1"]["role"] == "input"
+        assert pins["2"]["net"] == "GND"
+        assert pins["2"]["role"] == "ground"
+        assert pins["3"]["role"] == "power_in"
+        assert pins["4"]["net"] is None
+        assert pins["4"]["role"] == "no_connect"
+        assert pins["5"]["net"] == "V3V3"
+        assert pins["5"]["role"] == "power_out"
+        regulator_failures = [
+            failure
+            for failure in metadata_report.failures
+            if failure.details.get("ref") == regulator["ref"] or failure.path == regulator["ref"]
+        ]
+        assert regulator_failures == []
+
+
 def test_rp2040_firmware_profile_and_stack_modules_are_graph_grounded(service):
     project = "rp2040_usb_device_firmware_check"
     service.create_project(project, template="rp2040_usb_device")

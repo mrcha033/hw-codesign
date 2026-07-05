@@ -47,6 +47,16 @@ def usb_esd_bridge_pins() -> list[dict[str, Any]]:
     ]
 
 
+def ap2112k_3v3_pins(input_net: str) -> list[dict[str, Any]]:
+    return [
+        pin(1, "EN", input_net, "input"),
+        pin(2, "GND", "GND", "ground"),
+        pin(3, "VIN", input_net, "power_in"),
+        pin(4, "NC", None, "no_connect"),
+        pin(5, "VOUT", "V3V3", "power_out"),
+    ]
+
+
 def usb_c_rd_components(start_index: int) -> list[dict[str, Any]]:
     return [
         component(
@@ -296,13 +306,7 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(8, "VCC", "V3V3", "power_in"),
             pin(9, "REGIN", "VBAT", "passive"),
         ], manufacturer="Texas Instruments"),
-        component("LD1", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", [
-            pin(1, "EN", "V3V3", "input"),
-            pin(2, "GND", "GND", "ground"),
-            pin(3, "VIN", "VBAT", "power_in"),
-            pin(4, "NC", None, "no_connect"),
-            pin(5, "VOUT", "V3V3", "power_out"),
-        ], manufacturer="Diodes Incorporated"),
+        component("LD1", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", ap2112k_3v3_pins("VBAT"), manufacturer="Diodes Incorporated"),
         component("U1", "mcu", "nRF52840", "nRF52840-QIAA", "Nordic_nRF52840:nRF52840-QIAA", mcu_pins, manufacturer="Nordic Semiconductor"),
         component("U5", "env_sensor", "Temp/Humidity", "SHT31-DIS-B2.5KS", "DFN-8", [
             pin(1, "SDA", "I2C_SDA", "open_drain"),
@@ -465,13 +469,7 @@ def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(5, "GND", "GND", "ground"),
         ], manufacturer="STMicroelectronics"),
         component("U1", "mcu", "RP2040", "RP2040", "QFN-56", mcu_pins, manufacturer="Raspberry Pi Ltd"),
-        component("U2", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", [
-            pin(1, "EN", "V3V3", "input"),
-            pin(2, "GND", "GND", "ground"),
-            pin(3, "VIN", "USB_VBUS", "power_in"),
-            pin(4, "NC", None, "no_connect"),
-            pin(5, "VOUT", "V3V3", "power_out"),
-        ], manufacturer="Diodes Incorporated"),
+        component("U2", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", ap2112k_3v3_pins("USB_VBUS"), manufacturer="Diodes Incorporated"),
         component("U3", "flash", "16Mbit QSPI Flash", "W25Q16JVSSIQ", "SOIC-8", [
             pin(1, "CS",   "FLASH_CS",  "input"),
             pin(2, "DO",   "FLASH_D1",  "output"),
@@ -586,13 +584,7 @@ def build_lora_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(2, "GND",  "GND",  "ground"),
         ], manufacturer="JST"),
         component("U1", "mcu", "STM32L071CZ", "STM32L071CZT6", "LQFP-48", mcu_pins, manufacturer="STMicroelectronics"),
-        component("U2", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", [
-            pin(1, "EN",   "V3V3", "input"),
-            pin(2, "GND",  "GND",  "ground"),
-            pin(3, "VIN",  "VBAT", "power_in"),
-            pin(4, "NC",   None,   "no_connect"),
-            pin(5, "VOUT", "V3V3", "power_out"),
-        ], manufacturer="Diodes Incorporated"),
+        component("U2", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", ap2112k_3v3_pins("VBAT"), manufacturer="Diodes Incorporated"),
         component("U3", "lora_radio", "SX1276 LoRa", "SX1276IMLTRT", "QFN-28", [
             pin(1,  "VDD",     "V3V3",       "power_in"),
             pin(2,  "VSS",     "GND",         "ground"),
@@ -782,13 +774,7 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(2, "VOUT", "V5",   "power_out"),
             pin(3, "GND",  "GND",  "ground"),
         ], manufacturer="Texas Instruments"),
-        component("U5", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", [
-            pin(1, "EN",   "V3V3", "input"),
-            pin(2, "GND",  "GND",  "ground"),
-            pin(3, "VIN",  "V5",   "power_in"),
-            pin(4, "NC",   None,   "no_connect"),
-            pin(5, "VOUT", "V3V3", "power_out"),
-        ], manufacturer="Diodes Incorporated"),
+        component("U5", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", ap2112k_3v3_pins("V5"), manufacturer="Diodes Incorporated"),
         component("U6", "can", "CAN PHY", "TCAN1042HGVDRQ1", "SOIC8", [
             pin(1, "VCC",  "V5",    "power_in"),
             pin(2, "GND",  "GND",   "ground"),
@@ -930,11 +916,7 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = usb_esd_bridge_pins()
-    ldo_pins = [
-        pin(1, "VIN",  "USB_VBUS", "power_in"),
-        pin(2, "GND",  "GND",      "ground"),
-        pin(3, "VOUT", "V3V3",     "power_out"),
-    ]
+    ldo_pins = ap2112k_3v3_pins("USB_VBUS")
     decap_pins_a = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
     bulk_pins = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
 
@@ -1128,11 +1110,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = usb_esd_bridge_pins()
-    ldo_pins = [
-        pin(1, "VIN",  "USB_VBUS", "power_in"),
-        pin(2, "GND",  "GND",      "ground"),
-        pin(3, "VOUT", "V3V3",     "power_out"),
-    ]
+    ldo_pins = ap2112k_3v3_pins("USB_VBUS")
     swd_pins = [
         pin(1,  "P1",  "USB_VBUS",  "power_in"),
         pin(2,  "P2",  "SWDIO",     "passive"),
@@ -1213,13 +1191,7 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(4, "DM_OUT", "USB_DM",     "bidirectional"),
         pin(5, "GND",    "GND",        "ground"),
     ]
-    ldo_pins = [
-        pin(1, "EN",   "USB_VBUS", "input"),
-        pin(2, "GND",  "GND",      "ground"),
-        pin(3, "VIN",  "USB_VBUS", "power_in"),
-        pin(4, "NC",   None,       "no_connect"),
-        pin(5, "VOUT", "V3V3",     "power_out"),
-    ]
+    ldo_pins = ap2112k_3v3_pins("USB_VBUS")
     mcu_pins = [
         pin(1,  "VDD",       "V3V3",      "power_in"),
         pin(2,  "VSS",       "GND",       "ground"),
@@ -1329,11 +1301,7 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
 def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
     usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = usb_esd_bridge_pins()
-    ldo_pins = [
-        pin(1, "VIN",  "USB_VBUS", "power_in"),
-        pin(2, "GND",  "GND",      "ground"),
-        pin(3, "VOUT", "V3V3",     "power_out"),
-    ]
+    ldo_pins = ap2112k_3v3_pins("USB_VBUS")
     mcu_pins = [
         pin(1,  "PA00_XIN32",  "XIN32",    "passive"),
         pin(2,  "PA01_XOUT32", "XOUT32",   "passive"),
@@ -1450,11 +1418,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
 def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
     usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = usb_esd_bridge_pins()
-    ldo_pins = [
-        pin(1, "VIN",  "USB_VBUS", "power_in"),
-        pin(2, "GND",  "GND",      "ground"),
-        pin(3, "VOUT", "V3V3",     "power_out"),
-    ]
+    ldo_pins = ap2112k_3v3_pins("USB_VBUS")
     mcu_pins = [
         pin(3,  "VDD",     "V3V3",     "power_in"),
         pin(4,  "VSS",     "GND",      "ground"),
