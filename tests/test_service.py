@@ -290,6 +290,29 @@ def test_ap2112_regulators_match_curated_sot23_5_pin_contract(service, template)
         assert regulator_failures == []
 
 
+@pytest.mark.parametrize("template", ["esp32_wifi_gateway", "stm32g0_power_monitor", "nrf52840_dongle"])
+def test_usb_vbus_loads_have_input_bulk_capacitor(service, template):
+    project = f"{template}_usb_vbus_bulk_check"
+    service.create_project(project, template=template)
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_power_integrity_estimate(graph, spec)
+
+    assert report.status.value == "pass"
+    assert "rail_decoupling_missing" not in {failure.code for failure in report.failures}
+    assert report.metrics["coverage"]["USB_VBUS"]["bulk"]
+    bulk_caps = [
+        component
+        for component in graph["components"]
+        if component.get("category") == "bulk_cap"
+        and {pin.get("net") for pin in component.get("pins", [])} == {"USB_VBUS", "GND"}
+    ]
+    assert bulk_caps
+
+
 def test_rp2040_firmware_profile_and_stack_modules_are_graph_grounded(service):
     project = "rp2040_usb_device_firmware_check"
     service.create_project(project, template="rp2040_usb_device")

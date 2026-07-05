@@ -919,6 +919,7 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ldo_pins = ap2112k_3v3_pins("USB_VBUS")
     decap_pins_a = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
     bulk_pins = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
+    input_bulk_pins = [pin(1, "VCC", "USB_VBUS", "power_in"), pin(2, "GND", "GND", "ground")]
 
     components = [
         component("J1", "power_input",     "USB-C POWER",    "USB4105-GF-A",       "USB_C_16Pin",        usbc_pins),
@@ -932,6 +933,7 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C1", "decoupling",      "100nF",          "GRM155R71C104KA88D", "0402",               decap_pins_a),
         component("C2", "decoupling",      "100nF",          "GRM155R71C104KA88D", "0402",               decap_pins_a),
         component("C3", "bulk_cap",        "10uF",           "GRM188R60J106ME47D", "0603",               bulk_pins),
+        component("C4", "bulk_cap",        "10uF USB_IN",    "GRM188R60J106ME47D", "0603",               input_bulk_pins),
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
@@ -1127,6 +1129,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
     i2c_pullup_sda_pins = [pin(1, "A", "V3V3", "power_in"), pin(2, "B", "I2C_SDA", "passive")]
     decap_pins = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
     bulk_pins  = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
+    input_bulk_pins = [pin(1, "VCC", "USB_VBUS", "power_in"), pin(2, "GND", "GND", "ground")]
 
     components = [
         component("J1",  "power_input",       "USB-C POWER",     "USB4105-GF-A",        "USB_C_16Pin",         usbc_pins),
@@ -1144,6 +1147,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C1",  "decoupling",        "100nF",           "GRM155R71C104KA88D",   "0402",                decap_pins),
         component("C2",  "decoupling",        "100nF",           "GRM155R71C104KA88D",   "0402",                decap_pins),
         component("C3",  "bulk_cap",          "10uF",            "GRM188R60J106ME47D",   "0603",                bulk_pins),
+        component("C4",  "bulk_cap",          "10uF USB_IN",     "GRM188R60J106ME47D",   "0603",                input_bulk_pins),
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
@@ -1451,6 +1455,7 @@ def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     decap_pins = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
     bulk_pins  = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
+    input_bulk_pins = [pin(1, "VCC", "USB_VBUS", "power_in"), pin(2, "GND", "GND", "ground")]
     pullup_pins = [pin(1, "A", "V3V3", "power_in"), pin(2, "B", "GND", "passive")]
 
     components = [
@@ -1465,6 +1470,7 @@ def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C1", "decoupling",     "100nF",        "GRM155R71C104KA88D", "0402",           decap_pins),
         component("C2", "decoupling",     "100nF",        "GRM155R71C104KA88D", "0402",           decap_pins),
         component("C3", "bulk_cap",       "10uF",         "GRM188R60J106ME47D", "0603",           bulk_pins),
+        component("C4", "bulk_cap",       "10uF USB_IN",  "GRM188R60J106ME47D", "0603",           input_bulk_pins),
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
