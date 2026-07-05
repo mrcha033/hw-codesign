@@ -143,6 +143,47 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     assert 'footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"' in board
 
 
+@pytest.mark.parametrize(
+    "template",
+    [
+        "esp32_wifi_gateway",
+        "avr_32u4_hid",
+        "stm32g0_power_monitor",
+        "samd21_sensor_hub",
+        "nrf52840_dongle",
+    ],
+)
+def test_usb_templates_bridge_raw_connector_nets_to_protected_usb_nets(service, template):
+    project = f"{template}_usb_bridge_check"
+    service.create_project(project, template=template)
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_interface_integrity(graph)
+    codes = {failure.code for failure in report.failures}
+    assert "usb_differential_pair_incomplete" not in codes
+    assert "usb_esd_bridge_missing" not in codes
+    assert report.metrics["usb_bridge_present"] is True
+
+    metadata_report = service.validator.check_component_metadata(graph["components"])
+    assert [failure.code for failure in metadata_report.failures if failure.path == "D1"] == []
+
+    d1 = next(component for component in graph["components"] if component["ref"] == "D1")
+    assert {pin["net"] for pin in d1["pins"] if pin.get("net")} == {
+        "USB_DP_RAW",
+        "USB_DM_RAW",
+        "USB_DP",
+        "USB_DM",
+        "GND",
+    }
+    nets = {net["name"]: set(net["connected_pins"]) for net in graph["nets"]}
+    assert {"J1.3", "D1.1"} <= nets["USB_DP_RAW"]
+    assert {"J1.4", "D1.3"} <= nets["USB_DM_RAW"]
+    assert "D1.2" in nets["USB_DP"]
+    assert "D1.4" in nets["USB_DM"]
+
+
 def test_rp2040_firmware_profile_and_stack_modules_are_graph_grounded(service):
     project = "rp2040_usb_device_firmware_check"
     service.create_project(project, template="rp2040_usb_device")

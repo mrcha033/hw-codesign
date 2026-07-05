@@ -37,6 +37,16 @@ def usb_c_connector_pins(*, raw_data: bool) -> list[dict[str, Any]]:
     ]
 
 
+def usb_esd_bridge_pins() -> list[dict[str, Any]]:
+    return [
+        pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
+        pin(2, "DP_OUT", "USB_DP", "bidirectional"),
+        pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"),
+        pin(4, "DM_OUT", "USB_DM", "bidirectional"),
+        pin(5, "GND", "GND", "ground"),
+    ]
+
+
 def usb_c_rd_components(start_index: int) -> list[dict[str, Any]]:
     return [
         component(
@@ -918,12 +928,8 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(8, "RXD",      "UART_TX",   "input"),
         pin(4, "GND",      "GND",       "ground"),
     ]
-    usbc_pins = usb_c_connector_pins(raw_data=False)
-    tvs_pins = [
-        pin(1, "A",  "USB_DP",  "bidirectional"),
-        pin(2, "K",  "GND",     "ground"),
-        pin(3, "A2", "USB_DM",  "bidirectional"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=True)
+    tvs_pins = usb_esd_bridge_pins()
     ldo_pins = [
         pin(1, "VIN",  "USB_VBUS", "power_in"),
         pin(2, "GND",  "GND",      "ground"),
@@ -947,7 +953,7 @@ def build_esp32_wifi_gateway_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
-        "USB_DP": "usb", "USB_DM": "usb",
+        "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
         "ETH_CLK": "spi", "ETH_MOSI": "spi", "ETH_MISO": "spi", "ETH_CS": "signal",
         "ETH_TXDP": "differential", "ETH_TXDM": "differential",
         "ETH_RXDP": "differential", "ETH_RXDM": "differential",
@@ -1006,16 +1012,7 @@ def build_avr_32u4_hid_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(20, "PA4",     "GPIO_PA4",  "bidirectional"),
     ]
     usbc_pins = usb_c_connector_pins(raw_data=True)
-    tvs_pins = [
-        pin(1, "A",  "USB_DP_RAW", "bidirectional"),
-        pin(2, "K",  "GND",         "ground"),
-        pin(3, "A2", "USB_DM_RAW", "bidirectional"),
-    ]
-    _tvs_out_pins = [
-        pin(1, "A",  "USB_DP",   "bidirectional"),
-        pin(2, "K",  "GND",      "ground"),
-        pin(3, "A2", "USB_DM",   "bidirectional"),
-    ]
+    tvs_pins = usb_esd_bridge_pins()
     xtal_pins = [
         pin(1, "XIN",  "XTAL_XIN",  "passive"),
         pin(2, "XOUT", "XTAL_XOUT", "passive"),
@@ -1129,12 +1126,8 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(8, "RXD",      "UART_TX",  "input"),
         pin(4, "GND",      "GND",      "ground"),
     ]
-    usbc_pins = usb_c_connector_pins(raw_data=False)
-    tvs_pins = [
-        pin(1, "A",  "USB_DP",  "bidirectional"),
-        pin(2, "K",  "GND",     "ground"),
-        pin(3, "A2", "USB_DM",  "bidirectional"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=True)
+    tvs_pins = usb_esd_bridge_pins()
     ldo_pins = [
         pin(1, "VIN",  "USB_VBUS", "power_in"),
         pin(2, "GND",  "GND",      "ground"),
@@ -1176,7 +1169,7 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
-        "USB_DP": "usb", "USB_DM": "usb",
+        "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
         "I2C_SCL": "i2c", "I2C_SDA": "i2c",
         "UART_TX": "signal", "UART_RX": "signal",
         "SHUNT_HI": "signal", "SHUNT_LO": "signal",
@@ -1334,12 +1327,8 @@ def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    usbc_pins = usb_c_connector_pins(raw_data=False)
-    tvs_pins = [
-        pin(1, "A",  "USB_DP", "bidirectional"),
-        pin(2, "K",  "GND",    "ground"),
-        pin(3, "A2", "USB_DM", "bidirectional"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=True)
+    tvs_pins = usb_esd_bridge_pins()
     ldo_pins = [
         pin(1, "VIN",  "USB_VBUS", "power_in"),
         pin(2, "GND",  "GND",      "ground"),
@@ -1424,7 +1413,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
-        "USB_DP": "usb", "USB_DM": "usb",
+        "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
         "I2C_SCL": "i2c", "I2C_SDA": "i2c",
         "SWDIO": "signal", "SWCLK": "signal",
         "XIN32": "signal", "XOUT32": "signal",
@@ -1459,12 +1448,8 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    usbc_pins = usb_c_connector_pins(raw_data=False)
-    tvs_pins = [
-        pin(1, "A",  "USB_DP", "bidirectional"),
-        pin(2, "K",  "GND",    "ground"),
-        pin(3, "A2", "USB_DM", "bidirectional"),
-    ]
+    usbc_pins = usb_c_connector_pins(raw_data=True)
+    tvs_pins = usb_esd_bridge_pins()
     ldo_pins = [
         pin(1, "VIN",  "USB_VBUS", "power_in"),
         pin(2, "GND",  "GND",      "ground"),
@@ -1519,7 +1504,7 @@ def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
-        "USB_DP": "usb", "USB_DM": "usb",
+        "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
         "RF_ANT": "rf", "SWDIO": "signal", "SWCLK": "signal",
     }
     endpoints: dict[str, list[str]] = defaultdict(list)
