@@ -65,8 +65,8 @@ CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
     "imu": [
         {"names": ("VDD",), "roles": ("power_in",)},
         {"names": ("GND",), "roles": ("ground",), "voltage_domains": ("GND",)},
-        {"names": ("SCL",), "roles": ("open_drain", "input", "bidirectional")},
-        {"names": ("SDA",), "roles": ("open_drain", "bidirectional")},
+        {"names": ("SCL", "SCX", "SCK_SCL"), "roles": ("open_drain", "input", "bidirectional")},
+        {"names": ("SDA", "SDX", "SDI_SDA"), "roles": ("open_drain", "bidirectional")},
         {"names": ("INT1", "INT"), "roles": ("output", "input")},
     ],
     "can": [

@@ -210,6 +210,55 @@ def test_i2c_templates_include_recognized_pullups_to_logic_rail(service, templat
         assert pullup_refs
 
 
+def test_samd21_sensor_hub_uses_curated_sensor_and_debug_pin_contracts(service):
+    project = "samd21_sensor_contract_check"
+    service.create_project(project, template="samd21_sensor_hub")
+    service.generate_all(project)
+    path = service.workspace.require_project(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    mechanical_contract = json.loads((path / "mechanical" / "source" / "mechanical_contract.json").read_text(encoding="utf-8"))
+
+    metadata_report = service.validator.check_component_metadata(graph["components"])
+    assert metadata_report.status.value == "pass"
+    assert mechanical_contract["connector_cutouts"]
+
+    components = {component["ref"]: component for component in graph["components"]}
+    imu_pins = {pin["number"]: pin for pin in components["U3"]["pins"]}
+    assert imu_pins["2"]["name"] == "SDX"
+    assert imu_pins["2"]["net"] == "I2C_SDA"
+    assert imu_pins["3"]["name"] == "SCX"
+    assert imu_pins["3"]["net"] == "I2C_SCL"
+
+    env_pins = {pin["number"]: pin for pin in components["U4"]["pins"]}
+    assert {number: env_pins[number]["name"] for number in map(str, range(1, 9))} == {
+        "1": "VDD",
+        "2": "VDDIO",
+        "3": "GND",
+        "4": "SDI_SDA",
+        "5": "SCK_SCL",
+        "6": "SDO_ADDR",
+        "7": "CSB",
+        "8": "GND2",
+    }
+    assert env_pins["4"]["net"] == "I2C_SDA"
+    assert env_pins["5"]["net"] == "I2C_SCL"
+    assert env_pins["8"]["net"] == "GND"
+    assert env_pins["8"]["role"] == "ground"
+
+    debug_pins = {pin["number"]: pin for pin in components["J2"]["pins"]}
+    assert debug_pins["6"]["name"] == "SWO"
+    assert debug_pins["6"]["net"] is None
+    assert debug_pins["6"]["role"] == "no_connect"
+    assert debug_pins["7"]["name"] == "KEY"
+    assert debug_pins["7"]["net"] is None
+    assert debug_pins["7"]["role"] == "no_connect"
+    assert debug_pins["8"]["name"] == "NC"
+    assert debug_pins["8"]["net"] is None
+    assert debug_pins["8"]["role"] == "no_connect"
+    assert debug_pins["10"]["name"] == "RESET"
+    assert debug_pins["10"]["net"] == "MCU_NRST"
+
+
 def test_generic_i2c_pullup_on_wrong_rail_fails_interface_integrity(service):
     project = "lora_sensor_node_i2c_wrong_rail_check"
     service.create_project(project, template="lora_sensor_node")

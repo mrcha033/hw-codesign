@@ -1347,28 +1347,30 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(14, "CS",      "V3V3",     "input"),
     ]
     env_sensor_pins = [
-        pin(1, "VCC",  "V3V3",     "power_in"),
-        pin(2, "GND",  "GND",      "ground"),
-        pin(3, "SCK",  "I2C_SCL",  "input"),
-        pin(4, "SDI",  "I2C_SDA",  "bidirectional"),
-        pin(5, "SDO",  "GND",      "passive"),
-        pin(6, "CSB",  "V3V3",     "input"),
+        pin(1, "VDD",      "V3V3",    "power_in"),
+        pin(2, "VDDIO",    "V3V3",    "power_in"),
+        pin(3, "GND",      "GND",     "ground"),
+        pin(4, "SDI_SDA",  "I2C_SDA", "open_drain"),
+        pin(5, "SCK_SCL",  "I2C_SCL", "open_drain"),
+        pin(6, "SDO_ADDR", "GND",     "input"),
+        pin(7, "CSB",      "V3V3",    "input"),
+        pin(8, "GND2",     "GND",     "ground"),
     ]
     rtc_xtal_pins = [
         pin(1, "XIN32",  "XIN32",  "passive"),
         pin(2, "XOUT32", "XOUT32", "passive"),
     ]
     swd_pins = [
-        pin(1,  "P1",  "V3V3",     "power_in"),
-        pin(2,  "P2",  "SWDIO",    "passive"),
-        pin(3,  "P3",  "GND",      "ground"),
-        pin(4,  "P4",  "SWCLK",    "passive"),
-        pin(5,  "P5",  "GND",      "ground"),
-        pin(6,  "P6",  "MCU_NRST", "passive"),
-        pin(7,  "P7",  "GND",      "ground"),
-        pin(8,  "P8",  "GND",      "ground"),
-        pin(9,  "P9",  "GND",      "ground"),
-        pin(10, "P10", "GND",      "ground"),
+        pin(1,  "VCC",    "V3V3",     "power_in"),
+        pin(2,  "SWDIO",  "SWDIO",    "bidirectional"),
+        pin(3,  "GND",    "GND",      "ground"),
+        pin(4,  "SWDCLK", "SWCLK",    "input"),
+        pin(5,  "GND",    "GND",      "ground"),
+        pin(6,  "SWO",    None,       "no_connect"),
+        pin(7,  "KEY",    None,       "no_connect"),
+        pin(8,  "NC",     None,       "no_connect"),
+        pin(9,  "GND",    "GND",      "ground"),
+        pin(10, "RESET",  "MCU_NRST", "input"),
     ]
     i2c_pullup_scl_pins = [pin(1, "A", "V3V3", "power_in"), pin(2, "B", "I2C_SCL", "passive")]
     i2c_pullup_sda_pins = [pin(1, "A", "V3V3", "power_in"), pin(2, "B", "I2C_SDA", "passive")]
