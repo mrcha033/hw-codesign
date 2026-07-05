@@ -313,6 +313,42 @@ def test_usb_vbus_loads_have_input_bulk_capacitor(service, template):
     assert bulk_caps
 
 
+def test_bldc_esc_includes_reverse_polarity_and_can_termination_support(service):
+    project = "bldc_esc_support_check"
+    service.create_project(project, template="bldc_esc")
+    result = service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    assert result["resolution_report"]["status"] == "pass"
+    support_report = service._support_circuit_completeness_report(spec, graph)
+    interface_report = service.validator.check_interface_integrity(graph)
+    power_tree_report = service.validator.check_power_tree(graph, spec)
+    power_integrity_report = service.validator.check_power_integrity_estimate(graph, spec)
+
+    assert support_report.status.value == "pass"
+    assert interface_report.status.value == "pass"
+    assert power_tree_report.status.value == "pass"
+    assert "missing_required_protection_role" not in {failure.code for failure in support_report.failures}
+    assert "can_termination_missing" not in {failure.code for failure in interface_report.failures}
+    assert [
+        failure.details["rail"]
+        for failure in power_integrity_report.failures
+        if failure.code == "rail_bulk_cap_missing"
+    ] == ["V3V3"]
+
+    components = {component["ref"]: component for component in graph["components"]}
+    assert {pin["net"] for pin in components["Q4"]["pins"] if pin.get("net")} == {"VBAT_RAW", "VBAT", "GND"}
+    assert {pin["net"] for pin in components["R3"]["pins"]} == {"CANH", "CANL"}
+    roles = {
+        (item["ref"], item["role"], item["component_id"], item["resolution"])
+        for item in graph["component_resolution"]
+    }
+    assert ("Q4", "reverse_polarity", "lm74700qdbvrq1", "curated") in roles
+    assert ("R3", "resistor_120r", "rc0603_120r", "curated") in roles
+
+
 def test_rp2040_firmware_profile_and_stack_modules_are_graph_grounded(service):
     project = "rp2040_usb_device_firmware_check"
     service.create_project(project, template="rp2040_usb_device")

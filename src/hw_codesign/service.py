@@ -2333,6 +2333,9 @@ class HardwareService:
                 "env_sensor": {"required_nets": {"V3V3", "GND", "I2C_SCL", "I2C_SDA", "TEMP_INT"}},
                 "fuel_gauge": {"required_nets": {"VBAT", "V3V3", "GND", "I2C_SCL", "I2C_SDA", "FUEL_ALRT"}},
             },
+            "bldc_esc": {
+                "reverse_polarity": {"required_nets": {"VBAT_RAW", "VBAT", "GND"}},
+            },
         }
         return contracts.get(role_set_name, {})
 

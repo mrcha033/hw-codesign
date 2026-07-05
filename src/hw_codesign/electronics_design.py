@@ -716,9 +716,14 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
     ]
     components = [
         component("J1", "power_input", "VBAT INPUT", "Molex-42820-2212", "MicroFit_2Pin", [
-            pin(1, "VBAT", "VBAT", "power_in"),
+            pin(1, "VBAT", "VBAT_RAW", "power_in"),
             pin(2, "GND",  "GND",  "ground"),
         ], manufacturer="Molex"),
+        component("Q4", "reverse_polarity", "Ideal Diode", "LM74700QDBVRQ1", "SOT23-6", [
+            pin(1, "ANODE", "VBAT_RAW", "power_in"),
+            pin(2, "CATHODE", "VBAT", "power_out"),
+            pin(3, "GND", "GND", "ground"),
+        ], manufacturer="Texas Instruments"),
         component("D1", "tvs", "33V TVS", "SMCJ33A", "SMCJ", [
             pin(1, "K", "VBAT", "passive"),
             pin(2, "A", "GND",  "ground"),
@@ -783,6 +788,10 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(5, "CANH", "CANH",  "bidirectional"),
             pin(6, "CANL", "CANL",  "bidirectional"),
         ], manufacturer="Texas Instruments"),
+        component("R3", "termination", "120R CAN", "RC0603FR-07120RL", "R0603", [
+            pin(1, "A", "CANH", "passive"),
+            pin(2, "B", "CANL", "passive"),
+        ], manufacturer="Yageo"),
         component("J2", "motor_connector", "MOTOR PHASES", "Phoenix-1935174", "Terminal_3Pin", [
             pin(1, "A", "PHASE_A", "passive"),
             pin(2, "B", "PHASE_B", "passive"),
@@ -823,15 +832,15 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C5", "bulk_cap", "22uF 5V", "GRM31CR61E226ME15L", "C1206", [
             pin(1, "VCC", "V5",   "passive"), pin(2, "GND", "GND", "ground"),
         ], manufacturer="Murata"),
-        component("C6", "capacitor_10u_50v", "10uF VBAT", "GRM32ER71H106KA12L", "C1210", [
+        component("C6", "bulk_cap", "10uF VBAT", "GRM32ER71H106KA12L", "C1210", [
             pin(1, "VCC", "VBAT", "passive"), pin(2, "GND", "GND", "ground"),
         ], manufacturer="Murata"),
-        component("C7", "capacitor_10u_50v", "10uF VBAT", "GRM32ER71H106KA12L", "C1210", [
+        component("C7", "bulk_cap", "10uF VBAT", "GRM32ER71H106KA12L", "C1210", [
             pin(1, "VCC", "VBAT", "passive"), pin(2, "GND", "GND", "ground"),
         ], manufacturer="Murata"),
     ]
     net_classes = {
-        "GND": "ground", "VBAT": "power", "V5": "power", "V3V3": "power",
+        "GND": "ground", "VBAT_RAW": "power", "VBAT": "power", "V5": "power", "V3V3": "power",
         "CANH": "can", "CANL": "can",
         "PHASE_A": "motor", "PHASE_B": "motor", "PHASE_C": "motor",
         "SPI_CLK": "signal", "SPI_MOSI": "signal", "SPI_MISO": "signal", "DRV_CS": "signal",
