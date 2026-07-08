@@ -298,12 +298,12 @@ class HardwareService:
             "manufacturing": manufacturing_file,
         }
         _AFFECTED_GATES_BY_ROOT = {
-            "actuation": ["electrical_semantics", "power_budget", "firmware_pinmap", "thermal_integrity"],
-            "system": ["electrical_semantics", "power_tree_integrity", "mechanical_fit"],
+            "actuation": ["semantic_electrical", "power_integrity_estimate", "firmware_pinmap", "layout_thermal_integrity"],
+            "system": ["semantic_electrical", "power_tree_integrity", "mechanical_fit"],
             "compute": ["pin_symbol_footprint", "firmware_pinmap", "native_zephyr_build"],
-            "manufacturing": ["layout_signal_integrity", "native_drc", "manufacturing_export"],
+            "manufacturing": ["ir_pcb_sanity", "layout_signal_integrity", "native_drc", "reference_fabrication"],
             "firmware": ["firmware_interface_contract", "firmware_pinmap", "native_zephyr_build"],
-            "sensing": ["electrical_semantics", "firmware_pinmap", "firmware_interface_contract"],
+            "sensing": ["semantic_electrical", "firmware_pinmap", "firmware_interface_contract"],
         }
         conflicting_items: list[dict[str, Any]] = []
 
@@ -410,10 +410,10 @@ class HardwareService:
         _affected_gates_by_category: dict[str, list[str]] = {
             "ip_protection": ["mechanical_fit", "physical_qualification"],
             "bus_protocol": ["firmware_interface_contract", "firmware_pinmap", "native_zephyr_build"],
-            "functional_safety": ["safety_requirements", "firmware_interface_contract", "physical_qualification"],
-            "current_rating": ["electrical_semantics", "power_budget", "thermal_integrity", "physical_qualification"],
-            "manufacturing_service": ["component_provenance", "manufacturing_export", "artifact_integrity"],
-            "pcb_stackup": ["layout_signal_integrity", "native_drc", "manufacturing_export"],
+            "functional_safety": ["requirements_lowering", "firmware_interface_contract", "physical_qualification"],
+            "current_rating": ["semantic_electrical", "power_integrity_estimate", "layout_thermal_integrity", "physical_qualification"],
+            "manufacturing_service": ["component_provenance", "sourcing", "supplier_availability", "artifact_integrity"],
+            "pcb_stackup": ["ir_pcb_sanity", "layout_signal_integrity", "native_drc", "reference_fabrication"],
         }
         _retained_assumption_rules: list[dict[str, Any]] = [
             {
@@ -421,7 +421,7 @@ class HardwareService:
                 "category": "motor_driver_topology",
                 "source": "motor driver topology retained from documented assumption",
                 "specified_pattern": r"(?:external|onboard|integrated|외장|온보드).*(?:driver|드라이버)|(?:driver|드라이버).*(?:external|onboard|integrated|외장|온보드)",
-                "affected_gates": ["electrical_semantics", "power_budget", "firmware_interface_contract", "physical_qualification"],
+                "affected_gates": ["semantic_electrical", "power_integrity_estimate", "firmware_interface_contract", "physical_qualification"],
             },
             {
                 "assumption_key": "cooling",

@@ -605,10 +605,30 @@ def test_natural_language_requirements_update_structured_spec(service, project):
     assert lowered["actuation.motor_channels"]["value"] == 16
     assert lowered["actuation.motor_channels"]["field_type"] == "integer"
     assert lowered["actuation.motor_channels"]["source_range"] == {"start": 0, "end": 10}
-    assert "power_budget" in lowered["actuation.motor_channels"]["affected_gates"]
+    assert "power_integrity_estimate" in lowered["actuation.motor_channels"]["affected_gates"]
+    assert "layout_thermal_integrity" in lowered["actuation.motor_channels"]["affected_gates"]
     lowered_tokens = [item for item in ir["tokens"] if item["kind"] == "lowered_field"]
     assert any(item["spec_path"] == "actuation.motor_channels" and item["source_span"] == "16 channel" for item in lowered_tokens)
     assert ir["required_human_approvals"] == []
+
+
+def test_requirements_ir_affected_gates_are_concrete_report_names(service, project):
+    result = service.update_requirements(
+        project,
+        "16 channel 24V battery, IP67, CAN-FD, ASIL-B, 8A continuous, JLCPCB assembly, impedance-controlled",
+    )
+    service.generate_all(project)
+    checks = service.run_all_checks(project, include_external=False)
+    emitted_gates = {
+        gate
+        for item in [*result["compiler_ir"]["lowered_fields"], *result["compiler_ir"]["tokens"]]
+        for gate in item.get("affected_gates", [])
+    }
+    report_gates = {report["gate"] for report in checks["reports"]}
+    release_only_gates = {"artifact_integrity"}
+
+    assert emitted_gates <= report_gates | release_only_gates
+    assert not (emitted_gates & {"electrical_semantics", "power_budget", "thermal_integrity", "manufacturing_export", "safety_requirements"})
 
 
 def test_requirements_update_result_matches_public_schema(service, project):
