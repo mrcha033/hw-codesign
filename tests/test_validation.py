@@ -318,6 +318,71 @@ def test_support_circuit_contract_rejects_wrong_crystal_load_cap_value(service):
     assert failure.details["expected_max_pf"] == 47.0
 
 
+def test_support_circuit_contract_requires_boot_strap_bias(service):
+    project = "avr_boot_strap_contract"
+    service.create_project(project, template="avr_32u4_hid")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    bad_graph["components"] = [component for component in bad_graph["components"] if component["category"] != "hwb_pulldown"]
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "boot_strap_bias_missing")
+    assert failure.details["pin_name"] == "PB3"
+    assert failure.details["net_name"] == "HWB"
+    assert failure.details["expected_net"] == "GND"
+
+
+def test_support_circuit_contract_rejects_boot_strap_wrong_bias_rail(service):
+    project = "rp2040_boot_strap_contract"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    boot_resistor = next(component for component in bad_graph["components"] if component["category"] == "boot_resistor")
+    rail_pin = next(pin for pin in boot_resistor["pins"] if pin["net"] == "V3V3")
+    rail_pin["net"] = "GND"
+    rail_pin["voltage_domain"] = "GND"
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "boot_strap_bias_missing")
+    assert failure.details["pin_name"] == "GPIO23"
+    assert failure.details["net_name"] == "BOOTSEL"
+    assert failure.details["expected_net"] == "V3V3"
+
+
+def test_support_circuit_contract_passes_generated_stm32_boot0_bias(service):
+    project = "stm32_boot0_bias_contract"
+    service.create_project(project, template="stm32g0_power_monitor")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), graph)
+
+    assert report.status == "pass"
+
+
+def test_grounding_benchmark_catches_missing_boot_strap_bias(service):
+    project = "rp2040_grounding_boot_strap"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    service.generate_firmware_only(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    case = next(item for item in benchmark["cases"] if item["id"] == "missing_boot_strap_bias")
+    assert case["detected"] is True
+    assert case["expected_codes"] == ["boot_strap_bias_missing"]
+    assert "boot_strap_bias_missing" in case["observed_codes"]
+
+
 def test_grounding_benchmark_catches_wrong_crystal_load_cap_value(service):
     project = "rp2040_grounding_xtal_value"
     service.create_project(project, template="rp2040_usb_device")

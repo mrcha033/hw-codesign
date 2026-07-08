@@ -35,7 +35,7 @@ from .reference_backend import build_firmware_reference, export_fabrication, int
 from .resolver import SUPPLIER_EVIDENCE_MAX_AGE_DAYS, _evidence_is_stale, role_for_component
 from .resources import resource_root
 from .supplier_adapters import supplier_adapter
-from .validation import Validator, persist_report
+from .validation import Validator, boot_strap_bias_failures, persist_report
 from .workspace import Workspace
 
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
@@ -2938,6 +2938,7 @@ class HardwareService:
                 net_contract_checks += 1
                 failures.extend(self._support_net_contract_failures(role_set_name, role, component, contract))
         failures.extend(self._crystal_load_cap_failures(graph))
+        failures.extend(boot_strap_bias_failures(graph))
 
         return GateReport(
             "support_circuit_completeness",
@@ -3446,6 +3447,31 @@ class HardwareService:
                     self._support_circuit_completeness_report(spec, graph_bad_xtal_cap_value),
                     ["crystal_load_cap_value_out_of_range"],
                 )
+
+        boot_strap_nets = {"HWB", "BOOTSEL", "BOOT0", "BOOT0_GND"}
+        boot_strap_bias = next(
+            (
+                component
+                for component in graph.get("components", [])
+                if component.get("category") != "mcu"
+                and boot_strap_nets & {pin.get("net") for pin in component.get("pins", [])}
+            ),
+            None,
+        )
+        if boot_strap_bias:
+            graph_missing_boot_strap_bias = deepcopy(graph)
+            graph_missing_boot_strap_bias["components"] = [
+                component
+                for component in graph_missing_boot_strap_bias.get("components", [])
+                if component.get("ref") != boot_strap_bias.get("ref")
+            ]
+            record(
+                "missing_boot_strap_bias",
+                "support_circuit_completeness",
+                f"Removed boot-mode strap bias component {boot_strap_bias.get('ref')}",
+                self._support_circuit_completeness_report(spec, graph_missing_boot_strap_bias),
+                ["boot_strap_bias_missing"],
+            )
 
         spec_bad_power = deepcopy(spec)
         spec_bad_power.setdefault("system", {}).setdefault("supply", {}).setdefault("battery", {})["pack_current_peak_a"] = 5

@@ -137,7 +137,7 @@ Expected benchmark summary:
 ```
 
 This intentionally injects bad in-memory candidates, including wrong pinout,
-wrong footprint, missing or miswired support circuit, bad power budget,
+wrong footprint, missing or miswired support circuit including boot strap bias, bad power budget,
 unreachable rail, regulator voltage-order violation, regulator input voltage range
 violation, powered-load supply voltage range violation, missing or wrong-rail I2C pull-up,
 missing or wrong-value CAN termination, missing USB ESD bridge, hot block near sensitive logic,

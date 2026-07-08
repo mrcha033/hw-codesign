@@ -19,6 +19,8 @@
   or wrong-valued CAN termination across CANH/CANL
 - `support_circuit_completeness` rejects crystal oscillators whose load capacitors are
   missing, not grounded, or outside the grounded pF-range expected for oscillator load caps
+- Boot-mode strap pins such as `HWB`, `BOOT0`, and `BOOTSEL` must have a grounded pull
+  direction matching the safe boot state; a suggestive net name alone is not accepted
 - Shared source-generation step plus six-gate backend contract (compile → netlist → graph parity
   → footprint parity → layout → manufacturing export) enforced across all adapters
 - Offline pinned **tscircuit 0.1.1491**: Circuit JSON netlist, pad, placement, routing, and
@@ -132,7 +134,7 @@
 - `hw_explore_design_space` enumerates backend, component, mechanical variant, and supplier axes
   and scores each against the current gates; result written to `history/design_space/exploration.json`
 - `hw_run_grounding_benchmark` adversarially mutates generated artifacts (pinout, footprint,
-  pin electrical roles, power tree, interface wiring including USB-C CC Rd and oscillator load caps, layout, decoupling placement, RF, connector retention, sourcing,
+  pin electrical roles, power tree, interface wiring including USB-C CC Rd, oscillator load caps, and boot strap bias, layout, decoupling placement, RF, connector retention, sourcing,
   critical-role alternate integrity, connector cutout alignment, mounting keepout intrusion,
   firmware pin assignment, motor PWM channel coverage) and confirms every relevant gate catches
   the injected defect; a missed case fails the benchmark

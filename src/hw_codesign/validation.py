@@ -34,6 +34,8 @@ CAN_TERMINATION_OHMS = 120.0
 CAN_TERMINATION_TOLERANCE_OHMS = 12.0
 USB_C_RD_OHMS = 5100.0
 USB_C_RD_TOLERANCE_OHMS = 510.0
+BOOT_STRAP_MIN_BIAS_OHMS = 1_000.0
+BOOT_STRAP_MAX_BIAS_OHMS = 1_000_000.0
 
 
 CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
@@ -2013,6 +2015,87 @@ def _component_supply_voltage_range_v(
         if min_v is not None or max_v is not None:
             return min_v, max_v
     return _supply_voltage_range_from_constraints(component.get("constraints", []), pin)
+
+
+def boot_strap_bias_failures(graph: dict[str, Any]) -> list[Failure]:
+    components = graph.get("components", [])
+    failures: list[Failure] = []
+    for component in components:
+        if str(component.get("category", "")).lower() != "mcu":
+            continue
+        for pin in component.get("pins", []):
+            rule = _boot_strap_rule_for_pin(pin)
+            if rule is None:
+                continue
+            expected_net, bias = rule
+            target_net = pin.get("net")
+            if not target_net:
+                failures.append(Failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "boot_strap_bias_missing",
+                    f"{component.get('ref', '?')}.{pin.get('number')} {pin.get('name')} boot strap is not connected to a biased net",
+                    path="electronics.components",
+                    details={
+                        "ref": component.get("ref"),
+                        "pin_number": pin.get("number"),
+                        "pin_name": pin.get("name"),
+                        "expected_bias": bias,
+                        "expected_net": expected_net,
+                    },
+                ))
+                continue
+            if target_net == expected_net:
+                continue
+            valid_refs: list[str] = []
+            candidate_refs: list[dict[str, Any]] = []
+            for bias_component in components:
+                if bias_component is component:
+                    continue
+                pins = bias_component.get("pins", [])
+                nets = {item.get("net") for item in pins if item.get("net")}
+                if target_net not in nets:
+                    continue
+                resistance_ohms = _component_resistance_ohms(bias_component)
+                candidate = {
+                    "ref": bias_component.get("ref"),
+                    "category": bias_component.get("category"),
+                    "nets": sorted(nets),
+                    "resistance_ohms": resistance_ohms,
+                }
+                candidate_refs.append(candidate)
+                if expected_net in nets and resistance_ohms is not None and BOOT_STRAP_MIN_BIAS_OHMS <= resistance_ohms <= BOOT_STRAP_MAX_BIAS_OHMS:
+                    valid_refs.append(str(bias_component.get("ref")))
+            if not valid_refs:
+                failures.append(Failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "boot_strap_bias_missing",
+                    f"{component.get('ref', '?')}.{pin.get('number')} {pin.get('name')} boot strap net {target_net} is not biased {bias} to {expected_net}",
+                    path="electronics.components",
+                    details={
+                        "ref": component.get("ref"),
+                        "pin_number": pin.get("number"),
+                        "pin_name": pin.get("name"),
+                        "net_name": target_net,
+                        "expected_bias": bias,
+                        "expected_net": expected_net,
+                        "min_bias_ohms": BOOT_STRAP_MIN_BIAS_OHMS,
+                        "max_bias_ohms": BOOT_STRAP_MAX_BIAS_OHMS,
+                        "candidate_bias_components": candidate_refs,
+                    },
+                ))
+    return failures
+
+
+def _boot_strap_rule_for_pin(pin: dict[str, Any]) -> tuple[str, str] | None:
+    pin_name = str(pin.get("name") or "").upper().replace("~", "").replace("#", "")
+    net_name = str(pin.get("net") or "").upper()
+    if pin_name == "HWB" or net_name == "HWB":
+        return "GND", "pulldown"
+    if pin_name == "BOOT0" or net_name in {"BOOT0", "BOOT0_GND"}:
+        return "GND", "pulldown"
+    if pin_name == "BOOTSEL" or net_name == "BOOTSEL":
+        return "V3V3", "pullup"
+    return None
 
 
 def _rating_sources(component: dict[str, Any]) -> list[dict[str, Any]]:

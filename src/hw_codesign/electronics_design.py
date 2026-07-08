@@ -636,6 +636,10 @@ def build_lora_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(1, "A", "VBAT_DIV", "passive"),
             pin(2, "B", "GND",       "passive"),
         ], manufacturer="Yageo"),
+        component("R5", "resistor_100k", "100K BOOT0 PD", "RC0603FR-07100KL", "R0603", [
+            pin(1, "A", "BOOT0", "passive"),
+            pin(2, "B", "GND",   "ground"),
+        ], manufacturer="Yageo", constraints=["boot_strap", "pulldown"]),
         component("C1", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [
             pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground"),
         ], manufacturer="Murata"),
@@ -1153,6 +1157,10 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("J3",  "debug_header",      "SWD 10-pin",      "Samtec-FTSH-105",      "SWD_10Pin_1.27mm",    swd_pins),
         component("R2",  "i2c_pullup",        "4K7 SCL PU",      "RC0603FR-074K7L",      "0603",                i2c_pullup_scl_pins),
         component("R3",  "i2c_pullup",        "4K7 SDA PU",      "RC0603FR-074K7L",      "0603",                i2c_pullup_sda_pins),
+        component("R4",  "resistor_4k7",      "4K7 BOOT0 PD",    "RC0603FR-074K7L",      "0603",                [
+            pin(1, "A", "BOOT0_GND", "passive"),
+            pin(2, "B", "GND",       "ground"),
+        ], constraints=["boot_strap", "pulldown"]),
         component("C1",  "decoupling",        "100nF",           "GRM155R71C104KA88D",   "0402",                decap_pins),
         component("C2",  "decoupling",        "100nF",           "GRM155R71C104KA88D",   "0402",                decap_pins),
         component("C3",  "bulk_cap",          "10uF",            "GRM188R60J106ME47D",   "0603",                bulk_pins),
