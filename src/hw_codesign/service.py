@@ -50,6 +50,8 @@ _RELEASE_TIER_BY_BACKEND: dict[str, str] = {
     "tscircuit": "fabrication",
     "kicad": "fabrication",
 }
+_CRYSTAL_LOAD_CAP_MIN_PF = 4.0
+_CRYSTAL_LOAD_CAP_MAX_PF = 47.0
 # Gates that require native toolchain (ERC/DRC/autoroute/Zephyr). When include_external=False
 # these are BLOCKED-by-design; the benchmark excludes them from software_gate_pass_rate so CI
 # can track software-gate convergence without native tools.
@@ -233,6 +235,91 @@ def _review_artifact_record(reference: str, workspace_root: Path, project_path: 
         record["bytes"] = resolved.stat().st_size
         record["sha256"] = sha256(resolved)
     return record
+
+
+def _crystal_load_cap_value_failure(
+    crystal: dict[str, Any],
+    capacitor: dict[str, Any],
+    net_name: str,
+) -> Failure | None:
+    capacitance_pf = _component_capacitance_pf(capacitor)
+    if capacitance_pf is None:
+        return Failure(
+            FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+            "crystal_load_cap_value_missing",
+            f"Crystal load capacitor {capacitor.get('ref', '?')} on {net_name} lacks a grounded capacitance value",
+            path="electronics.components",
+            details={
+                "crystal_ref": crystal.get("ref"),
+                "capacitor_ref": capacitor.get("ref"),
+                "net_name": net_name,
+                "expected_min_pf": _CRYSTAL_LOAD_CAP_MIN_PF,
+                "expected_max_pf": _CRYSTAL_LOAD_CAP_MAX_PF,
+                "value": capacitor.get("value"),
+                "mpn": capacitor.get("mpn"),
+            },
+        )
+    if _CRYSTAL_LOAD_CAP_MIN_PF <= capacitance_pf <= _CRYSTAL_LOAD_CAP_MAX_PF:
+        return None
+    return Failure(
+        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+        "crystal_load_cap_value_out_of_range",
+        f"Crystal load capacitor {capacitor.get('ref', '?')} on {net_name} is {capacitance_pf:g} pF, outside the grounded oscillator-load range",
+        path="electronics.components",
+        details={
+            "crystal_ref": crystal.get("ref"),
+            "capacitor_ref": capacitor.get("ref"),
+            "net_name": net_name,
+            "capacitance_pf": capacitance_pf,
+            "expected_min_pf": _CRYSTAL_LOAD_CAP_MIN_PF,
+            "expected_max_pf": _CRYSTAL_LOAD_CAP_MAX_PF,
+            "value": capacitor.get("value"),
+            "mpn": capacitor.get("mpn"),
+        },
+    )
+
+
+def _component_capacitance_pf(component: dict[str, Any]) -> float | None:
+    for container_key in ("ratings", "electrical", "parameters"):
+        source = component.get(container_key)
+        if not isinstance(source, dict):
+            continue
+        for key, multiplier in (
+            ("capacitance_pf", 1.0),
+            ("capacitance_nf", 1_000.0),
+            ("capacitance_uf", 1_000_000.0),
+            ("capacitance_f", 1_000_000_000_000.0),
+        ):
+            value = source.get(key)
+            if isinstance(value, (int, float)):
+                return float(value) * multiplier
+    for key in ("value", "mpn", "supplier_sku"):
+        value = _capacitance_pf_from_text(component.get(key))
+        if value is not None:
+            return value
+    for constraint in component.get("constraints", []):
+        value = _capacitance_pf_from_text(constraint)
+        if value is not None:
+            return value
+    return None
+
+
+def _capacitance_pf_from_text(value: Any) -> float | None:
+    text = str(value or "").strip().lower().replace("µ", "u").replace("μ", "u")
+    if not text:
+        return None
+    match = re.search(r"(?<![a-z0-9.])(?P<value>\d+(?:\.\d+)?)\s*(?P<unit>pf|p|nf|n|uf|u|f)\b", text)
+    if not match:
+        return None
+    number = float(match.group("value"))
+    unit = match.group("unit")
+    if unit in {"pf", "p"}:
+        return number
+    if unit in {"nf", "n"}:
+        return number * 1_000.0
+    if unit in {"uf", "u"}:
+        return number * 1_000_000.0
+    return number * 1_000_000_000_000.0
 
 
 class HardwareService:
@@ -2405,7 +2492,13 @@ class HardwareService:
                     component for component in cap_candidates
                     if "GND" in {pin.get("net") for pin in component.get("pins", [])}
                 ]
+                invalid_value_failures = [
+                    failure
+                    for component in grounded_caps
+                    if (failure := _crystal_load_cap_value_failure(crystal, component, net_name)) is not None
+                ]
                 if grounded_caps:
+                    failures.extend(invalid_value_failures)
                     continue
                 if cap_candidates:
                     failures.append(Failure(
@@ -3217,6 +3310,21 @@ class HardwareService:
                     "Moved one crystal load capacitor ground return onto V3V3",
                     self._support_circuit_completeness_report(spec, graph_miswired_xtal_cap),
                     ["crystal_load_cap_ground_missing"],
+                )
+
+            graph_bad_xtal_cap_value = deepcopy(graph)
+            bad_xtal_cap = next(
+                (component for component in graph_bad_xtal_cap_value.get("components", []) if component.get("category") == "xtal_cap"),
+                None,
+            )
+            if bad_xtal_cap:
+                bad_xtal_cap["value"] = "10uF XTAL"
+                record(
+                    "wrong_crystal_load_cap_value",
+                    "support_circuit_completeness",
+                    "Changed one crystal load capacitor from pF range to 10uF",
+                    self._support_circuit_completeness_report(spec, graph_bad_xtal_cap_value),
+                    ["crystal_load_cap_value_out_of_range"],
                 )
 
         spec_bad_power = deepcopy(spec)

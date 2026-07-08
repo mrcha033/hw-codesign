@@ -299,6 +299,38 @@ def test_support_circuit_contract_rejects_ungrounded_crystal_load_cap(service):
     assert failure.details["candidate_refs"] == [cap["ref"]]
 
 
+def test_support_circuit_contract_rejects_wrong_crystal_load_cap_value(service):
+    project = "rp2040_clock_value_contract"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    cap = next(component for component in bad_graph["components"] if component["category"] == "xtal_cap")
+    cap["value"] = "10uF XTAL"
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "crystal_load_cap_value_out_of_range")
+    assert failure.details["capacitor_ref"] == cap["ref"]
+    assert failure.details["capacitance_pf"] == 10_000_000.0
+    assert failure.details["expected_max_pf"] == 47.0
+
+
+def test_grounding_benchmark_catches_wrong_crystal_load_cap_value(service):
+    project = "rp2040_grounding_xtal_value"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_all(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    case = next(item for item in benchmark["cases"] if item["id"] == "wrong_crystal_load_cap_value")
+    assert case["detected"] is True
+    assert case["expected_codes"] == ["crystal_load_cap_value_out_of_range"]
+    assert "crystal_load_cap_value_out_of_range" in case["observed_codes"]
+
+
 def test_power_tree_integrity_passes_generated_robotics_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)
