@@ -1,5 +1,7 @@
 project:
   name: samd21_sensor_hub
+  target_use: usb_sensor_hub
+  revision: r1
   description: ATSAMD21G18A multi-sensor hub — LSM6DSOX IMU + BME280 env sensor + USB-C + native SWD
   version: 0.1.0
   template: samd21_sensor_hub
@@ -7,6 +9,15 @@ project:
 
 system:
   target_application: Wearable sensor node, data logger, IMU reference board, Arduino-Zero-compatible custom board
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.25
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.25}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.15}
 
 compute:
   mcu:
@@ -23,6 +34,7 @@ compute:
 
 actuation:
   motor_channels: 0
+  motor_channel_peak_current_a: 0.0
   gpio_outputs: 22
   pwm_channels: 8
 
@@ -39,20 +51,37 @@ sensing:
     measures: [temperature, humidity, pressure]
   adc_channels: 10
   adc_bits: 12
+  e_stop: not_required
 
 assumptions:
-  - id: ASM-01
-    text: DFLL96M locked to 32.768kHz crystal generates 48MHz for USB FS and core clock
-    rationale: SAMD21 USB peripheral requires precise 48MHz; DFLL from external 32.768kHz achieves ±50ppm within USB spec
-  - id: ASM-02
-    text: LSM6DSOX and BME280 share I2C bus (SERCOM3 PA22/PA23); addresses 0x6A and 0x76 respectively
-    rationale: No address collision on default config; both devices support I2C fast mode 400kHz
-  - id: ASM-03
-    text: USB D+/D- on PA24/PA25 fixed pins with 27Ω series resistors and no external pull-ups
-    rationale: SAMD21 USB PHY has internal pull-ups on D+; series resistors required per USB signal integrity spec
-  - id: ASM-04
-    text: SWD on PA30/PA31 with 10-pin Cortex debug header for J-Link or DAPLink
-    rationale: SAMD21 boot ROM includes standard Cortex-M SWD debug; no bootloader required for initial flash
+  dfll_usb_clock:
+    value: dfll96m_locked_to_32768hz_crystal
+    resolved_value: dfll96m_locked_to_32768hz_crystal
+    confidence: high
+    reason: SAMD21 USB peripheral requires precise 48MHz; DFLL from external 32.768kHz achieves USB Full Speed clock tolerance.
+    critical: true
+    requires_user_review: false
+  shared_i2c_bus:
+    value: sercom3_pa22_pa23_lsm6dsox_0x6a_bme280_0x76
+    resolved_value: sercom3_pa22_pa23_lsm6dsox_0x6a_bme280_0x76
+    confidence: high
+    reason: LSM6DSOX and BME280 default I2C addresses do not collide, and both support 400kHz fast mode.
+    critical: true
+    requires_user_review: false
+  native_usb_phy:
+    value: pa24_pa25_with_usb_esd_and_no_external_pullup
+    resolved_value: pa24_pa25_with_usb_esd_and_no_external_pullup
+    confidence: high
+    reason: SAMD21 USB PHY has internal D+ pull-up; external protection is modeled by USBLC6-2SC6 on the raw connector pair.
+    critical: true
+    requires_user_review: false
+  swd_debug:
+    value: pa30_pa31_10pin_cortex_debug_header
+    resolved_value: pa30_pa31_10pin_cortex_debug_header
+    confidence: high
+    reason: SAMD21 exposes standard ARM SWD for initial flash and bring-up over a keyed Cortex debug header.
+    critical: true
+    requires_user_review: false
 
 electronics:
   backend: tscircuit
@@ -87,7 +116,7 @@ mechanical:
     board_thickness_mm: 1.6
     max_component_height_top_mm: 2.5
     max_component_height_bottom_mm: 1.0
-  enclosure_internal_mm: [50.0, 30.0, 5.0]
+  enclosure_internal_mm: [54.0, 34.0, 8.0]
   wall_thickness_mm: 2.0
   insertion_clearance_mm: 1.0
   assembly_clearance_mm: 0.6
@@ -109,18 +138,47 @@ mechanical:
     - {ref: J2, side: right, opening_mm: [13.0, 5.0], center_z_mm: 2.5, position_tolerance_mm: 0.5}
 
 firmware:
+  framework: zephyr
+  target: atmel_samd21g18a
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
   rtos: bare_metal
   zephyr_target: atmel_samd21g18a
   toolchain: arm-none-eabi-gcc
   frameworks: [arduino_samd, zephyr_samd21]
   modules:
     - id: usb_cdc
+      behavior: interface_stack
+      stack: usb
+      library: zephyr_usb_cdc_acm
+      required_nets: [USB_DP, USB_DM]
+      required_tests: [usb_cdc_enumeration]
+      init_order: 20
+      stack_size_bytes: 2048
       description: USB CDC-ACM serial for host data streaming and configuration
     - id: lsm6dsox_driver
+      behavior: sensor_poll
+      bus: i2c
+      sensor: lsm6dsox
+      address: 0x6A
+      poll_interval_ms: 1
+      ring_buf_entries: 32
       description: I2C driver for LSM6DSOX with FIFO batching and INT1 interrupt
     - id: bme280_driver
+      behavior: sensor_poll
+      bus: i2c
+      sensor: bme280
+      address: 0x76
+      poll_interval_ms: 1000
+      ring_buf_entries: 4
       description: I2C driver for BME280 with forced mode and oversampling config
     - id: data_streamer
+      behavior: interface_stack
+      stack: usb
+      library: zephyr_usb_cdc_acm
+      required_nets: [USB_DP, USB_DM]
+      required_tests: [sensor_data_streaming_1khz]
+      init_order: 60
+      stack_size_bytes: 2048
       description: Binary packet protocol streaming sensor data to USB CDC host at configurable rate
   ota: false
 
@@ -128,13 +186,21 @@ manufacturing:
   pcb:
     profile: jlcpcb_2layer
     layers: 2
-    min_clearance_mm: 0.127
-    min_track_width_mm: 0.127
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
 
 safety:
   regulatory: [CE]
   isolation_required: false
   esd_protection: required
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog]
 
 sourcing:
   provider: curated
@@ -151,11 +217,17 @@ test_plan:
     - sensor_data_streaming_1khz
 
 requirements:
-  performance:
-    - id: REQ-01
-      text: IMU data rate ≥ 1 kHz (LSM6DSOX FIFO mode)
-    - id: REQ-02
-      text: USB CDC streaming latency ≤ 5 ms
-  reliability:
-    - id: REQ-03
-      text: Continuous sensor acquisition ≥ 24 hours without reset
+  raw_inputs: []
+  active_lowered:
+    - {id: req_lowered_0001, source: template:samd21_sensor_hub, spec_path: sensing.imu, status: lowered}
+    - {id: req_lowered_0002, source: template:samd21_sensor_hub, spec_path: firmware.modules.usb_cdc, status: lowered}
+  active_unresolved:
+    - id: req_unresolved_0001
+      source: template:samd21_sensor_hub
+      category: reliability_test_duration
+      field_type: retained_assumption
+      status: unresolved
+      release_blocking: false
+      reason: The 24-hour continuous acquisition target needs bench soak evidence before release, but it does not change the generated pin/package contract.
+      required_human_approvals: [bringup_owner]
+      affected_gates: [physical_qualification, firmware_modules]

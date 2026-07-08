@@ -14,7 +14,6 @@ from .models import Failure, FailureCategory, GateReport, Status
 from .resolver import SUPPLIER_EVIDENCE_MAX_AGE_DAYS, _evidence_is_stale
 from .sourcing_policy import sourcing_waiver_failures
 
-
 CONNECTOR_CATEGORIES = {"power_input", "can_connector", "usb", "estop", "motor_io"}
 
 CURATED_REGULATOR_OUTPUT_CURRENT_A: dict[str, float] = {
@@ -181,11 +180,19 @@ class Validator:
                 available_peak_a=battery_peak,
             ))
         protections = set(safety.get("required_protections", []))
-        required = ["reverse_polarity", "fuse_or_efuse", "tvs", "watchdog"]
+        battery_type = str(battery.get("type", "")).lower()
+        input_connector = str(spec.get("electronics", {}).get("power", {}).get("input_connector", "")).lower()
+        usb_powered = "usb" in battery_type or "usb" in input_connector
+        required = ["watchdog"]
         if channels > 0:
-            required.append("motor_enable_gate")
+            required.extend(["reverse_polarity", "fuse_or_efuse", "tvs", "motor_enable_gate"])
+        elif not usb_powered and battery_type not in {"", "coin_cell", "lisocl2_primary_cell"}:
+            required.extend(["reverse_polarity", "fuse_or_efuse"])
+        if safety.get("esd_protection") == "required" or usb_powered:
+            required.append("usb_esd")
         for protection in required:
-            if protection not in protections:
+            alternatives = {"usb_esd": {"usb_esd", "tvs"}, "tvs": {"tvs", "usb_esd"}}.get(protection, {protection})
+            if not protections.intersection(alternatives):
                 failures.append(_failure(FailureCategory.ELECTRICAL_SEMANTIC_ERROR, "missing_protection", f"Required protection is missing: {protection}", "safety.required_protections"))
         estop = safety.get("emergency_stop", {})
         if spec.get("sensing", {}).get("e_stop") == "required" and not estop.get("fail_safe_hardware_path"):

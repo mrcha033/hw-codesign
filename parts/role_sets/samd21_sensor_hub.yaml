@@ -18,6 +18,7 @@ roles:
   imu: {component_id: lsm6dsoxtr, resolution: curated}
   env_sensor: {component_id: bme280, resolution: curated}
   capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_1uf: {component_id: grm188_1uf, resolution: curated}
   capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
   debug_header: {component_id: conn_2x05_2p54, resolution: curated}

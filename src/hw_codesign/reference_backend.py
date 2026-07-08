@@ -208,6 +208,8 @@ def internal_erc(graph: dict[str, Any]) -> GateReport:
         required = {"power_input", "fuse", "reverse_polarity", "tvs", "charger", "regulator", "fuel_gauge", "mcu", "env_sensor", "debug"}
     elif architecture == "esp32s3_usb_i2c_sensor_data_logger":
         required = {"power_input", "fuse", "reverse_polarity", "tvs", "regulator", "mcu", "imu", "debug"}
+    elif architecture == "atsamd21g18a_lsm6dsox_bme280":
+        required = {"power_input", "tvs", "regulator_3v3", "mcu", "imu", "env_sensor", "debug_header"}
     else:
         required = {"mcu", "imu", "regulator", "can", "motor_io", "fuse", "reverse_polarity", "tvs", "efuse", "safety_gate"}
     present = {item["category"] for item in graph["components"]}

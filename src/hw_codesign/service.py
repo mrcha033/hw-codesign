@@ -2689,6 +2689,7 @@ class HardwareService:
             "reverse_polarity": ("reverse_polarity",),
             "fuse_or_efuse": ("fuse", "efuse"),
             "tvs": ("tvs",),
+            "usb_esd": ("tvs", "usb_esd"),
             "motor_enable_gate": ("safety_gate",),
         }
         for protection in spec.get("safety", {}).get("required_protections", []):

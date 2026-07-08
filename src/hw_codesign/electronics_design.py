@@ -1322,6 +1322,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(10, "GND",         "GND",      "ground"),
         pin(17, "VDDIO",       "V3V3",     "power_in"),
         pin(18, "GND",         "GND",      "ground"),
+        pin(27, "PA18_SERCOM3_2", "IMU_INT1", "input"),
         pin(31, "PA22_SDA",    "I2C_SDA",  "bidirectional"),
         pin(32, "PA23_SCL",    "I2C_SCL",  "input"),
         pin(33, "PA24_USBDM",  "USB_DM",   "bidirectional"),
@@ -1339,7 +1340,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
         pin(2,  "SDX",     "I2C_SDA",  "bidirectional"),
         pin(3,  "SCX",     "I2C_SCL",  "input"),
         pin(4,  "INT1",    "IMU_INT1", "output"),
-        pin(5,  "INT2",    "IMU_INT2", "output"),
+        pin(5,  "INT2",    None,       "no_connect"),
         pin(6,  "VDD_IO",  "V3V3",     "power_in"),
         pin(7,  "GND",     "GND",      "ground"),
         pin(8,  "GND",     "GND",      "ground"),
@@ -1375,6 +1376,7 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
     i2c_pullup_scl_pins = [pin(1, "A", "V3V3", "power_in"), pin(2, "B", "I2C_SCL", "passive")]
     i2c_pullup_sda_pins = [pin(1, "A", "V3V3", "power_in"), pin(2, "B", "I2C_SDA", "passive")]
     decap_pins = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
+    vddcore_cap_pins = [pin(1, "VCC", "VDDCORE", "passive"), pin(2, "GND", "GND", "ground")]
     bulk_pins  = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
 
     components = [
@@ -1393,14 +1395,15 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C1", "decoupling",   "100nF",           "GRM155R71C104KA88D", "0402",             decap_pins),
         component("C2", "decoupling",   "100nF",           "GRM155R71C104KA88D", "0402",             decap_pins),
         component("C3", "bulk_cap",     "10uF",            "GRM188R60J106ME47D", "0603",             bulk_pins),
+        component("C6", "capacitor_1uf", "1uF VDDCORE",     "GRM188R61C105KA93D", "0603",             vddcore_cap_pins),
     ]
     net_classes = {
-        "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
+        "GND": "ground", "USB_VBUS": "power", "V3V3": "power", "VDDCORE": "power",
         "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
         "I2C_SCL": "i2c", "I2C_SDA": "i2c",
         "SWDIO": "signal", "SWCLK": "signal",
         "XIN32": "signal", "XOUT32": "signal",
-        "IMU_INT1": "signal", "IMU_INT2": "signal",
+        "IMU_INT1": "signal",
     }
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:

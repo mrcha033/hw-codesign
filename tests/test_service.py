@@ -7,10 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from hw_codesign.backends.kicad import KiCadBackend
 from hw_codesign.backends.freerouting import FreeroutingBackend
+from hw_codesign.backends.kicad import KiCadBackend
 from hw_codesign.errors import UnsafeChangeError
-from hw_codesign.reference_backend import internal_drc
+from hw_codesign.reference_backend import internal_drc, internal_erc
 from hw_codesign.schematic_generator import generate_kicad_schematic
 
 
@@ -221,13 +221,30 @@ def test_samd21_sensor_hub_uses_curated_sensor_and_debug_pin_contracts(service):
     metadata_report = service.validator.check_component_metadata(graph["components"])
     assert metadata_report.status.value == "pass"
     assert mechanical_contract["connector_cutouts"]
+    assert service.validator.validate_spec(service.read_spec(project)).status.value == "pass"
+    assert service.validator.check_electrical_semantics(service.read_spec(project)).status.value == "pass"
+    assert service.validator.check_mechanical(service.read_spec(project)).status.value == "pass"
+    firmware_modules_report = service.validator.check_firmware_modules(
+        service.read_spec(project)["firmware"]["modules"],
+        json.loads((path / "firmware" / "generated" / "pinmap.json").read_text(encoding="utf-8")),
+        spec=service.read_spec(project),
+        graph=graph,
+        module_dir=path / "firmware" / "modules",
+    )
+    assert firmware_modules_report.status.value == "pass"
+    assert internal_erc(graph).status.value == "pass"
 
     components = {component["ref"]: component for component in graph["components"]}
+    mcu_pins = {pin["number"]: pin for pin in components["U2"]["pins"]}
+    assert mcu_pins["27"]["net"] == "IMU_INT1"
     imu_pins = {pin["number"]: pin for pin in components["U3"]["pins"]}
     assert imu_pins["2"]["name"] == "SDX"
     assert imu_pins["2"]["net"] == "I2C_SDA"
     assert imu_pins["3"]["name"] == "SCX"
     assert imu_pins["3"]["net"] == "I2C_SCL"
+    assert imu_pins["4"]["net"] == "IMU_INT1"
+    assert imu_pins["5"]["net"] is None
+    assert imu_pins["5"]["role"] == "no_connect"
 
     env_pins = {pin["number"]: pin for pin in components["U4"]["pins"]}
     assert {number: env_pins[number]["name"] for number in map(str, range(1, 9))} == {
@@ -257,6 +274,10 @@ def test_samd21_sensor_hub_uses_curated_sensor_and_debug_pin_contracts(service):
     assert debug_pins["8"]["role"] == "no_connect"
     assert debug_pins["10"]["name"] == "RESET"
     assert debug_pins["10"]["net"] == "MCU_NRST"
+
+    vddcore_cap = components["C6"]
+    assert vddcore_cap["component_id"] == "grm188_1uf"
+    assert {pin["net"] for pin in vddcore_cap["pins"]} == {"VDDCORE", "GND"}
 
 
 def test_generic_i2c_pullup_on_wrong_rail_fails_interface_integrity(service):
