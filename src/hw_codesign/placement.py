@@ -52,6 +52,8 @@ HIGH_CURRENT_THRESHOLD_A = 5.0
 MIN_HIGH_CURRENT_LAYERS = 4
 MAX_HIGH_CURRENT_A_PER_MM2 = 0.01
 MAX_HIGH_CURRENT_CHAIN_STEP_MM = 35.0
+MAX_HIGH_CURRENT_LOOP_AREA_BOARD_FRACTION = 0.05
+MIN_HIGH_CURRENT_LOOP_AREA_LIMIT_MM2 = 300.0
 RF_EDGE_DISTANCE_MAX_MM = 8.0
 RF_NOISY_COMPONENT_KEEP_OUT_MM = 10.0
 USB_ESD_MAX_CONNECTOR_DISTANCE_MM = 15.0
@@ -613,6 +615,10 @@ def _placement_cost(
             if left in placements and right in placements:
                 distance = _placement_distance_mm(placements[left], placements[right])
                 add("high_current_loop", max(0.0, distance - MAX_HIGH_CURRENT_CHAIN_STEP_MM) * 10.0)
+        loop_area = _high_current_loop_area_mm2(chain, placements)
+        if loop_area is not None:
+            area_limit = _high_current_loop_area_limit_mm2(width, height)
+            add("high_current_loop_area", max(0.0, loop_area - area_limit) * 0.5)
 
     for constraint in constraints:
         if constraint.kind == "mounting_hole_keepout":
@@ -767,6 +773,21 @@ def _build_constraint_graph(
                 "graph high-current categories + spec declared peak current",
                 max_step_mm=MAX_HIGH_CURRENT_CHAIN_STEP_MM,
                 **measured_max(distance, MAX_HIGH_CURRENT_CHAIN_STEP_MM, "high_current_loop", 10.0),
+            )
+        loop_area = _high_current_loop_area_mm2(chain, placements)
+        if loop_area is not None:
+            area_limit = _high_current_loop_area_limit_mm2(width, height)
+            violation = max(0.0, loop_area - area_limit)
+            add_edge(
+                "high_current_loop_area",
+                chain,
+                True,
+                "graph high-current categories + spec declared peak current + placement polygon area",
+                area_mm2=round(loop_area, 3),
+                max_area_mm2=round(area_limit, 3),
+                margin_mm2=round(area_limit - loop_area, 3),
+                cost_key="high_current_loop_area",
+                violation_cost=round(violation * 0.5, 6),
             )
 
     rf_refs = [
@@ -1271,9 +1292,28 @@ def check_layout_thermal_integrity(
                     distance_mm=round(distance, 3),
                     max_step_mm=MAX_HIGH_CURRENT_CHAIN_STEP_MM,
                 )
+        high_current_loop_area = _high_current_loop_area_mm2(chain, placements)
+        high_current_loop_area_limit = _high_current_loop_area_limit_mm2(width, height)
+        high_current_loop_area_a_mm2 = (
+            peak_current * high_current_loop_area
+            if high_current_loop_area is not None else None
+        )
+        if high_current_loop_area is not None and high_current_loop_area > high_current_loop_area_limit:
+            fail(
+                "high_current_loop_area_excessive",
+                "High-current input path encloses excessive placement loop area",
+                refs=chain,
+                loop_area_mm2=round(high_current_loop_area, 3),
+                max_loop_area_mm2=round(high_current_loop_area_limit, 3),
+                peak_current_a=peak_current,
+                loop_area_a_mm2=round(high_current_loop_area_a_mm2, 3),
+            )
     else:
         chain = []
         high_current_chain_steps = []
+        high_current_loop_area = None
+        high_current_loop_area_limit = None
+        high_current_loop_area_a_mm2 = None
 
     return GateReport(
         "layout_thermal_integrity",
@@ -1288,6 +1328,15 @@ def check_layout_thermal_integrity(
             "high_current_chain_refs": chain,
             "high_current_chain_steps": high_current_chain_steps,
             "high_current_chain_max_step_mm": MAX_HIGH_CURRENT_CHAIN_STEP_MM,
+            "high_current_loop_area_mm2": (
+                round(high_current_loop_area, 3) if high_current_loop_area is not None else None
+            ),
+            "high_current_loop_area_limit_mm2": (
+                round(high_current_loop_area_limit, 3) if high_current_loop_area_limit is not None else None
+            ),
+            "high_current_loop_area_a_mm2": (
+                round(high_current_loop_area_a_mm2, 3) if high_current_loop_area_a_mm2 is not None else None
+            ),
         },
         backend={"name": "layout-thermal-precheck", "deterministic": True, "release_authoritative": False},
     )
@@ -1447,6 +1496,26 @@ def _connector_current_rating_a(spec: dict[str, Any]) -> float | None:
 
 def _placement_distance_mm(a: Placement, b: Placement) -> float:
     return math.hypot(a.x_mm - b.x_mm, a.y_mm - b.y_mm)
+
+
+def _high_current_loop_area_limit_mm2(width: float, height: float) -> float:
+    board_area = max(0.0, width * height)
+    return max(MIN_HIGH_CURRENT_LOOP_AREA_LIMIT_MM2, board_area * MAX_HIGH_CURRENT_LOOP_AREA_BOARD_FRACTION)
+
+
+def _high_current_loop_area_mm2(chain: list[str], placements: dict[str, Placement]) -> float | None:
+    points = [
+        (placements[ref].x_mm, placements[ref].y_mm)
+        for ref in chain
+        if ref in placements
+    ]
+    if len(points) < 3:
+        return None
+    area = 0.0
+    for index, (x0, y0) in enumerate(points):
+        x1, y1 = points[(index + 1) % len(points)]
+        area += x0 * y1 - x1 * y0
+    return abs(area) / 2.0
 
 
 def _component_nets(component: dict[str, Any]) -> set[str]:

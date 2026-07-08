@@ -141,7 +141,7 @@ wrong footprint, missing or miswired support circuit including boot strap bias, 
 unreachable rail, regulator voltage-order violation, regulator input voltage range
 violation, powered-load supply voltage range violation, missing or wrong-rail I2C pull-up,
 missing or wrong-value CAN termination, missing USB ESD bridge, hot block near sensitive logic,
-misplaced USB ESD placement, misplaced RF antenna/keepout, under-rated connector
+excessive high-current loop area, misplaced USB ESD placement, misplaced RF antenna/keepout, under-rated connector
 current, missing critical-role sourcing resilience, unavailable part, invalid net
 endpoint, component pin/net mismatch, firmware pinmap mismatch, missing e-stop
 shutdown behavior, missing firmware interface bring-up, and a dependency-order

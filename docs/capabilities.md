@@ -42,7 +42,7 @@
   per-edge measured distance/margin/cost evidence, and per-placement provenance before validation
 - Constraint-driven placement proposal: structured, provenance-tagged placements with keepout,
   mounting-hole, connector-edge, decoupling-proximity, thermal-spacing, RF keepout,
-  USB-ESD, high-current-loop, and thermal-zone costs
+  USB-ESD, high-current-loop step and loop-area, and thermal-zone costs
 - Hard-blocks on off-board components, coincident centers, and connectors placed on the wrong
   board half; advisory warnings on coarse courtyard overlap estimation
 - `ir_pcb_sanity` cross-checks generated KiCad copper-layer declarations and copper-layer usage
@@ -50,7 +50,8 @@
   board file, so a 2-layer candidate cannot silently carry inner-layer zones, routes, or exports
 - `layout_thermal_integrity` and `layout_signal_integrity` are gated checks that block
   high-current designs on under-layered stackups, thermal-risk components placed next to
-  sensitive devices, and misplaced RF antenna or USB ESD components
+  sensitive devices, excessive high-current ingress loop area, and misplaced RF antenna or USB
+  ESD components
 - `power_tree_integrity` verifies reachable rails, regulator voltage ordering, grounded
   regulator input-voltage ranges, and powered-load supply ranges so coherent-looking rail
   graphs cannot feed a part outside its VIN or VCC contract
@@ -135,7 +136,7 @@
   and scores each against the current gates; result written to `history/design_space/exploration.json`
 - `hw_run_grounding_benchmark` adversarially mutates generated artifacts (pinout, footprint,
   pin electrical roles, power tree, interface wiring including USB-C CC Rd, oscillator load caps, and boot strap bias, layout, decoupling placement, RF, connector retention, sourcing,
-  critical-role alternate integrity, connector cutout alignment, mounting keepout intrusion,
+  high-current loop area, critical-role alternate integrity, connector cutout alignment, mounting keepout intrusion,
   firmware pin assignment, motor PWM channel coverage) and confirms every relevant gate catches
   the injected defect; a missed case fails the benchmark
 - `candidate_critic` is a whole-candidate second pass inside `hw_run_all_checks`: false

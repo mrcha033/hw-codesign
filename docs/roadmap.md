@@ -84,8 +84,10 @@ Every item below emits `advisory` until validated against bench measurement, the
   stackup. Feeds `thermal_integrity` (currently advisory in placement) with real numbers.
 - **Signal integrity (SI).** Trace impedance, length-match, and crosstalk checks for flagged
   nets (USB, CAN, QSPI, RF) — gates the layout-autonomy work in H2.
-- **EMC pre-compliance heuristics.** Return-path/loop-area and decoupling-coverage scoring;
-  strictly advisory, explicitly *not* a compliance claim.
+- **EMC pre-compliance heuristics.** Extend the current high-current ingress
+  loop-area precheck into routed return-path and decoupling-coverage scoring;
+  strictly advisory beyond the existing high-confidence digital contradictions,
+  explicitly *not* a compliance claim.
 - **Power-integrity / IR-drop** on the routed copper (depends on H2 routing).
 
 ## H2 — Layout autonomy (credibility-gated escalation)

@@ -243,6 +243,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "wrong_usb_c_cc_pulldown_value",
         "usb_esd_far_from_connector",
         "hot_block_near_sensitive_logic",
+        "high_current_loop_area_excessive",
         "connector_current_rating_violation",
         "missing_connector_retention",
         "connector_cutout_misaligned",

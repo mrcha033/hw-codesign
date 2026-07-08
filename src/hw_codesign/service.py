@@ -28,7 +28,13 @@ from .backends.zephyr import ZephyrBackend
 from .generators import firmware_profile, generate_bom, generate_electronics, generate_firmware, generate_mechanical
 from .io import atomic_write_text, read_yaml, write_json, write_yaml
 from .models import Failure, FailureCategory, GateReport, RepairPatch, Status
-from .placement import check_layout_signal_integrity, check_layout_thermal_integrity, check_placement, propose_placement
+from .placement import (
+    HIGH_CURRENT_THRESHOLD_A,
+    check_layout_signal_integrity,
+    check_layout_thermal_integrity,
+    check_placement,
+    propose_placement,
+)
 from .policy import ChangePolicy
 from .provenance import artifact_provenance
 from .reference_backend import build_firmware_reference, export_fabrication, internal_drc, internal_erc
@@ -3806,6 +3812,62 @@ class HardwareService:
                 f"Moved targeted decoupling capacitor {targeted_decoupling.get('ref')} away from {targeted_decoupling.get('decoupling_target_ref')}",
                 check_placement(decoupling_proposal, graph_bad_decoupling_placement),
                 ["decoupling_too_far_from_target"],
+            )
+
+        high_current_chain_categories = ["power_input", "fuse", "reverse_polarity", "tvs", "efuse"]
+        high_current_chain_refs = [
+            str(match.get("ref"))
+            for category in high_current_chain_categories
+            for match in [
+                next(
+                    (
+                        component
+                        for component in graph.get("components", [])
+                        if component.get("category") == category and component.get("ref")
+                    ),
+                    None,
+                )
+            ]
+            if match is not None
+        ]
+        envelope = spec.get("mechanical", {}).get("envelope", {})
+        board_width = float(envelope.get("board_width_mm", 0.0))
+        board_height = float(envelope.get("board_height_mm", 0.0))
+        supply = spec.get("system", {}).get("supply", {})
+        actuation = spec.get("actuation", {})
+        declared_peak_current = max(
+            float(supply.get("battery", {}).get("pack_current_peak_a", 0) or 0),
+            float(actuation.get("motor_channel_peak_current_a", 0) or 0)
+            * int(actuation.get("max_simultaneous_peak_channels", actuation.get("motor_channels", 0)) or 0),
+        )
+        if (
+            declared_peak_current >= HIGH_CURRENT_THRESHOLD_A
+            and len(high_current_chain_refs) >= 5
+            and board_width >= 65.0
+            and board_height >= 65.0
+        ):
+            loop_proposal = propose_placement(spec, graph)
+            loop_positions = [
+                (20.0, 20.0),
+                (55.0, 20.0),
+                (55.0, 55.0),
+                (20.0, 55.0),
+                (20.0, 22.0),
+            ]
+            for ref, (x_mm, y_mm) in zip(high_current_chain_refs, loop_positions):
+                if ref in loop_proposal.placements:
+                    loop_proposal.placements[ref] = replace(
+                        loop_proposal.placements[ref],
+                        x_mm=x_mm,
+                        y_mm=y_mm,
+                        source="benchmark_forced_high_current_loop_area",
+                    )
+            record(
+                "high_current_loop_area_excessive",
+                "layout_thermal_grounding",
+                "Arranged the high-current ingress chain as a compact-step rectangle with excessive loop area",
+                check_layout_thermal_integrity(loop_proposal, graph, spec),
+                ["high_current_loop_area_excessive"],
             )
 
         rf_component = next(

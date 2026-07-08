@@ -121,6 +121,19 @@ def test_constraint_graph_carries_measured_cost_evidence(spec: dict, graph: dict
         assert details["violation_cost"] >= 0.0
 
 
+def test_constraint_graph_carries_high_current_loop_area_evidence(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+
+    edge = _edges(proposal, "high_current_loop_area")[0]
+    details = edge["details"]
+    assert details["cost_key"] == "high_current_loop_area"
+    assert isinstance(details["area_mm2"], (int, float))
+    assert isinstance(details["max_area_mm2"], (int, float))
+    assert isinstance(details["margin_mm2"], (int, float))
+    assert isinstance(details["violation_cost"], (int, float))
+    assert details["violation_cost"] >= 0.0
+
+
 def test_constraint_graph_carries_rf_and_targeted_decoupling_cost_evidence(ble_spec: dict, ble_graph: dict):
     proposal = propose_placement(ble_spec, ble_graph)
 
@@ -348,6 +361,8 @@ def test_layout_thermal_integrity_passes_seed(spec: dict, graph: dict):
     assert report.metrics["layers"] == 4
     assert report.metrics["high_current_chain_refs"]
     assert report.metrics["high_current_chain_steps"]
+    assert report.metrics["high_current_loop_area_mm2"] is not None
+    assert report.metrics["high_current_loop_area_mm2"] <= report.metrics["high_current_loop_area_limit_mm2"]
 
 
 def test_layout_thermal_integrity_rejects_high_current_chain_spread(spec: dict, graph: dict):
@@ -370,6 +385,30 @@ def test_layout_thermal_integrity_rejects_high_current_chain_spread(spec: dict, 
     assert "high_current_path_spread_excessive" in _codes(report)
     spread = next(step for step in report.metrics["high_current_chain_steps"] if step["refs"] == [left, right])
     assert spread["distance_mm"] > spread["max_step_mm"]
+
+
+def test_layout_thermal_integrity_rejects_high_current_loop_area_even_with_short_steps(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+    seed_report = check_layout_thermal_integrity(proposal, graph, spec)
+    chain = seed_report.metrics["high_current_chain_refs"]
+    assert len(chain) >= 5
+
+    positions = [
+        (20.0, 20.0),
+        (55.0, 20.0),
+        (55.0, 55.0),
+        (20.0, 55.0),
+        (20.0, 22.0),
+    ]
+    for ref, (x_mm, y_mm) in zip(chain, positions):
+        proposal.placements[ref] = replace(proposal.placements[ref], x_mm=x_mm, y_mm=y_mm)
+
+    report = check_layout_thermal_integrity(proposal, graph, spec)
+
+    assert report.status == Status.FAIL
+    assert "high_current_loop_area_excessive" in _codes(report)
+    assert "high_current_path_spread_excessive" not in _codes(report)
+    assert report.metrics["high_current_loop_area_mm2"] > report.metrics["high_current_loop_area_limit_mm2"]
 
 
 def test_layout_thermal_integrity_rejects_hot_block_near_logic(spec: dict, graph: dict):
