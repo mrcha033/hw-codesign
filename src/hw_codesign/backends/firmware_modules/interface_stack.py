@@ -5,7 +5,6 @@ from typing import Any
 
 from ._base import ModuleOutput
 
-
 _STACK_KCONFIG: dict[str, list[str]] = {
     "usb": ["CONFIG_USB_DEVICE_STACK=y", "CONFIG_USB_CDC_ACM=y"],
     "qspi": ["CONFIG_SPI=y"],

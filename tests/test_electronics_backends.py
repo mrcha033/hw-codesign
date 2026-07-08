@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 
 from hw_codesign.backends import command as backend_command
-from hw_codesign.backends.tscircuit import TSCircuitBackend
 from hw_codesign.backends.command import ToolResult
 from hw_codesign.backends.electronics import CONTRACT_STAGES
+from hw_codesign.backends.tscircuit import TSCircuitBackend
 from hw_codesign.io import read_yaml, write_yaml
 from hw_codesign.models import GateReport, Status
 

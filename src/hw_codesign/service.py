@@ -4259,6 +4259,7 @@ class HardwareService:
                 iterations_dir = project_path / "history" / "iterations"
                 passed_gates: list[str] = []
                 failed_gates: list[str] = []
+                blocked_gates: list[str] = []
                 if iterations_dir.is_dir():
                     iteration_dirs = sorted(iterations_dir.iterdir())
                     if iteration_dirs:

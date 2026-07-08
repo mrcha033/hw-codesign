@@ -9,6 +9,9 @@ toolchains:
 test:
 	uv run pytest
 
+lint:
+	uv run ruff check src cli server tests
+
 sample:
 	hw --root . create-project quadruped_robot_controller
 

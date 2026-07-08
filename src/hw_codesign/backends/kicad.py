@@ -194,7 +194,7 @@ class KiCadBackend(ElectronicsBackendAdapter):
 
         if proc.returncode != 0:
             # Filter out benign KiCad wxApp/trait warnings from stderr
-            fatal = [l for l in proc.stderr.splitlines() if "assert" in l.lower() and "traits" not in l and "GetWidth" not in l and l.strip()]
+            fatal = [ln for ln in proc.stderr.splitlines() if "assert" in ln.lower() and "traits" not in ln and "GetWidth" not in ln and ln.strip()]
             if fatal or not proc.stdout.strip():
                 failure = Failure(FailureCategory.TOOL_ERROR, "pcbnew_drc_failed", f"pcbnew DRC script failed: {'; '.join(fatal[:2]) or 'no output'}", details={"stderr": proc.stderr[-2000:]})
                 return GateReport("drc", Status.BLOCKED, [failure])
