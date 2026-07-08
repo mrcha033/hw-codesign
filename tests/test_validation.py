@@ -342,6 +342,21 @@ def test_power_tree_integrity_passes_generated_robotics_graph(service, project):
     assert {"VBAT_RAW", "VBAT_FUSED", "VBAT", "VSYS", "V5", "V3V3"} <= set(report.metrics["source_nets"])
 
 
+def test_power_tree_integrity_keeps_pin_specific_motor_supply_range_scoped(service):
+    project = "bldc_pin_supply_scope"
+    service.create_project(project, template="bldc_esc")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service.validator.check_power_tree(graph, service.read_spec(project))
+
+    assert report.status == "pass"
+    limits = report.metrics["component_voltage_limits"]["U2"]
+    assert any(item["pin_name"] == "VM" and item["supply_voltage_min_v"] == 6.0 for item in limits)
+    assert all(item["pin_name"] != "DVDD" or item["supply_voltage_min_v"] is None for item in limits)
+
+
 def test_power_tree_integrity_rejects_unreachable_power_load(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)

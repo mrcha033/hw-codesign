@@ -75,7 +75,7 @@ The canonical agent workflow, from the [MCP tool reference](docs/mcp-tools.md):
 ```
 hw_get_capabilities            ← which backends and native tools are installed
 hw_create_project              ← instantiate a board family template
-hw_update_requirements         ← lower natural-language requirements into typed spec fields
+hw_update_requirements         ← lower requirements into typed fields plus resolved/unresolved assumption IR
 
 # Author topology, placement, and firmware
 hw_propose_circuit_block       ← search the component catalog before committing

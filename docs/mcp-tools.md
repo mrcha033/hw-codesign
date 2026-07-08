@@ -95,9 +95,9 @@ The public tool registry exposes this as the shared top-level
 - `hw_validate_spec` — validate the spec against its JSON Schema; returns failures with field paths
 - `hw_update_spec` — write a spec section; requires `user_approved=true` for safety-critical sections
 - `hw_update_requirements` — lower natural-language requirements into typed spec fields;
-  also returns and persists `requirements_ir_v1` with lowered fields, unresolved
-  assumptions, unsupported constraints, conflicting typed fields, required approvals,
-  and affected gates.
+  also returns and persists `requirements_ir_v1` with lowered fields, explicitly
+  resolved assumptions, unresolved assumptions, unsupported constraints, conflicting
+  typed fields, required approvals, and affected gates.
   Retained critical assumptions such as motor-driver topology or cooling are
   release-blocking until explicitly resolved or waived.
   Its public output schema is `requirements_update_result`, not an opaque blob.

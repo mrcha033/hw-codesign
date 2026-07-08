@@ -69,11 +69,15 @@
     },
     "compiler_ir": {
       "type": "object",
-      "required": ["version", "input_id", "lowered_fields", "unresolved_assumptions", "unsupported_constraints", "required_human_approvals", "affected_gates"],
+      "required": ["version", "input_id", "lowered_fields", "resolved_assumptions", "unresolved_assumptions", "unsupported_constraints", "required_human_approvals", "affected_gates"],
       "properties": {
         "version": {"const": "requirements_ir_v1"},
         "input_id": {"type": "string"},
         "lowered_fields": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": true}
+        },
+        "resolved_assumptions": {
           "type": "array",
           "items": {"type": "object", "additionalProperties": true}
         },

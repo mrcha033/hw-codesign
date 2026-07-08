@@ -357,10 +357,12 @@ class HardwareService:
     def update_requirements(self, project: str, requirements_text: str) -> dict[str, Any]:
         """Deterministically lower common natural-language requirements into the typed spec."""
         system_path = self.workspace.require_project(project) / "spec" / "system.yaml"
+        mechanical_path = self.workspace.require_project(project) / "spec" / "mechanical.yaml"
         firmware_path = self.workspace.require_project(project) / "spec" / "firmware.yaml"
         manufacturing_path = self.workspace.require_project(project) / "spec" / "manufacturing.yaml"
         req_path = self.workspace.require_project(project) / "spec" / "requirements.yaml"
         system_file = read_yaml(system_path)
+        mechanical_file = read_yaml(mechanical_path)
         firmware_file = read_yaml(firmware_path)
         manufacturing_file = read_yaml(manufacturing_path)
         changed: list[str] = []
@@ -382,12 +384,13 @@ class HardwareService:
         ]
         _ROOTS = {
             "actuation": system_file, "system": system_file, "compute": system_file,
-            "manufacturing": manufacturing_file,
+            "mechanical": mechanical_file, "manufacturing": manufacturing_file,
         }
         _AFFECTED_GATES_BY_ROOT = {
             "actuation": ["semantic_electrical", "power_integrity_estimate", "firmware_pinmap", "layout_thermal_integrity"],
             "system": ["semantic_electrical", "power_tree_integrity", "mechanical_fit"],
             "compute": ["pin_symbol_footprint", "firmware_pinmap", "native_zephyr_build"],
+            "mechanical": ["mechanical_fit", "layout_thermal_integrity", "physical_qualification"],
             "manufacturing": ["ir_pcb_sanity", "layout_signal_integrity", "native_drc", "reference_fabrication"],
             "firmware": ["firmware_interface_contract", "firmware_pinmap", "native_zephyr_build"],
             "sensing": ["semantic_electrical", "firmware_pinmap", "firmware_interface_contract"],
@@ -448,6 +451,119 @@ class HardwareService:
             })
 
         lowered_text = requirements_text.lower()
+        assumptions = _assumptions_as_dict(system_file.get("assumptions", {}))
+        resolved_assumption_items: list[dict[str, Any]] = []
+
+        def _lower_explicit_assumption(
+            *,
+            assumption_key: str,
+            spec_path: str,
+            value: str,
+            field_type: str,
+            source_span: str,
+            source_range: dict[str, int],
+            reason: str,
+        ) -> None:
+            keys = spec_path.split(".")
+            target = _ROOTS[keys[0]]
+            for key in keys[:-1]:
+                target = target[key]
+            target[keys[-1]] = value
+            changed.append(spec_path)
+            affected_gates = _AFFECTED_GATES_BY_ROOT.get(keys[0], [])
+            lowered_fields.append({
+                "spec_path": spec_path,
+                "value": value,
+                "field_type": field_type,
+                "source_span": source_span,
+                "source_range": source_range,
+                "affected_gates": affected_gates,
+                "status": "lowered",
+            })
+            if assumption_key in assumptions:
+                assumption = assumptions[assumption_key]
+                assumption["value"] = value
+                assumption["resolved_value"] = value
+                assumption["confidence"] = "user_specified"
+                assumption["requires_user_review"] = False
+                assumption["resolution_source"] = "requirements_ir_v1"
+                assumption["resolution_span"] = source_span
+                assumption["reason"] = reason
+                resolved_assumption_items.append({
+                    "assumption_key": assumption_key,
+                    "value": value,
+                    "status": "resolved",
+                    "source_span": source_span,
+                    "source_range": source_range,
+                    "spec_path": spec_path,
+                    "affected_gates": affected_gates,
+                    "required_human_approvals": [],
+                    "reason": reason,
+                })
+
+        _explicit_assumption_rules: list[dict[str, Any]] = [
+            {
+                "assumption_key": "motor_type",
+                "spec_path": "actuation.motor_type",
+                "field_type": "enum",
+                "patterns": [
+                    (r"\bexternal\s+driver(?:\s+modules?)?\b|외장\s*드라이버", "external_driver_modules"),
+                    (r"\bonboard\s+driver\b|\bintegrated\s+driver\b|온보드\s*드라이버", "onboard_driver"),
+                ],
+                "reason": "Motor driver topology specified by requirements text.",
+            },
+            {
+                "assumption_key": "cooling",
+                "spec_path": "mechanical.cooling",
+                "field_type": "enum",
+                "patterns": [
+                    (r"\bforced(?:\s+air)?\s+cooling\b|\bfan(?:\s+cooled)?\b|강제\s*냉각|팬", "forced_air"),
+                    (r"\bpassive\s+cooling\b|자연\s*냉각", "passive"),
+                ],
+                "reason": "Cooling condition specified by requirements text.",
+            },
+        ]
+        for rule in _explicit_assumption_rules:
+            parsed = [
+                {
+                    "value": value,
+                    "source_span": match.group(0),
+                    "source_range": _source_range(match),
+                }
+                for pattern, value in rule["patterns"]
+                for match in re.finditer(pattern, requirements_text, flags=re.IGNORECASE)
+            ]
+            if not parsed:
+                continue
+            distinct_values = {item["value"] for item in parsed}
+            if len(distinct_values) > 1:
+                spec_path = rule["spec_path"]
+                approval_id = "approve_or_lower_conflict_" + re.sub(r"[^a-z0-9]+", "_", spec_path.lower()).strip("_")
+                conflicting_items.append({
+                    "source": f"Conflicting values for {spec_path}: " + ", ".join(str(value) for value in sorted(distinct_values, key=str)),
+                    "source_span": "; ".join(item["source_span"] for item in parsed),
+                    "source_range": {"start": min(item["source_range"]["start"] for item in parsed), "end": max(item["source_range"]["end"] for item in parsed)},
+                    "category": "conflicting_requirement",
+                    "field_type": "conflicting_lowered_field",
+                    "status": "unresolved",
+                    "release_blocking": True,
+                    "reason": f"Multiple values were specified for typed field {spec_path}; refusing to choose one silently",
+                    "spec_path": spec_path,
+                    "conflicts": parsed,
+                    "required_human_approvals": [approval_id],
+                    "affected_gates": _AFFECTED_GATES_BY_ROOT.get(spec_path.split(".")[0], []),
+                })
+                continue
+            _lower_explicit_assumption(
+                assumption_key=rule["assumption_key"],
+                spec_path=rule["spec_path"],
+                value=parsed[0]["value"],
+                field_type=rule["field_type"],
+                source_span=parsed[0]["source_span"],
+                source_range=parsed[0]["source_range"],
+                reason=rule["reason"],
+            )
+
         if "zephyr" in lowered_text:
             firmware_file["firmware"]["framework"] = "zephyr"
             changed.append("firmware.framework")
@@ -475,7 +591,9 @@ class HardwareService:
                     "affected_gates": _AFFECTED_GATES_BY_ROOT["sensing"],
                     "status": "lowered",
                 })
+        system_file["assumptions"] = assumptions
         write_yaml(system_path, system_file)
+        write_yaml(mechanical_path, mechanical_file)
         write_yaml(firmware_path, firmware_file)
         write_yaml(manufacturing_path, manufacturing_file)
         _unsupported: list[tuple[str, str, str]] = [
@@ -665,6 +783,7 @@ class HardwareService:
             "version": "requirements_ir_v1",
             "input_id": input_id,
             "lowered_fields": sorted(lowered_fields, key=lambda item: item["spec_path"]),
+            "resolved_assumptions": resolved_assumption_items,
             "unresolved_assumptions": retained_assumption_items,
             "unsupported_constraints": unresolved_items,
             "conflicting_fields": conflicting_items,
@@ -679,11 +798,12 @@ class HardwareService:
             "has_unresolved_constraints": bool(active_unresolved_items),
             "mode": "replace_active_requirements",
             "changed_paths": sorted(set(changed)),
-            "changed_files": [str(system_path), str(firmware_path), str(manufacturing_path), str(req_path)],
+            "changed_files": [str(system_path), str(mechanical_path), str(firmware_path), str(manufacturing_path), str(req_path)],
             "unresolved_requirements": [item["source"] for item in active_unresolved_items],
             "unsupported_constraints": unsupported_constraints,
             "conflicting_requirements": [item["source"] for item in conflicting_items],
             "unresolved_assumptions": [item["source"] for item in retained_assumption_items],
+            "resolved_assumptions": [item["assumption_key"] for item in resolved_assumption_items],
             "compiler_ir": compiler_ir,
             "required_human_approvals": required_human_approvals,
             "affected_gates": affected_gates,

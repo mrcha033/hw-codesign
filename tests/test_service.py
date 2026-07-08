@@ -596,6 +596,8 @@ def test_natural_language_requirements_update_structured_spec(service, project):
     assert spec["actuation"]["motor_channels"] == 16
     assert spec["actuation"]["motor_channel_peak_current_a"] == 6.0
     assert spec["system"]["supply"]["battery"]["pack_voltage_nominal"] == 24.0
+    assert spec["actuation"]["motor_type"] == "external_driver_modules"
+    assert spec["mechanical"]["cooling"] == "forced_air"
     assert spec["manufacturing"]["pcb"]["layers"] == 6
     assert spec["firmware"]["framework"] == "zephyr"
     assert spec.get("requirements", {}).get("active_unresolved", []) == []
@@ -607,6 +609,10 @@ def test_natural_language_requirements_update_structured_spec(service, project):
     assert lowered["actuation.motor_channels"]["source_range"] == {"start": 0, "end": 10}
     assert "power_integrity_estimate" in lowered["actuation.motor_channels"]["affected_gates"]
     assert "layout_thermal_integrity" in lowered["actuation.motor_channels"]["affected_gates"]
+    assert lowered["actuation.motor_type"]["value"] == "external_driver_modules"
+    assert lowered["mechanical.cooling"]["value"] == "forced_air"
+    resolved = {item["assumption_key"]: item for item in ir["resolved_assumptions"]}
+    assert {"motor_type", "cooling"} <= set(resolved)
     lowered_tokens = [item for item in ir["tokens"] if item["kind"] == "lowered_field"]
     assert any(item["spec_path"] == "actuation.motor_channels" and item["source_span"] == "16 channel" for item in lowered_tokens)
     assert ir["required_human_approvals"] == []

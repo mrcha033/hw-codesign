@@ -52,11 +52,23 @@ def test_update_requirements_resolves_explicit_topology_and_cooling_from_brief(s
     assert result["status"] == "generated"
     assert result["has_unresolved_constraints"] is False
     assert result["unresolved_assumptions"] == []
+    assert set(result["resolved_assumptions"]) == {"motor_type", "cooling"}
     assert "approve_assumption_motor_type" not in result["required_human_approvals"]
     assert "approve_assumption_cooling" not in result["required_human_approvals"]
     spec = service.read_spec(project)
+    assert spec["actuation"]["motor_type"] == "external_driver_modules"
+    assert spec["mechanical"]["cooling"] == "forced_air"
+    assert spec["assumptions"]["motor_type"]["requires_user_review"] is False
+    assert spec["assumptions"]["motor_type"]["resolved_value"] == "external_driver_modules"
+    assert spec["assumptions"]["cooling"]["requires_user_review"] is False
+    assert spec["assumptions"]["cooling"]["resolved_value"] == "forced_air"
     ir = spec["requirements"]["compiler_ir"]
     assert ir["unresolved_assumptions"] == []
+    resolved = {item["assumption_key"]: item for item in ir["resolved_assumptions"]}
+    assert resolved["motor_type"]["spec_path"] == "actuation.motor_type"
+    assert resolved["cooling"]["spec_path"] == "mechanical.cooling"
+    lowered_paths = {item["spec_path"] for item in ir["lowered_fields"]}
+    assert {"actuation.motor_type", "mechanical.cooling"} <= lowered_paths
     assert all(item.get("kind") != "retained_assumption" for item in ir["tokens"])
 
 
@@ -89,6 +101,30 @@ def test_update_requirements_rejects_conflicting_lowered_fields(service, project
     lowering = next(report for report in checks["reports"] if report["gate"] == "requirements_lowering")
     assert lowering["status"] != "pass"
     assert "unlowered_requirement" in {failure["code"] for failure in lowering["failures"]}
+
+
+def test_update_requirements_rejects_conflicting_explicit_assumption_fields(service, project):
+    original = service.read_spec(project)
+
+    result = service.update_requirements(
+        project,
+        "16 channel 24V battery external driver onboard driver forced cooling passive cooling",
+    )
+
+    assert result["has_unresolved_constraints"] is True
+    spec = service.read_spec(project)
+    assert spec["actuation"]["motor_type"] == original["actuation"]["motor_type"]
+    assert spec["mechanical"]["cooling"] == original["mechanical"]["cooling"]
+    assert spec["assumptions"]["motor_type"]["requires_user_review"] is True
+    assert spec["assumptions"]["cooling"]["requires_user_review"] is True
+    conflicts = {item["spec_path"]: item for item in spec["requirements"]["compiler_ir"]["conflicting_fields"]}
+    assert {"actuation.motor_type", "mechanical.cooling"} <= set(conflicts)
+    assert {item["value"] for item in conflicts["actuation.motor_type"]["conflicts"]} == {
+        "external_driver_modules",
+        "onboard_driver",
+    }
+    assert {item["value"] for item in conflicts["mechanical.cooling"]["conflicts"]} == {"forced_air", "passive"}
+    assert all(item["field_type"] == "conflicting_lowered_field" for item in spec["requirements"]["active_unresolved"])
 
 
 def test_update_requirements_does_not_lower_continuous_current_as_peak(service, project):
