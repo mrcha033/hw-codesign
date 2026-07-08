@@ -3563,6 +3563,31 @@ class HardwareService:
                     ["regulator_input_voltage_out_of_range"],
                 )
 
+                original_regulator = next(
+                    (
+                        item for item in graph.get("components", [])
+                        if item.get("ref") == regulator_vin.get("ref")
+                    ),
+                    regulator_vin,
+                )
+                original_input_pin = next((pin for pin in original_regulator.get("pins", []) if pin.get("role") == "power_in"), None)
+                input_net = original_input_pin.get("net") if original_input_pin else None
+                output_pin = next((pin for pin in original_regulator.get("pins", []) if pin.get("role") == "power_out"), None)
+                output_net = output_pin.get("net") if output_pin else None
+                spec_bad_regulator_headroom = deepcopy(spec)
+                rails = spec_bad_regulator_headroom.get("system", {}).get("supply", {}).get("rails", [])
+                input_rail = next((rail for rail in rails if rail.get("name") == input_net), None)
+                output_rail = next((rail for rail in rails if rail.get("name") == output_net), None)
+                if input_rail and output_rail and isinstance(output_rail.get("voltage"), (int, float)):
+                    input_rail["voltage"] = float(output_rail["voltage"]) + 0.1
+                    record(
+                        "regulator_dropout_headroom_violation",
+                        "power_tree_grounding",
+                        f"Reduced {regulator_vin.get('ref')} input rail headroom below regulator dropout margin",
+                        self.validator.check_power_tree(graph, spec_bad_regulator_headroom),
+                        ["regulator_dropout_headroom_insufficient"],
+                    )
+
         constrained_load = next(
             (
                 component

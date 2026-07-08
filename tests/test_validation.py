@@ -405,6 +405,8 @@ def test_power_tree_integrity_passes_generated_robotics_graph(service, project):
 
     assert report.status == "pass"
     assert {"VBAT_RAW", "VBAT_FUSED", "VBAT", "VSYS", "V5", "V3V3"} <= set(report.metrics["source_nets"])
+    assert report.metrics["regulator_voltage_limits"]["U5"]["min_dropout_headroom_v"] == 0.4
+    assert report.metrics["regulator_voltage_limits"]["U5"]["observed_headroom_v"] > 1.0
 
 
 def test_power_tree_integrity_keeps_pin_specific_motor_supply_range_scoped(service):
@@ -472,6 +474,25 @@ def test_power_tree_integrity_rejects_regulator_input_voltage_range_violation(se
     assert failure.details["ref"] == "U5"
     assert failure.details["input_voltage_max_v"] == 17.0
     assert failure.details["observed_input_voltage_max_v"] == 24.0
+
+
+def test_power_tree_integrity_rejects_regulator_dropout_headroom_violation(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    spec = service.read_spec(project)
+    v5 = next(rail for rail in spec["system"]["supply"]["rails"] if rail["name"] == "V5")
+    v5["voltage"] = 3.45
+
+    report = service.validator.check_power_tree(graph, spec)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "regulator_dropout_headroom_insufficient")
+    assert failure.details["ref"] == "U5"
+    assert failure.details["input_nets"] == ["V5"]
+    assert failure.details["output_nets"] == ["V3V3"]
+    assert failure.details["min_dropout_headroom_v"] == 0.4
+    assert failure.details["observed_headroom_v"] < 0.4
 
 
 def test_power_tree_integrity_rejects_load_supply_voltage_range_violation(service):

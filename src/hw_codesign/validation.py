@@ -30,6 +30,13 @@ CURATED_REGULATOR_INPUT_VOLTAGE_RANGE_V: dict[str, tuple[float, float]] = {
     "TPS62133RGTR": (3.0, 17.0),
 }
 
+CURATED_REGULATOR_MIN_HEADROOM_V: dict[str, float] = {
+    "AP2112K-3.3TRG1": 0.25,
+    "LM22678TJ-5.0": 1.5,
+    "LM76005RNPR": 0.5,
+    "TPS62133RGTR": 0.4,
+}
+
 CAN_TERMINATION_OHMS = 120.0
 CAN_TERMINATION_TOLERANCE_OHMS = 12.0
 USB_C_RD_OHMS = 5100.0
@@ -907,6 +914,29 @@ class Validator:
                             input_voltage_max_v=max_input_v,
                             observed_input_voltage_min_v=observed_min,
                             observed_input_voltage_max_v=observed_max,
+                        ))
+                min_headroom_v = _component_regulator_headroom_v(component)
+                if min_headroom_v is not None and known_outputs:
+                    observed_headroom_v = min(known_inputs) - max(known_outputs)
+                    regulator_voltage_limits.setdefault(str(component.get("ref", "?")), {}).update({
+                        "output_nets": sorted(outputs),
+                        "min_dropout_headroom_v": min_headroom_v,
+                        "observed_headroom_v": observed_headroom_v,
+                    })
+                    if observed_headroom_v < min_headroom_v - 0.05:
+                        failures.append(_failure(
+                            FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                            "regulator_dropout_headroom_insufficient",
+                            f"{component.get('ref', '?')} input/output rails leave insufficient regulator dropout headroom",
+                            "electronics.components",
+                            ref=component.get("ref"),
+                            mpn=component.get("mpn"),
+                            input_nets=sorted(inputs),
+                            output_nets=sorted(outputs),
+                            min_dropout_headroom_v=min_headroom_v,
+                            observed_headroom_v=observed_headroom_v,
+                            observed_input_voltage_min_v=min(known_inputs),
+                            observed_output_voltage_max_v=max(known_outputs),
                         ))
             if input_domains == output_domains:
                 continue
@@ -1991,6 +2021,31 @@ def _component_input_voltage_range_v(component: dict[str, Any]) -> tuple[float, 
         return constraint_range
     mpn = str(component.get("mpn") or "").upper()
     return CURATED_REGULATOR_INPUT_VOLTAGE_RANGE_V.get(mpn)
+
+
+def _component_regulator_headroom_v(component: dict[str, Any]) -> float | None:
+    for source in _rating_sources(component):
+        value = (
+            _number(source.get("min_dropout_headroom_v"))
+            or _number(source.get("minimum_headroom_v"))
+            or _number(source.get("dropout_voltage_v"))
+            or _number(source.get("dropout_v"))
+        )
+        if value is not None:
+            return value
+    for constraint in component.get("constraints", []):
+        text = str(constraint).strip().lower().replace("-", "_")
+        mv_match = re.search(r"(?P<mv>\d+(?:\.\d+)?)\s*mv_dropout", text)
+        if mv_match:
+            return float(mv_match.group("mv")) / 1000.0
+        vp_match = re.search(r"(?P<int>\d+)v(?P<frac>\d+)_dropout", text)
+        if vp_match:
+            return float(f"{vp_match.group('int')}.{vp_match.group('frac')}")
+        v_match = re.search(r"(?P<v>\d+(?:p\d+|\.\d+)?)v(?:\d+)?_dropout", text)
+        if v_match:
+            return float(v_match.group("v").replace("p", "."))
+    mpn = str(component.get("mpn") or "").upper()
+    return CURATED_REGULATOR_MIN_HEADROOM_V.get(mpn)
 
 
 def _component_supply_voltage_range_v(
