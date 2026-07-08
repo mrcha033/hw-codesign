@@ -609,6 +609,10 @@ class HardwareService:
             (r"\b\d+(?:\.\d+)?\s*A\s+continuous\b", "current_rating", "continuous current rating — not lowered into spec"),
             (r"\bJLCPCB\b", "manufacturing_service", "JLCPCB assembly service — not lowered into spec"),
             (r"\bimpedance[\s-]controlled\b", "pcb_stackup", "impedance-controlled PCB stackup — not lowered into spec"),
+            (r"\b(?:EMI|EMC|FCC|CE)\b", "emi_emc_compliance", "EMI/EMC compliance target — requires external qualification evidence"),
+            (r"\b(?:MIL-STD-810|IEC\s*60068|vibration|shock)\b", "vibration_environment", "Vibration/shock qualification target — requires external test evidence"),
+            (r"\b(?:USB[-\s]?C\s*PD|USB[-\s]?PD|power\s+delivery)\b", "usb_power_delivery", "USB-C Power Delivery negotiation — not lowered into power/interface spec"),
+            (r"\b(?:thermal|temperature)\s+(?:limit|max(?:imum)?|below|under)\s+\d+(?:\.\d+)?\s*(?:deg\s*C|degrees?\s*C|C)\b", "thermal_limit", "Thermal/temperature limit — requires explicit thermal model or qualification evidence"),
         ]
         _reasons: dict[str, str] = {
             "ip_protection": "IP ingress protection not modeled as a typed spec field",
@@ -617,6 +621,10 @@ class HardwareService:
             "current_rating": "Continuous current not modeled separately from peak current in typed spec",
             "manufacturing_service": "JLCPCB assembly service selection not modeled in typed spec",
             "pcb_stackup": "Impedance-controlled stackup not modeled in typed spec",
+            "emi_emc_compliance": "EMI/EMC compliance cannot be certified by digital checks",
+            "vibration_environment": "Specific vibration/shock qualification requires external test evidence",
+            "usb_power_delivery": "USB-C PD negotiation is not modeled in the generated power or firmware interface contract",
+            "thermal_limit": "Numeric thermal limits require an explicit thermal model or measured qualification evidence",
         }
         _affected_gates_by_category: dict[str, list[str]] = {
             "ip_protection": ["mechanical_fit", "physical_qualification"],
@@ -625,6 +633,10 @@ class HardwareService:
             "current_rating": ["semantic_electrical", "power_integrity_estimate", "layout_thermal_integrity", "physical_qualification"],
             "manufacturing_service": ["component_provenance", "sourcing", "supplier_availability", "artifact_integrity"],
             "pcb_stackup": ["ir_pcb_sanity", "layout_signal_integrity", "native_drc", "reference_fabrication"],
+            "emi_emc_compliance": ["layout_signal_integrity", "reference_fabrication", "physical_qualification"],
+            "vibration_environment": ["mechanical_connector_retention", "mechanical_mounting_integrity", "physical_qualification"],
+            "usb_power_delivery": ["power_tree_integrity", "interface_integrity", "firmware_interface_contract", "physical_qualification"],
+            "thermal_limit": ["layout_thermal_integrity", "mechanical_fit", "physical_qualification"],
         }
         _retained_assumption_rules: list[dict[str, Any]] = [
             {

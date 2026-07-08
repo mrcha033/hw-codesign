@@ -30,7 +30,8 @@ similar to:
   "release_eligible": false,
   "requirements_update": {
     "status": "generated",
-    "changed_paths": ["actuation.motor_channels", "..."]
+    "changed_paths": ["actuation.motor_channels", "..."],
+    "unsupported_constraints": ["EMI/EMC compliance target — requires external qualification evidence", "..."]
   },
   "design_goal": "cross-domain hardware candidate for evidence-backed promotion",
   "design_domains": {

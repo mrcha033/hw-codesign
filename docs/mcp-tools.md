@@ -100,6 +100,9 @@ The public tool registry exposes this as the shared top-level
   typed fields, required approvals, and affected gates.
   Retained critical assumptions such as motor-driver topology or cooling are
   release-blocking until explicitly resolved or waived.
+  Physical qualification and protocol claims such as EMI/EMC, vibration/shock
+  standards, USB-C PD, and numeric thermal limits are preserved as unresolved
+  release blockers unless they are backed by explicit modeled fields or evidence.
   Its public output schema is `requirements_update_result`, not an opaque blob.
 - `hw_list_assumptions` — list all declared design assumptions and their resolution state
 - `hw_resolve_assumption` — resolve a named assumption; requires `approved=true`

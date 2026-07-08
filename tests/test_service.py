@@ -696,6 +696,39 @@ def test_unsupported_constraints_persist_to_spec_and_block_validation(service, p
     assert "unlowered_requirement" in codes
 
 
+def test_requirements_compiler_preserves_physical_qualification_constraints(service, project):
+    result = service.update_requirements(
+        project,
+        "USB-C PD sink with EMI/EMC pre-compliance, MIL-STD-810 vibration, thermal limit 70C",
+    )
+
+    assert result["status"] == "generated"
+    assert result["has_unresolved_constraints"] is True
+    assert "physical_qualification" in result["affected_gates"]
+    spec = service.read_spec(project)
+    unsupported = spec["requirements"]["compiler_ir"]["unsupported_constraints"]
+    by_category = {item["category"]: item for item in unsupported}
+
+    assert {
+        "usb_power_delivery",
+        "emi_emc_compliance",
+        "vibration_environment",
+        "thermal_limit",
+    } <= set(by_category)
+    assert by_category["usb_power_delivery"]["source_span"] == "USB-C PD"
+    assert "firmware_interface_contract" in by_category["usb_power_delivery"]["affected_gates"]
+    assert "layout_signal_integrity" in by_category["emi_emc_compliance"]["affected_gates"]
+    assert "mechanical_connector_retention" in by_category["vibration_environment"]["affected_gates"]
+    assert "layout_thermal_integrity" in by_category["thermal_limit"]["affected_gates"]
+    assert all(item["release_blocking"] for item in unsupported)
+    assert all(item["required_human_approvals"] for item in unsupported)
+
+    checks = service.run_all_checks(project, include_external=False)
+    lowering = next(report for report in checks["reports"] if report["gate"] == "requirements_lowering")
+    assert lowering["status"] != "pass"
+    assert "unlowered_requirement" in {failure["code"] for failure in lowering["failures"]}
+
+
 def test_update_requirements_replaces_active_unresolved_constraints(service, project):
     """update_requirements uses replace semantics for active_unresolved: a later call with no
     unsupported constraints clears active_unresolved even if the prior call had blockers.
