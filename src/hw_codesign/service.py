@@ -3399,6 +3399,38 @@ class HardwareService:
                     ["regulator_input_voltage_out_of_range"],
                 )
 
+        constrained_load = next(
+            (
+                component
+                for component in graph.get("components", [])
+                if set(component.get("constraints", [])) & {"3v3_only", "3v3_supply", "3v3_compatible", "3v3_logic_compatible"}
+                and any(pin.get("role") == "power_in" and pin.get("net") == "V3V3" for pin in component.get("pins", []))
+            ),
+            None,
+        )
+        if constrained_load:
+            graph_bad_load_supply = deepcopy(graph)
+            wrong_supply_net = "USB_VBUS" if any(net.get("name") == "USB_VBUS" for net in graph.get("nets", [])) else "V5"
+            wrong_supply_domain = "USB_5V" if wrong_supply_net == "USB_VBUS" else "V5"
+            for component_item in graph_bad_load_supply.get("components", []):
+                if component_item.get("ref") != constrained_load.get("ref"):
+                    continue
+                load_pin = next(
+                    (pin for pin in component_item.get("pins", []) if pin.get("role") == "power_in" and pin.get("net") == "V3V3"),
+                    None,
+                )
+                if load_pin:
+                    load_pin["net"] = wrong_supply_net
+                    load_pin["voltage_domain"] = wrong_supply_domain
+                break
+            record(
+                "load_supply_voltage_range_violation",
+                "power_integrity_grounding",
+                f"Moved constrained 3V3-only load {constrained_load.get('ref')} onto {wrong_supply_net}",
+                self.validator.check_power_tree(graph_bad_load_supply, spec),
+                ["component_supply_voltage_out_of_range"],
+            )
+
         graph_missing_decoupling = deepcopy(graph)
         graph_missing_decoupling["components"] = [
             component for component in graph_missing_decoupling.get("components", [])

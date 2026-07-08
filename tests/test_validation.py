@@ -394,6 +394,43 @@ def test_power_tree_integrity_rejects_regulator_input_voltage_range_violation(se
     assert failure.details["observed_input_voltage_max_v"] == 24.0
 
 
+def test_power_tree_integrity_rejects_load_supply_voltage_range_violation(service):
+    project = "esp32_load_supply_contract"
+    service.create_project(project, template="esp32_wifi_gateway")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    constrained_load = next(component for component in bad_graph["components"] if "3v3_only" in component.get("constraints", []))
+    supply_pin = next(pin for pin in constrained_load["pins"] if pin["role"] == "power_in" and pin["net"] == "V3V3")
+    supply_pin["net"] = "USB_VBUS"
+    supply_pin["voltage_domain"] = "USB_5V"
+
+    report = service.validator.check_power_tree(bad_graph, service.read_spec(project))
+
+    assert report.status == "fail"
+    assert "power_pin_voltage_domain_mismatch" not in {item.code for item in report.failures}
+    failure = next(item for item in report.failures if item.code == "component_supply_voltage_out_of_range")
+    assert failure.details["ref"] == constrained_load["ref"]
+    assert failure.details["net_name"] == "USB_VBUS"
+    assert failure.details["supply_voltage_max_v"] == 3.6
+    assert failure.details["observed_voltage_v"] == 5.0
+
+
+def test_grounding_benchmark_catches_load_supply_voltage_range_violation(service):
+    project = "esp32_grounding_supply_voltage"
+    service.create_project(project, template="esp32_wifi_gateway")
+    service.generate_electronics_only(project)
+    service.generate_firmware_only(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    case = next(item for item in benchmark["cases"] if item["id"] == "load_supply_voltage_range_violation")
+    assert case["detected"] is True
+    assert case["expected_codes"] == ["component_supply_voltage_out_of_range"]
+    assert "component_supply_voltage_out_of_range" in case["observed_codes"]
+
+
 def test_power_integrity_estimate_passes_generated_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)

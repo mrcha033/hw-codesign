@@ -762,6 +762,7 @@ class Validator:
         reachable: set[str] = set()
         transfers: list[tuple[dict[str, Any], set[str], set[str]]] = []
         regulator_voltage_limits: dict[str, dict[str, Any]] = {}
+        component_voltage_limits: dict[str, list[dict[str, Any]]] = {}
 
         for component in graph.get("components", []):
             category = component.get("category")
@@ -836,6 +837,41 @@ class Validator:
                         pin_number=pin.get("number"),
                         net_name=pin["net"],
                     ))
+                if _component_category_matches(component, {"regulator"}):
+                    continue
+                supply_range = _component_supply_voltage_range_v(component)
+                if supply_range is None:
+                    continue
+                min_supply_v, max_supply_v = supply_range
+                observed_voltage_v = _net_nominal_voltage(str(pin["net"]), rail_nominal)
+                if observed_voltage_v is None:
+                    continue
+                component_voltage_limits.setdefault(str(component.get("ref", "?")), []).append({
+                    "pin_number": pin.get("number"),
+                    "pin_name": pin.get("name"),
+                    "net_name": pin.get("net"),
+                    "mpn": component.get("mpn"),
+                    "supply_voltage_min_v": min_supply_v,
+                    "supply_voltage_max_v": max_supply_v,
+                    "observed_voltage_v": observed_voltage_v,
+                })
+                below_min = min_supply_v is not None and observed_voltage_v < min_supply_v - 0.05
+                above_max = max_supply_v is not None and observed_voltage_v > max_supply_v + 0.05
+                if below_min or above_max:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "component_supply_voltage_out_of_range",
+                        f"{component.get('ref', '?')}.{pin.get('number')} supply rail is outside the grounded component input range",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        mpn=component.get("mpn"),
+                        pin_number=pin.get("number"),
+                        pin_name=pin.get("name"),
+                        net_name=pin.get("net"),
+                        supply_voltage_min_v=min_supply_v,
+                        supply_voltage_max_v=max_supply_v,
+                        observed_voltage_v=observed_voltage_v,
+                    ))
 
         for component, inputs, outputs in transfers:
             known_inputs = [value for net in inputs if (value := _net_nominal_voltage(net, rail_nominal)) is not None]
@@ -892,6 +928,7 @@ class Validator:
             "source_nets": sorted(reachable),
             "transfer_components": len(transfers),
             "regulator_voltage_limits": regulator_voltage_limits,
+            "component_voltage_limits": component_voltage_limits,
             "power_loads_checked": sum(
                 1
                 for component in graph.get("components", [])
@@ -1954,6 +1991,27 @@ def _component_input_voltage_range_v(component: dict[str, Any]) -> tuple[float, 
     return CURATED_REGULATOR_INPUT_VOLTAGE_RANGE_V.get(mpn)
 
 
+def _component_supply_voltage_range_v(component: dict[str, Any]) -> tuple[float | None, float | None] | None:
+    for source in _rating_sources(component):
+        min_v = (
+            _number(source.get("supply_voltage_min_v"))
+            or _number(source.get("input_voltage_min_v"))
+            or _number(source.get("vcc_min_v"))
+            or _number(source.get("vdd_min_v"))
+            or _number(source.get("vin_min_v"))
+        )
+        max_v = (
+            _number(source.get("supply_voltage_max_v"))
+            or _number(source.get("input_voltage_max_v"))
+            or _number(source.get("vcc_max_v"))
+            or _number(source.get("vdd_max_v"))
+            or _number(source.get("vin_max_v"))
+        )
+        if min_v is not None or max_v is not None:
+            return min_v, max_v
+    return _supply_voltage_range_from_constraints(component.get("constraints", []))
+
+
 def _rating_sources(component: dict[str, Any]) -> list[dict[str, Any]]:
     sources = [component]
     for key in ("electrical_limits", "ratings", "datasheet_limits"):
@@ -1980,6 +2038,44 @@ def _input_voltage_range_from_constraints(constraints: Iterable[Any]) -> tuple[f
     if minimum is not None and maximum is not None:
         return minimum, maximum
     return None
+
+
+def _supply_voltage_range_from_constraints(constraints: Iterable[Any]) -> tuple[float | None, float | None] | None:
+    minimum: float | None = None
+    maximum: float | None = None
+    for constraint in constraints:
+        text = str(constraint).strip().lower().replace("-", "_")
+        if text in {"3v3_only", "3v3_supply"}:
+            return 3.0, 3.6
+        if text in {"3v3_compatible", "3v3_logic_compatible"}:
+            maximum = min(maximum, 3.6) if maximum is not None else 3.6
+            continue
+        if text in {"5v_operation", "5v_supply"}:
+            return 4.5, 5.5
+        range_match = re.search(
+            r"(?P<min>\d+(?:[vp.]\d+)?v?)_to_(?P<max>\d+(?:[vp.]\d+)?v?)(?:_(?:supply|input|vin|vm))?\b",
+            text,
+        )
+        if range_match:
+            return _voltage_number(range_match.group("min")), _voltage_number(range_match.group("max"))
+        max_match = re.search(
+            r"(?P<max>\d+(?:[vp.]\d+)?v?)_(?:max|supply|max_supply|supply_max|input|input_max|vin|vin_max|max_input|max_vin|bus_max)\b",
+            text,
+        )
+        if max_match:
+            value = _voltage_number(max_match.group("max"))
+            maximum = min(maximum, value) if maximum is not None else value
+    if minimum is not None or maximum is not None:
+        return minimum, maximum
+    return None
+
+
+def _voltage_number(value: str) -> float:
+    text = value.strip().lower()
+    if text.endswith("v"):
+        text = text[:-1]
+    text = text.replace("p", ".").replace("v", ".")
+    return float(text)
 
 
 def _current_limit_from_constraint(text: str) -> float | None:
