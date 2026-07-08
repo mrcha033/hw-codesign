@@ -94,13 +94,18 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
     footprints = []
     pad_positions: dict[str, list[tuple[float, float]]] = defaultdict(list)
     fixed_positions = component_positions(graph)
+    right_edge_refs = {
+        str(interface.get("ref"))
+        for interface in spec.get("mechanical", {}).get("connector_interfaces", [])
+        if interface.get("side") == "right" and interface.get("ref")
+    }
     for i, item in enumerate(graph["components"]):
         x, y = fixed_positions.get(item["ref"], (10 + (i % 7) * 20, 10 + (i // 7) * 15))
         high_current = any(str(item_pin.get("net") or "").startswith("VBAT") or item_pin.get("net") == "VSYS" for item_pin in item["pins"])
         pitch = 3.0 if high_current else 2.0
         columns = 1 if high_current else min(7, max(2, len(item["pins"])))
         pads = []
-        mirror_x = item["ref"] in {f"J{index}" for index in range(17, 23)}
+        mirror_x = item["ref"] in right_edge_refs or item["ref"] in {f"J{index}" for index in range(17, 23)}
         for pin_index, item_pin in enumerate(item["pins"]):
             px = (pin_index % columns) * pitch * (-1 if mirror_x else 1)
             py = (pin_index // columns) * pitch

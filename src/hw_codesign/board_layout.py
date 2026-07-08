@@ -237,12 +237,42 @@ def _usb_hid_controller_seed_table() -> dict[str, tuple[tuple[float, float], str
     }
 
 
+_SAMD21_SENSOR_HUB_ANCHORS: dict[str, tuple[float, float]] = {
+    # Board: 50x30 mm. USB-C must stay on the front edge; SWD exits the right edge.
+    "J1": (12.0, 3.0),   # USB-C, front edge
+    "D1": (18.0, 3.0),   # USB ESD, connector-side of the protected USB pair
+    "U1": (28.0, 5.0),   # 3V3 LDO, close to VBUS but thermally separated from sensors/MCU
+    "C3": (34.0, 5.0),   # V3V3 bulk cap beside the regulator output
+    "U2": (24.0, 17.0),  # ATSAMD21G18A, central for USB/SWD/I2C fanout
+    "X1": (18.0, 20.0),  # 32.768 kHz crystal, close to XIN32/XOUT32
+    "C4": (21.0, 17.0),  # XIN32 load cap near crystal and MCU pins
+    "C5": (21.0, 23.0),  # XOUT32 load cap near crystal and MCU pins
+    "C6": (18.0, 24.0),  # VDDCORE cap near MCU core rail
+    "C1": (20.0, 14.0),  # V3V3 decoupling near MCU power pins
+    "C2": (34.0, 16.0),  # V3V3 decoupling near I2C sensors
+    "U3": (36.0, 12.0),  # LSM6DSOX IMU on the sensor side of the bus
+    "U4": (36.0, 21.0),  # BME280, separated from LDO heat source
+    "R1": (29.0, 22.0),  # I2C SCL pull-up near sensors
+    "R2": (29.0, 26.0),  # I2C SDA pull-up near sensors
+    "J2": (47.0, 21.0),  # SWD 10-pin header, right edge
+}
+
+
+def _samd21_sensor_hub_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
+    return {
+        ref: (xy, "samd21_sensor_hub_anchor")
+        for ref, xy in _SAMD21_SENSOR_HUB_ANCHORS.items()
+    }
+
+
 def _seed_table_for_graph(graph: dict[str, Any]) -> dict[str, tuple[tuple[float, float], str]]:
     architecture = graph.get("design_basis", {}).get("architecture")
     if architecture == "nrf52840_ble_sensor":
         return _ble_sensor_node_seed_table()
     if architecture == "esp32s3_usb_i2c_sensor_data_logger":
         return _sensor_data_logger_seed_table()
+    if architecture == "atsamd21g18a_lsm6dsox_bme280":
+        return _samd21_sensor_hub_seed_table()
     if architecture == "rp2040_usb_hid_qspi_flash":
         return _usb_hid_controller_seed_table()
     if architecture == "rp2040_qspi_usb_device":

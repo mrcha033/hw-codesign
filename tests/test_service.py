@@ -279,6 +279,18 @@ def test_samd21_sensor_hub_uses_curated_sensor_and_debug_pin_contracts(service):
     assert vddcore_cap["component_id"] == "grm188_1uf"
     assert {pin["net"] for pin in vddcore_cap["pins"]} == {"VDDCORE", "GND"}
 
+    positions = {item["ref"]: item["pcb_position_mm"] for item in graph["components"]}
+    assert positions["J1"] == [12.0, 3.0]
+    assert positions["D1"] == [18.0, 3.0]
+    assert positions["U3"] == [36.0, 12.0]
+    assert positions["U4"] == [36.0, 21.0]
+    assert positions["J2"] == [47.0, 21.0]
+
+    routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
+    assert routing["status"] == "generated"
+    assert routing["failures"] == []
+    assert internal_drc(path, service.read_spec(project), graph).status.value == "pass"
+
 
 def test_generic_i2c_pullup_on_wrong_rail_fails_interface_integrity(service):
     project = "lora_sensor_node_i2c_wrong_rail_check"

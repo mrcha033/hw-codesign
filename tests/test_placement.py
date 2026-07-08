@@ -44,6 +44,17 @@ def ble_graph(ble_spec: dict) -> dict:
     return build_graph(ble_spec)
 
 
+@pytest.fixture
+def samd21_spec() -> dict:
+    template = Path(__file__).parents[1] / "src" / "hw_codesign" / "templates" / "samd21_sensor_hub.yaml"
+    return yaml.safe_load(template.read_text(encoding="utf-8"))
+
+
+@pytest.fixture
+def samd21_graph(samd21_spec: dict) -> dict:
+    return build_graph(samd21_spec)
+
+
 def _codes(report) -> set[str]:
     return {failure.code for failure in report.failures}
 
@@ -173,6 +184,37 @@ def test_targeted_decoupling_proximity_is_enforced_for_ble_seed(ble_spec: dict, 
     assert targeted
     assert any(constraint.target_ref == "C2" and constraint.params["target_ref"] == "U1" for constraint in targeted)
     assert check_placement(proposal, ble_graph).status == Status.PASS
+
+
+def test_samd21_sensor_hub_uses_board_specific_physical_seed(samd21_spec: dict, samd21_graph: dict):
+    proposal = propose_placement(samd21_spec, samd21_graph)
+
+    placement_report = check_placement(proposal, samd21_graph)
+    thermal_report = check_layout_thermal_integrity(proposal, samd21_graph, samd21_spec)
+    signal_report = check_layout_signal_integrity(proposal, samd21_graph, samd21_spec)
+
+    assert placement_report.status == Status.PASS
+    assert placement_report.metrics["errors"] == 0
+    assert thermal_report.status == Status.PASS
+    assert thermal_report.metrics["thermal_risk_components"] == 1
+    assert signal_report.status == Status.PASS
+
+    max_edge = samd21_spec["mechanical"]["max_connector_edge_distance_mm"]
+    width = samd21_spec["mechanical"]["envelope"]["board_width_mm"]
+    assert proposal.placements["J1"].y_mm <= max_edge
+    assert width - proposal.placements["J2"].x_mm <= max_edge
+    assert proposal.placements["J1"].source == "samd21_sensor_hub_anchor"
+    assert proposal.placements["J2"].source == "samd21_sensor_hub_anchor"
+    assert proposal.placements["R3"].source == "usb_c_rd_connector_seed"
+    assert proposal.placements["R4"].source == "usb_c_rd_connector_seed"
+
+    usb_esd = proposal.placements["D1"]
+    usb_connector = proposal.placements["J1"]
+    usb_device = proposal.placements["U2"]
+    assert math.dist((usb_esd.x_mm, usb_esd.y_mm), (usb_connector.x_mm, usb_connector.y_mm)) < math.dist(
+        (usb_esd.x_mm, usb_esd.y_mm),
+        (usb_device.x_mm, usb_device.y_mm),
+    )
 
 
 def test_constraint_solver_repairs_targeted_decoupling_far_from_ic(ble_spec: dict, ble_graph: dict):

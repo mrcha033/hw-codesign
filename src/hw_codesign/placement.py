@@ -35,10 +35,10 @@ from .board_layout import component_positions, placement_sources
 from .models import Failure, FailureCategory, GateReport, Status
 
 # Categories whose components dissipate meaningful power and benefit from spacing.
-POWER_CATEGORIES = {"regulator", "efuse", "reverse_polarity", "safety_gate", "motor_io"}
+POWER_CATEGORIES = {"regulator", "regulator_3v3", "efuse", "reverse_polarity", "safety_gate", "motor_io"}
 # Categories that can create enough heat or current concentration to corrupt a
 # superficially valid placement if they are too close to logic/sensor devices.
-THERMAL_RISK_CATEGORIES = {"regulator", "efuse", "reverse_polarity", "safety_gate", "charger"}
+THERMAL_RISK_CATEGORIES = {"regulator", "regulator_3v3", "efuse", "reverse_polarity", "safety_gate", "charger"}
 SENSITIVE_CATEGORIES = {"mcu", "imu", "env_sensor", "fuel_gauge"}
 HIGH_CURRENT_PATH_CATEGORIES = ["power_input", "fuse", "reverse_polarity", "tvs", "efuse"]
 # Gross-overlap floor: centers closer than this are unambiguously broken,
@@ -194,8 +194,11 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
 
     _seed_rationale: dict[str, str] = {
         "curated_anchor": "Hand-tuned anchor from the reference layout seed.",
+        "samd21_sensor_hub_anchor": "Board-family anchor for the SAMD21 USB sensor hub layout contract.",
         "decoupling_row_seed": "Seed row reserved for decoupling capacitors.",
         "connector_edge_seed": "Seed pushed to a board edge for connector access.",
+        "usb_c_rd_connector_seed": "USB-C Rd resistor position derived from the connector CC pins.",
+        "crystal_load_cap_seed": "Crystal load capacitor position derived from the crystal reference.",
         "grid_fallback": "Deterministic grid fallback; no curated anchor for this reference.",
     }
 
