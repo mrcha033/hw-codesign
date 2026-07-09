@@ -603,7 +603,7 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         description=(
             "Run the deterministic hardware-grounding benchmark against generated artifacts. "
             "Injects in-memory wrong pinout, wrong footprint, exact-part no-connect pin contract violations, missing or miswired support circuit including USB-C CC Rd, USB ESD pair mapping, crystal load-cap presence/grounding/value, and boot strap bias, bad power budget, "
-            "unreachable power rail, regulator voltage-order violation, regulator input voltage range violation, regulator dropout/headroom violation, regulator enable-bias violation, powered-load supply voltage range violation, missing rail decoupling, missing or wrong-rail I2C pull-up, missing or wrong-value CAN termination, "
+            "unreachable power rail, regulator voltage-order violation, regulator input voltage range violation, regulator dropout/headroom violation, regulator enable-bias violation, powered-load supply voltage range violation, missing rail decoupling, missing, wrong-rail, or wrong-value I2C pull-up, missing or wrong-value CAN termination, "
             "missing USB ESD bridge, misplaced USB ESD placement, misplaced oscillator crystal, excessive high-current loop area, hot-block placement near sensitive logic, "
             "misplaced RF antenna/keepout, under-rated connector current, connector cutout misalignment, mounting keepout intrusion, missing critical-role sourcing resilience, missing curated alternate integrity, "
             "unavailable part, invalid net endpoint, component pin/net mismatch, firmware pinmap mismatch, "

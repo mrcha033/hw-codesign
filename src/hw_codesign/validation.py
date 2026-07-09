@@ -39,6 +39,8 @@ CURATED_REGULATOR_MIN_HEADROOM_V: dict[str, float] = {
 
 CAN_TERMINATION_OHMS = 120.0
 CAN_TERMINATION_TOLERANCE_OHMS = 12.0
+I2C_PULLUP_MIN_OHMS = 1_000.0
+I2C_PULLUP_MAX_OHMS = 10_000.0
 USB_C_RD_OHMS = 5100.0
 USB_C_RD_TOLERANCE_OHMS = 510.0
 BOOT_STRAP_MIN_BIAS_OHMS = 1_000.0
@@ -1173,6 +1175,7 @@ class Validator:
             for name, net in nets_by_name.items()
             if net.get("signal_class") == "i2c" or str(name).upper().startswith("I2C")
         )
+        i2c_pullup_values_checked = 0
         for net_name in i2c_nets:
             pullup_components = [
                 component for component in components
@@ -1212,6 +1215,35 @@ class Validator:
                     pullup_rails=pullup_rails,
                     endpoint_supply_nets=endpoint_supply_nets,
                 ))
+            for component in pullup_components:
+                resistance_ohms = _component_resistance_ohms(component)
+                if resistance_ohms is None:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "i2c_pullup_value_missing",
+                        f"{component.get('ref', '?')} pull-up on I2C net {net_name} has no declared resistance value",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        net_name=net_name,
+                        value=component.get("value"),
+                        expected_min_ohms=I2C_PULLUP_MIN_OHMS,
+                        expected_max_ohms=I2C_PULLUP_MAX_OHMS,
+                    ))
+                    continue
+                i2c_pullup_values_checked += 1
+                if resistance_ohms < I2C_PULLUP_MIN_OHMS or resistance_ohms > I2C_PULLUP_MAX_OHMS:
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "i2c_pullup_value_out_of_range",
+                        f"{component.get('ref', '?')} pull-up on I2C net {net_name} is {resistance_ohms:g} ohms, expected {I2C_PULLUP_MIN_OHMS:g}-{I2C_PULLUP_MAX_OHMS:g} ohms",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        net_name=net_name,
+                        value=component.get("value"),
+                        resistance_ohms=resistance_ohms,
+                        expected_min_ohms=I2C_PULLUP_MIN_OHMS,
+                        expected_max_ohms=I2C_PULLUP_MAX_OHMS,
+                    ))
 
         can_high = "CANH" in net_names
         can_low = "CANL" in net_names
@@ -1377,6 +1409,9 @@ class Validator:
         report.metrics = {
             **report.metrics,
             "i2c_nets_checked": len(i2c_nets),
+            "i2c_pullup_values_checked": i2c_pullup_values_checked,
+            "i2c_pullup_expected_min_ohms": I2C_PULLUP_MIN_OHMS,
+            "i2c_pullup_expected_max_ohms": I2C_PULLUP_MAX_OHMS,
             "can_pair_present": can_high and can_low,
             "usb_nets_checked": len(present_usb_nets),
             "usb_bridge_present": usb_bridge_present,

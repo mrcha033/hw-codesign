@@ -28,8 +28,9 @@
 
 - Deterministic typed electrical graph with role-set resolver and curated component database;
   every resolved component has immutable provenance
-- `interface_integrity` checks bus support circuits, including missing I2C pull-ups and
-  pull-ups tied to a rail that does not match the powered I2C endpoints, plus missing
+- `interface_integrity` checks bus support circuits, including missing I2C pull-ups,
+  I2C pull-ups outside the declared 1k-10k range, and pull-ups tied to a rail
+  that does not match the powered I2C endpoints, plus missing
   or wrong-valued CAN termination across CANH/CANL, and USB ESD bridges whose
   DP_IN/DP_OUT/DM_IN/DM_OUT pins do not map to the expected raw/protected D+/D- nets
 - `support_circuit_completeness` rejects crystal oscillators whose load capacitors are

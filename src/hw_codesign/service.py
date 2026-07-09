@@ -3876,6 +3876,36 @@ class HardwareService:
                 ["i2c_pullup_voltage_mismatch"],
             )
 
+            graph_wrong_i2c_pullup_value = deepcopy(graph)
+            i2c_net_names = {str(net_name) for net_name in i2c_nets if net_name}
+            bad_i2c_pullup = next(
+                (
+                    component for component in graph_wrong_i2c_pullup_value.get("components", [])
+                    if (
+                        str(component.get("category", "")).endswith("_pullup")
+                        or component.get("category") in {"pullup", "resistor_4k7"}
+                        or role_for_component(component) == "resistor_4k7"
+                    )
+                    and any(pin.get("net") in i2c_net_names for pin in component.get("pins", []))
+                ),
+                None,
+            )
+            if bad_i2c_pullup:
+                bad_i2c_pullup["value"] = "100k"
+                for key in ("resistance_ohms", "ohms", "resistance"):
+                    bad_i2c_pullup.pop(key, None)
+                for key in ("electrical_limits", "ratings", "datasheet_limits"):
+                    if isinstance(bad_i2c_pullup.get(key), dict):
+                        for resistance_key in ("resistance_ohms", "ohms", "resistance"):
+                            bad_i2c_pullup[key].pop(resistance_key, None)
+                record(
+                    "wrong_i2c_pullup_value",
+                    "interface_signal_integrity",
+                    "Changed an I2C pull-up from 4.7k to 100k while keeping rail/net topology intact",
+                    self.validator.check_interface_integrity(graph_wrong_i2c_pullup_value),
+                    ["i2c_pullup_value_out_of_range"],
+                )
+
         if {"CANH", "CANL"} <= {net.get("name") for net in graph.get("nets", [])}:
             graph_missing_can_termination = deepcopy(graph)
             graph_missing_can_termination["components"] = [

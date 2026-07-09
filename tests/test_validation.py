@@ -420,6 +420,17 @@ def test_grounding_benchmark_catches_swapped_usb_esd_pair_mapping(service, proje
     assert "usb_esd_bridge_pin_net_mismatch" in case["observed_codes"]
 
 
+def test_grounding_benchmark_catches_wrong_i2c_pullup_value(service, project):
+    service.generate_all(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    case = next(item for item in benchmark["cases"] if item["id"] == "wrong_i2c_pullup_value")
+    assert case["detected"] is True
+    assert case["expected_codes"] == ["i2c_pullup_value_out_of_range"]
+    assert "i2c_pullup_value_out_of_range" in case["observed_codes"]
+
+
 def test_power_tree_integrity_passes_generated_robotics_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)
@@ -783,6 +794,37 @@ def test_interface_integrity_rejects_i2c_pullup_wrong_voltage_rail(service, proj
     failure = next(item for item in report.failures if item.code == "i2c_pullup_voltage_mismatch")
     assert failure.details["pullup_rails"] == ["V5"]
     assert failure.details["endpoint_supply_nets"] == ["V3V3"]
+
+
+def test_interface_integrity_rejects_wrong_i2c_pullup_value(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    i2c_net_names = {
+        net["name"]
+        for net in bad_graph["nets"]
+        if net.get("signal_class") == "i2c" or str(net.get("name", "")).upper().startswith("I2C")
+    }
+    pullup = next(
+        component for component in bad_graph["components"]
+        if (
+            str(component.get("category", "")).endswith("_pullup")
+            or component.get("category") in {"pullup", "resistor_4k7"}
+        )
+        and any(pin.get("net") in i2c_net_names for pin in component.get("pins", []))
+    )
+    pullup["value"] = "100k"
+
+    report = service.validator.check_interface_integrity(bad_graph)
+
+    assert report.status == "fail"
+    assert report.metrics["i2c_pullup_values_checked"] >= 1
+    failure = next(item for item in report.failures if item.code == "i2c_pullup_value_out_of_range")
+    assert failure.details["ref"] == pullup["ref"]
+    assert failure.details["resistance_ohms"] == 100000.0
+    assert failure.details["expected_min_ohms"] == 1000.0
+    assert failure.details["expected_max_ohms"] == 10000.0
 
 
 def test_interface_integrity_rejects_missing_can_termination(service, project):
