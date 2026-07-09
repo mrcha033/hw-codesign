@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import math
 from copy import deepcopy
@@ -785,3 +786,35 @@ def test_pipeline_emits_placement_gate_and_structured_graph(service, project):
     assert "placement_constraints" in gates
     assert "layout_thermal_integrity" in gates
     assert "layout_signal_integrity" in gates
+
+
+def test_reference_fabrication_uses_current_solver_placement_after_agent_constraint(service, project):
+    service.generate_electronics_only(project)
+    root = service.workspace.require_project(project)
+    graph_path = root / "electronics" / "generated" / "electrical_graph.json"
+    original_graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    original_r1 = next(item for item in original_graph["components"] if item["ref"] == "R1")
+
+    result = service.set_placement_constraint(project, {
+        "ref": "R1",
+        "relationship": "adjacent_to",
+        "target": "U1",
+        "max_distance_mm": 5.0,
+    })
+
+    assert result["status"] == "pass"
+    updated_graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    updated_r1 = next(item for item in updated_graph["components"] if item["ref"] == "R1")
+    expected = updated_graph["placement"]["placements"]["R1"]
+    assert updated_r1["pcb_position_mm"] == [expected["x_mm"], expected["y_mm"]]
+    assert updated_r1["pcb_position_mm"] != original_r1["pcb_position_mm"]
+    assert updated_r1["placement_source"] == expected["source"]
+
+    checks = service.run_all_checks(project, include_external=False)
+    by_gate = {report["gate"]: report for report in checks["reports"]}
+    assert by_gate["reference_fabrication"]["status"] == "pass"
+
+    pnp_path = root / "exports" / "candidates" / "reference-fabrication" / "fabrication" / "pick_and_place.csv"
+    rows = {row["Ref"]: row for row in csv.DictReader(pnp_path.read_text(encoding="utf-8").splitlines())}
+    assert float(rows["R1"]["PosX"]) == pytest.approx(expected["x_mm"])
+    assert float(rows["R1"]["PosY"]) == pytest.approx(expected["y_mm"])

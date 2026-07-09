@@ -30,6 +30,7 @@ from .io import atomic_write_text, read_yaml, write_json, write_yaml
 from .models import Failure, FailureCategory, GateReport, RepairPatch, Status
 from .placement import (
     HIGH_CURRENT_THRESHOLD_A,
+    apply_placement_to_graph,
     check_layout_signal_integrity,
     check_layout_thermal_integrity,
     check_placement,
@@ -1013,9 +1014,11 @@ class HardwareService:
             reports.append(GateReport("firmware_pinmap", Status.FAIL, [Failure(FailureCategory.FIRMWARE_ERROR, "missing_pinmap", "Generate firmware before checking the pinmap")]))
         graph_path = path / "electronics" / "generated" / "electrical_graph.json"
         graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else {"components": [], "nets": []}
-        reports.append(self.validator.check_mechanical_connector_retention(spec, graph))
-        reports.append(self.validator.check_mechanical_connector_cutouts(spec, graph))
-        reports.append(self.validator.check_mechanical_mounting_integrity(spec, graph))
+        placement_proposal = propose_placement(spec, graph) if graph.get("components") else None
+        placed_graph = apply_placement_to_graph(graph, placement_proposal) if placement_proposal else graph
+        reports.append(self.validator.check_mechanical_connector_retention(spec, placed_graph))
+        reports.append(self.validator.check_mechanical_connector_cutouts(spec, placed_graph))
+        reports.append(self.validator.check_mechanical_mounting_integrity(spec, placed_graph))
         fw_modules = spec.get("firmware", {}).get("modules", [])
         reports.append(self.validator.check_firmware_modules(fw_modules, pinmap, spec=spec, graph=graph, module_dir=path / "firmware" / "modules"))
         if graph_path.exists():
@@ -1045,15 +1048,14 @@ class HardwareService:
             reports.append(GateReport("bom", Status.FAIL, [Failure(FailureCategory.BOM_ERROR, "missing_bom_source", "Generate electronics before checking the BOM")]))
             reports.append(self._semantic_schematic_roundtrip_report(path, graph))
         reports.extend([internal_erc(graph), internal_drc(path, spec, graph), build_firmware_reference(path)])
-        if graph.get("components"):
-            placement_proposal = propose_placement(spec, graph)
-            reports.append(check_placement(placement_proposal, graph))
-            reports.append(check_layout_thermal_integrity(placement_proposal, graph, spec))
-            reports.append(check_layout_signal_integrity(placement_proposal, graph, spec))
+        if placement_proposal is not None:
+            reports.append(check_placement(placement_proposal, placed_graph))
+            reports.append(check_layout_thermal_integrity(placement_proposal, placed_graph, spec))
+            reports.append(check_layout_signal_integrity(placement_proposal, placed_graph, spec))
         if graph.get("components") and graph_path.exists():
             try:
                 ref_fab_out = path / "exports" / "candidates" / "reference-fabrication"
-                ref_fab_artifacts = export_fabrication(path, spec, graph, ref_fab_out)
+                ref_fab_artifacts = export_fabrication(path, spec, placed_graph, ref_fab_out)
                 reports.append(GateReport("reference_fabrication", Status.PASS, [], metrics={"artifact_count": len(ref_fab_artifacts), "candidate_only": True}, artifacts=ref_fab_artifacts, backend={"name": "reference-fabrication", "release_eligible": False, "candidate_only": True}))
             except Exception as exc:
                 reports.append(GateReport("reference_fabrication", Status.FAIL, [Failure(FailureCategory.EDA_ERROR, "reference_fabrication_error", str(exc))], backend={"name": "reference-fabrication", "release_eligible": False}))
@@ -5715,7 +5717,8 @@ class HardwareService:
         # Check that ref exists in the current graph
         spec = self.read_spec(project)
         from .reference_backend import build_graph
-        graph = build_graph(spec)
+        graph_path = path / "electronics" / "generated" / "electrical_graph.json"
+        graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.is_file() else build_graph(spec)
         known_refs = {c["ref"] for c in graph["components"]}
         if ref not in known_refs:
             return {
@@ -5740,9 +5743,14 @@ class HardwareService:
         agent_data["placement"]["constraints"] = existing
         write_yaml(agent_path, agent_data)
 
-        # Re-run placement gate so the agent immediately sees compliance
+        # Re-run placement and persist the updated coordinate contract so
+        # downstream fabrication candidates consume the same placed graph.
         updated_spec = self.read_spec(project)
-        gate_report = check_placement(propose_placement(updated_spec, graph), graph)
+        placement_proposal = propose_placement(updated_spec, graph)
+        placed_graph = apply_placement_to_graph(graph, placement_proposal)
+        if graph_path.is_file():
+            write_json(graph_path, placed_graph)
+        gate_report = check_placement(placement_proposal, placed_graph)
         persist_report(path, gate_report)
 
         return {

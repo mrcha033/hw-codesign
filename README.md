@@ -80,7 +80,7 @@ hw_update_requirements         ← lower requirements into typed fields plus res
 # Author topology, placement, and firmware
 hw_propose_circuit_block       ← search the component catalog before committing
 hw_add_circuit_block           ← add a circuit block; ERC runs and result is returned immediately
-hw_set_placement_constraint    ← express adjacent_to / near_connector; placement gate runs on write
+hw_set_placement_constraint    ← express adjacent_to / near_connector; gate runs and coordinates refresh
 hw_design_firmware_module      ← author a firmware behavior (timeout_shutdown, periodic_transmit, …)
 hw_check_cross_domain_consistency
 

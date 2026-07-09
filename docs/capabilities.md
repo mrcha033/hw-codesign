@@ -56,6 +56,9 @@
   USB-ESD, high-current-loop step and loop-area, and thermal-zone costs
 - Hard-blocks on off-board components, coincident centers, and connectors placed on the wrong
   board half; advisory warnings on coarse courtyard overlap estimation
+- Generated `pcb_position_mm`, assembly drawings, pick-and-place, and reference-fabrication
+  candidate exports consume the same solver proposal that `placement_constraints`,
+  `layout_thermal_integrity`, and `layout_signal_integrity` validate
 - `ir_pcb_sanity` cross-checks generated KiCad copper-layer declarations and copper-layer usage
   against the manufacturing stackup, and KiCad Gerber export derives its layer list from the
   board file, so a 2-layer candidate cannot silently carry inner-layer zones, routes, or exports

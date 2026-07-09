@@ -120,7 +120,7 @@ The public tool registry exposes this as the shared top-level
 - `hw_list_circuit_blocks` — list all agent-authored circuit blocks for a project
 
 ### Placement constraint authoring
-- `hw_set_placement_constraint` — author a placement relationship; placement gate runs on write
+- `hw_set_placement_constraint` — author a placement relationship; placement gate runs on write and generated coordinates are refreshed for downstream candidate fabrication
 - `hw_list_placement_constraints` — list all placement constraints for a project
 
 ### Firmware module authoring

@@ -9,7 +9,7 @@ from typing import Any
 
 from .io import atomic_write_text, write_json
 from .mechanical_contract import build_mechanical_contract
-from .placement import propose_placement
+from .placement import apply_placement_to_graph, propose_placement
 from .provenance import artifact_provenance
 from .reference_backend import build_graph, generate_kicad
 from .resolver import ComponentResolver
@@ -46,10 +46,7 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
         component.update({"mpn": data["mpn"], "manufacturer": data["manufacturer"], "package": data["package"], "symbol": data["symbol"], "footprint": data["footprint"]["library_id"], "footprint_metadata": data["footprint"], "pin_contracts": _curated_pin_contracts(data), "lifecycle": data["lifecycle"], "sourcing": data["sourcing"], "supplier_offer": data.get("supplier_offer"), "datasheet_evidence": data.get("datasheet_evidence", []), "constraints": data["constraints"], "review_status": data["review_status"], "resolution": match.resolution, "component_id": match.component_id, "resolution_provenance": match.provenance})
         _complete_unmapped_package_pins(component)
     proposal = propose_placement(spec, graph)
-    for component in graph["components"]:
-        placement = proposal.placements[component["ref"]]
-        component["pcb_position_mm"] = [placement.x_mm, placement.y_mm]
-    graph["placement"] = proposal.to_dict()
+    graph = apply_placement_to_graph(graph, proposal)
     graph["component_resolution"] = ComponentResolver.serialize(resolved)
     graph["component_provenance"] = {item.ref: item.provenance for item in resolved}
     graph["component_resolution_report"] = resolution_report.to_dict()

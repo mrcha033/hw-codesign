@@ -91,16 +91,20 @@ def component_positions(graph: dict[str, Any]) -> dict[str, tuple[float, float]]
 def placement_sources(graph: dict[str, Any]) -> dict[str, str]:
     """Provenance tag for each placed reference (mirrors ``component_positions``)."""
     table = _seed_table_for_graph(graph)
-    return {
-        item["ref"]: (
-            "usb_c_rd_connector_seed"
-            if item.get("category") == "usb_cc_pulldown" and item["ref"] not in table
-            else "crystal_load_cap_seed"
-            if item.get("category") == "xtal_cap" and item["ref"] not in table
-            else table[item["ref"]][1] if item["ref"] in table else "grid_fallback"
-        )
-        for item in graph.get("components", [])
-    }
+    sources: dict[str, str] = {}
+    for item in graph.get("components", []):
+        ref = item["ref"]
+        if "pcb_position_mm" in item and item.get("placement_source"):
+            sources[ref] = str(item["placement_source"])
+        elif item.get("category") == "usb_cc_pulldown" and ref not in table:
+            sources[ref] = "usb_c_rd_connector_seed"
+        elif item.get("category") == "xtal_cap" and ref not in table:
+            sources[ref] = "crystal_load_cap_seed"
+        elif ref in table:
+            sources[ref] = table[ref][1]
+        else:
+            sources[ref] = "grid_fallback"
+    return sources
 
 
 def _usb_c_rd_seed_position(

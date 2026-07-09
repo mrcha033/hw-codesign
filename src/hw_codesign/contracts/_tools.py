@@ -1122,6 +1122,8 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         description=(
             "Express a PCB placement relationship for a component. "
             "Validated against the current BOM and stored in the project spec. "
+            "When an electrical graph exists, rewrites its placement coordinates from the solver proposal "
+            "so downstream candidate fabrication uses the same placed graph. "
             "Relationships: adjacent_to, near_connector, same_side, opposite_side, thermal_separation."
         ),
         input_schema={

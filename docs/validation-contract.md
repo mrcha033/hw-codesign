@@ -134,6 +134,11 @@ channel coverage, firmware e-stop shutdown behavior, firmware interface bring-up
 coverage, and dependency reports,
 then verifies that the relevant gates catch each plausible-but-wrong candidate.
 
+The reference-fabrication candidate export uses the current placed electrical
+graph, including agent-authored placement constraints applied after initial
+electronics generation, so pick-and-place and assembly artifacts cannot silently
+fall back to stale seed coordinates after the placement gates pass.
+
 The benchmark passes only when all injected cases are detected. It is evidence
 that the current digital validators catch those classes of false positives; it
 is not evidence that thermal, EMI/EMC, SI/PI, vibration, ingress, connector

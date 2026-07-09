@@ -28,6 +28,7 @@ Design constraints (intentional, to keep the feature credible):
 from __future__ import annotations
 
 import math
+from copy import deepcopy
 from dataclasses import asdict, dataclass, field, replace
 from typing import Any
 
@@ -132,6 +133,21 @@ class PlacementProposal:
                 "authoritative": False,
             },
         }
+
+
+def apply_placement_to_graph(graph: dict[str, Any], proposal: PlacementProposal) -> dict[str, Any]:
+    """Return a graph copy whose component coordinates match a proposal."""
+    updated = deepcopy(graph)
+    for component in updated.get("components", []):
+        placement = proposal.placements.get(component.get("ref"))
+        if placement is None:
+            continue
+        component["pcb_position_mm"] = [placement.x_mm, placement.y_mm]
+        component["placement_source"] = placement.source
+        if placement.rationale:
+            component["placement_rationale"] = placement.rationale
+    updated["placement"] = proposal.to_dict()
+    return updated
 
 
 def _courtyard_side_mm(pin_count: int) -> float:
