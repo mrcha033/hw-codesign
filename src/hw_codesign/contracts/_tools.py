@@ -496,8 +496,8 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         name="hw_run_all_checks",
         description=(
             "Run all registered gate checks. Set include_external=false to skip toolchain-dependent gates, "
-            "including native EDA/CAD/firmware builds and the tscircuit Node compiler; skipped contract gates "
-            "return structured blocked reports."
+            "including native EDA/CAD/firmware builds, the tscircuit Node compiler, and KiCad-native "
+            "compile/export gates; skipped contract gates return structured blocked reports."
         ),
         input_schema={
             "type": "object",

@@ -118,6 +118,24 @@ def test_tscircuit_backend_is_not_executed_when_external_checks_disabled(service
     assert reports["tscircuit_layout_completeness"]["status"] == "blocked"
 
 
+def test_kicad_backend_is_not_executed_when_external_checks_disabled(service, project, monkeypatch):
+    _set_backend(service, project, "kicad")
+    service.generate_electronics_only(project)
+
+    def fail_if_called(*_args, **_kwargs):
+        pytest.fail("KiCad backend subprocess should not run when include_external=False")
+
+    monkeypatch.setattr(service.kicad, "evaluate", fail_if_called)
+
+    checks = service.run_all_checks(project, include_external=False)
+    reports = {item["gate"]: item for item in checks["reports"]}
+
+    assert reports["kicad_compile"]["status"] == "blocked"
+    assert reports["kicad_compile"]["failures"][0]["code"] == "external_gate_not_run"
+    assert reports["kicad_footprint_parity"]["status"] == "blocked"
+    assert reports["kicad_manufacturing_export"]["status"] == "blocked"
+
+
 def test_tool_version_timeout_degrades_to_unknown(monkeypatch):
     monkeypatch.setattr(backend_command, "resolve_tool", lambda _: "/bin/hung-tool")
 

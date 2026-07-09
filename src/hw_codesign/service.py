@@ -1069,7 +1069,10 @@ class HardwareService:
             else:
                 reports.extend(self.tscircuit.blocked_contract("external_gate_not_run", "tscircuit backend execution was not requested"))
         elif backend == "kicad":
-            reports.extend(self.kicad.evaluate(path, graph))
+            if include_external:
+                reports.extend(self.kicad.evaluate(path, graph))
+            else:
+                reports.extend(self.kicad.blocked_contract("external_gate_not_run", "KiCad backend execution was not requested"))
         elif backend == "python_netlist":
             reports.extend(self.python_netlist.evaluate(path, graph))
         else:
