@@ -622,7 +622,15 @@ class Validator:
                 failures.append(_failure(FailureCategory.BOM_ERROR, "sourcing_unresolved", f"{ref} sourcing is not resolved or waived", "electronics.components"))
             failures.extend(sourcing_waiver_failures(sourcing, path="electronics.components"))
             offer = component.get("supplier_offer") or {}
-            if offer and sourcing.get("status") != "waived":
+            if sourcing.get("status") == "resolved" and not offer:
+                failures.append(_failure(
+                    FailureCategory.BOM_ERROR,
+                    "supplier_availability_evidence_missing",
+                    f"{ref} has resolved sourcing metadata but no current supplier availability evidence",
+                    "electronics.components",
+                    supplier_skus=sourcing.get("supplier_skus", []),
+                ))
+            elif offer and sourcing.get("status") != "waived":
                 availability = offer.get("availability")
                 if availability in {"out_of_stock", "discontinued"}:
                     failures.append(_failure(
@@ -633,7 +641,16 @@ class Validator:
                         provider=offer.get("provider"),
                         availability=availability,
                     ))
-                elif availability == "available":
+                elif availability != "available":
+                    failures.append(_failure(
+                        FailureCategory.BOM_ERROR,
+                        "supplier_availability_unknown",
+                        f"{ref} lacks current supplier availability evidence",
+                        "electronics.components",
+                        provider=offer.get("provider"),
+                        availability=availability,
+                    ))
+                else:
                     if not offer.get("sku") or not offer.get("observed_at"):
                         failures.append(_failure(
                             FailureCategory.BOM_ERROR,

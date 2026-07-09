@@ -25,7 +25,17 @@ def _template_spec() -> dict:
 
 
 def _available_records(parts_root: Path, provider: str) -> list[dict]:
-    components = yaml.safe_load((parts_root / "components" / "robotics_controller.yaml").read_text(encoding="utf-8"))["components"]
+    components = []
+    component_paths = [
+        parts_root / "components" / "robotics_controller.yaml",
+        *[
+            path for path in sorted((parts_root / "components").glob("*.yaml"))
+            if path.name != "robotics_controller.yaml"
+        ],
+    ]
+    for component_path in component_paths:
+        payload = yaml.safe_load(component_path.read_text(encoding="utf-8")) or {}
+        components.extend(payload.get("components", []))
     records = []
     for component in components:
         common = {
@@ -158,6 +168,22 @@ def test_sourcing_validator_rejects_unreviewed_waiver(service):
     assert "sourcing_waiver_unreviewed" in {failure.code for failure in provenance.failures}
 
 
+def test_sourcing_validator_rejects_resolved_sku_without_availability_evidence(service):
+    component = {
+        "ref": "U1",
+        "lifecycle": "active",
+        "manufacturer": "Example",
+        "sourcing": {"status": "resolved", "supplier_skus": ["EXAMPLE-SKU"]},
+        "pins": [{"number": "1", "name": "IO", "net": "N1"}],
+    }
+
+    report = service.validator.check_sourcing([component])
+
+    assert report.status.value == "fail"
+    failure = next(item for item in report.failures if item.code == "supplier_availability_evidence_missing")
+    assert failure.details["supplier_skus"] == ["EXAMPLE-SKU"]
+
+
 def test_missing_evidence_and_duplicate_component_id_block_resolution(tmp_path):
     template_spec = _template_spec()
     parts_root = _parts_copy(tmp_path)
@@ -186,6 +212,10 @@ def test_generated_graph_contains_supplier_and_datasheet_provenance(service, pro
     checks = service.run_all_checks(project, include_external=False)
     by_gate = {item["gate"]: item for item in checks["reports"]}
     assert by_gate["supplier_availability"]["status"] == "blocked"
+    assert by_gate["sourcing"]["status"] == "fail"
+    assert "supplier_availability_unknown" in {
+        failure["code"] for failure in by_gate["sourcing"]["failures"]
+    }
     assert by_gate["datasheet_evidence"]["status"] == "pass"
     assert by_gate["sourcing_resilience"]["status"] == "pass"
     graph = yaml.safe_load((service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))

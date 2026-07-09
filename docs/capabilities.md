@@ -139,8 +139,9 @@
   datasheet evidence and availability gates
 - Release checks consume only in-repository snapshots under `parts/suppliers`; no implicit
   network lookup at release time
-- Known out-of-stock or discontinued parts fail; missing or stale evidence blocks release
-  promotion, and stale `available` claims are also caught by the `sourcing` validator
+- Known out-of-stock or discontinued parts fail; missing normalized supplier-offer evidence
+  or stale evidence blocks release promotion, and stale `available` claims are also caught
+  by the `sourcing` validator
 - `status: waived` sourcing entries must carry reason, risk, mitigation, approval, and
   required review IDs; an unreviewed waiver is treated as release-blocking evidence debt
 - `sourcing_resilience` gate: critical roles must have a curated alternative listed in the role
