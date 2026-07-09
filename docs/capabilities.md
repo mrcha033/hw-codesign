@@ -54,7 +54,7 @@
   per-edge measured distance/margin/cost evidence, and per-placement provenance before validation
 - Constraint-driven placement proposal: structured, provenance-tagged placements with keepout,
   mounting-hole, connector-edge, decoupling-proximity, thermal-spacing, RF keepout,
-  USB-ESD, high-current-loop step and loop-area, and thermal-zone costs
+  USB-ESD, high-current-loop step and loop-area compaction, and thermal-zone costs
 - Hard-blocks on off-board components, coincident centers, and connectors placed on the wrong
   board half; advisory warnings on coarse courtyard overlap estimation
 - Generated `pcb_position_mm`, assembly drawings, pick-and-place, and reference-fabrication

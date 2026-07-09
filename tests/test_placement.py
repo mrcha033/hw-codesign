@@ -475,6 +475,32 @@ def test_layout_thermal_integrity_rejects_high_current_loop_area_even_with_short
     assert report.metrics["high_current_loop_area_mm2"] > report.metrics["high_current_loop_area_limit_mm2"]
 
 
+def test_constraint_solver_repairs_high_current_loop_area(spec: dict, graph: dict):
+    bad_graph = deepcopy(graph)
+    chain = check_layout_thermal_integrity(propose_placement(spec, graph), graph, spec).metrics["high_current_chain_refs"]
+    assert len(chain) >= 5
+
+    loop_positions = [
+        (20.0, 20.0),
+        (55.0, 20.0),
+        (55.0, 55.0),
+        (20.0, 55.0),
+        (20.0, 22.0),
+    ]
+    for ref, (x_mm, y_mm) in zip(chain, loop_positions):
+        component = next(item for item in bad_graph["components"] if item.get("ref") == ref)
+        component["pcb_position_mm"] = [x_mm, y_mm]
+
+    proposal = propose_placement(spec, bad_graph)
+    report = check_layout_thermal_integrity(proposal, bad_graph, spec)
+
+    assert report.status == Status.PASS
+    assert report.metrics["high_current_loop_area_mm2"] <= report.metrics["high_current_loop_area_limit_mm2"]
+    assert "high_current_loop_area_excessive" not in _codes(report)
+    assert "solver_high_current_loop_area" in {proposal.placements[ref].source for ref in chain}
+    assert proposal.solver_iterations > 0
+
+
 def test_layout_thermal_integrity_rejects_hot_block_near_logic(spec: dict, graph: dict):
     proposal = propose_placement(spec, graph)
     hot_ref = next(c["ref"] for c in graph["components"] if c.get("category") == "regulator")
@@ -724,7 +750,11 @@ def test_agent_near_connector_derives_position_in_same_half(spec: dict, graph: d
     }]}}
     proposal = propose_placement(spec_with, graph)
 
-    assert proposal.placements[constrained_ref].source in {"agent_constraint_near_connector", "solver_high_current_loop"}
+    assert proposal.placements[constrained_ref].source in {
+        "agent_constraint_near_connector",
+        "solver_high_current_loop",
+        "solver_high_current_loop_area",
+    }
     report = check_placement(proposal, graph)
     assert report.status == Status.PASS
     assert not any(f.code == "constraint_near_connector_violated" for f in report.failures)

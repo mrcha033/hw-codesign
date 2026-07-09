@@ -406,6 +406,13 @@ def _solve_placement_cost(
     original = dict(placements)
     iterations = 0
     best_cost, _best_breakdown = _placement_cost(solved, original, constraints, graph, spec, width, height)
+    spine_trial = _high_current_spine_trial(solved, constraints, graph, spec, width, height)
+    if spine_trial is not None:
+        trial_cost, _ = _placement_cost(spine_trial, original, constraints, graph, spec, width, height)
+        if trial_cost + 1e-6 < best_cost:
+            iterations += sum(1 for ref in solved if solved[ref] != spine_trial.get(ref))
+            solved = spine_trial
+            best_cost = trial_cost
 
     for _ in range(3):
         improved = False
@@ -533,6 +540,14 @@ def _candidate_positions_for_ref(
     if _declared_peak_current_a(spec) >= HIGH_CURRENT_THRESHOLD_A and ref in _high_current_chain_refs(graph):
         chain = _high_current_chain_refs(graph)
         index = chain.index(ref)
+        spine = _high_current_spine_position(ref, chain, placements, constraints, width, height)
+        if spine is not None:
+            candidates.append((
+                spine[0],
+                spine[1],
+                "solver_high_current_loop_area",
+                f"Cost solver compacted high-current ingress chain around {chain[0]}.",
+            ))
         neighbors = [chain[i] for i in (index - 1, index + 1) if 0 <= i < len(chain) and chain[i] in placements]
         if neighbors:
             avg_x = sum(placements[item].x_mm for item in neighbors) / len(neighbors)
@@ -1021,6 +1036,88 @@ def _away_candidate(placement: Placement, obstacle: Placement, distance: float, 
     if norm < 1e-6:
         dx, dy, norm = 1.0, 0.0, 1.0
     return obstacle.x_mm + dx / norm * distance, obstacle.y_mm + dy / norm * distance, source, rationale
+
+
+def _high_current_spine_position(
+    ref: str,
+    chain: list[str],
+    placements: dict[str, Placement],
+    constraints: list[PlacementConstraint],
+    width: float,
+    height: float,
+) -> tuple[float, float] | None:
+    """Return a compact high-current chain candidate for one ref.
+
+    The candidate is a proposal-level heuristic: keep the ingress chain on a
+    short straight spine anchored near the first high-current connector.  This
+    gives the cost search an explicit way to reduce polygon loop area instead
+    of relying only on local neighbor averaging.
+    """
+    if ref not in chain or not chain or chain[0] not in placements:
+        return None
+    index = chain.index(ref)
+    anchor = placements[chain[0]]
+    step = min(MAX_HIGH_CURRENT_CHAIN_STEP_MM / 3.0, 10.0)
+    chain_span = step * max(0, len(chain) - 1)
+    chain_points = [placements[item] for item in chain if item in placements]
+    centroid_x = sum(item.x_mm for item in chain_points) / len(chain_points)
+    centroid_y = sum(item.y_mm for item in chain_points) / len(chain_points)
+    start_x = _clamp(anchor.x_mm, 2.0, max(2.0, width - chain_span - 2.0))
+    y_mm = centroid_y
+
+    connector_constraint = next(
+        (
+            constraint
+            for constraint in constraints
+            if constraint.kind == "connector_edge" and constraint.target_ref == chain[0]
+        ),
+        None,
+    )
+    if connector_constraint is not None:
+        side = str(connector_constraint.params.get("side", "front"))
+        edge = min(float(connector_constraint.params.get("max_edge_distance_mm", 6.0)) * 0.5, 3.0)
+        if side in {"front", "rear"}:
+            if index == 0:
+                y_mm = edge if side == "front" else height - edge
+        elif side == "left":
+            x_mm = edge if index == 0 else centroid_x
+            start_y = _clamp(anchor.y_mm, 2.0, max(2.0, height - chain_span - 2.0))
+            return _clamp(x_mm, 2.0, max(2.0, width - 2.0)), start_y + index * step
+        elif side == "right":
+            x_mm = width - edge if index == 0 else centroid_x
+            start_y = _clamp(anchor.y_mm, 2.0, max(2.0, height - chain_span - 2.0))
+            return _clamp(x_mm, 2.0, max(2.0, width - 2.0)), start_y + index * step
+
+    return start_x + index * step, _clamp(y_mm, 2.0, max(2.0, height - 2.0))
+
+
+def _high_current_spine_trial(
+    placements: dict[str, Placement],
+    constraints: list[PlacementConstraint],
+    graph: dict[str, Any],
+    spec: dict[str, Any],
+    width: float,
+    height: float,
+) -> dict[str, Placement] | None:
+    if _declared_peak_current_a(spec) < HIGH_CURRENT_THRESHOLD_A:
+        return None
+    chain = _high_current_chain_refs(graph)
+    if len(chain) < 3 or not all(ref in placements for ref in chain):
+        return None
+    trial = dict(placements)
+    for ref in chain:
+        position = _high_current_spine_position(ref, chain, placements, constraints, width, height)
+        if position is None:
+            return None
+        current = placements[ref]
+        trial[ref] = replace(
+            current,
+            x_mm=round(_clamp(position[0], 2.0, max(2.0, width - 2.0)), 3),
+            y_mm=round(_clamp(position[1], 2.0, max(2.0, height - 2.0)), 3),
+            source="solver_high_current_loop_area",
+            rationale=f"Cost solver compacted high-current ingress chain around {chain[0]}.",
+        )
+    return trial
 
 
 def _clamp(value: float, lower: float, upper: float) -> float:
