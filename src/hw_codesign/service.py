@@ -3852,6 +3852,28 @@ class HardwareService:
                 ["usb_esd_bridge_missing"],
             )
 
+            graph_swapped_usb_esd = deepcopy(graph)
+            swapped_usb_esd = next(
+                (
+                    component for component in graph_swapped_usb_esd.get("components", [])
+                    if component.get("category") in {"usb_esd", "tvs"}
+                    and usb_required_nets <= {pin.get("net") for pin in component.get("pins", []) if pin.get("net")}
+                ),
+                None,
+            )
+            if swapped_usb_esd:
+                dp_in = next((pin for pin in swapped_usb_esd.get("pins", []) if pin.get("name") == "DP_IN"), None)
+                dm_in = next((pin for pin in swapped_usb_esd.get("pins", []) if pin.get("name") == "DM_IN"), None)
+                if dp_in is not None and dm_in is not None:
+                    dp_in["net"], dm_in["net"] = dm_in.get("net"), dp_in.get("net")
+                    record(
+                        "swapped_usb_esd_pair_mapping",
+                        "interface_signal_integrity",
+                        "Swapped USB ESD DP_IN/DM_IN raw net assignments while leaving every required USB net present",
+                        self.validator.check_interface_integrity(graph_swapped_usb_esd),
+                        ["usb_esd_bridge_pin_net_mismatch"],
+                    )
+
             graph_missing_usb_c_rd = deepcopy(graph)
             graph_missing_usb_c_rd["components"] = [
                 component

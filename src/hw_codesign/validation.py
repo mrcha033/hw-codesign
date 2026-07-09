@@ -1265,6 +1265,7 @@ class Validator:
         usb_nets = {"USB_DP_RAW", "USB_DM_RAW", "USB_DP", "USB_DM"}
         present_usb_nets = usb_nets & net_names
         usb_bridge_present = False
+        usb_bridge_pin_contracts_checked = 0
         if present_usb_nets:
             if present_usb_nets != usb_nets:
                 failures.append(_failure(
@@ -1280,6 +1281,14 @@ class Validator:
                 and _component_has_nets(component, usb_nets | {"GND"})
                 for component in components
             )
+            for component in components:
+                if not (
+                    _component_category_matches(component, {"usb_esd", "tvs"})
+                    and _component_has_nets(component, usb_nets | {"GND"})
+                ):
+                    continue
+                usb_bridge_pin_contracts_checked += 1
+                failures.extend(_usb_esd_bridge_pin_net_failures(component))
             if present_usb_nets == usb_nets and not usb_bridge_present:
                 failures.append(_failure(
                     FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
@@ -1354,6 +1363,7 @@ class Validator:
             "can_pair_present": can_high and can_low,
             "usb_nets_checked": len(present_usb_nets),
             "usb_bridge_present": usb_bridge_present,
+            "usb_bridge_pin_contracts_checked": usb_bridge_pin_contracts_checked,
             "usb_c_connectors_checked": len(usb_c_connectors),
             "usb_c_cc_nets_checked": len(usb_c_cc_nets_checked),
         }
@@ -1991,6 +2001,38 @@ def _component_category_matches(component: dict[str, Any], categories: set[str])
     if "pullup" in categories and category.endswith("_pullup"):
         return True
     return bool(set(component.get("constraints", [])) & categories)
+
+
+def _usb_esd_bridge_pin_net_failures(component: dict[str, Any]) -> list[Failure]:
+    expected_by_pin_name = {
+        "DP_IN": "USB_DP_RAW",
+        "DP_OUT": "USB_DP",
+        "DM_IN": "USB_DM_RAW",
+        "DM_OUT": "USB_DM",
+        "GND": "GND",
+    }
+    ref = component.get("ref", "?")
+    pins_by_name = {
+        str(pin.get("name", "")).upper(): pin
+        for pin in component.get("pins", [])
+        if pin.get("name")
+    }
+    failures: list[Failure] = []
+    for pin_name, expected_net in expected_by_pin_name.items():
+        pin = pins_by_name.get(pin_name)
+        observed_net = pin.get("net") if pin else None
+        if observed_net != expected_net:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "usb_esd_bridge_pin_net_mismatch",
+                f"{ref}.{pin_name} is not wired to {expected_net}",
+                "electronics.components",
+                ref=ref,
+                pin_name=pin_name,
+                expected_net=expected_net,
+                observed_net=observed_net,
+            ))
+    return failures
 
 
 def _component_is_i2c_pullup(

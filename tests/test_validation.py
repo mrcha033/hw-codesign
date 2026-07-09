@@ -409,6 +409,17 @@ def test_grounding_benchmark_catches_oscillator_far_from_mcu(service):
     assert "oscillator_crystal_far_from_mcu" in case["observed_codes"]
 
 
+def test_grounding_benchmark_catches_swapped_usb_esd_pair_mapping(service, project):
+    service.generate_all(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    case = next(item for item in benchmark["cases"] if item["id"] == "swapped_usb_esd_pair_mapping")
+    assert case["detected"] is True
+    assert case["expected_codes"] == ["usb_esd_bridge_pin_net_mismatch"]
+    assert "usb_esd_bridge_pin_net_mismatch" in case["observed_codes"]
+
+
 def test_power_tree_integrity_passes_generated_robotics_graph(service, project):
     service.generate_all(project)
     project_path = service.workspace.require_project(project)
@@ -815,6 +826,25 @@ def test_interface_integrity_rejects_missing_usb_esd_bridge(service, project):
 
     assert report.status == "fail"
     assert "usb_esd_bridge_missing" in {item.code for item in report.failures}
+
+
+def test_interface_integrity_rejects_usb_esd_swapped_pair_pin_mapping(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    esd = next(component for component in bad_graph["components"] if component["category"] == "usb_esd")
+    dp_in = next(pin for pin in esd["pins"] if pin["name"] == "DP_IN")
+    dm_in = next(pin for pin in esd["pins"] if pin["name"] == "DM_IN")
+    dp_in["net"], dm_in["net"] = dm_in["net"], dp_in["net"]
+
+    report = service.validator.check_interface_integrity(bad_graph)
+
+    assert report.status == "fail"
+    failures = [item for item in report.failures if item.code == "usb_esd_bridge_pin_net_mismatch"]
+    assert {failure.details["pin_name"] for failure in failures} == {"DP_IN", "DM_IN"}
+    assert report.metrics["usb_bridge_present"] is True
+    assert report.metrics["usb_bridge_pin_contracts_checked"] == 1
 
 
 def test_interface_integrity_rejects_missing_usb_c_cc_pulldowns(service, project):

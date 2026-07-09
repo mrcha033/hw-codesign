@@ -27,7 +27,8 @@
   every resolved component has immutable provenance
 - `interface_integrity` checks bus support circuits, including missing I2C pull-ups and
   pull-ups tied to a rail that does not match the powered I2C endpoints, plus missing
-  or wrong-valued CAN termination across CANH/CANL
+  or wrong-valued CAN termination across CANH/CANL, and USB ESD bridges whose
+  DP_IN/DP_OUT/DM_IN/DM_OUT pins do not map to the expected raw/protected D+/D- nets
 - `support_circuit_completeness` rejects crystal oscillators whose load capacitors are
   missing, not grounded, or outside the grounded pF-range expected for oscillator load caps
 - Boot-mode strap pins such as `HWB`, `BOOT0`, and `BOOTSEL` must have a grounded pull
@@ -153,7 +154,7 @@
 - `hw_explore_design_space` enumerates backend, component, mechanical variant, and supplier axes
   and scores each against the current gates; result written to `history/design_space/exploration.json`
 - `hw_run_grounding_benchmark` adversarially mutates generated artifacts (pinout, footprint,
-  pin electrical roles, power tree including regulator dropout/headroom and enable bias, interface wiring including USB-C CC Rd, oscillator load caps, and boot strap bias, layout, oscillator placement, decoupling placement, RF, connector retention, sourcing,
+  pin electrical roles, power tree including regulator dropout/headroom and enable bias, interface wiring including USB-C CC Rd, USB ESD pair mapping, oscillator load caps, and boot strap bias, layout, oscillator placement, decoupling placement, RF, connector retention, sourcing,
   high-current loop area, critical-role alternate integrity, connector cutout alignment, mounting keepout intrusion,
   firmware pin assignment, motor PWM channel coverage) and confirms every relevant gate catches
   the injected defect; a missed case fails the benchmark
