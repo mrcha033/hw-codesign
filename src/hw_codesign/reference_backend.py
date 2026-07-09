@@ -3,7 +3,9 @@ from __future__ import annotations
 import csv
 import io
 import json
+import os
 import re
+import shutil
 import subprocess
 from collections import defaultdict
 from pathlib import Path
@@ -16,6 +18,8 @@ from .io import atomic_write_text, write_json
 from .models import Failure, FailureCategory, GateReport, Status
 from .pcb_router import route_board
 from .schematic_generator import generate_kicad_schematic
+
+REFERENCE_FIRMWARE_TIMEOUT_SECONDS = 120
 
 PARTS = {
     "mcu": ("STM32H743VIT6", "LQFP-100_14x14mm_P0.5mm"),
@@ -464,11 +468,123 @@ def export_mechanical(project: Path, spec: dict[str, Any], release: Path) -> lis
     return [str(path) for path in sorted(target.iterdir())]
 
 
-def build_firmware_reference(project: Path) -> GateReport:
+def build_firmware_reference(project: Path, timeout_seconds: int | None = None) -> GateReport:
     app = project / "firmware" / "reference"
-    build = app / "build"; build.mkdir(parents=True, exist_ok=True)
-    completed = subprocess.run(["cmake", "-S", str(app), "-B", str(build), "-G", "Ninja"], capture_output=True, text=True, check=False)
-    if completed.returncode == 0:
-        completed = subprocess.run(["cmake", "--build", str(build)], capture_output=True, text=True, check=False)
-    failures = [] if completed.returncode == 0 else [Failure(FailureCategory.FIRMWARE_ERROR, "build_failure", completed.stderr[-4000:])]
-    return GateReport("reference_firmware_build", Status.PASS if not failures else Status.FAIL, failures, artifacts=[str(build / "bringup_tests")], backend={"name": "reference-host-bsp", "returncode": completed.returncode, "stderr": completed.stderr[-4000:]})
+    build = app / "build"
+    timeout_seconds = _reference_firmware_timeout_seconds(timeout_seconds)
+    backend: dict[str, Any] = {
+        "name": "reference-host-bsp",
+        "timeout_seconds": timeout_seconds,
+    }
+    artifact = str(build / "bringup_tests")
+
+    if not (app / "CMakeLists.txt").is_file():
+        failure = Failure(
+            FailureCategory.FIRMWARE_ERROR,
+            "reference_firmware_missing",
+            "Generate firmware before running the reference host BSP build",
+            path="firmware/reference/CMakeLists.txt",
+        )
+        return GateReport("reference_firmware_build", Status.BLOCKED, [failure], artifacts=[artifact], backend=backend)
+
+    cmake = shutil.which("cmake")
+    if cmake is None:
+        failure = Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "Executable not found: cmake")
+        return GateReport("reference_firmware_build", Status.BLOCKED, [failure], artifacts=[artifact], backend={**backend, "available": False, "command": ["cmake"]})
+
+    build.mkdir(parents=True, exist_ok=True)
+    configure_cmd = [cmake, "-S", str(app), "-B", str(build), "-G", "Ninja"]
+    configure = _run_reference_firmware_command(configure_cmd, timeout_seconds, "configure")
+    if configure is not None:
+        return configure
+    build_cmd = [cmake, "--build", str(build)]
+    build_report = _run_reference_firmware_command(build_cmd, timeout_seconds, "build")
+    if build_report is not None:
+        return build_report
+    return GateReport(
+        "reference_firmware_build",
+        Status.PASS,
+        [],
+        artifacts=[artifact],
+        backend={**backend, "available": True, "command": build_cmd, "returncode": 0},
+    )
+
+
+def _reference_firmware_timeout_seconds(value: int | None = None) -> int:
+    if value is not None:
+        return max(1, int(value))
+    raw = os.environ.get("HW_REFERENCE_FIRMWARE_TIMEOUT_SECONDS")
+    if raw:
+        try:
+            return max(1, int(raw))
+        except ValueError:
+            pass
+    return REFERENCE_FIRMWARE_TIMEOUT_SECONDS
+
+
+def _run_reference_firmware_command(command: list[str], timeout_seconds: int, stage: str) -> GateReport | None:
+    try:
+        completed = subprocess.run(command, capture_output=True, text=True, check=False, timeout=timeout_seconds)
+    except subprocess.TimeoutExpired as exc:
+        failure = Failure(
+            FailureCategory.TOOL_ERROR,
+            "tool_timeout",
+            f"reference firmware {stage} exceeded the {timeout_seconds} second limit",
+            details={
+                "timeout_seconds": timeout_seconds,
+                "stdout": _tail_text(exc.stdout),
+                "stderr": _tail_text(exc.stderr),
+            },
+        )
+        return GateReport(
+            "reference_firmware_build",
+            Status.BLOCKED,
+            [failure],
+            backend={
+                "name": "reference-host-bsp",
+                "available": True,
+                "stage": stage,
+                "command": command,
+                "returncode": None,
+                "timeout_seconds": timeout_seconds,
+            },
+        )
+    except OSError as exc:
+        failure = Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", f"cmake could not be executed: {exc}")
+        return GateReport(
+            "reference_firmware_build",
+            Status.BLOCKED,
+            [failure],
+            backend={"name": "reference-host-bsp", "available": False, "stage": stage, "command": command, "timeout_seconds": timeout_seconds},
+        )
+    if completed.returncode != 0:
+        failure = Failure(
+            FailureCategory.FIRMWARE_ERROR,
+            f"{stage}_failure",
+            _tail_text(completed.stderr) or f"reference firmware {stage} failed",
+            details={"stdout": _tail_text(completed.stdout), "stderr": _tail_text(completed.stderr)},
+        )
+        return GateReport(
+            "reference_firmware_build",
+            Status.FAIL,
+            [failure],
+            backend={
+                "name": "reference-host-bsp",
+                "available": True,
+                "stage": stage,
+                "command": command,
+                "returncode": completed.returncode,
+                "timeout_seconds": timeout_seconds,
+                "stdout": _tail_text(completed.stdout),
+                "stderr": _tail_text(completed.stderr),
+            },
+        )
+    return None
+
+
+def _tail_text(value: Any, limit: int = 4000) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")[-limit:]
+    return str(value)[-limit:]

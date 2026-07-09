@@ -121,6 +121,9 @@
 - `firmware_interface_contract` verifies generated Zephyr config, motor PWM channel coverage,
   and bring-up stubs cover required board interfaces (I2C, CAN, USB, e-stop fail-safe, motor
   PWM, BLE) before firmware build gates can promote the candidate
+- `reference_firmware_build` configures and builds the generated host BSP with a bounded
+  CMake timeout (`HW_REFERENCE_FIRMWARE_TIMEOUT_SECONDS`, default 120s); missing CMake or
+  a timeout returns structured `blocked` evidence rather than hanging validation
 - `hw_sw_parity` verifies firmware pinmap entries resolve to the same electrical net and physical
   MCU pin recorded in the electrical graph, not just to a same-named signal
 - Signal-level cross-domain consistency checked by `hw_check_cross_domain_consistency`:
