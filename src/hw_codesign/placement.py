@@ -343,6 +343,13 @@ def _derive_constraints(spec: dict[str, Any], graph: dict[str, Any]) -> list[Pla
         )
 
     seed_positions = component_positions(graph)
+    agent_target_by_ref = {
+        str(constraint["ref"]): str(constraint["target"])
+        for constraint in spec.get("placement", {}).get("constraints", [])
+        if constraint.get("ref")
+        and constraint.get("target")
+        and constraint.get("relationship") in {"adjacent_to", "near_connector"}
+    }
 
     # Decoupling proximity is enforced when the graph carries an explicit target
     # or the rail/load graph lets us infer a concrete powered component. Generic
@@ -351,9 +358,22 @@ def _derive_constraints(spec: dict[str, Any], graph: dict[str, Any]) -> list[Pla
         if item.get("category") == "decoupling":
             power_nets = sorted({pin["net"] for pin in item.get("pins", []) if pin.get("net")})
             explicit_target = item.get("decoupling_target_ref")
-            inferred_target = None if explicit_target else _infer_decoupling_target_ref(item, graph, seed_positions)
-            target_ref = explicit_target or inferred_target
-            target_source = "explicit_decoupling_target_ref" if explicit_target else ("inferred_power_rail_consumer" if inferred_target else None)
+            agent_target = agent_target_by_ref.get(str(item.get("ref")))
+            inferred_target = (
+                None
+                if explicit_target or agent_target
+                else _infer_decoupling_target_ref(item, graph, seed_positions)
+            )
+            target_ref = explicit_target or agent_target or inferred_target
+            target_source = (
+                "explicit_decoupling_target_ref"
+                if explicit_target
+                else "agent_placement_constraint"
+                if agent_target
+                else "inferred_power_rail_consumer"
+                if inferred_target
+                else None
+            )
             constraints.append(
                 PlacementConstraint(
                     kind="decoupling_proximity",

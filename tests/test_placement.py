@@ -144,6 +144,36 @@ def test_constraint_graph_carries_measured_cost_evidence(spec: dict, graph: dict
         assert details["violation_cost"] >= 0.0
 
 
+def test_agent_adjacent_target_overrides_inferred_decoupling_target(spec: dict, graph: dict):
+    constrained_spec = deepcopy(spec)
+    constrained_spec["placement"] = {
+        "constraints": [
+            {
+                "ref": "C1",
+                "relationship": "adjacent_to",
+                "target": "U1",
+                "max_distance_mm": 3.0,
+            }
+        ]
+    }
+
+    proposal = propose_placement(constrained_spec, graph)
+    report = check_placement(proposal, graph)
+    decoupling = next(
+        constraint
+        for constraint in proposal.constraints
+        if constraint.kind == "decoupling_proximity" and constraint.target_ref == "C1"
+    )
+
+    assert report.status == Status.PASS
+    assert decoupling.params["target_ref"] == "U1"
+    assert decoupling.params["target_source"] == "agent_placement_constraint"
+    assert math.dist(
+        (proposal.placements["C1"].x_mm, proposal.placements["C1"].y_mm),
+        (proposal.placements["U1"].x_mm, proposal.placements["U1"].y_mm),
+    ) <= 3.0
+
+
 def test_constraint_graph_carries_high_current_loop_area_evidence(spec: dict, graph: dict):
     proposal = propose_placement(spec, graph)
 
