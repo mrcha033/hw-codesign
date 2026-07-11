@@ -40,7 +40,12 @@ components:
     sourcing:
       status: resolved
       supplier_skus: [RP2040]
-    constraints: [dual_core_cortex_m0plus, native_usb_fs, pio_programmable_io, qspi_xip_flash_required]
+    # 12mhz_crystal_required_for_usb: the RP2040 bootrom USB boot path derives the
+    # USB clock from a 12 MHz crystal reference, so any other crystal frequency
+    # breaks USB enumeration. Grounded by the RP2040 datasheet (Clocks section) and
+    # the "Hardware design with RP2040" guide; authoritative pointer:
+    # datasheet_rp2040 in parts/evidence/datasheets.yaml.
+    constraints: [dual_core_cortex_m0plus, native_usb_fs, pio_programmable_io, qspi_xip_flash_required, 12mhz_crystal_required_for_usb]
     resolution_provenance:
       source: manufacturer_datasheet
       reviewed_at: '2026-06-21'

@@ -320,6 +320,84 @@ def test_support_circuit_contract_rejects_wrong_crystal_load_cap_value(service):
     assert failure.details["expected_max_pf"] == 47.0
 
 
+def test_support_circuit_contract_accepts_matching_crystal_frequency(service):
+    # RP2040 ships a 12 MHz crystal against a 12mhz_crystal_required_for_usb tag:
+    # the frequency-requirement check must stay silent on the correct design.
+    project = "rp2040_clock_frequency_ok"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), graph)
+
+    frequency_codes = {
+        "crystal_frequency_requirement_mismatch",
+        "crystal_frequency_unverified",
+        "crystal_frequency_source_missing",
+    }
+    assert frequency_codes.isdisjoint({item.code for item in report.failures})
+
+
+def test_support_circuit_contract_rejects_wrong_crystal_frequency(service):
+    project = "rp2040_clock_frequency_contract"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    crystal = next(component for component in bad_graph["components"] if "crystal" in str(component.get("category", "")).lower())
+    crystal["constraints"] = ["8mhz_xosc", "usb_timing_qualified"]
+    crystal["value"] = "8MHz XTAL"
+    crystal["mpn"] = ""
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    failure = next(item for item in report.failures if item.code == "crystal_frequency_requirement_mismatch")
+    assert failure.details["crystal_ref"] == crystal["ref"]
+    assert failure.details["required_frequency_mhz"] == 12.0
+    assert failure.details["actual_frequency_mhz"] == 8.0
+    assert failure.details["purpose"] == "usb"
+
+
+def test_support_circuit_contract_flags_ungrounded_crystal_frequency(service):
+    project = "rp2040_clock_frequency_evidence"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    crystal = next(component for component in bad_graph["components"] if "crystal" in str(component.get("category", "")).lower())
+    crystal["constraints"] = ["usb_timing_qualified"]
+    crystal["value"] = "XTAL"
+    crystal["mpn"] = ""
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    assert report.status == "fail"
+    assert "crystal_frequency_unverified" in {item.code for item in report.failures}
+
+
+def test_support_circuit_contract_accepts_avr_16mhz_usb_crystal(service):
+    # ATmega32U4 carries 16mhz_crystal_required_for_usb and ships a 16 MHz crystal:
+    # the second beneficiary of the check must pass cleanly, not just the RP2040.
+    project = "avr_hid_clock_ok"
+    service.create_project(project, template="avr_32u4_hid")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), graph)
+
+    frequency_codes = {
+        "crystal_frequency_requirement_mismatch",
+        "crystal_frequency_unverified",
+        "crystal_frequency_source_missing",
+    }
+    assert frequency_codes.isdisjoint({item.code for item in report.failures})
+
+
 def test_support_circuit_contract_passes_grounded_status_led_path(service):
     project = "usb_hid_status_led_contract"
     service.create_project(project, template="usb_hid_controller")

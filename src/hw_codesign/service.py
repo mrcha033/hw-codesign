@@ -329,6 +329,69 @@ def _capacitance_pf_from_text(value: Any) -> float | None:
     return number * 1_000_000_000_000.0
 
 
+# Pins whose name identifies a high-frequency oscillator connection on an MCU.
+_CLOCK_PIN_TOKENS = ("XIN", "XOUT", "XTAL", "OSC")
+
+
+def _crystal_frequency_mhz(component: dict[str, Any]) -> float | None:
+    """Grounded oscillation frequency of a crystal, in MHz.
+
+    Prefers the curated ``<N>mhz_xosc`` constraint tag (the same tag family the
+    resolver copies from the datasheet-reviewed part), falling back to the
+    frequency stated in the component value/mpn text. Sub-MHz timekeeping
+    crystals (e.g. 32.768 kHz) intentionally return ``None`` — they never satisfy
+    a MHz-scale requirement and must not be silently coerced.
+    """
+    for constraint in component.get("constraints", []):
+        match = re.fullmatch(
+            r"(?P<value>\d+(?:\.\d+)?)mhz_(?:xosc|xtal|crystal)",
+            str(constraint).strip().lower().replace("-", "_"),
+        )
+        if match:
+            return float(match.group("value"))
+    for key in ("value", "mpn"):
+        match = re.search(
+            r"(?<![a-z0-9.])(?P<value>\d+(?:\.\d+)?)\s*mhz",
+            str(component.get(key) or "").strip().lower(),
+        )
+        if match:
+            return float(match.group("value"))
+    return None
+
+
+def _is_timekeeping_crystal(component: dict[str, Any]) -> bool:
+    """True for sub-MHz timekeeping crystals (e.g. 32.768 kHz RTC).
+
+    A MHz-scale clock requirement can never be satisfied by a kHz timepiece, and
+    RTC oscillator pins (``XIN32``/``XOUT32``) share the ``XIN``/``XOUT`` token
+    used to find HF oscillator pins — so these must be excluded from HF-crystal
+    association rather than mistaken for an unverified HF part.
+    """
+    haystack = " ".join(
+        str(value or "").lower()
+        for value in (component.get("value"), component.get("mpn"), *component.get("constraints", []))
+    )
+    return "khz" in haystack or "32.768" in haystack or "32768" in haystack
+
+
+def _required_crystal_frequency_mhz(component: dict[str, Any]) -> tuple[float, str] | None:
+    """Frequency (MHz) an MCU's datasheet requires of its external crystal, plus the purpose.
+
+    Grounded in the curated ``<N>mhz_crystal_required_for_<purpose>`` constraint
+    tag (e.g. ``12mhz_crystal_required_for_usb`` on the RP2040 bootrom USB path,
+    ``16mhz_crystal_required_for_usb`` on the ATmega32U4). Returns ``None`` when
+    the part declares no such hard requirement.
+    """
+    for constraint in component.get("constraints", []):
+        match = re.fullmatch(
+            r"(?P<value>\d+(?:\.\d+)?)mhz_crystal_required_for_(?P<purpose>[a-z0-9_]+)",
+            str(constraint).strip().lower().replace("-", "_"),
+        )
+        if match:
+            return float(match.group("value")), match.group("purpose")
+    return None
+
+
 class HardwareService:
     def __init__(self, root: Path | str):
         self.root = Path(root).resolve()
@@ -2822,6 +2885,88 @@ class HardwareService:
                     ))
         return failures
 
+    @staticmethod
+    def _crystal_frequency_requirement_failures(graph: dict[str, Any]) -> list[Failure]:
+        """Flag MCUs whose external crystal frequency contradicts a datasheet requirement.
+
+        A schematic can look complete — crystal present, load caps grounded — yet
+        be electrically invalid because the crystal runs at the wrong frequency for
+        a clock-locked subsystem (USB enumeration, radio PLL). This grounds the
+        check entirely in curated evidence: the MCU's
+        ``<N>mhz_crystal_required_for_<purpose>`` tag and the crystal's
+        ``<N>mhz_xosc`` frequency tag.
+        """
+        components = graph.get("components", [])
+        crystals = [
+            c for c in components
+            if "crystal" in str(c.get("category", "")).lower()
+            and not _is_timekeeping_crystal(c)
+        ]
+        failures: list[Failure] = []
+        for mcu in components:
+            if str(mcu.get("category", "")).lower() != "mcu":
+                continue
+            requirement = _required_crystal_frequency_mhz(mcu)
+            if requirement is None:
+                continue
+            required_mhz, purpose = requirement
+            clock_nets = {
+                str(pin.get("net"))
+                for pin in mcu.get("pins", [])
+                if pin.get("net")
+                and pin.get("net") != "GND"
+                and any(token in str(pin.get("name", "")).upper() for token in _CLOCK_PIN_TOKENS)
+            }
+            connected_crystals = [
+                crystal for crystal in crystals
+                if clock_nets & {str(pin.get("net")) for pin in crystal.get("pins", []) if pin.get("net")}
+            ]
+            if not connected_crystals:
+                failures.append(Failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "crystal_frequency_source_missing",
+                    f"{mcu.get('ref', '?')} requires a {required_mhz:g} MHz crystal for {purpose} but none is connected to its oscillator pins",
+                    path="electronics.components",
+                    details={
+                        "mcu_ref": mcu.get("ref"),
+                        "required_frequency_mhz": required_mhz,
+                        "purpose": purpose,
+                        "clock_nets": sorted(clock_nets),
+                    },
+                ))
+                continue
+            for crystal in connected_crystals:
+                actual_mhz = _crystal_frequency_mhz(crystal)
+                if actual_mhz is None:
+                    failures.append(Failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "crystal_frequency_unverified",
+                        f"{crystal.get('ref', '?')} clocks {mcu.get('ref', '?')} ({purpose} needs {required_mhz:g} MHz) but its frequency is not grounded in curated evidence",
+                        path="electronics.components",
+                        details={
+                            "mcu_ref": mcu.get("ref"),
+                            "crystal_ref": crystal.get("ref"),
+                            "required_frequency_mhz": required_mhz,
+                            "purpose": purpose,
+                        },
+                    ))
+                    continue
+                if abs(actual_mhz - required_mhz) > 1e-6:
+                    failures.append(Failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "crystal_frequency_requirement_mismatch",
+                        f"{mcu.get('ref', '?')} {purpose} requires a {required_mhz:g} MHz crystal but {crystal.get('ref', '?')} is {actual_mhz:g} MHz",
+                        path="electronics.components",
+                        details={
+                            "mcu_ref": mcu.get("ref"),
+                            "crystal_ref": crystal.get("ref"),
+                            "required_frequency_mhz": required_mhz,
+                            "actual_frequency_mhz": actual_mhz,
+                            "purpose": purpose,
+                        },
+                    ))
+        return failures
+
     def _sourcing_resilience_report(
         self,
         spec: dict[str, Any],
@@ -3114,6 +3259,7 @@ class HardwareService:
                 net_contract_checks += 1
                 failures.extend(self._support_net_contract_failures(role_set_name, role, component, contract))
         failures.extend(self._crystal_load_cap_failures(graph))
+        failures.extend(self._crystal_frequency_requirement_failures(graph))
         failures.extend(boot_strap_bias_failures(graph))
         failures.extend(status_led_circuit_failures(spec, graph))
 
@@ -3628,6 +3774,51 @@ class HardwareService:
                     self._support_circuit_completeness_report(spec, graph_bad_xtal_cap_value),
                     ["crystal_load_cap_value_out_of_range"],
                 )
+
+            # A crystal frequency that contradicts the MCU's datasheet requirement
+            # (e.g. RP2040 USB needs exactly 12 MHz) yields a schematic that looks
+            # complete but cannot enumerate — a plausible-but-wrong grounding defect.
+            clock_locked_mcu = next(
+                (
+                    component for component in graph.get("components", [])
+                    if str(component.get("category", "")).lower() == "mcu"
+                    and _required_crystal_frequency_mhz(component) is not None
+                ),
+                None,
+            )
+            if clock_locked_mcu is not None:
+                mcu_clock_nets = {
+                    str(pin.get("net"))
+                    for pin in clock_locked_mcu.get("pins", [])
+                    if pin.get("net")
+                    and pin.get("net") != "GND"
+                    and any(token in str(pin.get("name", "")).upper() for token in _CLOCK_PIN_TOKENS)
+                }
+                graph_wrong_xtal_frequency = deepcopy(graph)
+                required_mhz = _required_crystal_frequency_mhz(clock_locked_mcu)[0]
+                wrong_mhz = 8.0 if abs(required_mhz - 8.0) > 1e-6 else 25.0
+                mutated_crystal = next(
+                    (
+                        component for component in graph_wrong_xtal_frequency.get("components", [])
+                        if "crystal" in str(component.get("category", "")).lower()
+                        and mcu_clock_nets & {str(pin.get("net")) for pin in component.get("pins", []) if pin.get("net")}
+                    ),
+                    None,
+                )
+                if mutated_crystal is not None:
+                    mutated_crystal["constraints"] = [
+                        constraint for constraint in mutated_crystal.get("constraints", [])
+                        if not re.fullmatch(r"\d+(?:\.\d+)?mhz_(?:xosc|xtal|crystal)", str(constraint).strip().lower().replace("-", "_"))
+                    ] + [f"{wrong_mhz:g}mhz_xosc"]
+                    mutated_crystal["value"] = f"{wrong_mhz:g}MHz XTAL"
+                    mutated_crystal["mpn"] = ""
+                    record(
+                        "wrong_crystal_frequency_for_mcu_requirement",
+                        "support_circuit_completeness",
+                        f"Retuned {clock_locked_mcu.get('ref')}'s oscillator crystal to {wrong_mhz:g} MHz against a {required_mhz:g} MHz datasheet requirement",
+                        self._support_circuit_completeness_report(spec, graph_wrong_xtal_frequency),
+                        ["crystal_frequency_requirement_mismatch"],
+                    )
 
         boot_strap_nets = {"HWB", "BOOTSEL", "BOOT0", "BOOT0_GND"}
         boot_strap_bias = next(
