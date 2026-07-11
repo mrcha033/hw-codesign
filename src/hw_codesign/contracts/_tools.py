@@ -1128,7 +1128,8 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
             "Validated against the current BOM and stored in the project spec. "
             "When an electrical graph exists, rewrites its placement coordinates from the solver proposal "
             "so downstream candidate fabrication uses the same placed graph. "
-            "Relationships: adjacent_to, near_connector, same_side, opposite_side, thermal_separation."
+            "Relationships: adjacent_to, near_connector, thermal_separation. "
+            "Top/bottom board-side relations are rejected until every canonical fabrication backend preserves component layers."
         ),
         input_schema={
             "type": "object",
@@ -1140,14 +1141,24 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
                         "ref":             {"type": "string"},
                         "relationship":    {
                             "type": "string",
-                            "enum": ["adjacent_to", "near_connector", "same_side", "opposite_side", "thermal_separation"],
+                            "enum": ["adjacent_to", "near_connector", "thermal_separation"],
                         },
                         "target":          {"type": "string"},
-                        "max_distance_mm": {"type": "number"},
-                        "side":            {"type": "string", "enum": ["top", "bottom", "same_half", "any"]},
+                        "max_distance_mm": {"type": "number", "exclusiveMinimum": 0},
+                        "min_distance_mm": {"type": "number", "exclusiveMinimum": 0},
+                        "side":            {"const": "same_half"},
                         "rationale":       {"type": "string"},
                     },
-                    "required": ["ref", "relationship"],
+                    "required": ["ref", "relationship", "target"],
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {"relationship": {"const": "thermal_separation"}},
+                                "required": ["relationship"],
+                            },
+                            "then": {"required": ["min_distance_mm"]},
+                        }
+                    ],
                     "additionalProperties": True,
                 },
             },

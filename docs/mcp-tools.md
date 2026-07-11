@@ -37,7 +37,7 @@ hw_get_part_types            ← available parametric part types and their inten
 hw_design_part               ← design a 3D-printable part; returns STEP/STL + printability report
 hw_propose_circuit_block     ← find catalog candidates for a given category before committing
 hw_add_circuit_block         ← author a circuit block into the topology; ERC runs immediately
-hw_set_placement_constraint  ← express adjacent_to / near_connector relationships; gate runs on write
+hw_set_placement_constraint  ← express adjacent_to / near_connector / thermal_separation relationships; gate runs on write
 hw_design_firmware_module    ← author a firmware behavior (timeout_shutdown, periodic_transmit, …)
 hw_record_design_decision    ← log a decision + rationale to history/decisions.jsonl
 hw_check_cross_domain_consistency ← validate placement refs against BOM, firmware signals against pinmap
@@ -122,7 +122,7 @@ The public tool registry exposes this as the shared top-level
 - `hw_list_circuit_blocks` — list all agent-authored circuit blocks for a project
 
 ### Placement constraint authoring
-- `hw_set_placement_constraint` — author a placement relationship; placement gate runs on write and generated coordinates are refreshed for downstream candidate fabrication
+- `hw_set_placement_constraint` — author an adjacent, connector-near, or minimum thermal-separation relationship; placement gate runs on write and generated coordinates and selected tscircuit source are refreshed for downstream candidate fabrication
 - `hw_list_placement_constraints` — list all placement constraints for a project
 
 ### Firmware module authoring

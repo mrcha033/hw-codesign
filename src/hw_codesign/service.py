@@ -2410,8 +2410,10 @@ class HardwareService:
         try:
             # Run in a subprocess for process isolation: prevents modified/malicious
             # file content from affecting the server's own memory or state.
+            package_root = Path(__file__).resolve().parents[1]
             wrapper = (
                 "import json, sys\n"
+                f"sys.path.insert(0, {str(package_root)!r})\n"
                 f"exec(open({str(code_path)!r}, encoding='utf-8').read())\n"
                 "sys.stdout.write(json.dumps(semantic_schematic))\n"
             )
@@ -4414,6 +4416,33 @@ class HardwareService:
                 ["thermal_sensitive_spacing_violation"],
             )
 
+            thermal_constraint_spec = deepcopy(spec)
+            placement_spec = thermal_constraint_spec.setdefault("placement", {})
+            placement_spec["constraints"] = [
+                *placement_spec.get("constraints", []),
+                {
+                    "ref": hot_component["ref"],
+                    "relationship": "thermal_separation",
+                    "target": logic_component["ref"],
+                    "min_distance_mm": 20.0,
+                },
+            ]
+            thermal_proposal = propose_placement(thermal_constraint_spec, graph)
+            logic_placement = thermal_proposal.placements[logic_component["ref"]]
+            thermal_proposal.placements[hot_component["ref"]] = replace(
+                thermal_proposal.placements[hot_component["ref"]],
+                x_mm=logic_placement.x_mm + 1.0,
+                y_mm=logic_placement.y_mm,
+                source="benchmark_forced_thermal_separation_violation",
+            )
+            record(
+                "declared_thermal_separation_violated",
+                "layout_thermal_grounding",
+                f"Placed {hot_component.get('ref')} within 1 mm of {logic_component.get('ref')} despite a declared 20 mm thermal separation",
+                check_placement(thermal_proposal, graph),
+                ["constraint_thermal_separation_violated"],
+            )
+
         targeted_decoupling = next(
             (
                 component
@@ -6133,11 +6162,18 @@ class HardwareService:
             return {"status": "blocked", "code": "missing_ref",
                     "message": "constraint must include 'ref' (the component reference to constrain)"}
         relationship = constraint.get("relationship")
-        if relationship not in {"adjacent_to", "near_connector", "same_side", "opposite_side", "thermal_separation"}:
+        if relationship in {"same_side", "opposite_side"}:
+            return {
+                "status": "blocked",
+                "code": "unsupported_board_side_placement",
+                "message": "Board-side placement is not supported until canonical fabrication backends preserve top/bottom component layers",
+                "relationship": relationship,
+            }
+        if relationship not in {"adjacent_to", "near_connector", "thermal_separation"}:
             return {
                 "status": "blocked",
                 "code": "invalid_relationship",
-                "message": "relationship must be one of: adjacent_to, near_connector, same_side, opposite_side, thermal_separation",
+                "message": "relationship must be one of: adjacent_to, near_connector, thermal_separation",
             }
 
         # Check that ref exists in the current graph
@@ -6153,19 +6189,65 @@ class HardwareService:
                 "message": f"Ref '{ref}' is not in the current BOM. Add it first via hw_add_circuit_block.",
                 "known_refs": sorted(known_refs),
             }
-        if constraint.get("target") and constraint["target"] not in known_refs:
+        target = constraint.get("target")
+        if not target:
+            return {
+                "status": "blocked",
+                "code": "missing_target",
+                "message": f"{relationship} requires a target component reference",
+            }
+        if target == ref:
+            return {
+                "status": "blocked",
+                "code": "self_target_constraint",
+                "message": "A placement constraint cannot target the constrained component itself",
+            }
+        if target not in known_refs:
             return {
                 "status": "blocked",
                 "code": "target_not_in_bom",
-                "message": f"Target '{constraint['target']}' is not in the current BOM.",
+                "message": f"Target '{target}' is not in the current BOM.",
                 "known_refs": sorted(known_refs),
             }
+        normalized_constraint = dict(constraint)
+        if relationship == "adjacent_to":
+            distance = normalized_constraint.setdefault("max_distance_mm", 5.0)
+            if not isinstance(distance, (int, float)) or isinstance(distance, bool) or distance <= 0:
+                return {
+                    "status": "blocked",
+                    "code": "invalid_max_distance",
+                    "message": "adjacent_to max_distance_mm must be a positive number",
+                }
+        elif relationship == "near_connector":
+            side = normalized_constraint.setdefault("side", "same_half")
+            if side != "same_half":
+                return {
+                    "status": "blocked",
+                    "code": "unsupported_near_connector_side",
+                    "message": "near_connector currently supports side=same_half only",
+                }
+        elif relationship == "thermal_separation":
+            distance = normalized_constraint.get("min_distance_mm")
+            if not isinstance(distance, (int, float)) or isinstance(distance, bool) or distance <= 0:
+                return {
+                    "status": "blocked",
+                    "code": "invalid_min_distance",
+                    "message": "thermal_separation requires a positive min_distance_mm",
+                }
 
         agent_path = path / "spec" / "agent_blocks.yaml"
         agent_data: dict[str, Any] = read_yaml(agent_path) if agent_path.is_file() else {}
         existing = agent_data.setdefault("placement", {}).get("constraints", [])
-        existing = [c for c in existing if c.get("ref") != ref]
-        existing.append(constraint)
+        existing = [
+            item
+            for item in existing
+            if not (
+                item.get("ref") == ref
+                and item.get("relationship") == relationship
+                and item.get("target") == target
+            )
+        ]
+        existing.append(normalized_constraint)
         agent_data["placement"]["constraints"] = existing
         write_yaml(agent_path, agent_data)
 
@@ -6174,8 +6256,11 @@ class HardwareService:
         updated_spec = self.read_spec(project)
         placement_proposal = propose_placement(updated_spec, graph)
         placed_graph = apply_placement_to_graph(graph, placement_proposal)
+        regenerated_sources: list[str] = []
         if graph_path.is_file():
             write_json(graph_path, placed_graph)
+            if updated_spec.get("electronics", {}).get("backend") == "tscircuit":
+                regenerated_sources = self.tscircuit.generate_source(path, updated_spec, placed_graph)
         gate_report = check_placement(placement_proposal, placed_graph)
         persist_report(path, gate_report)
 
@@ -6183,8 +6268,9 @@ class HardwareService:
             "status": gate_report.status.value,
             "project": project,
             "ref": ref,
-            "constraint": constraint,
+            "constraint": normalized_constraint,
             "constraint_count": len(existing),
+            "regenerated_sources": regenerated_sources,
             "placement_gate": {
                 "status": gate_report.status.value,
                 "errors": gate_report.metrics.get("errors", 0),

@@ -19,9 +19,10 @@ def _release_capable_tscircuit_graph():
     footprint = {"library_id": "Resistor_SMD:R_0603_1608Metric", "expected_pads": ["1", "2"], "backend_footprints": {"tscircuit": "0603"}}
     return {
         "components": [
-            {"ref": "R1", "pins": [{"number": "1", "name": "A", "net": "SIG"}, {"number": "2", "name": "B", "net": "GND"}], "footprint_metadata": footprint},
-            {"ref": "R2", "pins": [{"number": "1", "name": "A", "net": "SIG"}, {"number": "2", "name": "B", "net": "GND"}], "footprint_metadata": footprint},
+            {"ref": "R1", "pcb_position_mm": [20.0, 20.0], "placement_source": "test_solver", "pins": [{"number": "1", "name": "A", "net": "SIG"}, {"number": "2", "name": "B", "net": "GND"}], "footprint_metadata": footprint},
+            {"ref": "R2", "pcb_position_mm": [40.0, 20.0], "placement_source": "test_solver", "pins": [{"number": "1", "name": "A", "net": "SIG"}, {"number": "2", "name": "B", "net": "GND"}], "footprint_metadata": footprint},
         ],
+        "placement": {"board_width_mm": 160.0, "board_height_mm": 100.0},
         "nets": [
             {"name": "SIG", "connected_pins": ["R1.1", "R2.1"]},
             {"name": "GND", "connected_pins": ["R1.2", "R2.2"]},
@@ -245,6 +246,7 @@ def test_design_candidate_is_cross_domain_primary_workflow(service, project):
         "wrong_usb_c_cc_pulldown_value",
         "usb_esd_far_from_connector",
         "hot_block_near_sensitive_logic",
+        "declared_thermal_separation_violated",
         "high_current_loop_area_excessive",
         "connector_current_rating_violation",
         "missing_connector_retention",
@@ -326,6 +328,45 @@ def test_public_tool_schemas_have_release_envelope():
     for name, tool in TOOL_REGISTRY.items():
         public_schema = tool.to_dict()["output_schema"]
         assert_schema_has_top_level_envelope(public_schema, name)
+
+
+def test_placement_constraint_input_schema_matches_enforced_relationships():
+    from hw_codesign.contracts import TOOL_REGISTRY
+
+    validator = Draft202012Validator(TOOL_REGISTRY["hw_set_placement_constraint"].input_schema)
+    validator.validate({
+        "project": "demo",
+        "constraint": {
+            "ref": "U2",
+            "relationship": "thermal_separation",
+            "target": "U1",
+            "min_distance_mm": 12.0,
+        },
+    })
+
+    with pytest.raises(ValidationError):
+        validator.validate({
+            "project": "demo",
+            "constraint": {"ref": "U2", "relationship": "adjacent_to"},
+        })
+    with pytest.raises(ValidationError):
+        validator.validate({
+            "project": "demo",
+            "constraint": {
+                "ref": "U2",
+                "relationship": "thermal_separation",
+                "target": "U1",
+            },
+        })
+    with pytest.raises(ValidationError):
+        validator.validate({
+            "project": "demo",
+            "constraint": {
+                "ref": "U2",
+                "relationship": "opposite_side",
+                "target": "U1",
+            },
+        })
 
 
 def test_public_tool_schema_envelope_preserves_strict_inline_contracts():

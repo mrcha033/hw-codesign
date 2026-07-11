@@ -10,7 +10,7 @@ Design constraints (intentional, to keep the feature credible):
 
 * Seed coordinates are reused for all refs without an agent constraint, so
   hand-tuned routing and mechanical gates produce identical output.
-* Agent-authored constraints (adjacent_to, near_connector) derive positions from
+* Agent-authored constraints (adjacent_to, near_connector, thermal_separation) derive positions from
   the relationship geometry.  Only constrained refs get derived coordinates;
   provenance is tagged on each placement so the source is always auditable.
 * Constraint thresholds are derived from independent sources (the spec, board
@@ -192,6 +192,15 @@ def _derive_agent_constraint_position(
             cy_dir = -1.0 if ty > board_height / 2 else 1.0
             return max(lo_x, min(tx, hi_x)), max(lo_y, min(ty + cy_dir * step, hi_y))
 
+    if relationship == "thermal_separation":
+        minimum = float(constraint["min_distance_mm"])
+        offset = minimum + 1.0
+        for dx, dy in ((offset, 0.0), (-offset, 0.0), (0.0, offset), (0.0, -offset)):
+            cx, cy = tx + dx, ty + dy
+            if lo_x <= cx <= hi_x and lo_y <= cy <= hi_y:
+                return cx, cy
+        return max(lo_x, min(tx + offset, hi_x)), max(lo_y, min(ty, hi_y))
+
     # Fallback for unrecognised relationships: step right
     return max(lo_x, min(tx + 5.0, hi_x)), max(lo_y, min(ty, hi_y))
 
@@ -243,7 +252,11 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
     # Apply agent-authored constraints: derive positions for constrained refs.
     agent_constraints_spec = spec.get("placement", {}).get("constraints", [])
     agent_constraint_list: list[PlacementConstraint] = []
-    _kind_map = {"adjacent_to": "agent_adjacent_to", "near_connector": "agent_near_connector"}
+    _kind_map = {
+        "adjacent_to": "agent_adjacent_to",
+        "near_connector": "agent_near_connector",
+        "thermal_separation": "agent_thermal_separation",
+    }
     for ac in agent_constraints_spec:
         ref = ac.get("ref")
         relationship = ac.get("relationship", "")
@@ -251,7 +264,7 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
         if not ref or ref not in placements:
             continue
         target_placement = placements.get(target_ref) if target_ref else None
-        if relationship in {"adjacent_to", "near_connector"} and target_placement is not None:
+        if relationship in _kind_map and target_placement is not None:
             cx, cy = _derive_agent_constraint_position(relationship, ac, target_placement, width, height)
             original = placements[ref]
             placements[ref] = Placement(
@@ -265,7 +278,7 @@ def propose_placement(spec: dict[str, Any], graph: dict[str, Any]) -> PlacementP
                 source=f"agent_constraint_{relationship}",
                 rationale=ac.get("rationale", f"Position derived from {relationship} constraint relative to {target_ref}."),
             )
-        kind = _kind_map.get(relationship, f"agent_{relationship}")
+        kind = _kind_map.get(relationship, "agent_unsupported_relationship")
         agent_constraint_list.append(
             PlacementConstraint(
                 kind=kind,
@@ -500,6 +513,29 @@ def _candidate_positions_for_ref(
                 offset = max(1.5, min(max_d * 0.7, 5.0))
                 for dx, dy in ((offset, 0.0), (-offset, 0.0), (0.0, offset), (0.0, -offset)):
                     candidates.append((target.x_mm + dx, target.y_mm + dy, "solver_agent_adjacent_to", f"Cost solver satisfied adjacent_to relation with {target.ref}."))
+        elif constraint.kind == "agent_thermal_separation":
+            target = placements.get(constraint.params.get("target"))
+            if target is not None:
+                minimum = float(constraint.params["min_distance_mm"])
+                candidates.append(_away_candidate(
+                    current,
+                    target,
+                    minimum + 1.0,
+                    "solver_agent_thermal_separation",
+                    f"Cost solver separated {ref} from thermal target {target.ref}.",
+                ))
+                for dx, dy in (
+                    (minimum + 1.0, 0.0),
+                    (-minimum - 1.0, 0.0),
+                    (0.0, minimum + 1.0),
+                    (0.0, -minimum - 1.0),
+                ):
+                    candidates.append((
+                        target.x_mm + dx,
+                        target.y_mm + dy,
+                        "solver_agent_thermal_separation",
+                        f"Cost solver separated {ref} from thermal target {target.ref}.",
+                    ))
 
     components = {component.get("ref"): component for component in graph.get("components", []) if component.get("ref")}
     component = components.get(ref, {})
@@ -626,6 +662,13 @@ def _placement_cost(
             if target is not None:
                 distance = _placement_distance_mm(placement, target)
                 add("agent_adjacent_to", max(0.0, distance - float(constraint.params.get("max_distance_mm", 5.0))) * 50.0)
+        elif constraint.kind == "agent_thermal_separation" and placement is not None:
+            target = placements.get(constraint.params.get("target"))
+            if target is not None:
+                distance = _placement_distance_mm(placement, target)
+                add("agent_thermal_separation", max(0.0, float(constraint.params["min_distance_mm"]) - distance) * 50.0)
+        elif constraint.kind == "agent_unsupported_relationship":
+            add("agent_unsupported_relationship", 10000.0)
 
     rf_refs = [
         ref for ref, component in components.items()
@@ -828,6 +871,27 @@ def _build_constraint_graph(
                 constraint.derived_from,
                 max_distance_mm=constraint.params.get("max_distance_mm"),
                 side=constraint.params.get("side"),
+            )
+        elif constraint.kind == "agent_thermal_separation" and constraint.target_ref:
+            target = constraint.params.get("target")
+            distance = None
+            if target and constraint.target_ref in placements and str(target) in placements:
+                distance = _placement_distance_mm(placements[constraint.target_ref], placements[str(target)])
+            minimum = float(constraint.params["min_distance_mm"])
+            add_edge(
+                constraint.kind,
+                [constraint.target_ref, str(target)] if target else [constraint.target_ref],
+                constraint.enforced,
+                constraint.derived_from,
+                **measured_min(distance, minimum, "agent_thermal_separation", 50.0),
+            )
+        elif constraint.kind == "agent_unsupported_relationship" and constraint.target_ref:
+            add_edge(
+                constraint.kind,
+                [constraint.target_ref],
+                True,
+                constraint.derived_from,
+                relationship=constraint.params.get("relationship"),
             )
         elif constraint.kind == "thermal_spacing" and constraint.target_ref:
             add_edge(
@@ -1308,6 +1372,32 @@ def check_placement(proposal: PlacementProposal, graph: dict[str, Any]) -> GateR
                         side=side,
                         axis=axis,
                     )
+        elif constraint.kind == "agent_thermal_separation":
+            constrained = placements.get(constraint.target_ref)
+            target_ref = constraint.params.get("target")
+            target = placements.get(target_ref) if target_ref else None
+            if constrained is None or target is None:
+                continue
+            distance = _placement_distance_mm(constrained, target)
+            minimum = float(constraint.params["min_distance_mm"])
+            if distance < minimum:
+                record(
+                    "error",
+                    "constraint_thermal_separation_violated",
+                    f"{constraint.target_ref} is {distance:.2f} mm from {target_ref} (minimum {minimum} mm)",
+                    ref=constraint.target_ref,
+                    target=target_ref,
+                    distance_mm=round(distance, 3),
+                    min_distance_mm=minimum,
+                )
+        elif constraint.kind == "agent_unsupported_relationship":
+            record(
+                "error",
+                "unsupported_placement_relationship",
+                f"Stored placement relationship {constraint.params.get('relationship')} has no enforced physical semantics",
+                ref=constraint.target_ref,
+                relationship=constraint.params.get("relationship"),
+            )
         elif constraint.kind == "decoupling_proximity":
             if not constraint.enforced:
                 record(

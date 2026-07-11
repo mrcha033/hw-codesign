@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -98,6 +99,110 @@ def test_tscircuit_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
     assert compile_report.failures[0].code == "tool_timeout"
     assert compile_report.failures[0].details["timeout_seconds"] == 4
     assert compile_report.backend["timeout_seconds"] == 4
+
+
+def test_tscircuit_source_uses_solver_coordinates(service, project):
+    _set_backend(service, project, "tscircuit")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    component = next(item for item in graph["components"] if item["ref"] == "U1")
+    width = float(graph["placement"]["board_width_mm"])
+    height = float(graph["placement"]["board_height_mm"])
+    expected_x = float(component["pcb_position_mm"][0]) - width / 2.0
+    expected_y = float(component["pcb_position_mm"][1]) - height / 2.0
+    source = project_path / "electronics" / "source" / "tscircuit"
+    tsx_line = next(line for line in (source / "board.tsx").read_text(encoding="utf-8").splitlines() if 'name="U1"' in line)
+    compiler_line = next(line for line in (source / "board.compiler.mjs").read_text(encoding="utf-8").splitlines() if 'name: "U1"' in line)
+    manifest = json.loads((source / "source_manifest.json").read_text(encoding="utf-8"))
+
+    assert f"pcbX={{{expected_x:.3f}}}" in tsx_line
+    assert f"pcbY={{{expected_y:.3f}}}" in tsx_line
+    assert f"pcbX: {expected_x:.3f}" in compiler_line
+    assert f"pcbY: {expected_y:.3f}" in compiler_line
+    assert manifest["placement_contract"]["source"] == "electrical_graph.components[].pcb_position_mm"
+    assert manifest["placement_contract"]["missing_solver_placements"] == []
+    assert manifest["placement_contract"]["solver_placements"] == len(graph["components"])
+
+
+def test_tscircuit_source_refreshes_after_agent_placement(service, project):
+    _set_backend(service, project, "tscircuit")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    source_path = project_path / "electronics" / "source" / "tscircuit" / "board.tsx"
+    before = source_path.read_text(encoding="utf-8")
+
+    result = service.set_placement_constraint(project, {
+        "ref": "R1",
+        "relationship": "adjacent_to",
+        "target": "U1",
+        "max_distance_mm": 5.0,
+    })
+
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    component = next(item for item in graph["components"] if item["ref"] == "R1")
+    expected_x = float(component["pcb_position_mm"][0]) - float(graph["placement"]["board_width_mm"]) / 2.0
+    expected_y = float(component["pcb_position_mm"][1]) - float(graph["placement"]["board_height_mm"]) / 2.0
+    after = source_path.read_text(encoding="utf-8")
+    line = next(line for line in after.splitlines() if 'name="R1"' in line)
+
+    assert result["status"] == "pass"
+    assert result["regenerated_sources"]
+    assert after != before
+    assert f"pcbX={{{expected_x:.3f}}}" in line
+    assert f"pcbY={{{expected_y:.3f}}}" in line
+
+
+def test_tscircuit_manifest_blocks_missing_solver_placements(tmp_path):
+    project = tmp_path / "project"
+    spec = {"mechanical": {"envelope": {"board_width_mm": 40.0, "board_height_mm": 30.0}}}
+    graph = {
+        "components": [{
+            "ref": "R1",
+            "footprint_metadata": {
+                "library_id": "Resistor_SMD:R_0603_1608Metric",
+                "backend_footprints": {"tscircuit": "0603"},
+            },
+            "pins": [],
+        }],
+    }
+
+    TSCircuitBackend(tmp_path).generate_source(project, spec, graph)
+    manifest = json.loads((project / "electronics" / "source" / "tscircuit" / "source_manifest.json").read_text(encoding="utf-8"))
+
+    assert manifest["source_release_eligible"] is False
+    assert manifest["fabrication_release_eligible"] is False
+    assert manifest["placement_contract"]["missing_solver_placements"] == ["R1"]
+
+
+def test_tscircuit_compiled_placement_must_match_solver_coordinates():
+    graph = {
+        "placement": {"board_width_mm": 100.0, "board_height_mm": 60.0},
+        "components": [{
+            "ref": "U1",
+            "pcb_position_mm": [20.0, 10.0],
+            "placement_source": "solver_agent_adjacent_to",
+        }],
+    }
+    compiled = [
+        {"type": "source_component", "source_component_id": "source_component_0", "name": "U1"},
+        {
+            "type": "pcb_component",
+            "source_component_id": "source_component_0",
+            "center": {"x": -30.0, "y": -20.0},
+        },
+    ]
+
+    failures, checked = TSCircuitBackend.placement_parity_failures(compiled, graph)
+    drifted = deepcopy(compiled)
+    drifted[1]["center"] = {"x": -20.0, "y": -20.0}
+    drift_failures, drift_checked = TSCircuitBackend.placement_parity_failures(drifted, graph)
+
+    assert checked == 1
+    assert failures == []
+    assert drift_checked == 1
+    assert [failure.code for failure in drift_failures] == ["placement_coordinate_mismatch"]
+    assert drift_failures[0].details["error_mm"] == 10.0
 
 
 def test_tscircuit_backend_is_not_executed_when_external_checks_disabled(service, project, monkeypatch):

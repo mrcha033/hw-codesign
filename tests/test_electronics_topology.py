@@ -216,6 +216,19 @@ class TestSetPlacementConstraint:
         })
         assert result["status"] == "pass"
 
+    def test_thermal_separation_constraint(self, service, project):
+        result = service.set_placement_constraint(project, {
+            "ref": "U6",
+            "relationship": "thermal_separation",
+            "target": "U1",
+            "min_distance_mm": 25.0,
+            "rationale": "separate CAN transceiver from MCU thermal zone",
+        })
+
+        assert result["status"] == "pass"
+        assert result["constraint"]["min_distance_mm"] == 25.0
+        assert result["placement_gate"]["errors"] == 0
+
     def test_invalid_relationship_returns_blocked(self, service, project):
         result = service.set_placement_constraint(project, {
             "ref": "U6",
@@ -228,6 +241,36 @@ class TestSetPlacementConstraint:
         result = service.set_placement_constraint(project, {"relationship": "adjacent_to"})
         assert result["status"] == "blocked"
         assert result["code"] == "missing_ref"
+
+    def test_missing_target_returns_blocked(self, service, project):
+        result = service.set_placement_constraint(project, {
+            "ref": "U6",
+            "relationship": "adjacent_to",
+        })
+
+        assert result["status"] == "blocked"
+        assert result["code"] == "missing_target"
+
+    def test_invalid_thermal_distance_returns_blocked(self, service, project):
+        result = service.set_placement_constraint(project, {
+            "ref": "U6",
+            "relationship": "thermal_separation",
+            "target": "U1",
+            "min_distance_mm": 0,
+        })
+
+        assert result["status"] == "blocked"
+        assert result["code"] == "invalid_min_distance"
+
+    def test_board_side_relationship_returns_explicit_blocker(self, service, project):
+        result = service.set_placement_constraint(project, {
+            "ref": "U6",
+            "relationship": "opposite_side",
+            "target": "U1",
+        })
+
+        assert result["status"] == "blocked"
+        assert result["code"] == "unsupported_board_side_placement"
 
     def test_unknown_ref_returns_blocked(self, service, project):
         result = service.set_placement_constraint(project, {
@@ -246,6 +289,29 @@ class TestSetPlacementConstraint:
         result = service.list_placement_constraints(project)
         assert result["count"] == 1
         assert result["constraints"][0]["ref"] == "U6"
+
+    def test_multiple_relationships_for_same_ref_are_preserved(self, service, project):
+        first = service.set_placement_constraint(project, {
+            "ref": "U6",
+            "relationship": "near_connector",
+            "target": "J3",
+        })
+        second = service.set_placement_constraint(project, {
+            "ref": "U6",
+            "relationship": "thermal_separation",
+            "target": "U1",
+            "min_distance_mm": 20.0,
+        })
+
+        result = service.list_placement_constraints(project)
+
+        assert first["status"] == "pass"
+        assert second["status"] == "pass"
+        assert result["count"] == 2
+        assert {item["relationship"] for item in result["constraints"]} == {
+            "near_connector",
+            "thermal_separation",
+        }
 
 
 class TestListPlacementConstraints:

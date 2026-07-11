@@ -56,7 +56,9 @@
 ## Placement
 
 - Agent-authored placement constraints via `hw_set_placement_constraint`: express relationships
-  (`adjacent_to`, `near_connector`) rather than absolute XY coordinates; the placer runs a
+  (`adjacent_to`, `near_connector`, `thermal_separation`) rather than absolute XY coordinates;
+  top/bottom board-side relationships are refused until canonical backends preserve component
+  layers; the placer runs a
   deterministic constraint-cost search and records solver iterations, aggregate cost breakdown,
   per-edge measured distance/margin/cost evidence, and per-placement provenance before validation
 - Constraint-driven placement proposal: structured, provenance-tagged placements with keepout,
@@ -67,6 +69,9 @@
 - Generated `pcb_position_mm`, assembly drawings, pick-and-place, and reference-fabrication
   candidate exports consume the same solver proposal that `placement_constraints`,
   `layout_thermal_integrity`, and `layout_signal_integrity` validate
+- Fabrication-tier tscircuit source transforms the same solver `pcb_position_mm` coordinates into
+  its board-centered coordinate system, records missing solver placements in the source manifest,
+  and fails layout completeness when compiled Circuit JSON drifts beyond 0.05 mm
 - `ir_pcb_sanity` cross-checks generated KiCad copper-layer declarations and copper-layer usage
   against the manufacturing stackup, and KiCad Gerber export derives its layer list from the
   board file, so a 2-layer candidate cannot silently carry inner-layer zones, routes, or exports

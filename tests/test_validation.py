@@ -613,6 +613,17 @@ def test_grounding_benchmark_catches_oscillator_far_from_mcu(service):
     assert "oscillator_crystal_far_from_mcu" in case["observed_codes"]
 
 
+def test_grounding_benchmark_catches_declared_thermal_separation_violation(service, project):
+    service.generate_all(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    case = next(item for item in benchmark["cases"] if item["id"] == "declared_thermal_separation_violated")
+    assert case["detected"] is True
+    assert case["expected_codes"] == ["constraint_thermal_separation_violated"]
+    assert "constraint_thermal_separation_violated" in case["observed_codes"]
+
+
 def test_grounding_benchmark_catches_swapped_usb_esd_pair_mapping(service, project):
     service.generate_all(project)
 

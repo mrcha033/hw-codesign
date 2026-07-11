@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import shutil
@@ -24,12 +25,33 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
         self.platform_root = platform_root
         self.parts_root = parts_root or platform_root / "parts"
 
+    @staticmethod
+    def _source_position(
+        component: dict[str, Any],
+        index: int,
+        board_width: float,
+        board_height: float,
+    ) -> tuple[float, float, bool]:
+        position = component.get("pcb_position_mm")
+        has_solver_position = (
+            isinstance(position, list)
+            and len(position) == 2
+            and all(isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) for value in position)
+        )
+        if has_solver_position:
+            board_x, board_y = float(position[0]), float(position[1])
+        else:
+            board_x = 8 + (index % 7) * max(8, (board_width - 16) / 6)
+            board_y = 8 + (index // 7) * max(8, (board_height - 16) / 6)
+        return board_x - board_width / 2, board_y - board_height / 2, has_solver_position
+
     def generate_source(self, project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> list[str]:
         target = project / "electronics" / "source" / "tscircuit"
         target.mkdir(parents=True, exist_ok=True)
         components = []
         esm_components = []
         unsupported_footprints: list[dict[str, str]] = []
+        missing_solver_placements: list[str] = []
         envelope = spec["mechanical"]["envelope"]
         board_width = envelope["board_width_mm"]
         board_height = envelope["board_height_mm"]
@@ -47,8 +69,9 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             labels_js = json.dumps(labels, sort_keys=True)
             conn_js = "{" + ", ".join(f"{json.dumps(key)}: {value}" for key, value in connections.items()) + "}"
             footprint_prop = f" footprint={json.dumps(tscircuit_footprint)}" if tscircuit_footprint else ""
-            x = -board_width / 2 + 8 + (index % 7) * max(8, (board_width - 16) / 6)
-            y = -board_height / 2 + 8 + (index // 7) * max(8, (board_height - 16) / 6)
+            x, y, has_solver_position = self._source_position(item, index, board_width, board_height)
+            if not has_solver_position:
+                missing_solver_placements.append(str(item["ref"]))
             placement_prop = f" pcbX={{{x:.3f}}} pcbY={{{y:.3f}}}"
             mpn_prop = " supplierPartNumbers={{lcsc: []}}"
             components.append(
@@ -80,18 +103,25 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             + "\n)\n"
         )
         atomic_write_text(compiler_entry, esm)
+        fabrication_release_eligible = not unsupported_footprints and not missing_solver_placements
         write_json(target / "source_manifest.json", {
             "backend": "tscircuit",
             "compiler_version": self.VERSION,
             "backend_release_capable": True,
             "release_tier": "fabrication",
-            "source_release_eligible": not unsupported_footprints,
+            "source_release_eligible": fabrication_release_eligible,
             "netlist_release_eligible": False,
             "hdl_source_release_eligible": False,
-            "fabrication_release_eligible": not unsupported_footprints,
+            "fabrication_release_eligible": fabrication_release_eligible,
             "pcb_disabled": False,
             "routing_disabled": False,
             "unsupported_footprints": unsupported_footprints,
+            "placement_contract": {
+                "source": "electrical_graph.components[].pcb_position_mm",
+                "coordinate_transform": "board_origin_top_left_to_tscircuit_center",
+                "solver_placements": len(graph.get("components", [])) - len(missing_solver_placements),
+                "missing_solver_placements": missing_solver_placements,
+            },
             "sources": self.source_entries(target, [entry, compiler_entry]),
             "contract_gates": list(self.gate_names),
             "release_blocking_gates": list(self.gate_names),
@@ -101,7 +131,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                 "tscircuit",
                 compiler_version=self.VERSION,
                 command=self.command(entry),
-                release_eligible=not unsupported_footprints,
+                release_eligible=fabrication_release_eligible,
                 release_tier="fabrication",
             ),
         })
@@ -305,6 +335,8 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                 Failure(FailureCategory.EDA_ERROR, "component_unplaced", f"{ref} has no PCB placement in circuit.json", details={"ref": ref})
                 for ref in unplaced
             ]
+            placement_parity_failures, placement_parity_checked = self.placement_parity_failures(compiled, graph)
+            layout_failures.extend(placement_parity_failures)
             layout_failures += [
                 Failure(FailureCategory.EDA_ERROR, "pcb_traces_absent", "tscircuit produced no pcb_trace entries; routing may be deferred")
             ] if not pcb_traces else []
@@ -312,7 +344,14 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                 "tscircuit_layout_completeness",
                 Status.FAIL if layout_failures else Status.PASS,
                 layout_failures,
-                metrics={"placed": len(pcb_components), "total": len(all_component_refs), "traces": len(pcb_traces)},
+                metrics={
+                    "placed": len(pcb_components),
+                    "total": len(all_component_refs),
+                    "traces": len(pcb_traces),
+                    "placement_parity_checked": placement_parity_checked,
+                    "placement_parity_failures": len(placement_parity_failures),
+                    "placement_tolerance_mm": 0.05,
+                },
                 backend=backend,
             )
 
@@ -333,6 +372,85 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
     @staticmethod
     def _identifier(value: str) -> str:
         return re.sub(r"[^A-Za-z0-9_]", "_", value)
+
+    @classmethod
+    def placement_parity_failures(
+        cls,
+        circuit_json: list[dict[str, Any]],
+        graph: dict[str, Any],
+        tolerance_mm: float = 0.05,
+    ) -> tuple[list[Failure], int]:
+        placement = graph.get("placement", {})
+        board_width = placement.get("board_width_mm")
+        board_height = placement.get("board_height_mm")
+        if not isinstance(board_width, (int, float)) or not isinstance(board_height, (int, float)):
+            return [Failure(
+                FailureCategory.EDA_ERROR,
+                "solver_placement_contract_missing",
+                "Electrical graph does not carry the board dimensions required for tscircuit placement parity",
+            )], 0
+
+        source_components = {
+            item.get("source_component_id"): item.get("name")
+            for item in circuit_json
+            if item.get("type") == "source_component" and item.get("source_component_id") and item.get("name")
+        }
+        pcb_by_ref = {
+            source_components.get(item.get("source_component_id")): item
+            for item in circuit_json
+            if item.get("type") == "pcb_component"
+            and source_components.get(item.get("source_component_id"))
+        }
+        failures: list[Failure] = []
+        checked = 0
+        for index, component in enumerate(graph.get("components", [])):
+            ref = str(component.get("ref", "?"))
+            expected_x, expected_y, has_solver_position = cls._source_position(
+                component,
+                index,
+                float(board_width),
+                float(board_height),
+            )
+            if not has_solver_position:
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "solver_component_placement_missing",
+                    f"{ref} has no solver-derived pcb_position_mm for tscircuit placement",
+                    details={"ref": ref},
+                ))
+                continue
+            compiled = pcb_by_ref.get(ref)
+            if compiled is None:
+                continue
+            center = compiled.get("center") or {}
+            compiled_x = center.get("x")
+            compiled_y = center.get("y")
+            if not isinstance(compiled_x, (int, float)) or not isinstance(compiled_y, (int, float)):
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "compiled_component_position_missing",
+                    f"{ref} pcb_component has no numeric center in Circuit JSON",
+                    details={"ref": ref, "center": center},
+                ))
+                continue
+            checked += 1
+            error_mm = math.hypot(float(compiled_x) - expected_x, float(compiled_y) - expected_y)
+            if error_mm > tolerance_mm:
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "placement_coordinate_mismatch",
+                    f"{ref} compiled tscircuit placement differs from the solver proposal by {error_mm:.3f} mm",
+                    details={
+                        "ref": ref,
+                        "solver_board_position_mm": component.get("pcb_position_mm"),
+                        "expected_tscircuit_center_mm": [round(expected_x, 3), round(expected_y, 3)],
+                        "compiled_tscircuit_center_mm": [compiled_x, compiled_y],
+                        "error_mm": round(error_mm, 6),
+                        "tolerance_mm": tolerance_mm,
+                        "placement_source": component.get("placement_source"),
+                    },
+                ))
+        return failures, checked
 
     @staticmethod
     def extract_netlist(circuit_json: list[dict[str, Any]]) -> dict[str, list[str]]:

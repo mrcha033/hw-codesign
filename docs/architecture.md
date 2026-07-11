@@ -28,7 +28,7 @@ templates, and sometimes generators. See [adapting-a-spec.md](adapting-a-spec.md
 | Backend | What works | Release tier |
 |---|---|---|
 | `kicad` | Native netlist, ERC/DRC, Freerouting autoroute, Gerber/drill/BOM/STEP export | Fabrication |
-| `tscircuit` | Pinned offline compile (0.1.1491), Circuit JSON, graph/footprint parity, KiCad manufacturing bridge | Fabrication |
+| `tscircuit` | Pinned offline compile (0.1.1491), solver-coordinate and Circuit JSON placement parity, graph/footprint parity, KiCad manufacturing bridge | Fabrication |
 | `python_netlist` | Deterministic `compiled_netlist.json` + firmware; layout and manufacturing gates are N/A | Netlist |
 | `atopile` | Real `.ato` source, `ato build`; compile/netlist_extract/graph_parity via source-AST parity; footprint/layout/manufacturing blocked pending KiCad plugin path | HDL source |
 | `reference` | Design intent and candidate artifacts for inspection and tutorials | Candidate-only |

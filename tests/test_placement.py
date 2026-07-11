@@ -814,6 +814,83 @@ def test_agent_near_connector_violation_fails(spec: dict, graph: dict):
     assert any(f.code == "constraint_near_connector_violated" for f in report.failures)
 
 
+def test_agent_thermal_separation_derives_measured_minimum_distance(spec: dict, graph: dict):
+    constrained_ref = "U6"
+    target_ref = "U1"
+    spec_with = deepcopy(spec)
+    spec_with["placement"] = {"constraints": [{
+        "ref": constrained_ref,
+        "relationship": "thermal_separation",
+        "target": target_ref,
+        "min_distance_mm": 25.0,
+    }]}
+
+    proposal = propose_placement(spec_with, graph)
+    report = check_placement(proposal, graph)
+    constrained = proposal.placements[constrained_ref]
+    target = proposal.placements[target_ref]
+    distance = math.hypot(constrained.x_mm - target.x_mm, constrained.y_mm - target.y_mm)
+    edge = next(
+        item for item in proposal.constraint_graph["edges"]
+        if item["kind"] == "agent_thermal_separation"
+    )
+
+    assert report.status == Status.PASS
+    assert distance >= 25.0
+    assert constrained.source in {
+        "agent_constraint_thermal_separation",
+        "solver_agent_thermal_separation",
+    }
+    assert edge["details"]["minimum_mm"] == 25.0
+    assert edge["details"]["distance_mm"] == pytest.approx(distance, abs=0.001)
+    assert edge["details"]["margin_mm"] >= 0.0
+    assert edge["details"]["cost_key"] == "agent_thermal_separation"
+    assert edge["details"]["violation_cost"] == 0.0
+
+
+def test_agent_thermal_separation_violation_fails(spec: dict, graph: dict):
+    spec_with = deepcopy(spec)
+    spec_with["placement"] = {"constraints": [{
+        "ref": "U6",
+        "relationship": "thermal_separation",
+        "target": "U1",
+        "min_distance_mm": 20.0,
+    }]}
+    proposal = propose_placement(spec_with, graph)
+    proposal.placements["U6"] = replace(
+        proposal.placements["U6"],
+        x_mm=proposal.placements["U1"].x_mm + 2.0,
+        y_mm=proposal.placements["U1"].y_mm,
+    )
+
+    report = check_placement(proposal, graph)
+
+    failure = next(item for item in report.failures if item.code == "constraint_thermal_separation_violated")
+    assert report.status == Status.FAIL
+    assert failure.details["distance_mm"] == 2.0
+    assert failure.details["min_distance_mm"] == 20.0
+
+
+def test_legacy_unsupported_agent_relationship_fails_closed(spec: dict, graph: dict):
+    spec_with = deepcopy(spec)
+    spec_with["placement"] = {"constraints": [{
+        "ref": "U6",
+        "relationship": "same_side",
+        "target": "U1",
+    }]}
+
+    proposal = propose_placement(spec_with, graph)
+    report = check_placement(proposal, graph)
+
+    assert report.status == Status.FAIL
+    assert proposal.cost_breakdown["agent_unsupported_relationship"] == 10000.0
+    assert "unsupported_placement_relationship" in {failure.code for failure in report.failures}
+    assert any(
+        edge["kind"] == "agent_unsupported_relationship"
+        for edge in proposal.constraint_graph["edges"]
+    )
+
+
 def test_unconstrained_refs_keep_seed_positions_when_agent_constraints_present(spec: dict, graph: dict):
     refs = [c["ref"] for c in graph["components"]]
     constrained_ref, target_ref = refs[0], refs[1]
