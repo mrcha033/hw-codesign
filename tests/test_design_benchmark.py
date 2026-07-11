@@ -1,8 +1,29 @@
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
+import pytest
+
 from hw_codesign.service import _BENCHMARK_SPECS, HardwareService
+
+
+@pytest.fixture(scope="session")
+def benchmark_result(tmp_path_factory: pytest.TempPathFactory) -> dict:
+    """Run the full design benchmark once per session and share the result.
+
+    The benchmark builds every spec in ``_BENCHMARK_SPECS`` end-to-end, so it is
+    expensive (seconds per template). The many read-only structural-contract tests
+    below only inspect the returned dict, so they share a single cached run rather
+    than rebuilding all templates once per test. Tests that assert workspace
+    side-effects (cleanup, keep_projects, distinct artifacts) still run fresh.
+    """
+    root = tmp_path_factory.mktemp("benchmark_ws")
+    source_schemas = Path(__file__).parents[1] / "schemas"
+    shutil.copytree(source_schemas, root / "schemas")
+    service = HardwareService(root)
+    return service.run_design_benchmark(include_external=False)
+
 
 # ---------------------------------------------------------------------------
 # Benchmark spec catalogue integrity
@@ -44,11 +65,11 @@ def test_benchmark_templates_are_supported(service: HardwareService):
 
 
 # ---------------------------------------------------------------------------
-# run_design_benchmark structural contract
+# run_design_benchmark structural contract (shared cached run)
 # ---------------------------------------------------------------------------
 
-def test_run_design_benchmark_returns_required_keys(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
+def test_run_design_benchmark_returns_required_keys(benchmark_result: dict):
+    result = benchmark_result
     assert "status" in result
     assert "benchmark" in result
     assert "summary" in result
@@ -56,27 +77,23 @@ def test_run_design_benchmark_returns_required_keys(service: HardwareService):
     assert result["benchmark"] == "design_benchmark_v0"
 
 
-def test_run_design_benchmark_status_is_valid_enum(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    assert result["status"] in {"pass", "fail", "partial"}
+def test_run_design_benchmark_status_is_valid_enum(benchmark_result: dict):
+    assert benchmark_result["status"] in {"pass", "fail", "partial"}
 
 
-def test_run_design_benchmark_summary_counts_consistent(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+def test_run_design_benchmark_summary_counts_consistent(benchmark_result: dict):
+    summary = benchmark_result["summary"]
     assert summary["total"] == len(_BENCHMARK_SPECS)
     assert summary["passed"] + summary["failed"] == summary["total"]
     assert 0.0 <= summary["pass_rate"] <= 1.0
 
 
-def test_run_design_benchmark_specs_count_matches_suite(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    assert len(result["specs"]) == len(_BENCHMARK_SPECS)
+def test_run_design_benchmark_specs_count_matches_suite(benchmark_result: dict):
+    assert len(benchmark_result["specs"]) == len(_BENCHMARK_SPECS)
 
 
-def test_run_design_benchmark_spec_results_have_required_keys(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    for spec_result in result["specs"]:
+def test_run_design_benchmark_spec_results_have_required_keys(benchmark_result: dict):
+    for spec_result in benchmark_result["specs"]:
         assert "id" in spec_result
         assert "template" in spec_result
         assert "intent" in spec_result
@@ -85,24 +102,21 @@ def test_run_design_benchmark_spec_results_have_required_keys(service: HardwareS
         assert "gate_summary" in spec_result
 
 
-def test_run_design_benchmark_spec_ids_match_suite(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
+def test_run_design_benchmark_spec_ids_match_suite(benchmark_result: dict):
     expected_ids = {s["id"] for s in _BENCHMARK_SPECS}
-    result_ids = {r["id"] for r in result["specs"]}
+    result_ids = {r["id"] for r in benchmark_result["specs"]}
     assert result_ids == expected_ids
 
 
-def test_run_design_benchmark_saves_artifact(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    assert "artifact" in result
-    artifact_path = Path(result["artifact"])
+def test_run_design_benchmark_saves_artifact(benchmark_result: dict):
+    assert "artifact" in benchmark_result
+    artifact_path = Path(benchmark_result["artifact"])
     assert artifact_path.is_file(), f"Benchmark artifact must exist at {artifact_path}"
 
 
-def test_run_design_benchmark_artifact_is_json(service: HardwareService):
+def test_run_design_benchmark_artifact_is_json(benchmark_result: dict):
     import json
-    result = service.run_design_benchmark(include_external=False)
-    artifact_path = Path(result["artifact"])
+    artifact_path = Path(benchmark_result["artifact"])
     data = json.loads(artifact_path.read_text(encoding="utf-8"))
     assert data["benchmark"] == "design_benchmark_v0"
     assert "summary" in data
@@ -131,55 +145,48 @@ def test_run_design_benchmark_multiple_runs_produce_separate_artifacts(service: 
     assert r1["artifact"] != r2["artifact"], "Each benchmark run must produce a distinct artifact file"
 
 
-def test_run_design_benchmark_mean_iterations_non_negative(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    assert result["summary"]["mean_iterations"] >= 0
+def test_run_design_benchmark_mean_iterations_non_negative(benchmark_result: dict):
+    assert benchmark_result["summary"]["mean_iterations"] >= 0
 
 
-def test_run_design_benchmark_each_spec_has_non_negative_iterations(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    for spec_result in result["specs"]:
+def test_run_design_benchmark_each_spec_has_non_negative_iterations(benchmark_result: dict):
+    for spec_result in benchmark_result["specs"]:
         assert spec_result["iterations"] >= 0, f"Iterations must be >= 0 for {spec_result['id']!r}"
 
 
-def test_run_design_benchmark_status_reflects_pass_rate(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+def test_run_design_benchmark_status_reflects_pass_rate(benchmark_result: dict):
+    summary = benchmark_result["summary"]
     if summary["passed"] == summary["total"]:
-        assert result["status"] == "pass"
+        assert benchmark_result["status"] == "pass"
     elif summary["passed"] == 0:
-        assert result["status"] == "fail"
+        assert benchmark_result["status"] == "fail"
     else:
-        assert result["status"] == "partial"
+        assert benchmark_result["status"] == "partial"
 
 
-def test_run_design_benchmark_software_gate_pass_rate_in_summary(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+def test_run_design_benchmark_software_gate_pass_rate_in_summary(benchmark_result: dict):
+    summary = benchmark_result["summary"]
     assert "software_gate_pass_rate" in summary
     assert 0.0 <= summary["software_gate_pass_rate"] <= 1.0
 
 
-def test_run_design_benchmark_software_gate_pass_rate_per_spec(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    for spec_result in result["specs"]:
+def test_run_design_benchmark_software_gate_pass_rate_per_spec(benchmark_result: dict):
+    for spec_result in benchmark_result["specs"]:
         if spec_result["status"] != "error":
             assert "software_gate_pass_rate" in spec_result
             assert 0.0 <= spec_result["software_gate_pass_rate"] <= 1.0
 
 
-def test_run_design_benchmark_software_gate_pass_rate_non_zero_for_valid_templates(service: HardwareService):
+def test_run_design_benchmark_software_gate_pass_rate_non_zero_for_valid_templates(benchmark_result: dict):
     # Valid templates should pass most software gates; rate must be > 0
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+    summary = benchmark_result["summary"]
     assert summary["software_gate_pass_rate"] > 0.0, (
         f"Software gate pass rate should be > 0 for valid templates; got {summary['software_gate_pass_rate']}"
     )
 
 
-def test_run_design_benchmark_software_gates_ready_in_summary(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+def test_run_design_benchmark_software_gates_ready_in_summary(benchmark_result: dict):
+    summary = benchmark_result["summary"]
     assert "software_gates_ready" in summary
     assert "software_gates_ready_rate" in summary
     assert 0 <= summary["software_gates_ready"] <= summary["total"]
@@ -207,24 +214,21 @@ def test_design_until_release_software_gates_ready_contract(service: HardwareSer
         assert len(result["pending_external_gates"]) > 0, "Must name at least one pending external gate"
 
 
-def test_run_design_benchmark_native_gate_pass_rate_in_summary(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+def test_run_design_benchmark_native_gate_pass_rate_in_summary(benchmark_result: dict):
+    summary = benchmark_result["summary"]
     assert "native_gate_pass_rate" in summary, "Summary must include native_gate_pass_rate"
     assert 0.0 <= summary["native_gate_pass_rate"] <= 1.0
 
 
-def test_run_design_benchmark_native_gate_pass_rate_per_spec(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    for spec_result in result["specs"]:
+def test_run_design_benchmark_native_gate_pass_rate_per_spec(benchmark_result: dict):
+    for spec_result in benchmark_result["specs"]:
         if spec_result["status"] != "error":
             assert "native_gate_pass_rate" in spec_result, f"Spec {spec_result.get('id')!r} missing native_gate_pass_rate"
             assert 0.0 <= spec_result["native_gate_pass_rate"] <= 1.0
 
 
-def test_run_design_benchmark_gate_counts_per_spec(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    for spec_result in result["specs"]:
+def test_run_design_benchmark_gate_counts_per_spec(benchmark_result: dict):
+    for spec_result in benchmark_result["specs"]:
         if spec_result["status"] != "error":
             assert "gates_passed_count" in spec_result
             assert "gates_failed_count" in spec_result
@@ -232,9 +236,8 @@ def test_run_design_benchmark_gate_counts_per_spec(service: HardwareService):
             assert spec_result["gates_failed_count"] >= 0
 
 
-def test_run_design_benchmark_tracks_physical_qualification_gaps(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    summary = result["summary"]
+def test_run_design_benchmark_tracks_physical_qualification_gaps(benchmark_result: dict):
+    summary = benchmark_result["summary"]
 
     assert summary["physical_qualification_required_tests"] >= len(_BENCHMARK_SPECS)
     assert summary["physical_qualification_missing_or_unapproved"] >= len(_BENCHMARK_SPECS)
@@ -243,9 +246,8 @@ def test_run_design_benchmark_tracks_physical_qualification_gaps(service: Hardwa
     assert summary["physical_qualification_gap_categories"]
 
 
-def test_run_design_benchmark_physical_summary_per_spec(service: HardwareService):
-    result = service.run_design_benchmark(include_external=False)
-    for spec_result in result["specs"]:
+def test_run_design_benchmark_physical_summary_per_spec(benchmark_result: dict):
+    for spec_result in benchmark_result["specs"]:
         if spec_result["status"] == "error":
             continue
         physical = spec_result["physical_qualification_summary"]

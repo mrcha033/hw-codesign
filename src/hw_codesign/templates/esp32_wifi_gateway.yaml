@@ -78,6 +78,14 @@ mechanical:
     max_component_height_top_mm: 5.0
     max_component_height_bottom_mm: 1.0
   enclosure_internal_mm: [80.0, 60.0, 25.0]
+  insertion_clearance_mm: 1.5
+  assembly_clearance_mm: 0.8
+  tolerance_mm: 0.2
+  mounting_holes:
+    - {x_mm: 3.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 66.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 3.5, y_mm: 46.5, diameter_mm: 3.2}
+    - {x_mm: 66.5, y_mm: 46.5, diameter_mm: 3.2}
 
 firmware:
   rtos: esp-idf-freertos

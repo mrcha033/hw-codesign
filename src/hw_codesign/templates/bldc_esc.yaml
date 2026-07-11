@@ -86,9 +86,21 @@ firmware:
       action: {transmit: can_esc_telemetry}
     - id: foc_state_machine
       behavior: state_machine
-      states: [idle, align, open_loop_ramp, closed_loop_foc, fault]
-      trigger: {signal: NFAULT}
-      action: {on_fault: transition_to_fault}
+      initial_state: idle
+      states:
+        - {name: idle}
+        - {name: align}
+        - {name: open_loop_ramp}
+        - {name: closed_loop_foc}
+        - {name: fault, entry: disable_pwm_outputs}
+      transitions:
+        - {from: idle, to: align, trigger: enable}
+        - {from: align, to: open_loop_ramp, trigger: aligned}
+        - {from: open_loop_ramp, to: closed_loop_foc, trigger: sync_achieved}
+        - {from: align, to: fault, trigger: nfault}
+        - {from: open_loop_ramp, to: fault, trigger: nfault}
+        - {from: closed_loop_foc, to: fault, trigger: nfault}
+        - {from: fault, to: idle, trigger: reset}
 manufacturing:
   pcb:
     profile: jlcpcb_2layer

@@ -98,6 +98,46 @@ _BENCHMARK_SPECS: list[dict[str, str]] = [
         "template": "rp2040_usb_device",
         "intent": "RP2040 USB HID device with 2 MB QSPI flash and USB-C connector",
     },
+    {
+        "id": "usb_hid_rp2040_ctrl",
+        "template": "usb_hid_controller",
+        "intent": "RP2040 USB HID controller with QSPI flash and USB-C",
+    },
+    {
+        "id": "lora_stm32l0_node",
+        "template": "lora_sensor_node",
+        "intent": "STM32L071 LoRa sensor node with SX1276 radio and BME280 environmental sensor",
+    },
+    {
+        "id": "bldc_esc_g474",
+        "template": "bldc_esc",
+        "intent": "STM32G474 BLDC motor ESC with DRV8323 gate driver and three-phase MOSFET bridge",
+    },
+    {
+        "id": "esp32_wifi_gateway",
+        "template": "esp32_wifi_gateway",
+        "intent": "ESP32-WROOM-32E WiFi gateway with wired Ethernet uplink",
+    },
+    {
+        "id": "avr_32u4_hid",
+        "template": "avr_32u4_hid",
+        "intent": "ATmega32U4 USB HID keyboard controller with 16 MHz crystal",
+    },
+    {
+        "id": "stm32g0_power_monitor",
+        "template": "stm32g0_power_monitor",
+        "intent": "STM32G030 power monitor with current sensing and UART telemetry",
+    },
+    {
+        "id": "samd21_sensor_hub",
+        "template": "samd21_sensor_hub",
+        "intent": "SAMD21G18 USB sensor hub aggregating I2C sensors",
+    },
+    {
+        "id": "nrf52840_dongle",
+        "template": "nrf52840_dongle",
+        "intent": "nRF52840 USB BLE dongle with PCB antenna",
+    },
 ]
 
 

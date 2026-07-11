@@ -77,6 +77,11 @@ mechanical:
     max_component_height_top_mm: 2.0
     max_component_height_bottom_mm: 1.0
   enclosure_internal_mm: [35.0, 18.0, 4.0]
+  insertion_clearance_mm: 1.0
+  assembly_clearance_mm: 0.5
+  tolerance_mm: 0.2
+  # USB plug-in dongle: retained by the USB-A edge connector, no board-level mounting holes.
+  mounting_holes: []
 
 firmware:
   rtos: zephyr
