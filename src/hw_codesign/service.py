@@ -1223,6 +1223,27 @@ class HardwareService:
             reports.append(check_placement(placement_proposal, placed_graph))
             reports.append(check_layout_thermal_integrity(placement_proposal, placed_graph, spec))
             reports.append(check_layout_signal_integrity(placement_proposal, placed_graph, spec))
+        if graph.get("components"):
+            # H1 advisory physics evidence: computed DC operating point (ngspice).
+            # Always PASS — a computed estimate is attached to the design record but
+            # never blocks release (advisory until correlated against measurement;
+            # see docs/h1-physics-evidence-plan.md). ngspice absence is reported, not
+            # treated as a design defect, so release stays independent of the tool.
+            from .power_sim import dc_operating_point
+            dc = dc_operating_point(graph, spec)
+            reports.append(GateReport(
+                "power_integrity_dc_operating_point",
+                Status.PASS,
+                [],
+                metrics={
+                    "tier": "advisory",
+                    "ngspice_available": dc["status"] != "blocked",
+                    "rails": dc.get("rails", {}),
+                    "intermediate_node_voltages": dc.get("intermediate_node_voltages", {}),
+                    "resistor_count": dc.get("resistor_count", 0),
+                },
+                backend={"name": "ngspice-dc-op", "tier": "advisory"},
+            ))
         if graph.get("components") and graph_path.exists():
             try:
                 ref_fab_out = path / "exports" / "candidates" / "reference-fabrication"
