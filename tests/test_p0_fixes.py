@@ -56,7 +56,12 @@ def test_failed_native_export_never_leaves_partial_release(service, project, mon
         if assumption.get("requires_user_review"):
             service.resolve_assumption(project, name, assumption.get("value") or "approved", approved=True)
     monkeypatch.setattr(service.mechanical, "generate", lambda spec, target, **kwargs: GateReport("mechanical_export", Status.BLOCKED, [Failure(FailureCategory.TOOL_ERROR, "tool_unavailable", "CAD unavailable")]))
-    result = service.prepare_release(project, {"reports": [{"status": "pass"}]}, native_checks_confirmed=True)
+    # A well-formed passing gate report clears the release-gate check so preparation
+    # reaches the native export stage — where the (monkeypatched) mechanical export
+    # fails, which is the failure this test exercises. A bare {"status": "pass"} dict
+    # would crash report deserialization before that path is ever reached.
+    passing_reports = {"reports": [GateReport("tscircuit_compile", Status.PASS, []).to_dict()]}
+    result = service.prepare_release(project, passing_reports, native_checks_confirmed=True)
     assert result["status"] == "blocked"
     assert not (project_path / "exports" / "releases" / "r1").exists()
     assert not (project_path / "exports" / ".staging" / "r1").exists()
