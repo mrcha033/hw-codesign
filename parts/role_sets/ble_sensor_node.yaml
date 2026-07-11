@@ -15,6 +15,7 @@ roles:
   debug: {component_id: samtec_ftsh_105, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
   led_resistor: {component_id: rc0603_1k, resolution: curated}
+  led: {component_id: led_red_0603, resolution: curated}
   charge_set: {component_id: rc0603_10k, resolution: curated}
   capacitor_100n: {component_id: grm188_100n, resolution: curated}
   capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}

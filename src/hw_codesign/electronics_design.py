@@ -332,7 +332,11 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
         ], manufacturer="Samtec"),
         component("R1", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SCL", "I2C_SCL", "passive")], manufacturer="Yageo"),
         component("R2", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SDA", "I2C_SDA", "passive")], manufacturer="Yageo"),
-        component("R3", "led_resistor", "1K", "RC0603FR-071KL", "R0603", [pin(1, "A", "V3V3", "passive"), pin(2, "K", "LED_BLE", "passive")], manufacturer="Yageo"),
+        component("R3", "led_resistor", "1K", "RC0603FR-071KL", "R0603", [pin(1, "A", "V3V3", "passive"), pin(2, "K", "LED_BLE_A", "passive")], manufacturer="Yageo"),
+        component("D2", "led", "RED BLE STATUS", "LTST-C193KRKT-5A", "LED_0603", [
+            pin(1, "K", "LED_BLE", "passive"),
+            pin(2, "A", "LED_BLE_A", "passive"),
+        ], manufacturer="Lite-On"),
         component("R4", "charge_set", "10K", "RC0603FR-0710KL", "R0603", [pin(1, "A", "CHG_ISET", "passive"), pin(2, "GND", "GND", "passive")], manufacturer="Yageo"),
         component("C1", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
         component("C2", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", decoupling_target_ref="U1"),
@@ -502,8 +506,12 @@ def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
         ], manufacturer="Yageo"),
         component("R3", "led_resistor", "1K LED", "RC0603FR-071KL", "R0603", [
             pin(1, "A", "V3V3",      "passive"),
-            pin(2, "K", "STATUS_LED", "passive"),
+            pin(2, "K", "STATUS_LED_A", "passive"),
         ], manufacturer="Yageo"),
+        component("D2", "led", "RED STATUS LED", "LTST-C193KRKT-5A", "LED_0603", [
+            pin(1, "K", "STATUS_LED", "passive"),
+            pin(2, "A", "STATUS_LED_A", "passive"),
+        ], manufacturer="Lite-On"),
         component("C1", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [
             pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground"),
         ], manufacturer="Murata"),
@@ -815,8 +823,12 @@ def build_bldc_esc_graph(spec: dict[str, Any]) -> dict[str, Any]:
         ], manufacturer="Samtec"),
         component("R1", "led_resistor", "1K FAULT", "RC0603FR-071KL", "R0603", [
             pin(1, "A", "V3V3",     "passive"),
-            pin(2, "K", "FAULT_LED","passive"),
+            pin(2, "K", "FAULT_LED_A","passive"),
         ], manufacturer="Yageo"),
+        component("D2", "led", "RED FAULT LED", "LTST-C193KRKT-5A", "LED_0603", [
+            pin(1, "K", "FAULT_LED", "passive"),
+            pin(2, "A", "FAULT_LED_A", "passive"),
+        ], manufacturer="Lite-On"),
         component("R2", "pullup", "10K nFAULT PU", "RC0603FR-0710KL", "R0603", [
             pin(1, "VCC", "V3V3",  "passive"),
             pin(2, "B",   "NFAULT","passive"),

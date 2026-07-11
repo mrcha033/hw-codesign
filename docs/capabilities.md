@@ -34,7 +34,10 @@
   or wrong-valued CAN termination across CANH/CANL, and USB ESD bridges whose
   DP_IN/DP_OUT/DM_IN/DM_OUT pins do not map to the expected raw/protected D+/D- nets
 - `support_circuit_completeness` rejects crystal oscillators whose load capacitors are
-  missing, not grounded, or outside the grounded pF-range expected for oscillator load caps
+  missing, not grounded, or outside the grounded pF-range expected for oscillator load caps;
+  status indicators must include a real LED with valid anode/cathode orientation, a series
+  resistor, and a calculated current inside the 0.2-5 mA indicator design range (or the
+  lower datasheet forward-current limit)
 - Boot-mode strap pins such as `HWB`, `BOOT0`, and `BOOTSEL` must have a grounded pull
   direction matching the safe boot state; a suggestive net name alone is not accepted
 - Shared source-generation step plus six-gate backend contract (compile → netlist → graph parity

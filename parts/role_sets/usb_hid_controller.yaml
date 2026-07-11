@@ -11,6 +11,7 @@ roles:
   xtal_cap: {component_id: grm216_22p, resolution: curated}
   debug: {component_id: samtec_ftsh_105, resolution: curated}
   led_resistor: {component_id: rc0603_1k, resolution: curated}
+  led: {component_id: led_red_0603, resolution: curated}
   boot_resistor: {component_id: rc0603_10k, resolution: curated}
   pullup: {component_id: rc0603_10k, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}

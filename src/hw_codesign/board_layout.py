@@ -187,6 +187,7 @@ _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {
     "U3":  (40.0, 6.0),   # BQ27441 fuel gauge; GND pad at y=6+3*3=15, above signal channel
     "D1":  (12.0, 10.0),  # USB ESD TVS, between USB-C and MCU USB pins
     "R3":  (38.0, 25.0),  # LED resistor, lower-right
+    "D2":  (43.0, 25.0),  # Status LED, directly beside its current limiter
     # Debug header: placed at the left side of the board (x=6), clear of U1 which starts at x=25.
     # J2 row-0 pads land at x=6..18, row-1 at (6,30). Nearest mounting hole H3(3.5,31.5) is 2.9mm away.
     "J2":  (6.0, 28.0),   # SWD header, pads x=6..18mm row0 and (6,30) row1
@@ -240,10 +241,19 @@ def _usb_hid_controller_seed_table() -> dict[str, tuple[tuple[float, float], str
     anchors["Y1"] = (33.0, 10.0)
     anchors["C6"] = (36.0, 7.0)
     anchors["C7"] = (36.0, 13.0)
+    anchors["R3"] = (41.0, 17.0)
+    anchors["D2"] = (46.0, 17.0)
     return {
         ref: (xy, "usb_hid_controller_anchor")
         for ref, xy in anchors.items()
     }
+
+
+def _bldc_esc_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
+    table = _seed_table()
+    table["R1"] = ((40.0, 35.0), "bldc_status_led_anchor")
+    table["D2"] = ((45.0, 35.0), "bldc_status_led_anchor")
+    return table
 
 
 _SAMD21_SENSOR_HUB_ANCHORS: dict[str, tuple[float, float]] = {
@@ -311,6 +321,8 @@ def _seed_table_for_graph(graph: dict[str, Any]) -> dict[str, tuple[tuple[float,
         return _usb_hid_controller_seed_table()
     if architecture == "rp2040_qspi_usb_device":
         return _rp2040_usb_hid_seed_table()
+    if architecture == "stm32g474_drv8323_3phase_foc_esc":
+        return _bldc_esc_seed_table()
     if architecture == "atmega32u4_native_usb_hid":
         return _avr_32u4_hid_seed_table()
     return _seed_table()

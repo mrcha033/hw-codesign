@@ -45,6 +45,8 @@ USB_C_RD_OHMS = 5100.0
 USB_C_RD_TOLERANCE_OHMS = 510.0
 BOOT_STRAP_MIN_BIAS_OHMS = 1_000.0
 BOOT_STRAP_MAX_BIAS_OHMS = 1_000_000.0
+STATUS_LED_MIN_DESIGN_CURRENT_A = 0.0002
+STATUS_LED_MAX_DESIGN_CURRENT_A = 0.005
 
 
 CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
@@ -114,6 +116,10 @@ CATEGORY_PIN_ROLE_CONTRACTS: dict[str, list[dict[str, Any]]] = {
         {"names": ("DM_IN",), "roles": ("bidirectional",)},
         {"names": ("DM_OUT",), "roles": ("bidirectional",)},
         {"names": ("GND",), "roles": ("ground",), "voltage_domains": ("GND",)},
+    ],
+    "led": [
+        {"names": ("A", "ANODE"), "roles": ("passive",)},
+        {"names": ("K", "CATHODE"), "roles": ("passive",)},
     ],
     "motor_io": [
         {"names": ("V5",), "roles": ("power_out",), "voltage_domains": ("V5",)},
@@ -2346,6 +2352,262 @@ def _boot_strap_rule_for_pin(pin: dict[str, Any]) -> tuple[str, str] | None:
         return "GND", "pulldown"
     if pin_name == "BOOTSEL" or net_name == "BOOTSEL":
         return "V3V3", "pullup"
+    return None
+
+
+def status_led_circuit_failures(spec: dict[str, Any], graph: dict[str, Any]) -> list[Failure]:
+    components = graph.get("components", [])
+    leds = [component for component in components if str(component.get("category", "")).lower() == "led"]
+    resistors = [
+        component
+        for component in components
+        if str(component.get("category", "")).lower() == "led_resistor"
+    ]
+    failures: list[Failure] = []
+
+    if resistors and not leds:
+        for resistor in resistors:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_device_missing",
+                f"{resistor.get('ref', '?')} is labeled as an LED resistor, but no LED device is present",
+                "electronics.components",
+                resistor_ref=resistor.get("ref"),
+                resistor_nets=sorted(_component_nets(resistor)),
+            ))
+        return failures
+
+    rail_nominal = _rail_nominal_voltages(spec)
+    nets_by_name = {
+        str(net.get("name")): net
+        for net in graph.get("nets", [])
+        if net.get("name")
+    }
+    drive_voltage_by_net: dict[str, float] = {}
+    for component in components:
+        if str(component.get("category", "")).lower() in {"led", "led_resistor"}:
+            continue
+        supply_voltages = [
+            voltage
+            for pin in component.get("pins", [])
+            if pin.get("role") == "power_in" and pin.get("net")
+            if (voltage := _net_nominal_voltage(str(pin["net"]), rail_nominal)) is not None
+        ]
+        if not supply_voltages:
+            continue
+        drive_voltage = max(supply_voltages)
+        for pin in component.get("pins", []):
+            if pin.get("role") not in {"output", "bidirectional", "open_drain"} or not pin.get("net"):
+                continue
+            net_name = str(pin["net"])
+            drive_voltage_by_net[net_name] = max(drive_voltage_by_net.get(net_name, 0.0), drive_voltage)
+
+    led_terminal_nets = set().union(*(_component_nets(led) for led in leds))
+    for resistor in resistors:
+        if _component_nets(resistor) & led_terminal_nets:
+            continue
+        failures.append(_failure(
+            FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+            "status_led_device_missing",
+            f"{resistor.get('ref', '?')} is not connected to any LED device",
+            "electronics.components",
+            resistor_ref=resistor.get("ref"),
+            resistor_nets=sorted(_component_nets(resistor)),
+            led_refs=sorted(str(led.get("ref")) for led in leds),
+        ))
+
+    for led in leds:
+        ref = str(led.get("ref", "?"))
+        pins_by_name = {
+            str(pin.get("name", "")).upper(): pin
+            for pin in led.get("pins", [])
+            if pin.get("name")
+        }
+        anode = pins_by_name.get("A") or pins_by_name.get("ANODE")
+        cathode = pins_by_name.get("K") or pins_by_name.get("CATHODE")
+        if not anode or not cathode or not anode.get("net") or not cathode.get("net"):
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_pin_contract_invalid",
+                f"{ref} does not expose connected anode and cathode pins",
+                "electronics.components",
+                led_ref=ref,
+                pin_names=sorted(pins_by_name),
+            ))
+            continue
+
+        anode_net = str(anode["net"])
+        cathode_net = str(cathode["net"])
+        adjacent_resistors: list[dict[str, Any]] = []
+        valid_paths: list[dict[str, Any]] = []
+        for resistor in resistors:
+            resistor_nets = _component_nets(resistor)
+            shared_nets = resistor_nets & {anode_net, cathode_net}
+            if not shared_nets:
+                continue
+            adjacent_resistors.append(resistor)
+            if len(resistor_nets) != 2 or len(shared_nets) != 1:
+                continue
+            shared_net = next(iter(shared_nets))
+            other_net = next(iter(resistor_nets - {shared_net}))
+            if shared_net == anode_net:
+                upstream_net, downstream_net = other_net, cathode_net
+            else:
+                upstream_net, downstream_net = anode_net, other_net
+
+            upstream_voltage = _net_nominal_voltage(upstream_net, rail_nominal)
+            if (
+                upstream_voltage is not None
+                and upstream_voltage > 0.0
+                and _is_positive_supply_net(upstream_net, nets_by_name)
+                and downstream_net in drive_voltage_by_net
+            ):
+                valid_paths.append({
+                    "resistor": resistor,
+                    "mode": "active_low",
+                    "supply_net": upstream_net,
+                    "drive_net": downstream_net,
+                    "drive_voltage_v": upstream_voltage,
+                })
+            elif upstream_net in drive_voltage_by_net and downstream_net == "GND":
+                valid_paths.append({
+                    "resistor": resistor,
+                    "mode": "active_high",
+                    "supply_net": upstream_net,
+                    "drive_net": upstream_net,
+                    "drive_voltage_v": drive_voltage_by_net[upstream_net],
+                })
+
+        if not adjacent_resistors:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_series_resistor_missing",
+                f"{ref} is not connected through a current-limiting resistor",
+                "electronics.components",
+                led_ref=ref,
+                anode_net=anode_net,
+                cathode_net=cathode_net,
+            ))
+            continue
+        if len(adjacent_resistors) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_resistor_path_ambiguous",
+                f"{ref} is connected to multiple LED resistor candidates",
+                "electronics.components",
+                led_ref=ref,
+                resistor_refs=sorted(str(item.get("ref")) for item in adjacent_resistors),
+            ))
+            continue
+        if not valid_paths:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_path_invalid",
+                f"{ref} LED polarity and resistor path do not form a valid GPIO-driven circuit",
+                "electronics.components",
+                led_ref=ref,
+                anode_net=anode_net,
+                cathode_net=cathode_net,
+                resistor_refs=sorted(str(item.get("ref")) for item in adjacent_resistors),
+                drive_nets=sorted(drive_voltage_by_net),
+                positive_supply_nets=sorted(
+                    net_name
+                    for net_name in (
+                        {anode_net, cathode_net}
+                        | set().union(*(_component_nets(item) for item in adjacent_resistors))
+                    )
+                    if _is_positive_supply_net(net_name, nets_by_name)
+                ),
+            ))
+            continue
+
+        path = sorted(valid_paths, key=lambda item: str(item["resistor"].get("ref", "")))[0]
+        resistor = path["resistor"]
+        resistance_ohms = _component_resistance_ohms(resistor)
+        if resistance_ohms is None or resistance_ohms <= 0.0:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_resistor_value_missing",
+                f"{resistor.get('ref', '?')} has no grounded positive resistance value",
+                "electronics.components",
+                led_ref=ref,
+                resistor_ref=resistor.get("ref"),
+                value=resistor.get("value"),
+            ))
+            continue
+
+        forward_voltage_v = _component_forward_voltage_v(led)
+        forward_current_limit_a = _component_forward_current_limit_a(led)
+        if forward_voltage_v is None:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_forward_voltage_missing",
+                f"{ref} has no grounded forward-voltage value for current calculation",
+                "electronics.components",
+                led_ref=ref,
+            ))
+            continue
+        if forward_current_limit_a is None:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_forward_current_limit_missing",
+                f"{ref} has no grounded forward-current limit",
+                "electronics.components",
+                led_ref=ref,
+            ))
+            continue
+
+        drive_voltage_v = float(path["drive_voltage_v"])
+        estimated_current_a = max(0.0, drive_voltage_v - forward_voltage_v) / resistance_ohms
+        maximum_current_a = min(STATUS_LED_MAX_DESIGN_CURRENT_A, forward_current_limit_a)
+        if not STATUS_LED_MIN_DESIGN_CURRENT_A <= estimated_current_a <= maximum_current_a:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "status_led_current_out_of_range",
+                f"{ref} estimated current is {estimated_current_a * 1000.0:.2f} mA, outside the grounded indicator range",
+                "electronics.components",
+                led_ref=ref,
+                resistor_ref=resistor.get("ref"),
+                mode=path["mode"],
+                supply_net=path["supply_net"],
+                drive_net=path["drive_net"],
+                drive_voltage_v=drive_voltage_v,
+                forward_voltage_v=forward_voltage_v,
+                resistance_ohms=resistance_ohms,
+                estimated_current_a=estimated_current_a,
+                expected_min_current_a=STATUS_LED_MIN_DESIGN_CURRENT_A,
+                expected_max_current_a=maximum_current_a,
+                led_forward_current_limit_a=forward_current_limit_a,
+            ))
+    return failures
+
+
+def _component_forward_voltage_v(component: dict[str, Any]) -> float | None:
+    for source in _rating_sources(component):
+        for key in ("forward_voltage_typ_v", "forward_voltage_v", "vf_typ_v", "vf_v"):
+            value = _number(source.get(key))
+            if value is not None:
+                return value
+    for constraint in component.get("constraints", []):
+        match = re.search(
+            r"(?P<whole>\d+)(?:v|p)(?P<fraction>\d+)_forward_voltage(?:_typ)?\b",
+            str(constraint).strip().lower().replace("-", "_"),
+        )
+        if match:
+            return float(f"{match.group('whole')}.{match.group('fraction')}")
+    return None
+
+
+def _component_forward_current_limit_a(component: dict[str, Any]) -> float | None:
+    for source in _rating_sources(component):
+        for key in ("max_forward_current_a", "forward_current_max_a", "if_max_a"):
+            value = _number(source.get(key))
+            if value is not None:
+                return value
+    for constraint in component.get("constraints", []):
+        value = _current_limit_from_constraint(str(constraint))
+        if value is not None:
+            return value
     return None
 
 

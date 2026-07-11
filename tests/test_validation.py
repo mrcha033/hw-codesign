@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 
+import pytest
+
 
 def test_template_schema_is_valid_but_semantic_budget_fails(service, project):
     spec = service.read_spec(project)
@@ -318,6 +320,111 @@ def test_support_circuit_contract_rejects_wrong_crystal_load_cap_value(service):
     assert failure.details["expected_max_pf"] == 47.0
 
 
+def test_support_circuit_contract_passes_grounded_status_led_path(service):
+    project = "usb_hid_status_led_contract"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), graph)
+
+    assert report.status == "pass"
+    assert report.metrics["status_leds_checked"] == 1
+    led = next(component for component in graph["components"] if component["category"] == "led")
+    resistor = next(component for component in graph["components"] if component["category"] == "led_resistor")
+    assert {pin["name"]: pin["net"] for pin in led["pins"]} == {
+        "K": "STATUS_LED",
+        "A": "STATUS_LED_A",
+    }
+    assert {pin["net"] for pin in resistor["pins"]} == {"V3V3", "STATUS_LED_A"}
+    led_resolution = next(item for item in graph["component_resolution"] if item["ref"] == led["ref"])
+    assert (led_resolution["role"], led_resolution["component_id"], led_resolution["resolution"]) == (
+        "led",
+        "led_red_0603",
+        "curated",
+    )
+    board = (
+        project_path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb"
+    ).read_text(encoding="utf-8")
+    assert 'footprint "LED_SMD:LED_0603_1608Metric"' in board
+
+
+def test_support_circuit_contract_requires_status_led_device(service):
+    project = "usb_hid_missing_status_led"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    bad_graph["components"] = [
+        component for component in bad_graph["components"]
+        if component["category"] != "led"
+    ]
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    failure = next(item for item in report.failures if item.code == "status_led_device_missing")
+    assert report.status == "fail"
+    assert failure.details["resistor_ref"] == "R3"
+
+
+def test_support_circuit_contract_rejects_reversed_status_led(service):
+    project = "usb_hid_reversed_status_led"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    led = next(component for component in bad_graph["components"] if component["category"] == "led")
+    anode = next(pin for pin in led["pins"] if pin["name"] == "A")
+    cathode = next(pin for pin in led["pins"] if pin["name"] == "K")
+    anode["net"], cathode["net"] = cathode["net"], anode["net"]
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    failure = next(item for item in report.failures if item.code == "status_led_path_invalid")
+    assert report.status == "fail"
+    assert failure.details["led_ref"] == led["ref"]
+
+
+def test_support_circuit_contract_rejects_ambiguous_status_led_resistors(service):
+    project = "usb_hid_ambiguous_status_led_resistors"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    duplicate = deepcopy(next(component for component in bad_graph["components"] if component["category"] == "led_resistor"))
+    duplicate["ref"] = "R99"
+    bad_graph["components"].append(duplicate)
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    failure = next(item for item in report.failures if item.code == "status_led_resistor_path_ambiguous")
+    assert report.status == "fail"
+    assert failure.details["resistor_refs"] == ["R3", "R99"]
+
+
+def test_support_circuit_contract_rejects_status_led_overcurrent(service):
+    project = "usb_hid_status_led_overcurrent"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    bad_graph = deepcopy(graph)
+    resistor = next(component for component in bad_graph["components"] if component["category"] == "led_resistor")
+    resistor["value"] = "10R"
+
+    report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
+
+    failure = next(item for item in report.failures if item.code == "status_led_current_out_of_range")
+    assert report.status == "fail"
+    assert failure.details["resistance_ohms"] == 10.0
+    assert failure.details["estimated_current_a"] == pytest.approx(0.13)
+    assert failure.details["expected_max_current_a"] == 0.005
+
+
 def test_support_circuit_contract_requires_boot_strap_bias(service):
     project = "avr_boot_strap_contract"
     service.create_project(project, template="avr_32u4_hid")
@@ -394,6 +501,25 @@ def test_grounding_benchmark_catches_wrong_crystal_load_cap_value(service):
     assert case["detected"] is True
     assert case["expected_codes"] == ["crystal_load_cap_value_out_of_range"]
     assert "crystal_load_cap_value_out_of_range" in case["observed_codes"]
+
+
+def test_grounding_benchmark_catches_status_led_support_failures(service):
+    project = "usb_hid_grounding_status_led"
+    service.create_project(project, template="usb_hid_controller")
+    service.generate_all(project)
+
+    benchmark = service.run_grounding_benchmark(project)
+
+    cases = {item["id"]: item for item in benchmark["cases"]}
+    assert cases["missing_status_led_device"]["detected"] is True
+    assert cases["missing_status_led_device"]["expected_codes"] == ["status_led_device_missing"]
+    assert "status_led_device_missing" in cases["missing_status_led_device"]["observed_codes"]
+    assert cases["reversed_status_led_polarity"]["detected"] is True
+    assert cases["reversed_status_led_polarity"]["expected_codes"] == ["status_led_path_invalid"]
+    assert "status_led_path_invalid" in cases["reversed_status_led_polarity"]["observed_codes"]
+    assert cases["wrong_status_led_resistor_value"]["detected"] is True
+    assert cases["wrong_status_led_resistor_value"]["expected_codes"] == ["status_led_current_out_of_range"]
+    assert "status_led_current_out_of_range" in cases["wrong_status_led_resistor_value"]["observed_codes"]
 
 
 def test_grounding_benchmark_catches_oscillator_far_from_mcu(service):

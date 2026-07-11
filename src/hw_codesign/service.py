@@ -42,7 +42,7 @@ from .reference_backend import build_firmware_reference, export_fabrication, int
 from .resolver import SUPPLIER_EVIDENCE_MAX_AGE_DAYS, _evidence_is_stale, role_for_component
 from .resources import resource_root
 from .supplier_adapters import supplier_adapter
-from .validation import Validator, boot_strap_bias_failures, persist_report
+from .validation import Validator, boot_strap_bias_failures, persist_report, status_led_circuit_failures
 from .workspace import Workspace
 
 _WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
@@ -3115,6 +3115,7 @@ class HardwareService:
                 failures.extend(self._support_net_contract_failures(role_set_name, role, component, contract))
         failures.extend(self._crystal_load_cap_failures(graph))
         failures.extend(boot_strap_bias_failures(graph))
+        failures.extend(status_led_circuit_failures(spec, graph))
 
         return GateReport(
             "support_circuit_completeness",
@@ -3126,6 +3127,10 @@ class HardwareService:
                 "resolved_critical_roles": len(critical_roles & resolved_roles),
                 "components": len(graph.get("components", [])),
                 "net_contract_checks": net_contract_checks,
+                "status_leds_checked": sum(
+                    1 for component in graph.get("components", [])
+                    if component.get("category") == "led"
+                ),
             },
             artifacts=[str(role_path)],
             backend={"name": "support-circuit-contract", "deterministic": True},
@@ -3648,6 +3653,70 @@ class HardwareService:
                 self._support_circuit_completeness_report(spec, graph_missing_boot_strap_bias),
                 ["boot_strap_bias_missing"],
             )
+
+        status_led = next(
+            (
+                component
+                for component in graph.get("components", [])
+                if component.get("category") == "led"
+            ),
+            None,
+        )
+        if status_led:
+            graph_missing_status_led = deepcopy(graph)
+            graph_missing_status_led["components"] = [
+                component
+                for component in graph_missing_status_led.get("components", [])
+                if component.get("ref") != status_led.get("ref")
+            ]
+            record(
+                "missing_status_led_device",
+                "support_circuit_completeness",
+                f"Removed status LED {status_led.get('ref')} while leaving its labeled resistor and GPIO net",
+                self._support_circuit_completeness_report(spec, graph_missing_status_led),
+                ["status_led_device_missing"],
+            )
+
+            graph_reversed_status_led = deepcopy(graph)
+            reversed_led = next(
+                (
+                    component
+                    for component in graph_reversed_status_led.get("components", [])
+                    if component.get("ref") == status_led.get("ref")
+                ),
+                None,
+            )
+            if reversed_led:
+                anode = next((pin for pin in reversed_led.get("pins", []) if pin.get("name") == "A"), None)
+                cathode = next((pin for pin in reversed_led.get("pins", []) if pin.get("name") == "K"), None)
+                if anode and cathode:
+                    anode["net"], cathode["net"] = cathode.get("net"), anode.get("net")
+                    record(
+                        "reversed_status_led_polarity",
+                        "support_circuit_completeness",
+                        f"Reversed {reversed_led.get('ref')} anode/cathode nets while preserving the resistor and GPIO path",
+                        self._support_circuit_completeness_report(spec, graph_reversed_status_led),
+                        ["status_led_path_invalid"],
+                    )
+
+            graph_bad_status_led_current = deepcopy(graph)
+            led_resistor = next(
+                (
+                    component
+                    for component in graph_bad_status_led_current.get("components", [])
+                    if component.get("category") == "led_resistor"
+                ),
+                None,
+            )
+            if led_resistor:
+                led_resistor["value"] = "10R"
+                record(
+                    "wrong_status_led_resistor_value",
+                    "support_circuit_completeness",
+                    f"Changed {led_resistor.get('ref')} to 10 ohms while preserving the LED topology",
+                    self._support_circuit_completeness_report(spec, graph_bad_status_led_current),
+                    ["status_led_current_out_of_range"],
+                )
 
         spec_bad_power = deepcopy(spec)
         spec_bad_power.setdefault("system", {}).setdefault("supply", {}).setdefault("battery", {})["pack_current_peak_a"] = 5
