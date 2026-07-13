@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/app/prj.conf",
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_i2c_imu.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_usb_console.c"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "firmware-interface-contract"
+  },
+  "failures": [],
+  "gate": "firmware_interface_contract",
+  "metrics": {
+    "config_options": [
+      "CONFIG_GPIO=y",
+      "CONFIG_I2C=y",
+      "CONFIG_UART_CONSOLE=y",
+      "CONFIG_USB_DEVICE_STACK=y"
+    ],
+    "pinmap_signals": [
+      "BOOT",
+      "ESP_EN",
+      "I2C_IMU_SCL",
+      "I2C_IMU_SDA",
+      "IMU_INT",
+      "UART_RX",
+      "UART_TX",
+      "USB_DM",
+      "USB_DP"
+    ],
+    "required_interfaces": [
+      "i2c",
+      "usb"
+    ],
+    "test_files": [
+      "test_i2c_imu.c",
+      "test_usb_console.c"
+    ]
+  },
+  "status": "pass"
+}

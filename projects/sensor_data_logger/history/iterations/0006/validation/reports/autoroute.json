@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb",
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.ses",
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/routing.json"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-07-13 14:18:23.486 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-07-13 14:18:23.514 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-07-13 14:18:24.669 INFO   [8FBDDE\\BEDC5A] Job '8FBDDE\\BEDC5A' started at 2026-07-13T05:18:24.668896Z.\n2026-07-13 14:18:24.893 INFO   New version available: v2.2.4\n2026-07-13 14:18:26.068 INFO   [8FBDDE\\BEDC5A] Auto-router pass #1 on board '61d455ac7a89c58f2c9aed7a143be01e' was completed in 1.34 seconds with the score of 831.67 (9 unrouted and 14 violations), using 0.95 CPU seconds and the job allocated 0.77 GB of memory so far.\n2026-07-13 14:18:26.978 INFO   [8FBDDE\\BEDC5A] Auto-router pass #2 on board '49f32f681c18c73e5c0543c8e0bdacbf' was completed in 0.90 seconds with the score of 878.19 (6 unrouted and 14 violations), using 1.81 CPU seconds and the job allocated 1.85 GB of memory so far.\n2026-07-13 14:18:27.762 INFO   [8FBDDE\\BEDC5A] Auto-router pass #3 on board '840c087df0d109594e1fe9618af56a3a' was completed in 0.77 seconds with the score of 896.32 (5 unrouted and 14 violations), using 2.77 CPU seconds and the job allocated 3.26 GB of memory so far.\n2026-07-13 14:18:28.373 INFO   [8FBDDE\\BEDC5A] Auto-router pass #4 on board '25f469cb8585e0bdcefd1283e8c88fe9' was completed in 0.60 seconds with the score of 896.43 (5 unrouted and 14 violations), using 2.77 CPU seconds and the job allocated 3.26 GB of memory so far.\n2026-07-13 14:18:28.898 INFO   [8FBDDE\\BEDC5A] Auto-router pass #5 on board '864c53e5d4bc8559489bcef665046deb' was completed in 0.52 seconds with the score of 910.59 (4 unrouted and 14 violations), using 3.73 CPU seconds and the job allocated 4.83 GB of memory so far.\n2026-07-13 14:18:29.369 INFO   [8FBDDE\\BEDC5A] Auto-router pass #6 on board '794ae076dc601d1be94b6d02a35ddad6' was completed in 0.46 seconds with the score of 910.59 (4 unrouted and 14 violations), using 3.73 CPU seconds and the job allocated 4.83 GB of memory so far.\n2026-07-13 14:18:29.370 INFO   [8FBDDE\\BEDC5A] Board state has not changed since pass #6 (hash 794ae076dc601d1be94b6d02a35ddad6). The auto-router cannot make further progress; stopping.\n2026-07-13 14:18:29.376 INFO   [8FBDDE\\BEDC5A] Auto-router session completed: started with 27 unrouted nets, completed in 4.68 seconds, final score: 910.59 (4 unrouted and 14 violations), using 3.73 total CPU seconds, 4.83 GB total allocated, and 238.07 MB peak heap usage.\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "timeout_seconds": 600,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
+  "failures": [],
+  "gate": "autoroute",
+  "metrics": {
+    "max_passes": 20,
+    "unrouted": 0
+  },
+  "status": "pass"
+}

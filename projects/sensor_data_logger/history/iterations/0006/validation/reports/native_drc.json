@@ -1,0 +1,556 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/reports/kicad_drc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "pcb",
+      "drc",
+      "--format",
+      "json",
+      "--severity-error",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/reports/kicad_drc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 13 violations\nFound 4 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/reports/kicad_drc.json\n"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Items shorting two nets (nets USB_CC1 and USB_VBUS)",
+        "items": [
+          {
+            "description": "PTH pad 5 [USB_CC1] of J1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "4f5faca1-28d8-49ae-85aa-3401e31b95fb"
+          },
+          {
+            "description": "PTH pad 1 [USB_VBUS] of F1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "7e84aa2e-0d9a-41ea-857f-ae2c2c46761e"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      "message": "Items shorting two nets (nets USB_CC1 and USB_VBUS)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Items shorting two nets (nets USB_CC2 and USB_FUSED)",
+        "items": [
+          {
+            "description": "PTH pad 6 [USB_CC2] of J1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "62a6328a-45ba-4d2f-991f-52a17a93c78b"
+          },
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "e57ef966-b99e-4704-97a0-4e1e17de2c18"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      "message": "Items shorting two nets (nets USB_CC2 and USB_FUSED)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 5 [<no net>] of U1",
+            "pos": {
+              "x": 44.0,
+              "y": 50.0
+            },
+            "uuid": "1ce9e9cc-4d2a-474b-bfef-b0ce04f2990b"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 6 [<no net>] of U1",
+            "pos": {
+              "x": 46.0,
+              "y": 50.0
+            },
+            "uuid": "993e1728-1bda-460f-b29e-27f7de34538e"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 7 [<no net>] of U1",
+            "pos": {
+              "x": 48.0,
+              "y": 50.0
+            },
+            "uuid": "b5b35a1c-137e-4f03-8042-12e19a9616b8"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 8 [<no net>] of U1",
+            "pos": {
+              "x": 50.0,
+              "y": 50.0
+            },
+            "uuid": "12346443-7949-4a70-a6b6-8d200c335504"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 9 [<no net>] of U1",
+            "pos": {
+              "x": 52.0,
+              "y": 50.0
+            },
+            "uuid": "31ca66c0-c852-4341-98dd-8c1f39e09e2f"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 10 [<no net>] of U1",
+            "pos": {
+              "x": 54.0,
+              "y": 50.0
+            },
+            "uuid": "58ac593f-36ba-41a6-8003-782cb4b03549"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Rectangle on Edge.Cuts",
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "uuid": "f38ab811-b0a1-4432-ae97-cb0e67d1dd02"
+          },
+          {
+            "description": "PTH pad 11 [<no net>] of U1",
+            "pos": {
+              "x": 56.0,
+              "y": 50.0
+            },
+            "uuid": "d4e15c10-7f31-4a3a-af4a-9c0ce884c94f"
+          }
+        ],
+        "severity": "error",
+        "type": "copper_edge_clearance"
+      },
+      "message": "Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 5 [USB_CC1] of J1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "4f5faca1-28d8-49ae-85aa-3401e31b95fb"
+          },
+          {
+            "description": "PTH pad 1 [USB_VBUS] of F1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "7e84aa2e-0d9a-41ea-857f-ae2c2c46761e"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Rear solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 5 [USB_CC1] of J1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "4f5faca1-28d8-49ae-85aa-3401e31b95fb"
+          },
+          {
+            "description": "PTH pad 1 [USB_VBUS] of F1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "7e84aa2e-0d9a-41ea-857f-ae2c2c46761e"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Rear solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 6 [USB_CC2] of J1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "62a6328a-45ba-4d2f-991f-52a17a93c78b"
+          },
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "e57ef966-b99e-4704-97a0-4e1e17de2c18"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Rear solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 6 [USB_CC2] of J1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "62a6328a-45ba-4d2f-991f-52a17a93c78b"
+          },
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "e57ef966-b99e-4704-97a0-4e1e17de2c18"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Rear solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "e57ef966-b99e-4704-97a0-4e1e17de2c18"
+          },
+          {
+            "description": "PTH pad 1 [USB_FUSED] of Q1",
+            "pos": {
+              "x": 34.0,
+              "y": 4.0
+            },
+            "uuid": "9f9ad4e3-03fb-493e-b657-aca4d469321f"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "PTH pad 1 [USB_CC2] of R6",
+            "pos": {
+              "x": 26.0,
+              "y": 7.0
+            },
+            "uuid": "71394436-64ec-4e1b-aa08-05da27065264"
+          },
+          {
+            "description": "PTH pad 6 [USB_CC2] of J1",
+            "pos": {
+              "x": 28.0,
+              "y": 4.0
+            },
+            "uuid": "62a6328a-45ba-4d2f-991f-52a17a93c78b"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "PTH pad 1 [USB_VBUS] of J1",
+            "pos": {
+              "x": 18.0,
+              "y": 4.0
+            },
+            "uuid": "548d0c3f-a005-4292-ae92-522dda6ba97a"
+          },
+          {
+            "description": "PTH pad 1 [USB_VBUS] of F1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "7e84aa2e-0d9a-41ea-857f-ae2c2c46761e"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "PTH pad 1 [USB_CC1] of R5",
+            "pos": {
+              "x": 22.0,
+              "y": 7.0
+            },
+            "uuid": "cc47f88d-7588-46b3-9a43-5c0fa2c41c46"
+          },
+          {
+            "description": "PTH pad 5 [USB_CC1] of J1",
+            "pos": {
+              "x": 26.0,
+              "y": 4.0
+            },
+            "uuid": "4f5faca1-28d8-49ae-85aa-3401e31b95fb"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_drc",
+  "metrics": {
+    "violations": 17
+  },
+  "status": "fail"
+}

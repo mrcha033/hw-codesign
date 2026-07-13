@@ -1,0 +1,14 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "cross-domain-consistency"
+  },
+  "failures": [],
+  "gate": "cross_domain_consistency",
+  "metrics": {
+    "bom_refs": 16,
+    "constraints_checked": 0
+  },
+  "status": "pass"
+}

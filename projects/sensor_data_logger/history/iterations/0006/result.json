@@ -1,0 +1,3291 @@
+{
+  "backend": "tscircuit",
+  "backend_release_eligible": true,
+  "blocking_gates": [
+    {
+      "failure_count": 16,
+      "gate": "supplier_availability",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 16,
+      "gate": "sourcing",
+      "status": "fail"
+    },
+    {
+      "failure_count": 1,
+      "gate": "tscircuit_compile",
+      "status": "fail"
+    },
+    {
+      "failure_count": 1,
+      "gate": "tscircuit_netlist_extract",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 1,
+      "gate": "tscircuit_graph_parity",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 1,
+      "gate": "tscircuit_footprint_parity",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 1,
+      "gate": "tscircuit_layout_completeness",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 17,
+      "gate": "native_drc",
+      "status": "fail"
+    },
+    {
+      "failure_count": 1,
+      "gate": "native_mechanical_validation",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 1,
+      "gate": "native_zephyr_build",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 8,
+      "gate": "physical_qualification",
+      "status": "blocked"
+    },
+    {
+      "failure_count": 2,
+      "gate": "design_dependency_graph",
+      "status": "fail"
+    }
+  ],
+  "candidate": {
+    "bundle": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/exports/candidates/0006/sensor_data_logger-0006-candidate.zip",
+    "candidate_only": true,
+    "iteration_id": "0006",
+    "path": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/exports/candidates/0006",
+    "release_eligible": false,
+    "status": "candidate"
+  },
+  "candidate_only": true,
+  "dependency_graph": {
+    "artifacts": [],
+    "backend": {
+      "deterministic": true,
+      "name": "structural_dependency_graph"
+    },
+    "failures": [
+      {
+        "category": "RELEASE_ERROR",
+        "code": "dependency_prerequisite_not_passed",
+        "details": {
+          "gate": "sourcing_resilience",
+          "prerequisite": "sourcing",
+          "prerequisite_status": "fail"
+        },
+        "message": "sourcing_resilience passed before prerequisite sourcing passed",
+        "path": "gates.sourcing_resilience",
+        "requires_user_decision": false,
+        "severity": "error"
+      },
+      {
+        "category": "RELEASE_ERROR",
+        "code": "dependency_prerequisite_not_passed",
+        "details": {
+          "gate": "kicad_library_crosscheck",
+          "prerequisite": "native_drc",
+          "prerequisite_status": "fail"
+        },
+        "message": "kicad_library_crosscheck passed before prerequisite native_drc passed",
+        "path": "gates.kicad_library_crosscheck",
+        "requires_user_decision": false,
+        "severity": "error"
+      }
+    ],
+    "gate": "design_dependency_graph",
+    "metrics": {
+      "blocked_or_unpassed_nodes": [
+        "native_drc",
+        "native_mechanical_validation",
+        "native_zephyr_build",
+        "physical_qualification",
+        "sourcing",
+        "supplier_availability"
+      ],
+      "declared_edges": 88,
+      "evaluated_edges": 64,
+      "nodes": 46
+    },
+    "status": "fail"
+  },
+  "design_domains": {
+    "electronics": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/board.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/sensor_bus.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/connectors.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/power_tree.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/data_logger.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/electrical_graph.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/routing.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/schematic_generation.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pro",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_sch",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.sch",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.tsx",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.compiler.mjs",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/source_manifest.json"
+    ],
+    "firmware": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/board.cmake",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/devicetree.overlay",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/kconfig.defconfig",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.h",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/app/src/main.c",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_i2c_imu.c",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_usb_console.c",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/boards/xtensa/sensor_data_logger/sensor_data_logger.dts",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/reference/CMakeLists.txt"
+    ],
+    "manufacturing": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/bom.csv"
+    ],
+    "mechanical": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/assembly.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/connector_cutouts.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/enclosure.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/enclosure_variants.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/fixtures.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/mechanical_contract.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/source_manifest.json"
+    ],
+    "sourcing": [
+      "component_resolution",
+      "component_provenance",
+      "sourcing_resilience"
+    ]
+  },
+  "design_goal": "cross-domain hardware candidate for evidence-backed promotion",
+  "gate_summary": {
+    "blocked": 8,
+    "fail": 4,
+    "pass": 35,
+    "total": 47
+  },
+  "generated": {
+    "backend": "tscircuit",
+    "component_resolution": [
+      {
+        "component_id": "usb4105_gf_a",
+        "data": {
+          "constraints": [
+            "usb2",
+            "usb_c_sink_cc"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usb4105_gf_a",
+              "content_sha256": null,
+              "id": "datasheet_usb4105_gf_a",
+              "kind": "datasheet",
+              "locator": "USB4105-GF-A",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Connector_USB:USB_C_GCT_USB4105",
+            "verified": true
+          },
+          "id": "usb4105_gf_a",
+          "lifecycle": "active",
+          "manufacturer": "GCT",
+          "mpn": "USB4105-GF-A",
+          "package": "USB-C-16",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VBUS",
+              "number": "1",
+              "voltage_domain": "USB_5V"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D+",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D-",
+              "number": "4"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "CC1",
+              "number": "5"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "CC2",
+              "number": "6"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USB4105-GF-A"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_usb4105_gf_a"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J1",
+        "resolution": "curated",
+        "role": "power_input"
+      },
+      {
+        "component_id": "rc0603_5k1",
+        "data": {
+          "constraints": [
+            "usb_c_rd",
+            "pulldown"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_5k1",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_5k1",
+              "kind": "datasheet",
+              "locator": "RC0603FR-075K1L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_5k1",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-075K1L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-075K1L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_5k1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R5",
+        "resolution": "curated",
+        "role": "resistor_5k1"
+      },
+      {
+        "component_id": "rc0603_5k1",
+        "data": {
+          "constraints": [
+            "usb_c_rd",
+            "pulldown"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_5k1",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_5k1",
+              "kind": "datasheet",
+              "locator": "RC0603FR-075K1L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_5k1",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-075K1L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-075K1L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_5k1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R6",
+        "resolution": "curated",
+        "role": "resistor_5k1"
+      },
+      {
+        "component_id": "littelfuse_0498080",
+        "data": {
+          "constraints": [
+            "service_fuse"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "littelfuse_0498080",
+              "content_sha256": null,
+              "id": "datasheet_littelfuse_0498080",
+              "kind": "datasheet",
+              "locator": "Littelfuse-0498080.M",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "HW_Curated:MIDI_Fuse",
+            "verified": true
+          },
+          "id": "littelfuse_0498080",
+          "lifecycle": "active",
+          "manufacturer": "Littelfuse",
+          "mpn": "Littelfuse-0498080.M",
+          "package": "MIDI",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "OUT",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "0498080.M"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "littelfuse_0498080",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "0498080.M",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "littelfuse_0498080",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "0498080.M"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "HW_Curated:Fuse_2",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_littelfuse_0498080"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "littelfuse_0498080",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "0498080.M",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "littelfuse_0498080",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "0498080.M"
+            },
+            "stock": null
+          }
+        },
+        "ref": "F1",
+        "resolution": "curated",
+        "role": "fuse"
+      },
+      {
+        "component_id": "lm74700qdbvrq1",
+        "data": {
+          "constraints": [
+            "reverse_polarity_controller"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "lm74700qdbvrq1",
+              "content_sha256": null,
+              "id": "datasheet_lm74700qdbvrq1",
+              "kind": "datasheet",
+              "locator": "LM74700QDBVRQ1",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+            "verified": true
+          },
+          "id": "lm74700qdbvrq1",
+          "lifecycle": "active",
+          "manufacturer": "Texas Instruments",
+          "mpn": "LM74700QDBVRQ1",
+          "package": "SOT-23-6",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "ANODE",
+              "number": "1"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "CATHODE",
+              "number": "2"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "LM74700QDBVRQ1"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "lm74700qdbvrq1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "LM74700QDBVRQ1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "lm74700qdbvrq1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "LM74700QDBVRQ1"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3"
+            ],
+            "library_id": "HW_Curated:LM74700",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_lm74700qdbvrq1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "lm74700qdbvrq1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "LM74700QDBVRQ1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "lm74700qdbvrq1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "LM74700QDBVRQ1"
+            },
+            "stock": null
+          }
+        },
+        "ref": "Q1",
+        "resolution": "curated",
+        "role": "reverse_polarity"
+      },
+      {
+        "component_id": "usblc6_2sc6",
+        "data": {
+          "constraints": [
+            "usb_esd"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usblc6_2sc6",
+              "content_sha256": null,
+              "id": "datasheet_usblc6_2sc6",
+              "kind": "datasheet",
+              "locator": "USBLC6-2SC6",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+            "verified": true
+          },
+          "id": "usblc6_2sc6",
+          "lifecycle": "active",
+          "manufacturer": "STMicroelectronics",
+          "mpn": "USBLC6-2SC6",
+          "package": "SOT-23-6",
+          "pins": [
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_OUT",
+              "number": "2"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_IN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_OUT",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USBLC6-2SC6"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Power_Protection:USBLC6-2SC6",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_usblc6_2sc6"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          }
+        },
+        "ref": "D1",
+        "resolution": "curated",
+        "role": "tvs"
+      },
+      {
+        "component_id": "tps62133rgtr",
+        "data": {
+          "constraints": [
+            "three_volt_three_rail"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "tps62133rgtr",
+              "content_sha256": null,
+              "id": "datasheet_tps62133rgtr",
+              "kind": "datasheet",
+              "locator": "TPS62133RGTR",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3"
+            ],
+            "library_id": "Package_DFN_QFN:VQFN-16",
+            "verified": true
+          },
+          "id": "tps62133rgtr",
+          "lifecycle": "active",
+          "manufacturer": "Texas Instruments",
+          "mpn": "TPS62133RGTR",
+          "package": "VQFN-16",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VIN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "VOUT",
+              "number": "2"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "TPS62133RGTR"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "tps62133rgtr",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "TPS62133RGTR",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "tps62133rgtr",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "TPS62133RGTR"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3"
+            ],
+            "library_id": "HW_Curated:TPS62133",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_tps62133rgtr"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "tps62133rgtr",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "TPS62133RGTR",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "tps62133rgtr",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "TPS62133RGTR"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U3",
+        "resolution": "curated",
+        "role": "regulator_3v3"
+      },
+      {
+        "component_id": "esp32s3_wroom_1",
+        "data": {
+          "constraints": [
+            "wifi_bt_mcu",
+            "integral_antenna_keepout_required"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "esp32s3_wroom_1",
+              "content_sha256": null,
+              "id": "datasheet_esp32s3_wroom_1",
+              "kind": "datasheet",
+              "locator": "ESP32-S3-WROOM-1-N8",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "38",
+              "39",
+              "40",
+              "41"
+            ],
+            "library_id": "RF_Module:ESP32-S3-WROOM-1",
+            "verified": true
+          },
+          "id": "esp32s3_wroom_1",
+          "lifecycle": "active",
+          "manufacturer": "Espressif Systems",
+          "mpn": "ESP32-S3-WROOM-1-N8",
+          "package": "LCC-41",
+          "pins": [
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "1",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "3V3",
+              "number": "2",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "input",
+              "name": "EN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "IO8",
+              "number": "12"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "USB_D-",
+              "number": "13"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "USB_D+",
+              "number": "14"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "IO3",
+              "number": "15"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "IO0",
+              "number": "27"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "RXD0",
+              "number": "36"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "TXD0",
+              "number": "37"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "IO1",
+              "number": "39"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "40",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "41",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "ESP32-S3-WROOM-1-N8"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "esp32s3_wroom_1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ESP32-S3-WROOM-1-N8",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "esp32s3_wroom_1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-16",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ESP32-S3-WROOM-1-N8"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "38",
+              "39",
+              "40",
+              "41"
+            ],
+            "library_id": "RF_Module:ESP32-S3-WROOM-1",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/sensor_data_logger.yaml",
+          "database_file_sha256": "ca788d7cf6bc44ac9158d70d9c6d431945178174c4fa5c2e7672d7420b434906",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_esp32s3_wroom_1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "esp32s3_wroom_1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ESP32-S3-WROOM-1-N8",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "esp32s3_wroom_1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-16",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ESP32-S3-WROOM-1-N8"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U1",
+        "resolution": "curated",
+        "role": "mcu"
+      },
+      {
+        "component_id": "icm_42688_p",
+        "data": {
+          "constraints": [
+            "imu"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "icm_42688_p",
+              "content_sha256": null,
+              "id": "datasheet_icm_42688_p",
+              "kind": "datasheet",
+              "locator": "ICM-42688-P",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Package_LGA:LGA-14",
+            "verified": true
+          },
+          "id": "icm_42688_p",
+          "lifecycle": "active",
+          "manufacturer": "TDK InvenSense",
+          "mpn": "ICM-42688-P",
+          "package": "LGA-14",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "1",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "open_drain",
+              "name": "SCL",
+              "number": "3"
+            },
+            {
+              "electrical_type": "open_drain",
+              "name": "SDA",
+              "number": "4"
+            },
+            {
+              "electrical_type": "output",
+              "name": "INT1",
+              "number": "5"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "ICM-42688-P"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "icm_42688_p",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ICM-42688-P",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "icm_42688_p",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ICM-42688-P"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Sensor_Motion:ICM-42688-P",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_icm_42688_p"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "icm_42688_p",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ICM-42688-P",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "icm_42688_p",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ICM-42688-P"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U2",
+        "resolution": "curated",
+        "role": "imu"
+      },
+      {
+        "component_id": "samtec_ftsh_105_uart",
+        "data": {
+          "constraints": [
+            "uart_debug"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "samtec_ftsh_105_uart",
+              "content_sha256": null,
+              "id": "datasheet_samtec_ftsh_105_uart",
+              "kind": "datasheet",
+              "locator": "Samtec-FTSH-105-01-L-DV-K",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "library_id": "Connector_Samtec:FTSH-105",
+            "verified": true
+          },
+          "id": "samtec_ftsh_105_uart",
+          "lifecycle": "active",
+          "manufacturer": "Samtec",
+          "mpn": "Samtec-FTSH-105-01-L-DV-K",
+          "package": "FTSH-10",
+          "pins": [
+            {
+              "electrical_type": "power_out",
+              "name": "VREF",
+              "number": "1",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "output",
+              "name": "TXD",
+              "number": "2"
+            },
+            {
+              "electrical_type": "input",
+              "name": "RXD",
+              "number": "3"
+            },
+            {
+              "electrical_type": "input",
+              "name": "BOOT",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "FTSH-105-01-L-DV-K"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "samtec_ftsh_105_uart",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "FTSH-105-01-L-DV-K",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "samtec_ftsh_105_uart",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "FTSH-105-01-L-DV-K"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Connector_Generic:Conn_02x05_Odd_Even",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/sensor_data_logger.yaml",
+          "database_file_sha256": "ca788d7cf6bc44ac9158d70d9c6d431945178174c4fa5c2e7672d7420b434906",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_samtec_ftsh_105_uart"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "samtec_ftsh_105_uart",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "FTSH-105-01-L-DV-K",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "samtec_ftsh_105_uart",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "FTSH-105-01-L-DV-K"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J2",
+        "resolution": "curated",
+        "role": "debug"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R1",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R2",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R3",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "grm188_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm188_100n",
+              "kind": "datasheet",
+              "locator": "GRM188R71C104KA01D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R71C104KA01D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R71C104KA01D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C1",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm188_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm188_100n",
+              "kind": "datasheet",
+              "locator": "GRM188R71C104KA01D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R71C104KA01D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R71C104KA01D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R71C104KA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R71C104KA01D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C2",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm31_22u",
+        "data": {
+          "constraints": [
+            "bulk_capacitor"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm31_22u",
+              "content_sha256": null,
+              "id": "datasheet_grm31_22u",
+              "kind": "datasheet",
+              "locator": "GRM31CR61E226ME15L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_1206_3216Metric",
+            "verified": true
+          },
+          "id": "grm31_22u",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM31CR61E226ME15L",
+          "package": "1206",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM31CR61E226ME15L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm31_22u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM31CR61E226ME15L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm31_22u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM31CR61E226ME15L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm31_22u"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml",
+          "role_set_sha256": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm31_22u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM31CR61E226ME15L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm31_22u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM31CR61E226ME15L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C9",
+        "resolution": "curated",
+        "role": "capacitor_22u"
+      }
+    ],
+    "files": {
+      "bom": [
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/bom.csv"
+      ],
+      "electronics": [
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/board.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/sensor_bus.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/connectors.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/power_tree.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/data_logger.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/electrical_graph.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/routing.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/schematic_generation.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pro",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.tsx",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.compiler.mjs",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/source_manifest.json"
+      ],
+      "firmware": [
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/board.cmake",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/devicetree.overlay",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/kconfig.defconfig",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/app/src/main.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_i2c_imu.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_usb_console.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/boards/xtensa/sensor_data_logger/sensor_data_logger.dts",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/reference/CMakeLists.txt"
+      ],
+      "mechanical": [
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/assembly.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/connector_cutouts.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/enclosure.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/enclosure_variants.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/fixtures.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/mechanical_contract.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/source_manifest.json"
+      ]
+    },
+    "resolution_report": {
+      "artifacts": [
+        "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml"
+      ],
+      "backend": {
+        "mutates_database": false,
+        "name": "ComponentResolver"
+      },
+      "failures": [],
+      "gate": "component_resolution",
+      "metrics": {
+        "critical_roles": 7,
+        "requested": 16,
+        "resolved": 16,
+        "supplier_provider": "curated"
+      },
+      "status": "pass"
+    },
+    "status": "generated"
+  },
+  "grounding_summary": {
+    "component_grounding": {
+      "curated": 16,
+      "supplier_unknown_refs": [
+        "J1",
+        "R5",
+        "R6",
+        "F1",
+        "Q1",
+        "D1",
+        "U3",
+        "U1",
+        "U2",
+        "J2",
+        "R1",
+        "R2",
+        "R3",
+        "C1",
+        "C2",
+        "C9"
+      ],
+      "total": 16,
+      "unresolved_refs": [],
+      "with_available_supplier_offer": 0,
+      "with_datasheet_evidence": 16
+    },
+    "physical_oracle_gaps": [
+      "SI/PI, EMI/EMC, thermal load behavior, vibration, ingress, connector fatigue, and board bring-up still require simulation or physical evidence outside this digital candidate."
+    ],
+    "risk_areas": [
+      {
+        "area": "pinout_package_footprint",
+        "gates": [
+          {
+            "failure_count": 0,
+            "gate": "datasheet_evidence",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "component_provenance",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "pin_symbol_footprint",
+            "status": "pass"
+          }
+        ],
+        "status": "pass"
+      },
+      {
+        "area": "semantic_representation_integrity",
+        "gates": [
+          {
+            "failure_count": 0,
+            "gate": "semantic_schematic_roundtrip",
+            "status": "pass"
+          }
+        ],
+        "status": "pass"
+      },
+      {
+        "area": "component_availability_lifecycle",
+        "gates": [
+          {
+            "failure_count": 0,
+            "gate": "component_resolution",
+            "status": "pass"
+          },
+          {
+            "failure_count": 16,
+            "gate": "supplier_availability",
+            "status": "blocked"
+          },
+          {
+            "failure_count": 16,
+            "gate": "sourcing",
+            "status": "fail"
+          },
+          {
+            "failure_count": 0,
+            "gate": "sourcing_resilience",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "component_provenance",
+            "status": "pass"
+          }
+        ],
+        "status": "fail"
+      },
+      {
+        "area": "support_circuit_and_power_assumptions",
+        "gates": [
+          {
+            "failure_count": 0,
+            "gate": "requirements_lowering",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "semantic_electrical",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "power_tree_integrity",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "power_integrity_estimate",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "interface_integrity",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "support_circuit_completeness",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "ir_erc",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "bom",
+            "status": "pass"
+          }
+        ],
+        "status": "pass"
+      },
+      {
+        "area": "long_horizon_dependency_integrity",
+        "gates": [
+          {
+            "failure_count": 2,
+            "gate": "design_dependency_graph",
+            "status": "fail"
+          }
+        ],
+        "status": "fail"
+      },
+      {
+        "area": "layout_routing_manufacturability",
+        "gates": [
+          {
+            "failure_count": 9,
+            "gate": "placement_constraints",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "layout_thermal_integrity",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "layout_signal_integrity",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "ir_pcb_sanity",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "reference_fabrication",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "compiled_electronics_backend",
+            "status": "missing"
+          }
+        ],
+        "status": "blocked"
+      },
+      {
+        "area": "mechanical_integration",
+        "gates": [
+          {
+            "failure_count": 0,
+            "gate": "mechanical_fit",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "mechanical_connector_retention",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "mechanical_connector_cutouts",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "mechanical_mounting_integrity",
+            "status": "pass"
+          }
+        ],
+        "status": "pass"
+      },
+      {
+        "area": "firmware_interface",
+        "gates": [
+          {
+            "failure_count": 0,
+            "gate": "firmware_pinmap",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "firmware_modules",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "hw_sw_parity",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "firmware_interface_contract",
+            "status": "pass"
+          },
+          {
+            "failure_count": 0,
+            "gate": "reference_firmware_build",
+            "status": "pass"
+          }
+        ],
+        "status": "pass"
+      },
+      {
+        "area": "physical_qualification_evidence",
+        "gates": [
+          {
+            "failure_count": 8,
+            "gate": "physical_qualification",
+            "status": "blocked"
+          }
+        ],
+        "status": "blocked"
+      }
+    ]
+  },
+  "iteration_id": "0006",
+  "project": "sensor_data_logger",
+  "promotion": {
+    "next_gate": "hw_check_release_gate",
+    "rule": "Only candidates with passing required gates, resolved critical assumptions, and complete artifact integrity can be promoted.",
+    "status": "not_promoted"
+  },
+  "release_blocking_failures": [
+    "supplier_availability",
+    "sourcing",
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "native_drc",
+    "native_mechanical_validation",
+    "native_zephyr_build",
+    "physical_qualification",
+    "design_dependency_graph"
+  ],
+  "release_eligible": false,
+  "requirements_update": null,
+  "review_bundle": null,
+  "reviewable_artifacts": {
+    "candidate_bundle": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/exports/candidates/0006/sensor_data_logger-0006-candidate.zip",
+    "candidate_manifest": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/exports/candidates/0006/manifest.json",
+    "electronics": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/board.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/sensor_bus.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/connectors.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/power_tree.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/data_logger.intent.md",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/electrical_graph.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/routing.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/schematic_generation.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pro",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_sch",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.sch",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.tsx",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.compiler.mjs",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/source_manifest.json"
+    ],
+    "firmware": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/board.cmake",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/devicetree.overlay",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/kconfig.defconfig",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.h",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/app/src/main.c",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_i2c_imu.c",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/tests/test_usb_console.c",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/zephyr/boards/xtensa/sensor_data_logger/sensor_data_logger.dts",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/reference/CMakeLists.txt"
+    ],
+    "manufacturing": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/bom.csv"
+    ],
+    "mechanical": [
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/assembly.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/connector_cutouts.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/enclosure.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/enclosure_variants.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/fixtures.py",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/mechanical_contract.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/source_manifest.json"
+    ],
+    "physical_qualification_plan": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/physical/qualification_plan.json",
+    "physical_qualification_plan_markdown": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/physical/qualification_plan.md",
+    "review_bundle": null,
+    "review_html": null
+  },
+  "semantic_representation": {
+    "authoring_model": "semantic-first",
+    "layers": {
+      "electronics_graph": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/electrical_graph.json",
+      "electronics_intent": [
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/board.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/sensor_bus.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/connectors.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/power_tree.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/intent/data_logger.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/electrical_graph.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/routing.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/schematic_generation.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pro",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.tsx",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/board.compiler.mjs",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/source/tscircuit/source_manifest.json"
+      ],
+      "firmware_pinmap": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/firmware/generated/pinmap.json",
+      "mechanical_contract": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/mechanical/source/mechanical_contract.json",
+      "relative_placement": {
+        "source": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+        "style": "constraint-derived component positions with provenance, not raw native PCB geometry"
+      },
+      "requirements": [
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/electrical.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/firmware.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/manufacturing.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/mechanical.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/requirements.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/safety.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/sourcing.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/system.yaml",
+        "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/spec/test_plan.yaml"
+      ],
+      "semantic_schematic": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.json",
+      "semantic_schematic_code": "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/semantic/semantic_schematic.py"
+    },
+    "native_outputs": {
+      "cad_exports": "generated from the mechanical contract and board STEP evidence",
+      "firmware_build_inputs": "generated from the same pinmap used by electrical and firmware parity checks",
+      "kicad_and_fabrication": "generated evidence artifacts; not the primary authoring representation"
+    },
+    "purpose": "LLM-facing semantic representation. Native EDA, CAD, firmware, and manufacturing outputs are generated from typed artifacts rather than treated as the primary prompt surface.",
+    "representation_contract": {
+      "grounding": "component records carry curated component IDs, MPNs, packages, and footprints",
+      "pin_wiring": "nets enumerate component refs plus pin names, pin numbers, roles, and MCU pins; semantic_schematic.py round-trips to the JSON model",
+      "placement": "placements and constraints preserve provenance for relative layout reasoning"
+    }
+  },
+  "sourcing_choices": [
+    {
+      "component_id": "usb4105_gf_a",
+      "datasheet_evidence_ids": [
+        "datasheet_usb4105_gf_a"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "GCT",
+      "mpn": "USB4105-GF-A",
+      "package": "USB-C-16",
+      "ref": "J1",
+      "resolution": "curated",
+      "role": "power_input",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "USB4105-GF-A",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "rc0603_5k1",
+      "datasheet_evidence_ids": [
+        "datasheet_rc0603_5k1"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-075K1L",
+      "package": "0603",
+      "ref": "R5",
+      "resolution": "curated",
+      "role": "resistor_5k1",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RC0603FR-075K1L",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "rc0603_5k1",
+      "datasheet_evidence_ids": [
+        "datasheet_rc0603_5k1"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-075K1L",
+      "package": "0603",
+      "ref": "R6",
+      "resolution": "curated",
+      "role": "resistor_5k1",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RC0603FR-075K1L",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "littelfuse_0498080",
+      "datasheet_evidence_ids": [
+        "datasheet_littelfuse_0498080"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Littelfuse",
+      "mpn": "Littelfuse-0498080.M",
+      "package": "MIDI",
+      "ref": "F1",
+      "resolution": "curated",
+      "role": "fuse",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "0498080.M",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "lm74700qdbvrq1",
+      "datasheet_evidence_ids": [
+        "datasheet_lm74700qdbvrq1"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Texas Instruments",
+      "mpn": "LM74700QDBVRQ1",
+      "package": "SOT-23-6",
+      "ref": "Q1",
+      "resolution": "curated",
+      "role": "reverse_polarity",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "LM74700QDBVRQ1",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "usblc6_2sc6",
+      "datasheet_evidence_ids": [
+        "datasheet_usblc6_2sc6"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "STMicroelectronics",
+      "mpn": "USBLC6-2SC6",
+      "package": "SOT-23-6",
+      "ref": "D1",
+      "resolution": "curated",
+      "role": "tvs",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "USBLC6-2SC6",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "tps62133rgtr",
+      "datasheet_evidence_ids": [
+        "datasheet_tps62133rgtr"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Texas Instruments",
+      "mpn": "TPS62133RGTR",
+      "package": "VQFN-16",
+      "ref": "U3",
+      "resolution": "curated",
+      "role": "regulator_3v3",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "TPS62133RGTR",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "esp32s3_wroom_1",
+      "datasheet_evidence_ids": [
+        "datasheet_esp32s3_wroom_1"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Espressif Systems",
+      "mpn": "ESP32-S3-WROOM-1-N8",
+      "package": "LCC-41",
+      "ref": "U1",
+      "resolution": "curated",
+      "role": "mcu",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "ESP32-S3-WROOM-1-N8",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "icm_42688_p",
+      "datasheet_evidence_ids": [
+        "datasheet_icm_42688_p"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "TDK InvenSense",
+      "mpn": "ICM-42688-P",
+      "package": "LGA-14",
+      "ref": "U2",
+      "resolution": "curated",
+      "role": "imu",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "ICM-42688-P",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "samtec_ftsh_105_uart",
+      "datasheet_evidence_ids": [
+        "datasheet_samtec_ftsh_105_uart"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Samtec",
+      "mpn": "Samtec-FTSH-105-01-L-DV-K",
+      "package": "FTSH-10",
+      "ref": "J2",
+      "resolution": "curated",
+      "role": "debug",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "FTSH-105-01-L-DV-K",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "rc0603_4k7",
+      "datasheet_evidence_ids": [
+        "datasheet_rc0603_4k7"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-074K7L",
+      "package": "0603",
+      "ref": "R1",
+      "resolution": "curated",
+      "role": "resistor_4k7",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RC0603FR-074K7L",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "rc0603_4k7",
+      "datasheet_evidence_ids": [
+        "datasheet_rc0603_4k7"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-074K7L",
+      "package": "0603",
+      "ref": "R2",
+      "resolution": "curated",
+      "role": "resistor_4k7",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RC0603FR-074K7L",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "rc0603_4k7",
+      "datasheet_evidence_ids": [
+        "datasheet_rc0603_4k7"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Yageo",
+      "mpn": "RC0603FR-074K7L",
+      "package": "0603",
+      "ref": "R3",
+      "resolution": "curated",
+      "role": "resistor_4k7",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "RC0603FR-074K7L",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "grm188_100n",
+      "datasheet_evidence_ids": [
+        "datasheet_grm188_100n"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "ref": "C1",
+      "resolution": "curated",
+      "role": "capacitor_100n",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM188R71C104KA01D",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "grm188_100n",
+      "datasheet_evidence_ids": [
+        "datasheet_grm188_100n"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM188R71C104KA01D",
+      "package": "0603",
+      "ref": "C2",
+      "resolution": "curated",
+      "role": "capacitor_100n",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM188R71C104KA01D",
+        "stock": null
+      }
+    },
+    {
+      "component_id": "grm31_22u",
+      "datasheet_evidence_ids": [
+        "datasheet_grm31_22u"
+      ],
+      "lifecycle": "active",
+      "manufacturer": "Murata",
+      "mpn": "GRM31CR61E226ME15L",
+      "package": "1206",
+      "ref": "C9",
+      "resolution": "curated",
+      "role": "capacitor_22u",
+      "sourcing_status": "resolved",
+      "supplier": {
+        "availability": "unknown",
+        "observed_at": null,
+        "provider": "curated",
+        "sku": "GRM31CR61E226ME15L",
+        "stock": null
+      }
+    }
+  ],
+  "status": "candidate"
+}

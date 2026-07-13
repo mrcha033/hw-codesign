@@ -1,0 +1,4 @@
+if BOARD_SENSOR_DATA_LOGGER
+config BOARD
+  default "sensor_data_logger"
+endif

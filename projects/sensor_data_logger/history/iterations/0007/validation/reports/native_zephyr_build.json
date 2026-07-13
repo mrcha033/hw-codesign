@@ -1,0 +1,18 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "xtensa_toolchain_unavailable",
+      "details": {},
+      "message": "Board 'esp32s3' requires the xtensa-esp toolchain which is not in the bundled toolchain set",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_zephyr_build",
+  "metrics": {},
+  "status": "blocked"
+}

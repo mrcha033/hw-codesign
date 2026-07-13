@@ -1,0 +1,56 @@
+[
+  {
+    "graph_pin": "U1.3",
+    "mcu_pin": "EN",
+    "net_name": "ESP_EN",
+    "signal": "ESP_EN"
+  },
+  {
+    "graph_pin": "U1.12",
+    "mcu_pin": "GPIO8",
+    "net_name": "I2C_IMU_SCL",
+    "signal": "I2C_IMU_SCL"
+  },
+  {
+    "graph_pin": "U1.13",
+    "mcu_pin": "USB_D-",
+    "net_name": "USB_DM",
+    "signal": "USB_DM"
+  },
+  {
+    "graph_pin": "U1.14",
+    "mcu_pin": "USB_D+",
+    "net_name": "USB_DP",
+    "signal": "USB_DP"
+  },
+  {
+    "graph_pin": "U1.15",
+    "mcu_pin": "GPIO3",
+    "net_name": "I2C_IMU_SDA",
+    "signal": "I2C_IMU_SDA"
+  },
+  {
+    "graph_pin": "U1.27",
+    "mcu_pin": "GPIO0",
+    "net_name": "BOOT",
+    "signal": "BOOT"
+  },
+  {
+    "graph_pin": "U1.36",
+    "mcu_pin": "RXD0",
+    "net_name": "UART_RX",
+    "signal": "UART_RX"
+  },
+  {
+    "graph_pin": "U1.37",
+    "mcu_pin": "TXD0",
+    "net_name": "UART_TX",
+    "signal": "UART_TX"
+  },
+  {
+    "graph_pin": "U1.39",
+    "mcu_pin": "GPIO1",
+    "net_name": "IMU_INT",
+    "signal": "IMU_INT"
+  }
+]

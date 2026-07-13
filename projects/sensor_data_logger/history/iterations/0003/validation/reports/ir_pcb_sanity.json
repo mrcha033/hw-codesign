@@ -1,0 +1,30 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/electronics/generated/kicad/sensor_data_logger.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "declared_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "expected_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "footprints": 16,
+    "layers": 2,
+    "pads": 95,
+    "segments": 123,
+    "used_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ]
+  },
+  "status": "pass"
+}

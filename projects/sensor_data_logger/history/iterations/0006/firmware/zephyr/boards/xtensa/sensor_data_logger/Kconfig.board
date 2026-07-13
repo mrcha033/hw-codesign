@@ -1,0 +1,2 @@
+config BOARD_SENSOR_DATA_LOGGER
+  bool "ESP32-S3 Sensor Data Logger"

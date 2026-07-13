@@ -1,0 +1,71 @@
+{
+  "backend": "tscircuit",
+  "backend_release_capable": true,
+  "compiler_version": "0.1.1491",
+  "contract_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "fabrication_release_eligible": false,
+  "hdl_source_release_eligible": false,
+  "netlist_release_eligible": false,
+  "pcb_disabled": false,
+  "placement_contract": {
+    "coordinate_transform": "board_origin_top_left_to_tscircuit_center",
+    "missing_solver_placements": [],
+    "solver_placements": 16,
+    "source": "electrical_graph.components[].pcb_position_mm"
+  },
+  "provenance": {
+    "backend": "tscircuit",
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/sensor_data_logger/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "compiler_version": "0.1.1491",
+    "component_db_hash": "506bfd3a28aa5e84cbc970dd584a4debcb845586e55282376d39984d0ae7a569",
+    "release_eligible": false,
+    "release_tier": "fabrication",
+    "role_set_hash": "930ffa932706d56900a19acb42c56fbb1d0acb64f1b154615431ba6c86dadfb9",
+    "source_spec_hash": "ce73661df203a9f4aafd99fc19265e6d6a85bf12d7f3a60ac9e2617b72ed336d",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "release_blocking_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "release_tier": "fabrication",
+  "routing_disabled": false,
+  "source_release_eligible": false,
+  "sources": [
+    {
+      "path": "board.compiler.mjs",
+      "sha256": "b2cff5c301253f3395f48f3bb010a6a03e5b06058787ee3db6cacd7cf4032647"
+    },
+    {
+      "path": "board.tsx",
+      "sha256": "7592ab8c9a079728de9dbd51b17a3905a88db04053e958b4697e2b02bb3d925e"
+    }
+  ],
+  "unsupported_footprints": [
+    {
+      "footprint": "HW_Curated:MIDI_Fuse",
+      "ref": "F1"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "curated_pin_electrical_type_mismatch",
+      "details": {
+        "expected_electrical_type": "ground",
+        "expected_pin_name": "GND",
+        "observed_electrical_type": null,
+        "observed_role": "input",
+        "pin_name": "RXD",
+        "pin_number": "3",
+        "ref": "J2"
+      },
+      "message": "J2.3 is ground in the curated part contract but the graph models it as input",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "curated_pin_voltage_domain_mismatch",
+      "details": {
+        "expected_pin_name": "GND",
+        "expected_voltage_domain": "GND",
+        "observed_voltage_domain": null,
+        "pin_name": "RXD",
+        "pin_number": "3",
+        "ref": "J2"
+      },
+      "message": "J2.3 voltage domain does not match the curated part contract",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "component_provenance",
+  "metrics": {
+    "components_checked": 16
+  },
+  "status": "fail"
+}

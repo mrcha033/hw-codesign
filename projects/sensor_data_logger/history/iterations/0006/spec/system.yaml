@@ -1,0 +1,46 @@
+system:
+  supply:
+    battery:
+      type: usb_pd
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.9
+    rails:
+    - name: V5
+      voltage: 5.0
+      current_peak_a: 0.9
+    - name: V3V3
+      voltage: 3.3
+      current_peak_a: 0.5
+compute:
+  mcu:
+    family: ESP32S3
+    hard_realtime_required: false
+actuation:
+  motor_channels: 0
+  motor_channel_peak_current_a: 0.0
+sensing:
+  imu: required
+  battery_monitor: not_required
+  current_monitor: not_required
+  temperature_monitor: required
+  e_stop: not_required
+assumptions:
+  rf_antenna_clearance:
+    value: module_integral_antenna
+    confidence: medium
+    reason: ESP32-S3-WROOM-1 has an integrated PCB antenna; a keep-out zone on the
+      top copper layer is required per Espressif layout guidelines.
+    critical: true
+    requires_user_review: true
+  power_budget:
+    value: usb_500ma_default
+    confidence: medium
+    reason: USB 2.0 host provides 500 mA by default; USB-PD negotiation for higher
+      current is not modelled.
+    critical: false
+    requires_user_review: false
+electronics:
+  backend: tscircuit
+  role_set: sensor_data_logger
+  compiled_backend_required: true

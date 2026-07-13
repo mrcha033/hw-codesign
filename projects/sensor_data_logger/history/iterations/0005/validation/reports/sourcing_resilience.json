@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/sensor_data_logger.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "sourcing-resilience-contract"
+  },
+  "failures": [],
+  "gate": "sourcing_resilience",
+  "metrics": {
+    "alternate_roles": 0,
+    "checked_alternates": 0,
+    "critical_roles": 7,
+    "role_set": "sensor_data_logger",
+    "single_source_justified_roles": 7,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}
