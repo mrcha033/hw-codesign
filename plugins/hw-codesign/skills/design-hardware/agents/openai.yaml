@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Hardware"
+  short_description: "Design hardware with evidence-backed release gates"
+  default_prompt: "Use $design-hardware to create and validate a hardware design candidate."

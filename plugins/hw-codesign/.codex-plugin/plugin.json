@@ -1,0 +1,37 @@
+{
+  "name": "hw-codesign",
+  "version": "0.1.0",
+  "description": "Agentic hardware design with evidence-backed release gates",
+  "author": {
+    "name": "mrcha033",
+    "url": "https://github.com/mrcha033"
+  },
+  "homepage": "https://github.com/mrcha033/hw-cli",
+  "repository": "https://github.com/mrcha033/hw-cli",
+  "keywords": [
+    "hardware-design",
+    "pcb",
+    "cad",
+    "firmware",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "hw-codesign",
+    "shortDescription": "Design hardware with evidence-backed gates.",
+    "longDescription": "Create and iterate PCB electronics, mechanical parts, firmware interfaces, sourcing decisions, manufacturing candidates, and review bundles. Release promotion remains gated by explicit digital, native-tool, and physical evidence.",
+    "developerName": "mrcha033",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/mrcha033/hw-cli",
+    "defaultPrompt": [
+      "Create a hardware design candidate from my requirements.",
+      "Diagnose why this hardware project is blocked from release.",
+      "Review two candidates and prepare a fabrication review."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

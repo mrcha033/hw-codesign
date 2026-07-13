@@ -1,0 +1,20 @@
+{
+  "name": "hw-cli",
+  "interface": {
+    "displayName": "Hw Cli"
+  },
+  "plugins": [
+    {
+      "name": "hw-codesign",
+      "source": {
+        "source": "local",
+        "path": "./plugins/hw-codesign"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
