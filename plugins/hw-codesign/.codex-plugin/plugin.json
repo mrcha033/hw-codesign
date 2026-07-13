@@ -33,5 +33,5 @@
       "Review two candidates and prepare a fabrication review."
     ]
   },
-  "mcpServers": "./.mcp.json"
+  "mcpServers": "./.mcp.codex.json"
 }

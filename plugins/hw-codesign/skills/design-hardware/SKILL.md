@@ -1,6 +1,6 @@
 ---
 name: design-hardware
-description: Design, inspect, iterate, validate, and package cross-domain hardware projects through the hw-codesign MCP server. Use when Codex needs to turn requirements into PCB electronics, placement, mechanical, firmware, sourcing, manufacturing, candidate-review, or release artifacts; diagnose blocked or failed hardware gates; compare candidates; or prepare an evidence-backed release.
+description: Design, inspect, iterate, validate, and package cross-domain hardware projects through the hw-codesign MCP server. Use when turning requirements into PCB electronics, placement, mechanical, firmware, sourcing, manufacturing, candidate-review, or release artifacts; diagnosing blocked or failed hardware gates; comparing candidates; or preparing an evidence-backed release.
 ---
 
 # Design Hardware
