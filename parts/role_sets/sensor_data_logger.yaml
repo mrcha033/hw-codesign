@@ -9,7 +9,7 @@ roles:
   regulator_3v3: {component_id: tps62133rgtr, resolution: curated}
   mcu: {component_id: esp32s3_wroom_1, resolution: curated}
   imu: {component_id: icm_42688_p, resolution: curated}
-  debug: {component_id: samtec_ftsh_105, resolution: curated}
+  debug: {component_id: samtec_ftsh_105_uart, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
   capacitor_100n: {component_id: grm188_100n, resolution: curated}
   capacitor_22u: {component_id: grm31_22u, resolution: curated}

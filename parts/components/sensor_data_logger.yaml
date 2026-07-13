@@ -1,4 +1,32 @@
 components:
+  - id: samtec_ftsh_105_uart
+    mpn: Samtec-FTSH-105-01-L-DV-K
+    manufacturer: Samtec
+    package: FTSH-10
+    symbol:
+      library_id: Connector_Generic:Conn_02x05_Odd_Even
+      verified: true
+      expected_pins: ['1','2','3','4','5']
+    footprint:
+      library_id: Connector_Samtec:FTSH-105
+      verified: true
+      expected_pads: ['1','2','3','4','5','6','7','8','9','10']
+    pins:
+      - {number: '1', name: VREF, electrical_type: power_out, voltage_domain: V3V3}
+      - {number: '2', name: TXD, electrical_type: output}
+      - {number: '3', name: RXD, electrical_type: input}
+      - {number: '4', name: BOOT, electrical_type: input}
+      - {number: '5', name: GND, electrical_type: ground, voltage_domain: GND}
+    lifecycle: active
+    sourcing:
+      status: resolved
+      supplier_skus: [FTSH-105-01-L-DV-K]
+    constraints: [uart_debug]
+    resolution_provenance:
+      source: manufacturer_datasheet
+      reviewed_at: '2026-06-15'
+    review_status: approved
+
   - id: esp32s3_wroom_1
     mpn: ESP32-S3-WROOM-1-N8
     manufacturer: Espressif Systems

@@ -15,6 +15,7 @@ records:
   - {component_id: molex_43650_0300, supplier_sku: Molex-43650-0300, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: rc0603_120r, supplier_sku: RC0603FR-07120RL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: samtec_ftsh_105, supplier_sku: FTSH-105-01-L-DV-K, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: samtec_ftsh_105_uart, supplier_sku: FTSH-105-01-L-DV-K, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: usb4105_gf_a, supplier_sku: USB4105-GF-A, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: usblc6_2sc6, supplier_sku: USBLC6-2SC6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: rc0603_100k, supplier_sku: RC0603FR-07100KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
