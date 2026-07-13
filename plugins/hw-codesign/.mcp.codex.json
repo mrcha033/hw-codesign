@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "hw-codesign": {
+      "title": "hw-codesign",
+      "description": "Agentic PCB, mechanical, firmware, sourcing, validation, and release workflows.",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "hw-codesign-platform[mcp] @ git+https://github.com/mrcha033/hw-cli",
+        "hw-mcp"
+      ]
+    }
+  }
+}

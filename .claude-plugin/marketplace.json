@@ -1,0 +1,23 @@
+{
+  "name": "hw-cli",
+  "description": "Agentic hardware co-design plugins for Claude Code, backed by the hw-codesign MCP server.",
+  "owner": {
+    "name": "mrcha033",
+    "url": "https://github.com/mrcha033"
+  },
+  "plugins": [
+    {
+      "name": "hw-codesign",
+      "description": "Create and iterate PCB electronics, mechanical parts, firmware interfaces, sourcing decisions, manufacturing candidates, and review bundles. Release promotion stays gated by explicit digital, native-tool, and physical evidence.",
+      "source": "./plugins/hw-codesign",
+      "category": "productivity",
+      "tags": [
+        "hardware-design",
+        "pcb",
+        "cad",
+        "firmware",
+        "mcp"
+      ]
+    }
+  ]
+}

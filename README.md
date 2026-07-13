@@ -27,6 +27,20 @@ a local toolchain.
 
 ## Connect an agent
 
+### Codex
+
+Install the repository-owned plugin from a local clone:
+
+```bash
+codex plugin marketplace add "$PWD"
+codex plugin add hw-codesign@hw-cli
+```
+
+Start a new Codex task, then invoke `$design-hardware` or ask Codex to create, inspect,
+validate, compare, or prepare a hardware candidate for release. The plugin runs the MCP
+server from the checked-out source with Python 3.11+ and uses the repository root as
+`HW_PLATFORM_ROOT`.
+
 ### Claude Desktop
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
@@ -169,4 +183,4 @@ PYTHONPATH=src python3 -m hw_codesign.cli --root . design-until-release quadrupe
 - The complete cross-domain flow depends on native KiCad, OpenCASCADE, Freerouting, tscircuit,
   and Zephyr. Validated paths: Linux container (CI), macOS (`make toolchains`), and Windows
   (Python test suite — native toolchains not yet installed on Windows runners).
-- MCP registry publication is deferred until the public tool interface and versioning policy are stable.
+- Hosted MCP registry publication is deferred until the public tool interface and versioning policy are stable; the repository-owned Codex plugin is installable from a local clone.
