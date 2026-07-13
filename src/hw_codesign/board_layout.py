@@ -17,13 +17,13 @@ _ANCHORS: dict[str, tuple[float, float]] = {
 
 _SENSOR_DATA_LOGGER_ANCHORS: dict[str, tuple[float, float]] = {
     "J1": (18.0, 4.0),
-    "F1": (26.0, 4.0),   # fuse, between USB-C and ideal-diode on power path
+    "F1": (26.0, 10.0),  # fuse, offset from USB-C CC pads; power path still routes to Q1
     "Q1": (34.0, 4.0),   # reverse-polarity ideal-diode, before regulator
     "D1": (30.0, 10.0),
     "U3": (44.0, 12.0),
-    "U1": (44.0, 44.0),
+    "U1": (44.0, 43.0),
     "U2": (18.0, 28.0),
-    "J2": (58.0, 44.0),
+    "J2": (54.0, 39.0),
     "R1": (18.0, 38.0),
     "R2": (27.0, 38.0),
     "R3": (50.0, 25.0),

@@ -36,6 +36,11 @@ def test_sensor_data_logger_template_generates_esp32_graph(service):
     assert by_ref["U1"]["component_id"] == "esp32s3_wroom_1"
     assert by_ref["U1"]["mpn"] == "ESP32-S3-WROOM-1-N8"
     assert by_ref["U1"]["footprint"] == "RF_Module:ESP32-S3-WROOM-1"
+    assert by_ref["J2"]["component_id"] == "samtec_ftsh_105_uart"
+    assert by_ref["J2"]["pin_contracts"]["3"]["name"] == "RXD"
+    assert by_ref["J2"]["pin_contracts"]["3"]["electrical_type"] == "input"
+    assert by_ref["F1"]["pcb_position_mm"] == [26.0, 10.0]
+    assert by_ref["U1"]["pcb_position_mm"] == [44.0, 43.0]
     assert {"power_input", "tvs", "regulator", "mcu", "imu", "debug"}.issubset(categories)
     assert "motor_io" not in categories
     assert "can" not in categories
@@ -92,6 +97,8 @@ def test_sensor_data_logger_kicad_artifacts_use_sensor_identity_and_two_layer_st
     board = (kicad_dir / f"{project}.kicad_pcb").read_text(encoding="utf-8")
 
     assert 'Title "ESP32-S3 Sensor Data Logger"' in legacy_schematic
+    assert '${KICAD10_3DMODEL_DIR}/Connector_USB.3dshapes/USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step' in board
+    assert '${KICAD10_3DMODEL_DIR}/RF_Module.3dshapes/ESP32-S3-WROOM-1.step' in board
     assert 'Title "Robot Controller"' not in legacy_schematic
     assert '(0 "F.Cu" signal)' in board
     assert '(31 "B.Cu" signal)' in board
@@ -118,6 +125,8 @@ def test_sensor_data_logger_checks_do_not_require_robotics_blocks(service):
     assert reports["firmware_modules"]["status"] == "pass"
     assert reports["firmware_interface_contract"]["status"] == "pass"
     assert reports["ir_erc"]["status"] == "pass"
+    assert reports["component_provenance"]["status"] == "pass"
+    assert reports["interface_integrity"]["status"] == "pass"
     assert reports["placement_constraints"]["status"] == "pass"
     assert reports["layout_thermal_integrity"]["status"] == "pass"
     assert reports["layout_signal_integrity"]["status"] == "pass"
