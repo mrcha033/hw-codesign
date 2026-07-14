@@ -1,0 +1,60 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_mount_bracket/controller_mount_bracket.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_mount_bracket/controller_mount_bracket.stl"
+  ],
+  "candidate_only": true,
+  "gate_status": "fail",
+  "intent": {
+    "bracket_height_mm": 32,
+    "bracket_style": "U",
+    "bracket_width_mm": 54,
+    "fastener": "M2",
+    "frame_holes": [
+      {
+        "x_mm": 8,
+        "y_mm": 7
+      },
+      {
+        "x_mm": 46,
+        "y_mm": 7
+      }
+    ],
+    "interface": "printed_torso",
+    "leg_depth_mm": 14,
+    "max_overhang_angle_deg": 45,
+    "pcb_holes": [
+      {
+        "x_mm": 2.5,
+        "z_mm": 2.5
+      },
+      {
+        "x_mm": 47.5,
+        "z_mm": 2.5
+      },
+      {
+        "x_mm": 2.5,
+        "z_mm": 27.5
+      },
+      {
+        "x_mm": 37.5,
+        "z_mm": 27.5
+      }
+    ],
+    "thickness_mm": 2.5
+  },
+  "part_name": "controller_mount_bracket",
+  "part_type": "pcb_mount_bracket",
+  "printability": {
+    "max_overhang_deg": 90.0,
+    "min_hole_mm": 2.4,
+    "min_wall_mm": 2.5,
+    "printable": false,
+    "recommended_orientation": "back plate flat on bed",
+    "stl_manifold": true,
+    "violations": [
+      "66 downward-facing triangles exceed 45.0\u00b0 overhang limit"
+    ]
+  },
+  "release_eligible": false
+}

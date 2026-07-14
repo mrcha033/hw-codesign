@@ -1,0 +1,20 @@
+{
+  "artifacts": [],
+  "backend": {
+    "name": "tscircuit"
+  },
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "external_gate_not_run",
+      "details": {},
+      "message": "tscircuit backend execution was not requested",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "tscircuit_layout_completeness",
+  "metrics": {},
+  "status": "blocked"
+}

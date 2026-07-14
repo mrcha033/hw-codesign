@@ -18,7 +18,7 @@
     "coordinate_transform": "board_origin_top_left_to_tscircuit_center",
     "missing_solver_placements": [],
     "solver_placements": 16,
-    "source": "electrical_graph.components[].pcb_position_mm"
+    "source": "electrical_graph.components[].pcb_position_mm + pcb_rotation_deg"
   },
   "provenance": {
     "backend": "tscircuit",
@@ -55,11 +55,11 @@
   "sources": [
     {
       "path": "board.compiler.mjs",
-      "sha256": "c85de86ca218a00bd315d08ba3c1587077e4603ebc7e595a454d023e6a63e79b"
+      "sha256": "664a7ee0def4fd259687148871b7cab5c1a3ad0758b624021c11ec788cd8085a"
     },
     {
       "path": "board.tsx",
-      "sha256": "5457c4f08364713c622f31383fd714d9a879131d46f3aba03268e8274d1b8acb"
+      "sha256": "27b81716294fbf43f1dbb4f2cf71827d4f229d39a12f3208ab4939588bfed3f7"
     }
   ],
   "unsupported_footprints": [

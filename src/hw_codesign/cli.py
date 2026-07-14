@@ -3,11 +3,44 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import uuid
 from pathlib import Path
 from typing import Any
 
 from .errors import HardwarePlatformError
+from .jobs import JobManager, ProjectWriterLock
 from .service import HardwareService
+
+_PROJECT_WRITE_COMMANDS = frozenset({
+    "create-project",
+    "update-requirements",
+    "generate",
+    "generate-reference-intent",
+    "generate-electronics-source",
+    "generate-mechanical-source",
+    "generate-firmware-source",
+    "design-candidate",
+    "design-space",
+    "grounding-benchmark",
+    "physical-qualification-plan",
+    "record-physical-evidence",
+    "check",
+    "iterate",
+    "design-until-release",
+    "release-gate",
+    "design-report",
+    "failure-report",
+    "export-review",
+    "export-standalone-review",
+    "add-review-comment",
+    "review-candidate",
+    "prepare-fabrication-review",
+    "design-part",
+    "add-circuit-block",
+    "set-placement-constraint",
+    "record-design-decision",
+    "register-project-part",
+})
 
 
 def _emit(value: Any) -> None:
@@ -18,11 +51,22 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="hw", description="Agentic hardware design CLI")
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Platform repository root")
     commands = parser.add_subparsers(dest="command", required=True)
+    submit_job = commands.add_parser("submit-job")
+    submit_job.add_argument("tool", help="Async MCP tool name, for example hw_design_candidate")
+    submit_job.add_argument("project")
+    submit_job.add_argument("--arguments", default="{}", help="Additional JSON tool arguments")
+    commands.add_parser("job-status").add_argument("job_id")
+    commands.add_parser("cancel-job").add_argument("job_id")
+    commands.add_parser("recover-jobs")
     create = commands.add_parser("create-project")
     create.add_argument("name")
     create.add_argument("--template", default="robotics_controller_full")
     read = commands.add_parser("read-spec")
     read.add_argument("project")
+    register_part = commands.add_parser("register-project-part")
+    register_part.add_argument("project")
+    register_part.add_argument("--registration", required=True, help="JSON project-owned part registration")
+    commands.add_parser("list-project-parts").add_argument("project")
     requirements = commands.add_parser("update-requirements")
     requirements.add_argument("project")
     requirements.add_argument("requirements_text")
@@ -63,6 +107,7 @@ def build_parser() -> argparse.ArgumentParser:
     release.add_argument("project")
     report = commands.add_parser("design-report")
     report.add_argument("project")
+    commands.add_parser("failure-report").add_argument("project")
     export_review = commands.add_parser("export-review")
     export_review.add_argument("project")
     export_standalone = commands.add_parser("export-standalone-review")
@@ -107,8 +152,8 @@ def build_parser() -> argparse.ArgumentParser:
     design_part = commands.add_parser("design-part")
     design_part.add_argument("project")
     design_part.add_argument("--part-name", required=True)
-    design_part.add_argument("--part-type", required=True,
-                             choices=["pcb_mount_bracket", "standoff_tower", "cable_clip", "din_rail_adapter", "custom_enclosure_variant"])
+    from .backends.parts import PART_REGISTRY
+    design_part.add_argument("--part-type", required=True, choices=sorted(PART_REGISTRY))
     design_part.add_argument("--intent", default="{}", help="JSON string of intent parameters")
     commands.add_parser("list-parts").add_argument("project")
     commands.add_parser("get-part-types")
@@ -137,11 +182,35 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = build_parser().parse_args()
     service = HardwareService(args.root)
+    jobs = JobManager(args.root)
+    lock: ProjectWriterLock | None = None
     try:
-        if args.command == "create-project":
+        lock_project = args.name if args.command == "create-project" else getattr(args, "project", None)
+        if args.command in _PROJECT_WRITE_COMMANDS and isinstance(lock_project, str):
+            lock = ProjectWriterLock(jobs.runtime_root, lock_project, f"cli-{uuid.uuid4().hex}")
+            lock.acquire()
+        if args.command == "submit-job":
+            extra = json.loads(args.arguments)
+            if not isinstance(extra, dict):
+                raise ValueError("--arguments must decode to a JSON object")
+            result = jobs.submit(args.tool, {**extra, "project": args.project})
+        elif args.command == "job-status":
+            result = jobs.status(args.job_id)
+        elif args.command == "cancel-job":
+            result = jobs.cancel(args.job_id)
+        elif args.command == "recover-jobs":
+            result = jobs.recover_orphans()
+        elif args.command == "create-project":
             result = service.create_project(args.name, args.template)
         elif args.command == "read-spec":
             result = {"status": "pass", "spec": service.read_spec(args.project)}
+        elif args.command == "register-project-part":
+            registration = json.loads(args.registration)
+            if not isinstance(registration, dict):
+                raise ValueError("--registration must decode to a JSON object")
+            result = service.register_project_part(args.project, registration)
+        elif args.command == "list-project-parts":
+            result = service.list_project_parts(args.project)
         elif args.command == "update-requirements":
             result = service.update_requirements(args.project, args.requirements_text)
         elif args.command == "validate-spec":
@@ -182,6 +251,8 @@ def main() -> int:
             result = service.check_release_gate(args.project)
         elif args.command == "design-report":
             result = service.generate_design_report(args.project)
+        elif args.command == "failure-report":
+            result = service.get_failure_report(args.project)
         elif args.command == "export-review":
             result = service.export_review(args.project)
         elif args.command == "export-standalone-review":
@@ -251,9 +322,12 @@ def main() -> int:
             raise AssertionError(args.command)
         _emit(result)
         return 0
-    except (HardwarePlatformError, FileExistsError, ValueError) as exc:
+    except (HardwarePlatformError, FileExistsError, TimeoutError, ValueError) as exc:
         _emit({"status": "fail", "error": type(exc).__name__, "message": str(exc)})
         return 2
+    finally:
+        if lock is not None:
+            lock.release()
 
 
 if __name__ == "__main__":

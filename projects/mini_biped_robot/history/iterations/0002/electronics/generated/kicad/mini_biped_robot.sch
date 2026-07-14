@@ -1,0 +1,297 @@
+EESchema Schematic File Version 4
+LIBS:power
+EELAYER 29 0
+EELAYER END
+$Descr A4 11693 8268
+Sheet 1 1
+Title "Robot Controller"
+$EndDescr
+$Comp
+L Connector_Generic:Conn_01x02 J1
+U 1 1 3E8
+P 1500 1200
+F 0 "J1" H 1580 1400 50  0000 C CNN
+F 1 "USB-C POWER" H 1580 1000 50  0000 C CNN
+F 2 "Connector_USB:USB_C_GCT_USB4105" H 1500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R3
+U 1 1 3E9
+P 3500 1200
+F 0 "R3" H 3580 1400 50  0000 C CNN
+F 1 "5K1 USB-C Rd" H 3580 1000 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R4
+U 1 1 3EA
+P 5500 1200
+F 0 "R4" H 5580 1400 50  0000 C CNN
+F 1 "5K1 USB-C Rd" H 5580 1000 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 D1
+U 1 1 3EB
+P 7500 1200
+F 0 "D1" H 7580 1400 50  0000 C CNN
+F 1 "USB ESD" H 7580 1000 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 7500 1200 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U1
+U 1 1 3EC
+P 1500 2100
+F 0 "U1" H 1580 2300 50  0000 C CNN
+F 1 "3V3 LDO" H 1580 1900 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 1500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U2
+U 1 1 3ED
+P 3500 2100
+F 0 "U2" H 3580 2300 50  0000 C CNN
+F 1 "SAMD21G18A" H 3580 1900 50  0000 C CNN
+F 2 "Package_QFP:TQFP-48_7x7mm_P0.5mm" H 3500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U3
+U 1 1 3EE
+P 5500 2100
+F 0 "U3" H 5580 2300 50  0000 C CNN
+F 1 "LSM6DSOX" H 5580 1900 50  0000 C CNN
+F 2 "Package_LGA:LGA-14_3x2.5mm_P0.5mm" H 5500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U4
+U 1 1 3EF
+P 7500 2100
+F 0 "U4" H 7580 2300 50  0000 C CNN
+F 1 "BME280" H 7580 1900 50  0000 C CNN
+F 2 "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm" H 7500 2100 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 X1
+U 1 1 3F0
+P 1500 3000
+F 0 "X1" H 1580 3200 50  0000 C CNN
+F 1 "32.768kHz XTAL" H 1580 2800 50  0000 C CNN
+F 2 "Crystal:Crystal_SMD_Epson_MC-306_3.2x1.5mm" H 1500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C4
+U 1 1 3F1
+P 3500 3000
+F 0 "C4" H 3580 3200 50  0000 C CNN
+F 1 "12pF RTC XTAL" H 3580 2800 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 3500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C5
+U 1 1 3F2
+P 5500 3000
+F 0 "C5" H 5580 3200 50  0000 C CNN
+F 1 "12pF RTC XTAL" H 5580 2800 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 5500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J2
+U 1 1 3F3
+P 7500 3000
+F 0 "J2" H 7580 3200 50  0000 C CNN
+F 1 "SWD 10-pin" H 7580 2800 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical" H 7500 3000 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R1
+U 1 1 3F4
+P 1500 3900
+F 0 "R1" H 1580 4100 50  0000 C CNN
+F 1 "4K7 SCL PU" H 1580 3700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 1500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R2
+U 1 1 3F5
+P 3500 3900
+F 0 "R2" H 3580 4100 50  0000 C CNN
+F 1 "4K7 SDA PU" H 3580 3700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C1
+U 1 1 3F6
+P 5500 3900
+F 0 "C1" H 5580 4100 50  0000 C CNN
+F 1 "100nF" H 5580 3700 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 5500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C2
+U 1 1 3F7
+P 7500 3900
+F 0 "C2" H 7580 4100 50  0000 C CNN
+F 1 "100nF" H 7580 3700 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 7500 3900 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C3
+U 1 1 3F8
+P 1500 4800
+F 0 "C3" H 1580 5000 50  0000 C CNN
+F 1 "10uF" H 1580 4600 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C6
+U 1 1 3F9
+P 3500 4800
+F 0 "C6" H 3580 5000 50  0000 C CNN
+F 1 "1uF VDDCORE" H 3580 4600 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J20
+U 1 1 3FA
+P 5500 4800
+F 0 "J20" H 5580 5000 50  0000 C CNN
+F 1 "2S LIPO INPUT" H 5580 4600 50  0000 C CNN
+F 2 "XT30PW_M" H 5500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 F20
+U 1 1 3FB
+P 7500 4800
+F 0 "F20" H 7580 5000 50  0000 C CNN
+F 1 "10A SERVO FUSE" H 7580 4600 50  0000 C CNN
+F 2 "Fuseholder_Blade_Mini" H 7500 4800 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U20
+U 1 1 3FC
+P 1500 5700
+F 0 "U20" H 1580 5900 50  0000 C CNN
+F 1 "5V 9A STEP-DOWN MODULE" H 1580 5500 50  0000 C CNN
+F 2 "MODULE_POLOLU_D24V90F5" H 1500 5700 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 C20
+U 1 1 3FD
+P 3500 5700
+F 0 "C20" H 3580 5900 50  0000 C CNN
+F 1 "1000uF 10V LOW ESR" H 3580 5500 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3500 5700 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U21
+U 1 1 3FE
+P 5500 5700
+F 0 "U21" H 5580 5900 50  0000 C CNN
+F 1 "16-CHANNEL I2C PWM" H 5580 5500 50  0000 C CNN
+F 2 "TSSOP-28_4.4x9.7mm_P0.65mm" H 5500 5700 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 U22
+U 1 1 3FF
+P 7500 5700
+F 0 "U22" H 7580 5900 50  0000 C CNN
+F 1 "E-STOP PWM INVERTER" H 7580 5500 50  0000 C CNN
+F 2 "SOT-23-5" H 7500 5700 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 R20
+U 1 1 400
+P 1500 6600
+F 0 "R20" H 1580 6800 50  0000 C CNN
+F 1 "10K E-STOP FAIL-SAFE PULLDOWN" H 1580 6400 50  0000 C CNN
+F 2 "R0603" H 1500 6600 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J27
+U 1 1 401
+P 3500 6600
+F 0 "J27" H 3580 6800 50  0000 C CNN
+F 1 "NC E-STOP LOOP" H 3580 6400 50  0000 C CNN
+F 2 "TerminalBlock_1x03_P5.08mm" H 3500 6600 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J21
+U 1 1 402
+P 5500 6600
+F 0 "J21" H 5580 6800 50  0000 C CNN
+F 1 "SERVO_1_3PIN" H 5580 6400 50  0000 C CNN
+F 2 "PinHeader_1x03_P2.54mm_Vertical" H 5500 6600 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J22
+U 1 1 403
+P 7500 6600
+F 0 "J22" H 7580 6800 50  0000 C CNN
+F 1 "SERVO_2_3PIN" H 7580 6400 50  0000 C CNN
+F 2 "PinHeader_1x03_P2.54mm_Vertical" H 7500 6600 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J23
+U 1 1 404
+P 1500 7500
+F 0 "J23" H 1580 7700 50  0000 C CNN
+F 1 "SERVO_3_3PIN" H 1580 7300 50  0000 C CNN
+F 2 "PinHeader_1x03_P2.54mm_Vertical" H 1500 7500 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J24
+U 1 1 405
+P 3500 7500
+F 0 "J24" H 3580 7700 50  0000 C CNN
+F 1 "SERVO_4_3PIN" H 3580 7300 50  0000 C CNN
+F 2 "PinHeader_1x03_P2.54mm_Vertical" H 3500 7500 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J25
+U 1 1 406
+P 5500 7500
+F 0 "J25" H 5580 7700 50  0000 C CNN
+F 1 "SERVO_5_3PIN" H 5580 7300 50  0000 C CNN
+F 2 "PinHeader_1x03_P2.54mm_Vertical" H 5500 7500 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J26
+U 1 1 407
+P 7500 7500
+F 0 "J26" H 7580 7700 50  0000 C CNN
+F 1 "SERVO_6_3PIN" H 7580 7300 50  0000 C CNN
+F 2 "PinHeader_1x03_P2.54mm_Vertical" H 7500 7500 50  0001 C CNN
+	1    0    0    -1
+$EndComp
+$EndSCHEMATC

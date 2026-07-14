@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import runpy
 from pathlib import Path
@@ -40,7 +41,12 @@ def test_sensor_data_logger_template_generates_esp32_graph(service):
     assert by_ref["J2"]["pin_contracts"]["3"]["name"] == "RXD"
     assert by_ref["J2"]["pin_contracts"]["3"]["electrical_type"] == "input"
     assert by_ref["F1"]["pcb_position_mm"] == [26.0, 10.0]
-    assert by_ref["U1"]["pcb_position_mm"] == [44.0, 43.0]
+    # Package-aware containment moves the 18 x 25.5 mm module inward from the
+    # legacy pin-count anchor while keeping its antenna edge-aligned.
+    assert by_ref["U1"]["pcb_position_mm"] == [44.0, 36.749]
+    assert by_ref["U1"]["pcb_rotation_deg"] == 180.0
+    assert by_ref["U1"]["placement_source"] == "sensor_data_logger_anchor"
+    assert "clamped to preserve board copper-edge clearance" in by_ref["U1"]["placement_rationale"]
     assert {"power_input", "tvs", "regulator", "mcu", "imu", "debug"}.issubset(categories)
     assert "motor_io" not in categories
     assert "can" not in categories
@@ -95,6 +101,8 @@ def test_sensor_data_logger_kicad_artifacts_use_sensor_identity_and_two_layer_st
     kicad_dir = project_path / "electronics" / "generated" / "kicad"
     legacy_schematic = (kicad_dir / f"{project}.sch").read_text(encoding="utf-8")
     board = (kicad_dir / f"{project}.kicad_pcb").read_text(encoding="utf-8")
+    routing = json.loads((kicad_dir / "routing.json").read_text(encoding="utf-8"))
+    pro = json.loads((kicad_dir / f"{project}.kicad_pro").read_text(encoding="utf-8"))
 
     assert 'Title "ESP32-S3 Sensor Data Logger"' in legacy_schematic
     assert '${KICAD10_3DMODEL_DIR}/Connector_USB.3dshapes/USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step' in board
@@ -107,6 +115,14 @@ def test_sensor_data_logger_kicad_artifacts_use_sensor_identity_and_two_layer_st
     assert '(zone ' in board
     assert '(net_name "GND") (layer "B.Cu")' in board
     assert '(net_name "V3V3")' not in board
+    assert '(footprint "RF_Module:ESP32-S3-WROOM-1"' in board
+    assert '(at 44.0 36.749 180.0)' in board
+    assert board.count('(pad "41"') == 13
+    assert board.count('(pad ""') >= 9
+    assert '(keepout (tracks not_allowed) (vias not_allowed) (pads not_allowed)' in board
+    assert '(layers "F.Cu" "B.Cu")' in board
+    assert pro["board"]["design_settings"]["rules"]["min_copper_edge_clearance"] == 0.5
+    assert len(routing["board_sha256"]) == 64
 
 
 def test_sensor_data_logger_checks_do_not_require_robotics_blocks(service):
@@ -131,6 +147,19 @@ def test_sensor_data_logger_checks_do_not_require_robotics_blocks(service):
     assert reports["layout_thermal_integrity"]["status"] == "pass"
     assert reports["layout_signal_integrity"]["status"] == "pass"
     assert reports["reference_firmware_build"]["status"] == "pass"
+    pnp_path = (
+        service.workspace.require_project(project)
+        / "exports"
+        / "candidates"
+        / "reference-fabrication"
+        / "fabrication"
+        / "pick_and_place.csv"
+    )
+    pnp_rows = {
+        row["Ref"]: row
+        for row in csv.DictReader(pnp_path.read_text(encoding="utf-8").splitlines())
+    }
+    assert float(pnp_rows["U1"]["Rotation"]) == 180.0
     assert "missing_required_block" not in {
         failure["code"]
         for failure in reports["ir_erc"]["failures"]
@@ -168,10 +197,10 @@ def test_sensor_data_logger_mechanical_contract_uses_sensor_placement(service):
     j1_cutout = next(item for item in contract["connector_cutouts"] if item["ref"] == "J1")
     board = contract["board"]
 
-    assert by_ref["J1"]["pcb_position_mm"] == [18.0, 4.0]
+    assert by_ref["J1"]["pcb_position_mm"] == [18.0, 4.176]
     assert j1_cutout["pcb_position_mm"] == by_ref["J1"]["pcb_position_mm"]
     assert j1_cutout["electrical_category"] == "power_input"
-    assert j1_cutout["enclosure_position_mm"] == [21.0, 7.0]
+    assert j1_cutout["enclosure_position_mm"] == [21.0, 7.176]
     assert all(0.0 <= item["x_mm"] <= board["width_mm"] and 0.0 <= item["y_mm"] <= board["height_mm"] for item in board["component_height_map"])
 
 

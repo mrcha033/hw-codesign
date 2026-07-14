@@ -1,9 +1,11 @@
 {
+  "board_sha256": "94f030721df7bad6c9f8b2722b7a44b65370d606ad534ebea423ee3d2f3ed7ce",
   "failures": [],
-  "freerouting_version": "2.2.4",
-  "max_passes": 20,
-  "mode": "plane_preseeded_freerouting",
-  "signal_routing": "complete",
-  "status": "pass",
-  "unrouted": 0
+  "mode": "zone_connected_planes",
+  "plane_connectivity": "copper_zones",
+  "signal_routing": "deferred_to_freerouting",
+  "status": "generated",
+  "zone_nets": [
+    "GND"
+  ]
 }

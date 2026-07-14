@@ -1,0 +1,7 @@
+test_plan:
+  gate_checks:
+  - usb_cdc_enumeration
+  - lsm6dsox_i2c_whoami
+  - bme280_i2c_whoami
+  - swd_debug_attach
+  - sensor_data_streaming_1khz

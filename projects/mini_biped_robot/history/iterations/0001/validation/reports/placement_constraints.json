@@ -1,0 +1,252 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "placement-proposal",
+    "release_authoritative": false
+  },
+  "failures": [
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "R3",
+          "D1"
+        ]
+      },
+      "message": "R3 and D1 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "R4",
+          "D1"
+        ]
+      },
+      "message": "R4 and D1 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U2",
+          "C4"
+        ]
+      },
+      "message": "U2 and C4 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U2",
+          "C1"
+        ]
+      },
+      "message": "U2 and C1 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U3",
+          "J22"
+        ]
+      },
+      "message": "U3 and J22 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "U4",
+          "U21"
+        ]
+      },
+      "message": "U4 and U21 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "C1",
+          "U20"
+        ]
+      },
+      "message": "C1 and U20 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "C2",
+          "U21"
+        ]
+      },
+      "message": "C2 and U21 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "J20",
+          "J21"
+        ]
+      },
+      "message": "J20 and J21 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "J20",
+          "J25"
+        ]
+      },
+      "message": "J20 and J25 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "F20",
+          "J25"
+        ]
+      },
+      "message": "F20 and J25 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "R20",
+          "J23"
+        ]
+      },
+      "message": "R20 and J23 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "R20",
+          "J25"
+        ]
+      },
+      "message": "R20 and J25 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "J21",
+          "J25"
+        ]
+      },
+      "message": "J21 and J25 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "J23",
+          "J24"
+        ]
+      },
+      "message": "J23 and J24 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "estimated_courtyard_overlap",
+      "details": {
+        "refs": [
+          "J23",
+          "J26"
+        ]
+      },
+      "message": "J23 and J26 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "warning"
+    }
+  ],
+  "gate": "placement_constraints",
+  "metrics": {
+    "authoritative": false,
+    "constraints": 37,
+    "cost": 0.563827,
+    "cost_breakdown": {
+      "movement": 0.563827
+    },
+    "errors": 0,
+    "finding_counts": {
+      "estimated_courtyard_overlap": 16
+    },
+    "method": "constraint_driven_placement_proposal",
+    "placements": 32,
+    "solver_iterations": 5,
+    "warnings": 16
+  },
+  "status": "pass"
+}

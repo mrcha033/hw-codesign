@@ -1,0 +1,56 @@
+[
+  {
+    "graph_pin": "U2.1",
+    "mcu_pin": "PA00_XIN32",
+    "net_name": "XIN32",
+    "signal": "XIN32"
+  },
+  {
+    "graph_pin": "U2.2",
+    "mcu_pin": "PA01_XOUT32",
+    "net_name": "XOUT32",
+    "signal": "XOUT32"
+  },
+  {
+    "graph_pin": "U2.27",
+    "mcu_pin": "PA18_SERCOM3_2",
+    "net_name": "IMU_INT1",
+    "signal": "IMU_INT1"
+  },
+  {
+    "graph_pin": "U2.31",
+    "mcu_pin": "PA22_SDA",
+    "net_name": "I2C_SDA",
+    "signal": "I2C_SDA"
+  },
+  {
+    "graph_pin": "U2.32",
+    "mcu_pin": "PA23_SCL",
+    "net_name": "I2C_SCL",
+    "signal": "I2C_SCL"
+  },
+  {
+    "graph_pin": "U2.33",
+    "mcu_pin": "PA24_USBDM",
+    "net_name": "USB_DM",
+    "signal": "USB_DM"
+  },
+  {
+    "graph_pin": "U2.34",
+    "mcu_pin": "PA25_USBDP",
+    "net_name": "USB_DP",
+    "signal": "USB_DP"
+  },
+  {
+    "graph_pin": "U2.40",
+    "mcu_pin": "~RESETN",
+    "net_name": "MCU_NRST",
+    "signal": "MCU_NRST"
+  },
+  {
+    "graph_pin": "U2.42",
+    "mcu_pin": "VDDCORE",
+    "net_name": "VDDCORE",
+    "signal": "VDDCORE"
+  }
+]

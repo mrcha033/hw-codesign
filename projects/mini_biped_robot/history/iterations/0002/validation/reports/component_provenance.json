@@ -1,0 +1,1361 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J20 is not curated",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J20 review is not approved",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J20 symbol/footprint metadata is not verified",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J20.1 is absent from curated symbol contract",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J20.1 is absent from curated footprint contract",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J20.2 is absent from curated symbol contract",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J20.2 is absent from curated footprint contract",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J20 sourcing is unresolved",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "F20 is not curated",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "F20 review is not approved",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "F20 symbol/footprint metadata is not verified",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "F20.1 is absent from curated symbol contract",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "F20.1 is absent from curated footprint contract",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "F20.2 is absent from curated symbol contract",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "F20.2 is absent from curated footprint contract",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "F20 sourcing is unresolved",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "U20 is not curated",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "U20 review is not approved",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "U20 symbol/footprint metadata is not verified",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U20.1 is absent from curated symbol contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U20.1 is absent from curated footprint contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U20.2 is absent from curated symbol contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U20.2 is absent from curated footprint contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U20.3 is absent from curated symbol contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U20.3 is absent from curated footprint contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U20.4 is absent from curated symbol contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U20.4 is absent from curated footprint contract",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "U20 sourcing is unresolved",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "U21 is not curated",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "U21 review is not approved",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "U21 symbol/footprint metadata is not verified",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.1 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.1 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.2 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.2 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.3 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.3 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.4 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.4 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.5 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.5 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.6 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.6 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.7 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.7 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.8 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.8 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.9 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.9 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.10 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.10 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U21.11 is absent from curated symbol contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U21.11 is absent from curated footprint contract",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "U21 sourcing is unresolved",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "U22 is not curated",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "U22 review is not approved",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "U22 symbol/footprint metadata is not verified",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U22.1 is absent from curated symbol contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U22.1 is absent from curated footprint contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U22.2 is absent from curated symbol contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U22.2 is absent from curated footprint contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U22.3 is absent from curated symbol contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U22.3 is absent from curated footprint contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "U22.4 is absent from curated symbol contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "U22.4 is absent from curated footprint contract",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "component_pin_contract_missing",
+      "details": {
+        "component_category": "safety_gate",
+        "expected_pin_names": [
+          "IN"
+        ],
+        "expected_roles": [
+          "input"
+        ],
+        "ref": "U22"
+      },
+      "message": "U22 is missing a required safety_gate pin contract",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "component_pin_contract_missing",
+      "details": {
+        "component_category": "safety_gate",
+        "expected_pin_names": [
+          "OUT"
+        ],
+        "expected_roles": [
+          "output"
+        ],
+        "ref": "U22"
+      },
+      "message": "U22 is missing a required safety_gate pin contract",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "U22 sourcing is unresolved",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "R20 is not curated",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "R20 review is not approved",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "R20 symbol/footprint metadata is not verified",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "R20.1 is absent from curated symbol contract",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "R20.1 is absent from curated footprint contract",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "R20.2 is absent from curated symbol contract",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "R20.2 is absent from curated footprint contract",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "R20 sourcing is unresolved",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J27 is not curated",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J27 review is not approved",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J27 symbol/footprint metadata is not verified",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J27.1 is absent from curated symbol contract",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J27.1 is absent from curated footprint contract",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J27.2 is absent from curated symbol contract",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J27.2 is absent from curated footprint contract",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J27.3 is absent from curated symbol contract",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J27.3 is absent from curated footprint contract",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "component_pin_contract_missing",
+      "details": {
+        "component_category": "estop",
+        "expected_pin_names": [
+          "ESTOP"
+        ],
+        "expected_roles": [
+          "input"
+        ],
+        "ref": "J27"
+      },
+      "message": "J27 is missing a required estop pin contract",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J27 sourcing is unresolved",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J21 is not curated",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J21 review is not approved",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J21 symbol/footprint metadata is not verified",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J21.1 is absent from curated symbol contract",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J21.1 is absent from curated footprint contract",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J21.2 is absent from curated symbol contract",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J21.2 is absent from curated footprint contract",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J21.3 is absent from curated symbol contract",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J21.3 is absent from curated footprint contract",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J21 sourcing is unresolved",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J22 is not curated",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J22 review is not approved",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J22 symbol/footprint metadata is not verified",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J22.1 is absent from curated symbol contract",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J22.1 is absent from curated footprint contract",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J22.2 is absent from curated symbol contract",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J22.2 is absent from curated footprint contract",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J22.3 is absent from curated symbol contract",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J22.3 is absent from curated footprint contract",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J22 sourcing is unresolved",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J23 is not curated",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J23 review is not approved",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J23 symbol/footprint metadata is not verified",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J23.1 is absent from curated symbol contract",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J23.1 is absent from curated footprint contract",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J23.2 is absent from curated symbol contract",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J23.2 is absent from curated footprint contract",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J23.3 is absent from curated symbol contract",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J23.3 is absent from curated footprint contract",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J23 sourcing is unresolved",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J24 is not curated",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J24 review is not approved",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J24 symbol/footprint metadata is not verified",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J24.1 is absent from curated symbol contract",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J24.1 is absent from curated footprint contract",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J24.2 is absent from curated symbol contract",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J24.2 is absent from curated footprint contract",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J24.3 is absent from curated symbol contract",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J24.3 is absent from curated footprint contract",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J24 sourcing is unresolved",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J25 is not curated",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J25 review is not approved",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J25 symbol/footprint metadata is not verified",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J25.1 is absent from curated symbol contract",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J25.1 is absent from curated footprint contract",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J25.2 is absent from curated symbol contract",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J25.2 is absent from curated footprint contract",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J25.3 is absent from curated symbol contract",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J25.3 is absent from curated footprint contract",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J25 sourcing is unresolved",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_curated",
+      "details": {},
+      "message": "J26 is not curated",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "component_not_approved",
+      "details": {},
+      "message": "J26 review is not approved",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "unverified_library_metadata",
+      "details": {},
+      "message": "J26 symbol/footprint metadata is not verified",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J26.1 is absent from curated symbol contract",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J26.1 is absent from curated footprint contract",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J26.2 is absent from curated symbol contract",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J26.2 is absent from curated footprint contract",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "symbol_pin_missing",
+      "details": {},
+      "message": "J26.3 is absent from curated symbol contract",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "footprint_pad_missing",
+      "details": {},
+      "message": "J26.3 is absent from curated footprint contract",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "sourcing_unresolved",
+      "details": {},
+      "message": "J26 sourcing is unresolved",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "component_provenance",
+  "metrics": {
+    "components_checked": 32
+  },
+  "status": "fail"
+}

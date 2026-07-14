@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(robot_controller_bsp C)
+enable_testing()
+add_library(board_bsp src/board.c)
+target_include_directories(board_bsp PUBLIC include ../generated)
+add_executable(bringup_tests tests/bringup_tests.c)
+target_link_libraries(bringup_tests PRIVATE board_bsp)
+add_test(NAME bringup_tests COMMAND bringup_tests)

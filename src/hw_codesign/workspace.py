@@ -25,6 +25,7 @@ SUPPORTED_TEMPLATES = frozenset({
     "rp2040_usb_device",
     "samd21_sensor_hub",
     "nrf52840_dongle",
+    "mini_servo_robot",
 })
 
 
@@ -59,7 +60,13 @@ class Workspace:
             value = {section: spec.get(section, {})}
             if section == "system":
                 value.update({key: spec[key] for key in ("compute", "actuation", "sensing", "assumptions", "electronics")})
+                if "placement" in spec:
+                    value["placement"] = spec["placement"]
             write_yaml(path / "spec" / f"{section}.yaml", value)
+        local_parts_template = files("hw_codesign.templates").joinpath(f"{template}.parts.local.yaml")
+        local_parts_path = Path(str(local_parts_template))
+        if local_parts_path.is_file():
+            shutil.copy2(local_parts_path, path / "parts.local.yaml")
         write_json(path / "history" / "failure_log.jsonl", [])
         (path / "history" / "decisions.md").write_text("# Engineering Decisions\n\n", encoding="utf-8")
         return {"project_path": str(path), "status": "created", "template": template}

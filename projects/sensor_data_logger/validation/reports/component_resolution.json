@@ -4,12 +4,14 @@
   ],
   "backend": {
     "mutates_database": false,
-    "name": "ComponentResolver"
+    "name": "ComponentResolver",
+    "project_local_catalog": false
   },
   "failures": [],
   "gate": "component_resolution",
   "metrics": {
     "critical_roles": 7,
+    "project_owned": 0,
     "requested": 16,
     "resolved": 16,
     "supplier_provider": "curated"

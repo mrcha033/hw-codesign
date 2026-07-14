@@ -17,12 +17,2738 @@
     ],
     "returncode": 0,
     "stderr": "",
-    "stdout": "Found 0 violations\nFound 0 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/reports/kicad_drc.json\n"
+    "stdout": "Found 51 violations\nFound 40 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/sensor_data_logger/validation/reports/kicad_drc.json\n"
   },
-  "failures": [],
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of R3 on F.Cu",
+            "pos": {
+              "x": 49.5,
+              "y": 25.0
+            },
+            "uuid": "f664ab36-8a19-4c5b-8a2b-0877446c47c5"
+          },
+          {
+            "description": "Pad 16 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 49.715,
+              "y": 24.249
+            },
+            "uuid": "59995440-cc94-4a0c-9a96-252f30b1308e"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0900 mm)",
+        "items": [
+          {
+            "description": "PTH pad 1 [V3V3] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 38.365
+            },
+            "uuid": "35742996-a530-4686-b066-f2627a90c1b9"
+          },
+          {
+            "description": "Pad 4 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 38.199
+            },
+            "uuid": "cc522688-851f-4df3-9e35-e9dc93d71cc4"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0900 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0900 mm)",
+        "items": [
+          {
+            "description": "Pad 3 [ESP_EN] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 39.469
+            },
+            "uuid": "570ce22a-c4d9-4dc6-ba8f-edf6b4c14765"
+          },
+          {
+            "description": "PTH pad 6 [<no net>] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 39.635
+            },
+            "uuid": "485126de-adb6-4d27-8757-8a6adf17c2b9"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0900 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Pad 3 [ESP_EN] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 39.469
+            },
+            "uuid": "570ce22a-c4d9-4dc6-ba8f-edf6b4c14765"
+          },
+          {
+            "description": "PTH pad 7 [<no net>] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 39.635
+            },
+            "uuid": "fbf895a5-1f87-423f-80ab-8affda79a40e"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Items shorting two nets (nets USB_FUSED and USB_DP_RAW)",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          },
+          {
+            "description": "Pad 1 [USB_DP_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 9.375
+            },
+            "uuid": "1012e212-3e02-48c0-a64a-fd428b248866"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      "message": "Items shorting two nets (nets USB_FUSED and USB_DP_RAW)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Items shorting two nets (nets ESP_EN and I2C_IMU_SDA)",
+        "items": [
+          {
+            "description": "Pad 2 [ESP_EN] of R3 on F.Cu",
+            "pos": {
+              "x": 50.5,
+              "y": 25.0
+            },
+            "uuid": "7a48aa1d-2f3d-4c0a-b8c9-51cd1a78a0c6"
+          },
+          {
+            "description": "Pad 15 [I2C_IMU_SDA] of U1 on F.Cu",
+            "pos": {
+              "x": 50.985,
+              "y": 24.249
+            },
+            "uuid": "03162046-e2da-4c74-976f-9480ee6904a7"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      "message": "Items shorting two nets (nets ESP_EN and I2C_IMU_SDA)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 2 [UART_TX] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 38.365
+            },
+            "uuid": "e35631bb-1206-48b0-8941-855f5b3f63b5"
+          },
+          {
+            "description": "Pad 4 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 38.199
+            },
+            "uuid": "cc522688-851f-4df3-9e35-e9dc93d71cc4"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Items shorting two nets (nets USB_FUSED and USB_DP)",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          },
+          {
+            "description": "Pad 2 [USB_DP] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.0
+            },
+            "uuid": "2e75d739-0261-4eb4-95bf-6538090f6f0b"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      "message": "Items shorting two nets (nets USB_FUSED and USB_DP)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0500 mm)",
+        "items": [
+          {
+            "description": "Pad 3 [ESP_EN] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 39.469
+            },
+            "uuid": "570ce22a-c4d9-4dc6-ba8f-edf6b4c14765"
+          },
+          {
+            "description": "PTH pad 8 [<no net>] of J2",
+            "pos": {
+              "x": 54.0,
+              "y": 39.635
+            },
+            "uuid": "bcf51de8-4c10-4f0c-b98f-b07a59e20190"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0500 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Items shorting two nets (nets USB_FUSED and USB_DM_RAW)",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          },
+          {
+            "description": "Pad 3 [USB_DM_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.625
+            },
+            "uuid": "0b4b8195-3147-4c14-a3bc-cc44dc6c7bca"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      "message": "Items shorting two nets (nets USB_FUSED and USB_DM_RAW)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0850 mm)",
+        "items": [
+          {
+            "description": "Pad 2 [ESP_EN] of R3 on F.Cu",
+            "pos": {
+              "x": 50.5,
+              "y": 25.0
+            },
+            "uuid": "7a48aa1d-2f3d-4c0a-b8c9-51cd1a78a0c6"
+          },
+          {
+            "description": "Pad 16 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 49.715,
+              "y": 24.249
+            },
+            "uuid": "59995440-cc94-4a0c-9a96-252f30b1308e"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0850 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0500 mm)",
+        "items": [
+          {
+            "description": "PTH pad 3 [UART_RX] of J2",
+            "pos": {
+              "x": 54.0,
+              "y": 38.365
+            },
+            "uuid": "a751e994-6480-43eb-9da7-92f1575473cd"
+          },
+          {
+            "description": "Pad 4 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 38.199
+            },
+            "uuid": "cc522688-851f-4df3-9e35-e9dc93d71cc4"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0500 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [USB_FUSED] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 3.375
+            },
+            "uuid": "ee66c76b-ee11-4a49-92e7-b6197e64569f"
+          },
+          {
+            "description": "Pad 2 [USB_PROT] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 4.0
+            },
+            "uuid": "c42f3b63-a4ef-4537-8804-5d7cca6721cb"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1010 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of C1 on F.Cu",
+            "pos": {
+              "x": 34.5,
+              "y": 39.0
+            },
+            "uuid": "e7c406b1-76a6-4cf6-aae5-e32ff834a9d3"
+          },
+          {
+            "description": "Pad 37 [UART_TX] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 38.199
+            },
+            "uuid": "fe9f7bdb-c306-4692-98de-198a4f63fc7f"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1010 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of C1 on F.Cu",
+            "pos": {
+              "x": 34.5,
+              "y": 39.0
+            },
+            "uuid": "e7c406b1-76a6-4cf6-aae5-e32ff834a9d3"
+          },
+          {
+            "description": "Pad 38 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 39.469
+            },
+            "uuid": "b60554f5-2479-4280-a5e9-39a3ab6c0f15"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 2 [USB_PROT] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 4.0
+            },
+            "uuid": "c42f3b63-a4ef-4537-8804-5d7cca6721cb"
+          },
+          {
+            "description": "Pad 3 [GND] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 4.625
+            },
+            "uuid": "d16a85a5-9819-45db-8de3-8a69547ce449"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1010 mm)",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of C1 on F.Cu",
+            "pos": {
+              "x": 35.5,
+              "y": 39.0
+            },
+            "uuid": "a7a2d88e-1ccc-4d0b-9862-b37b77f6ea55"
+          },
+          {
+            "description": "Pad 37 [UART_TX] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 38.199
+            },
+            "uuid": "fe9f7bdb-c306-4692-98de-198a4f63fc7f"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1010 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of C1 on F.Cu",
+            "pos": {
+              "x": 35.5,
+              "y": 39.0
+            },
+            "uuid": "a7a2d88e-1ccc-4d0b-9862-b37b77f6ea55"
+          },
+          {
+            "description": "Pad 38 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 39.469
+            },
+            "uuid": "b60554f5-2479-4280-a5e9-39a3ab6c0f15"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 4 [<no net>] of Q1 on F.Cu",
+            "pos": {
+              "x": 35.3,
+              "y": 4.625
+            },
+            "uuid": "75d363f9-90b0-4905-89e3-070e95f419be"
+          },
+          {
+            "description": "Pad 5 [<no net>] of Q1 on F.Cu",
+            "pos": {
+              "x": 35.3,
+              "y": 4.0
+            },
+            "uuid": "683c12ed-6fca-4033-b183-6354b489ac75"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 5 [<no net>] of Q1 on F.Cu",
+            "pos": {
+              "x": 35.3,
+              "y": 4.0
+            },
+            "uuid": "683c12ed-6fca-4033-b183-6354b489ac75"
+          },
+          {
+            "description": "Pad 6 [<no net>] of Q1 on F.Cu",
+            "pos": {
+              "x": 35.3,
+              "y": 3.375
+            },
+            "uuid": "817677e8-f61e-4be3-bb17-7b4f21f527f8"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [USB_DP_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 9.375
+            },
+            "uuid": "1012e212-3e02-48c0-a64a-fd428b248866"
+          },
+          {
+            "description": "Pad 2 [USB_DP] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.0
+            },
+            "uuid": "2e75d739-0261-4eb4-95bf-6538090f6f0b"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 2 [USB_DP] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.0
+            },
+            "uuid": "2e75d739-0261-4eb4-95bf-6538090f6f0b"
+          },
+          {
+            "description": "Pad 3 [USB_DM_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.625
+            },
+            "uuid": "0b4b8195-3147-4c14-a3bc-cc44dc6c7bca"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 4 [USB_DM] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.625
+            },
+            "uuid": "987f30a0-ed05-4383-b7fd-2f2bb3d637ac"
+          },
+          {
+            "description": "Pad 5 [GND] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.0
+            },
+            "uuid": "cb7e29f0-ed08-4589-8e0e-03e53841a849"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+        "items": [
+          {
+            "description": "Pad 5 [GND] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.0
+            },
+            "uuid": "cb7e29f0-ed08-4589-8e0e-03e53841a849"
+          },
+          {
+            "description": "Pad 6 [<no net>] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 9.375
+            },
+            "uuid": "7692958e-5045-42c6-bbdf-c7ea2d6da7ac"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1870 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1590 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of U2 on F.Cu",
+            "pos": {
+              "x": 16.85,
+              "y": 28.265
+            },
+            "uuid": "f9f8448a-944a-40c6-8711-95338c42cd44"
+          },
+          {
+            "description": "Pad 2 [GND] of U2 on F.Cu",
+            "pos": {
+              "x": 16.85,
+              "y": 27.735
+            },
+            "uuid": "5189902e-3957-4d72-9e3c-d29390ad6132"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      "message": "Clearance violation ( clearance 0.2000 mm; actual 0.1590 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "NPTH inside courtyard",
+        "items": [
+          {
+            "description": "NPTH pad of H4",
+            "pos": {
+              "x": 66.0,
+              "y": 46.0
+            },
+            "uuid": "775071e7-58d8-4839-aaf5-7d6d0e1efffd"
+          },
+          {
+            "description": "Footprint U1",
+            "pos": {
+              "x": 44.0,
+              "y": 36.749
+            },
+            "uuid": "eedf9b46-1a86-4b79-813b-fa954b783062"
+          }
+        ],
+        "severity": "error",
+        "type": "npth_inside_courtyard"
+      },
+      "message": "NPTH inside courtyard",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "PTH inside courtyard",
+        "items": [
+          {
+            "description": "PTH pad 1 [V3V3] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 38.365
+            },
+            "uuid": "35742996-a530-4686-b066-f2627a90c1b9"
+          },
+          {
+            "description": "Footprint U1",
+            "pos": {
+              "x": 44.0,
+              "y": 36.749
+            },
+            "uuid": "eedf9b46-1a86-4b79-813b-fa954b783062"
+          }
+        ],
+        "severity": "error",
+        "type": "pth_inside_courtyard"
+      },
+      "message": "PTH inside courtyard",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "PTH inside courtyard",
+        "items": [
+          {
+            "description": "PTH pad 2 [UART_TX] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 38.365
+            },
+            "uuid": "e35631bb-1206-48b0-8941-855f5b3f63b5"
+          },
+          {
+            "description": "Footprint U1",
+            "pos": {
+              "x": 44.0,
+              "y": 36.749
+            },
+            "uuid": "eedf9b46-1a86-4b79-813b-fa954b783062"
+          }
+        ],
+        "severity": "error",
+        "type": "pth_inside_courtyard"
+      },
+      "message": "PTH inside courtyard",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "PTH inside courtyard",
+        "items": [
+          {
+            "description": "PTH pad 6 [<no net>] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 39.635
+            },
+            "uuid": "485126de-adb6-4d27-8757-8a6adf17c2b9"
+          },
+          {
+            "description": "Footprint U1",
+            "pos": {
+              "x": 44.0,
+              "y": 36.749
+            },
+            "uuid": "eedf9b46-1a86-4b79-813b-fa954b783062"
+          }
+        ],
+        "severity": "error",
+        "type": "pth_inside_courtyard"
+      },
+      "message": "PTH inside courtyard",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "PTH inside courtyard",
+        "items": [
+          {
+            "description": "PTH pad 7 [<no net>] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 39.635
+            },
+            "uuid": "fbf895a5-1f87-423f-80ab-8affda79a40e"
+          },
+          {
+            "description": "Footprint U1",
+            "pos": {
+              "x": 44.0,
+              "y": 36.749
+            },
+            "uuid": "eedf9b46-1a86-4b79-813b-fa954b783062"
+          }
+        ],
+        "severity": "error",
+        "type": "pth_inside_courtyard"
+      },
+      "message": "PTH inside courtyard",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 46.9,
+              "y": 34.989
+            },
+            "uuid": "c8a4c01b-964e-440d-9c57-14c8f269c2bc"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 46.9,
+              "y": 33.589
+            },
+            "uuid": "74a5fe6b-2e91-42e4-8cfd-b39e452cf35f"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 46.2,
+              "y": 35.689
+            },
+            "uuid": "d5877a48-af1c-4b29-be30-a07fbef581dc"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 46.2,
+              "y": 34.289
+            },
+            "uuid": "373f8e75-a6fc-4451-9715-d8e0fa29b209"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 46.2,
+              "y": 32.889
+            },
+            "uuid": "143e325e-1b7d-46cf-b0cc-da4c0c3d078f"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 45.5,
+              "y": 34.989
+            },
+            "uuid": "4586cde2-bb24-47a4-8e50-5ef733b104b6"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 45.5,
+              "y": 33.589
+            },
+            "uuid": "4b480a8e-d62a-47cc-8572-c33963c7812d"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 44.8,
+              "y": 35.689
+            },
+            "uuid": "a99016da-e38d-49f8-bb41-65416b8bbddb"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 44.8,
+              "y": 34.289
+            },
+            "uuid": "85e80a01-2722-441f-a4b2-e5e6a6b477db"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 44.8,
+              "y": 32.889
+            },
+            "uuid": "38bc19a1-b912-4451-b302-4c9df6feaf3a"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 44.1,
+              "y": 34.989
+            },
+            "uuid": "b25ee643-e1b9-404c-9957-acf2bd134562"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 44.1,
+              "y": 33.589
+            },
+            "uuid": "019b4ed2-ebe4-4747-809a-c15c6130699a"
+          }
+        ],
+        "severity": "error",
+        "type": "drill_out_of_range"
+      },
+      "message": "Hole size out of range (board setup constraints min hole 0.3000 mm; actual 0.2000 mm)",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 2 [UART_TX] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 38.365
+            },
+            "uuid": "e35631bb-1206-48b0-8941-855f5b3f63b5"
+          },
+          {
+            "description": "Pad 4 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 38.199
+            },
+            "uuid": "cc522688-851f-4df3-9e35-e9dc93d71cc4"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          },
+          {
+            "description": "Pad 2 [USB_DP] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.0
+            },
+            "uuid": "2e75d739-0261-4eb4-95bf-6538090f6f0b"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          },
+          {
+            "description": "Pad 3 [USB_DM_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.625
+            },
+            "uuid": "0b4b8195-3147-4c14-a3bc-cc44dc6c7bca"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Pad 38 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 39.469
+            },
+            "uuid": "b60554f5-2479-4280-a5e9-39a3ab6c0f15"
+          },
+          {
+            "description": "Pad 2 [GND] of C1 on F.Cu",
+            "pos": {
+              "x": 35.5,
+              "y": 39.0
+            },
+            "uuid": "a7a2d88e-1ccc-4d0b-9862-b37b77f6ea55"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Pad 38 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 39.469
+            },
+            "uuid": "b60554f5-2479-4280-a5e9-39a3ab6c0f15"
+          },
+          {
+            "description": "Pad 1 [V3V3] of C1 on F.Cu",
+            "pos": {
+              "x": 34.5,
+              "y": 39.0
+            },
+            "uuid": "e7c406b1-76a6-4cf6-aae5-e32ff834a9d3"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Pad 16 [<no net>] of U1 on F.Cu",
+            "pos": {
+              "x": 49.715,
+              "y": 24.249
+            },
+            "uuid": "59995440-cc94-4a0c-9a96-252f30b1308e"
+          },
+          {
+            "description": "Pad 1 [V3V3] of R3 on F.Cu",
+            "pos": {
+              "x": 49.5,
+              "y": 25.0
+            },
+            "uuid": "f664ab36-8a19-4c5b-8a2b-0877446c47c5"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Pad 3 [ESP_EN] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 39.469
+            },
+            "uuid": "570ce22a-c4d9-4dc6-ba8f-edf6b4c14765"
+          },
+          {
+            "description": "PTH pad 7 [<no net>] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 39.635
+            },
+            "uuid": "fbf895a5-1f87-423f-80ab-8affda79a40e"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Pad 2 [ESP_EN] of R3 on F.Cu",
+            "pos": {
+              "x": 50.5,
+              "y": 25.0
+            },
+            "uuid": "7a48aa1d-2f3d-4c0a-b8c9-51cd1a78a0c6"
+          },
+          {
+            "description": "Pad 15 [I2C_IMU_SDA] of U1 on F.Cu",
+            "pos": {
+              "x": 50.985,
+              "y": 24.249
+            },
+            "uuid": "03162046-e2da-4c74-976f-9480ee6904a7"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Front solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Pad 1 [USB_DP_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 9.375
+            },
+            "uuid": "1012e212-3e02-48c0-a64a-fd428b248866"
+          },
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      "message": "Front solder mask aperture bridges items with different nets",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 27 [BOOT] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 25.499
+            },
+            "uuid": "7d5d2afa-9484-4d78-b8a5-8192e9f2aeae"
+          },
+          {
+            "description": "PTH pad 4 [BOOT] of J2",
+            "pos": {
+              "x": 55.27,
+              "y": 38.365
+            },
+            "uuid": "85589b54-5434-4ab3-8331-22cdf2272bf5"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [ESP_EN] of R3 on F.Cu",
+            "pos": {
+              "x": 50.5,
+              "y": 25.0
+            },
+            "uuid": "7a48aa1d-2f3d-4c0a-b8c9-51cd1a78a0c6"
+          },
+          {
+            "description": "Pad 3 [ESP_EN] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 39.469
+            },
+            "uuid": "570ce22a-c4d9-4dc6-ba8f-edf6b4c14765"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of R5 on F.Cu",
+            "pos": {
+              "x": 22.5,
+              "y": 7.0
+            },
+            "uuid": "89f94850-2ece-4b99-bfe1-095841326964"
+          },
+          {
+            "description": "Pad 2 [GND] of R6 on F.Cu",
+            "pos": {
+              "x": 26.5,
+              "y": 7.0
+            },
+            "uuid": "bfa5b51f-c387-4599-b8d8-3fef29002c99"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of R5 on F.Cu",
+            "pos": {
+              "x": 22.5,
+              "y": 7.0
+            },
+            "uuid": "89f94850-2ece-4b99-bfe1-095841326964"
+          },
+          {
+            "description": "Pad 2 [GND] of J1 on F.Cu",
+            "pos": {
+              "x": 13.85,
+              "y": 3.541
+            },
+            "uuid": "cf960887-142b-46db-8544-f6cd65bd7bd3"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of R5 on F.Cu",
+            "pos": {
+              "x": 22.5,
+              "y": 7.0
+            },
+            "uuid": "89f94850-2ece-4b99-bfe1-095841326964"
+          },
+          {
+            "description": "Pad 2 [GND] of U2 on F.Cu",
+            "pos": {
+              "x": 16.85,
+              "y": 27.735
+            },
+            "uuid": "5189902e-3957-4d72-9e3c-d29390ad6132"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of R6 on F.Cu",
+            "pos": {
+              "x": 26.5,
+              "y": 7.0
+            },
+            "uuid": "bfa5b51f-c387-4599-b8d8-3fef29002c99"
+          },
+          {
+            "description": "Pad 5 [GND] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.0
+            },
+            "uuid": "cb7e29f0-ed08-4589-8e0e-03e53841a849"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 5 [GND] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.0
+            },
+            "uuid": "cb7e29f0-ed08-4589-8e0e-03e53841a849"
+          },
+          {
+            "description": "Pad 3 [GND] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 4.625
+            },
+            "uuid": "d16a85a5-9819-45db-8de3-8a69547ce449"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 40 [GND] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 42.009
+            },
+            "uuid": "4bd13140-8c32-4fe1-a22d-fb2cb3f3d9e4"
+          },
+          {
+            "description": "Pad 2 [GND] of C1 on F.Cu",
+            "pos": {
+              "x": 35.5,
+              "y": 39.0
+            },
+            "uuid": "a7a2d88e-1ccc-4d0b-9862-b37b77f6ea55"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of C2 on F.Cu",
+            "pos": {
+              "x": 44.5,
+              "y": 39.0
+            },
+            "uuid": "5aabc746-c11d-4730-a39d-4bdf167fd9c5"
+          },
+          {
+            "description": "Pad 1 [GND] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 42.009
+            },
+            "uuid": "e4748970-b3be-4664-84e5-e4a1d587620b"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [GND] of C2 on F.Cu",
+            "pos": {
+              "x": 44.5,
+              "y": 39.0
+            },
+            "uuid": "5aabc746-c11d-4730-a39d-4bdf167fd9c5"
+          },
+          {
+            "description": "Pad 2 [GND] of C1 on F.Cu",
+            "pos": {
+              "x": 35.5,
+              "y": 39.0
+            },
+            "uuid": "a7a2d88e-1ccc-4d0b-9862-b37b77f6ea55"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 44.8,
+              "y": 35.689
+            },
+            "uuid": "a99016da-e38d-49f8-bb41-65416b8bbddb"
+          },
+          {
+            "description": "Pad 2 [GND] of C2 on F.Cu",
+            "pos": {
+              "x": 44.5,
+              "y": 39.0
+            },
+            "uuid": "5aabc746-c11d-4730-a39d-4bdf167fd9c5"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 3 [GND] of U3 on F.Cu",
+            "pos": {
+              "x": 45.65,
+              "y": 12.0
+            },
+            "uuid": "23bcfeaf-474a-4af5-a3ac-dee61e5425f4"
+          },
+          {
+            "description": "Pad 2 [GND] of C9 on F.Cu",
+            "pos": {
+              "x": 56.5,
+              "y": 14.0
+            },
+            "uuid": "f1ff2240-3b00-4617-93d5-369408bb3dfa"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 3 [GND] of U3 on F.Cu",
+            "pos": {
+              "x": 45.65,
+              "y": 12.0
+            },
+            "uuid": "23bcfeaf-474a-4af5-a3ac-dee61e5425f4"
+          },
+          {
+            "description": "Pad 5 [GND] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.0
+            },
+            "uuid": "cb7e29f0-ed08-4589-8e0e-03e53841a849"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 3 [GND] of U3 on F.Cu",
+            "pos": {
+              "x": 45.65,
+              "y": 12.0
+            },
+            "uuid": "23bcfeaf-474a-4af5-a3ac-dee61e5425f4"
+          },
+          {
+            "description": "PTH pad 41 [GND] of U1",
+            "pos": {
+              "x": 46.2,
+              "y": 32.889
+            },
+            "uuid": "143e325e-1b7d-46cf-b0cc-da4c0c3d078f"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [GND] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 42.009
+            },
+            "uuid": "e4748970-b3be-4664-84e5-e4a1d587620b"
+          },
+          {
+            "description": "PTH pad 5 [GND] of J2",
+            "pos": {
+              "x": 56.54,
+              "y": 38.365
+            },
+            "uuid": "ed4ca180-37dd-46d8-8ebc-157d44bca46a"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 3 [I2C_IMU_SCL] of U2 on F.Cu",
+            "pos": {
+              "x": 17.485,
+              "y": 27.1
+            },
+            "uuid": "5a98a401-0fdd-44a3-8c2a-a04cc24ddb9f"
+          },
+          {
+            "description": "Pad 2 [I2C_IMU_SCL] of R1 on F.Cu",
+            "pos": {
+              "x": 18.5,
+              "y": 38.0
+            },
+            "uuid": "f8c2a5f8-0b4d-4fb0-b958-ec14dc22805d"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 12 [I2C_IMU_SCL] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 28.039
+            },
+            "uuid": "df39dfb5-0a5e-4f67-8087-b890ce99688e"
+          },
+          {
+            "description": "Pad 3 [I2C_IMU_SCL] of U2 on F.Cu",
+            "pos": {
+              "x": 17.485,
+              "y": 27.1
+            },
+            "uuid": "5a98a401-0fdd-44a3-8c2a-a04cc24ddb9f"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 4 [I2C_IMU_SDA] of U2 on F.Cu",
+            "pos": {
+              "x": 18.515,
+              "y": 27.1
+            },
+            "uuid": "d84a5e82-7911-4342-8bf0-ff5b8441fc55"
+          },
+          {
+            "description": "Pad 2 [I2C_IMU_SDA] of R2 on F.Cu",
+            "pos": {
+              "x": 27.5,
+              "y": 38.0
+            },
+            "uuid": "09ba7fcf-5e9f-4fdd-97fd-4ea99a52202b"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [I2C_IMU_SDA] of R2 on F.Cu",
+            "pos": {
+              "x": 27.5,
+              "y": 38.0
+            },
+            "uuid": "09ba7fcf-5e9f-4fdd-97fd-4ea99a52202b"
+          },
+          {
+            "description": "Pad 15 [I2C_IMU_SDA] of U1 on F.Cu",
+            "pos": {
+              "x": 50.985,
+              "y": 24.249
+            },
+            "uuid": "03162046-e2da-4c74-976f-9480ee6904a7"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 5 [IMU_INT] of U2 on F.Cu",
+            "pos": {
+              "x": 19.15,
+              "y": 28.0
+            },
+            "uuid": "6bd3ea7d-eddf-4766-9feb-b62fbdf2cc07"
+          },
+          {
+            "description": "Pad 39 [IMU_INT] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 40.739
+            },
+            "uuid": "3ee6294a-9815-4ed2-877f-54c7da91146e"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 36 [UART_RX] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 36.929
+            },
+            "uuid": "d91a1a8a-9118-4c1a-8060-1dab93c7eead"
+          },
+          {
+            "description": "PTH pad 3 [UART_RX] of J2",
+            "pos": {
+              "x": 54.0,
+              "y": 38.365
+            },
+            "uuid": "a751e994-6480-43eb-9da7-92f1575473cd"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 37 [UART_TX] of U1 on F.Cu",
+            "pos": {
+              "x": 35.25,
+              "y": 38.199
+            },
+            "uuid": "fe9f7bdb-c306-4692-98de-198a4f63fc7f"
+          },
+          {
+            "description": "PTH pad 2 [UART_TX] of J2",
+            "pos": {
+              "x": 52.73,
+              "y": 38.365
+            },
+            "uuid": "e35631bb-1206-48b0-8941-855f5b3f63b5"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [USB_CC1] of R5 on F.Cu",
+            "pos": {
+              "x": 21.5,
+              "y": 7.0
+            },
+            "uuid": "b3cabad2-0b48-4854-90e1-23c2b1470901"
+          },
+          {
+            "description": "Pad 5 [USB_CC1] of J1 on F.Cu",
+            "pos": {
+              "x": 22.15,
+              "y": 3.541
+            },
+            "uuid": "61b62820-a7bb-42fb-9ac4-c580261c7a67"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 6 [USB_CC2] of J1 on F.Cu",
+            "pos": {
+              "x": 22.15,
+              "y": 4.811
+            },
+            "uuid": "1b5e9f7c-8d38-4515-b24e-7b244554ff2e"
+          },
+          {
+            "description": "Pad 1 [USB_CC2] of R6 on F.Cu",
+            "pos": {
+              "x": 25.5,
+              "y": 7.0
+            },
+            "uuid": "80cc14c2-f0f0-494b-9cb5-0d61e840794f"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 4 [USB_DM] of D1 on F.Cu",
+            "pos": {
+              "x": 31.3,
+              "y": 10.625
+            },
+            "uuid": "987f30a0-ed05-4383-b7fd-2f2bb3d637ac"
+          },
+          {
+            "description": "Pad 13 [USB_DM] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 26.769
+            },
+            "uuid": "c76ae290-6eef-44c6-ae02-35aea49fd205"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 4 [USB_DM_RAW] of J1 on F.Cu",
+            "pos": {
+              "x": 18.635,
+              "y": 0.851
+            },
+            "uuid": "76c10429-5bd5-4853-9d9f-604058b7dbb5"
+          },
+          {
+            "description": "Pad 3 [USB_DM_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.625
+            },
+            "uuid": "0b4b8195-3147-4c14-a3bc-cc44dc6c7bca"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [USB_DP] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 10.0
+            },
+            "uuid": "2e75d739-0261-4eb4-95bf-6538090f6f0b"
+          },
+          {
+            "description": "Pad 14 [USB_DP] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 25.499
+            },
+            "uuid": "6e671e90-407c-4581-b1b4-8ab38716901b"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 3 [USB_DP_RAW] of J1 on F.Cu",
+            "pos": {
+              "x": 17.365,
+              "y": 0.851
+            },
+            "uuid": "28db5a21-7896-40e9-a157-4c269413f3d9"
+          },
+          {
+            "description": "Pad 1 [USB_DP_RAW] of D1 on F.Cu",
+            "pos": {
+              "x": 28.7,
+              "y": 9.375
+            },
+            "uuid": "1012e212-3e02-48c0-a64a-fd428b248866"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "PTH pad 2 [USB_FUSED] of F1",
+            "pos": {
+              "x": 28.54,
+              "y": 10.0
+            },
+            "uuid": "f755624d-e7ba-4535-9f01-d48c4709210d"
+          },
+          {
+            "description": "Pad 1 [USB_FUSED] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 3.375
+            },
+            "uuid": "ee66c76b-ee11-4a49-92e7-b6197e64569f"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [USB_PROT] of Q1 on F.Cu",
+            "pos": {
+              "x": 32.7,
+              "y": 4.0
+            },
+            "uuid": "c42f3b63-a4ef-4537-8804-5d7cca6721cb"
+          },
+          {
+            "description": "Pad 1 [USB_PROT] of U3 on F.Cu",
+            "pos": {
+              "x": 42.35,
+              "y": 12.0
+            },
+            "uuid": "7ed4028a-faee-489f-9cbf-6ce40ada2aeb"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [USB_VBUS] of J1 on F.Cu",
+            "pos": {
+              "x": 13.85,
+              "y": 4.811
+            },
+            "uuid": "46e9d478-fb74-46af-9f8f-ea126d7c5b71"
+          },
+          {
+            "description": "PTH pad 1 [USB_VBUS] of F1",
+            "pos": {
+              "x": 23.46,
+              "y": 10.0
+            },
+            "uuid": "9096297a-f7be-4649-8c2e-4f65fdbc5e6e"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of U2 on F.Cu",
+            "pos": {
+              "x": 16.85,
+              "y": 28.265
+            },
+            "uuid": "f9f8448a-944a-40c6-8711-95338c42cd44"
+          },
+          {
+            "description": "Pad 1 [V3V3] of R1 on F.Cu",
+            "pos": {
+              "x": 17.5,
+              "y": 38.0
+            },
+            "uuid": "22111a45-b1e5-4f71-a6d0-6cef512e47bd"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of R2 on F.Cu",
+            "pos": {
+              "x": 26.5,
+              "y": 38.0
+            },
+            "uuid": "406f5a2c-ee4c-4c74-8f65-4acd0645db01"
+          },
+          {
+            "description": "Pad 1 [V3V3] of R1 on F.Cu",
+            "pos": {
+              "x": 17.5,
+              "y": 38.0
+            },
+            "uuid": "22111a45-b1e5-4f71-a6d0-6cef512e47bd"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of C1 on F.Cu",
+            "pos": {
+              "x": 34.5,
+              "y": 39.0
+            },
+            "uuid": "e7c406b1-76a6-4cf6-aae5-e32ff834a9d3"
+          },
+          {
+            "description": "Pad 1 [V3V3] of R2 on F.Cu",
+            "pos": {
+              "x": 26.5,
+              "y": 38.0
+            },
+            "uuid": "406f5a2c-ee4c-4c74-8f65-4acd0645db01"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of C2 on F.Cu",
+            "pos": {
+              "x": 43.5,
+              "y": 39.0
+            },
+            "uuid": "130284d8-7a7f-490e-8c87-130032ff507d"
+          },
+          {
+            "description": "PTH pad 1 [V3V3] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 38.365
+            },
+            "uuid": "35742996-a530-4686-b066-f2627a90c1b9"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of C2 on F.Cu",
+            "pos": {
+              "x": 43.5,
+              "y": 39.0
+            },
+            "uuid": "130284d8-7a7f-490e-8c87-130032ff507d"
+          },
+          {
+            "description": "Pad 1 [V3V3] of C1 on F.Cu",
+            "pos": {
+              "x": 34.5,
+              "y": 39.0
+            },
+            "uuid": "e7c406b1-76a6-4cf6-aae5-e32ff834a9d3"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of R3 on F.Cu",
+            "pos": {
+              "x": 49.5,
+              "y": 25.0
+            },
+            "uuid": "f664ab36-8a19-4c5b-8a2b-0877446c47c5"
+          },
+          {
+            "description": "Pad 1 [V3V3] of C9 on F.Cu",
+            "pos": {
+              "x": 55.5,
+              "y": 14.0
+            },
+            "uuid": "6e3ee7d5-327e-47cd-b83b-7f0e39eede2c"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of R3 on F.Cu",
+            "pos": {
+              "x": 49.5,
+              "y": 25.0
+            },
+            "uuid": "f664ab36-8a19-4c5b-8a2b-0877446c47c5"
+          },
+          {
+            "description": "PTH pad 1 [V3V3] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 38.365
+            },
+            "uuid": "35742996-a530-4686-b066-f2627a90c1b9"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 2 [V3V3] of U1 on F.Cu",
+            "pos": {
+              "x": 52.75,
+              "y": 40.739
+            },
+            "uuid": "9b91f59e-1d4f-4492-9240-1239d6588b41"
+          },
+          {
+            "description": "PTH pad 1 [V3V3] of J2",
+            "pos": {
+              "x": 51.46,
+              "y": 38.365
+            },
+            "uuid": "35742996-a530-4686-b066-f2627a90c1b9"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 1 [V3V3] of C9 on F.Cu",
+            "pos": {
+              "x": 55.5,
+              "y": 14.0
+            },
+            "uuid": "6e3ee7d5-327e-47cd-b83b-7f0e39eede2c"
+          },
+          {
+            "description": "Pad 2 [V3V3] of U3 on F.Cu",
+            "pos": {
+              "x": 44.0,
+              "y": 10.35
+            },
+            "uuid": "8f01bc7b-936b-4a20-b43b-6b7a759aa9e0"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
   "gate": "native_drc",
   "metrics": {
-    "violations": 0
+    "violations": 91
   },
-  "status": "pass"
+  "status": "fail"
 }

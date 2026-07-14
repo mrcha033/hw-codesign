@@ -1,0 +1,136 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml"
+  ],
+  "backend": {
+    "mutates_database": false,
+    "name": "ComponentResolver"
+  },
+  "failures": [
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role battery_input",
+      "path": "J20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role fuse",
+      "path": "F20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role external_buck_module",
+      "path": "U20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role pwm_driver",
+      "path": "U21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role safety_gate",
+      "path": "U22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role pulldown",
+      "path": "R20",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role estop",
+      "path": "J27",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role servo_output",
+      "path": "J21",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role servo_output",
+      "path": "J22",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role servo_output",
+      "path": "J23",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role servo_output",
+      "path": "J24",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role servo_output",
+      "path": "J25",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "BOM_ERROR",
+      "code": "role_unresolved",
+      "details": {},
+      "message": "No component selection for role servo_output",
+      "path": "J26",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "component_resolution",
+  "metrics": {
+    "critical_roles": 6,
+    "requested": 32,
+    "resolved": 19,
+    "supplier_provider": "curated"
+  },
+  "status": "fail"
+}

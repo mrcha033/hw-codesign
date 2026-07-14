@@ -1,0 +1,10 @@
+{
+  "failures": [],
+  "mode": "zone_connected_planes",
+  "plane_connectivity": "copper_zones",
+  "signal_routing": "deferred_to_freerouting",
+  "status": "generated",
+  "zone_nets": [
+    "GND"
+  ]
+}

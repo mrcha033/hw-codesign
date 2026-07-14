@@ -1,0 +1,32 @@
+/* Generated header: biped_motion_state — behavior: state_machine */
+#pragma once
+
+enum biped_motion_state_state {
+    BIPED_MOTION_STATE_STATE_DISARMED,
+    BIPED_MOTION_STATE_STATE_CALIBRATE,
+    BIPED_MOTION_STATE_STATE_STAND,
+    BIPED_MOTION_STATE_STATE_WALK_FORWARD,
+    BIPED_MOTION_STATE_STATE_TURN_LEFT,
+    BIPED_MOTION_STATE_STATE_TURN_RIGHT,
+    BIPED_MOTION_STATE_STATE_STOP,
+    BIPED_MOTION_STATE_STATE_FALLEN,
+    BIPED_MOTION_STATE_STATE_FAULT,
+    BIPED_MOTION_STATE_STATE_COUNT = 9,
+};
+
+enum biped_motion_state_event {
+    BIPED_MOTION_STATE_EVT_CALIBRATE,
+    BIPED_MOTION_STATE_EVT_CALIBRATION_OK,
+    BIPED_MOTION_STATE_EVT_WALK,
+    BIPED_MOTION_STATE_EVT_TURN_LEFT,
+    BIPED_MOTION_STATE_EVT_TURN_RIGHT,
+    BIPED_MOTION_STATE_EVT_STOP,
+    BIPED_MOTION_STATE_EVT_SETTLED,
+    BIPED_MOTION_STATE_EVT_FALL_DETECTED,
+    BIPED_MOTION_STATE_EVT_RESET,
+    BIPED_MOTION_STATE_EVT_FAULT,
+};
+
+void biped_motion_state_init(void);
+int  biped_motion_state_send_event(enum biped_motion_state_event event);
+enum biped_motion_state_state biped_motion_state_get_state(void);

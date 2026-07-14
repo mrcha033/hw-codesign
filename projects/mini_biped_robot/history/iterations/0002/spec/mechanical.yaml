@@ -1,0 +1,70 @@
+mechanical:
+  enclosure: none
+  selected_variant: bare_pcb
+  variants:
+  - name: bare_pcb
+    lid_style: none
+    ventilation: none
+    gasket: false
+  mounting: host_product
+  connectors_exposed: true
+  vibration_environment: moderate
+  cooling: passive
+  envelope:
+    board_width_mm: 50.0
+    board_height_mm: 30.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 2.5
+    max_component_height_bottom_mm: 1.0
+  enclosure_internal_mm:
+  - 54.0
+  - 34.0
+  - 8.0
+  wall_thickness_mm: 2.0
+  insertion_clearance_mm: 1.0
+  assembly_clearance_mm: 0.6
+  tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 6.0
+  default_component_height_mm: 2.0
+  component_heights_mm:
+    J1: 3.4
+    J2: 5.0
+    U3: 1.0
+    U4: 1.0
+  board_origin_mm:
+  - 0.0
+  - 0.0
+  - 0.0
+  mounting_holes:
+  - x_mm: 2.5
+    y_mm: 2.5
+    diameter_mm: 2.2
+  - x_mm: 47.5
+    y_mm: 2.5
+    diameter_mm: 2.2
+  - x_mm: 2.5
+    y_mm: 27.5
+    diameter_mm: 2.2
+  - x_mm: 37.5
+    y_mm: 27.5
+    diameter_mm: 2.2
+  fixtures:
+    mounting_plate:
+      enabled: false
+    frame_brackets:
+      enabled: false
+  connector_interfaces:
+  - ref: J1
+    side: front
+    opening_mm:
+    - 9.0
+    - 4.0
+    center_z_mm: 2.5
+    position_tolerance_mm: 0.5
+  - ref: J2
+    side: right
+    opening_mm:
+    - 13.0
+    - 5.0
+    center_z_mm: 2.5
+    position_tolerance_mm: 0.5

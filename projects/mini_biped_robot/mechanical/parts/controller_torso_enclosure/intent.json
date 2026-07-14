@@ -1,0 +1,56 @@
+{
+  "intent": {
+    "gland_holes": [
+      {
+        "center_x_mm": 28,
+        "center_z_mm": 10,
+        "diameter_mm": 12,
+        "label": "E-stop cable",
+        "side": "left"
+      }
+    ],
+    "internal_mm": [
+      58,
+      40,
+      22
+    ],
+    "lid": true,
+    "max_overhang_angle_deg": 45,
+    "panel_cutouts": [
+      {
+        "center_x_mm": 14,
+        "center_z_mm": 8,
+        "height_mm": 5,
+        "label": "USB-C",
+        "side": "front",
+        "width_mm": 10
+      },
+      {
+        "center_x_mm": 16,
+        "center_z_mm": 9,
+        "height_mm": 8,
+        "label": "XT30 servo power",
+        "side": "rear",
+        "width_mm": 10
+      },
+      {
+        "center_x_mm": 28,
+        "center_z_mm": 10,
+        "height_mm": 10,
+        "label": "servo harness",
+        "side": "right",
+        "width_mm": 22
+      }
+    ],
+    "vent_slots": {
+      "count": 4,
+      "side": "top",
+      "slot_height_mm": 16,
+      "slot_width_mm": 2.5,
+      "spacing_mm": 5
+    },
+    "wall_thickness_mm": 2.0
+  },
+  "part_name": "controller_torso_enclosure",
+  "part_type": "custom_enclosure_variant"
+}

@@ -1,0 +1,164 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "structural_dependency_graph"
+  },
+  "failures": [
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "semantic_schematic_roundtrip",
+        "prerequisite": "component_resolution",
+        "prerequisite_status": "fail"
+      },
+      "message": "semantic_schematic_roundtrip passed before prerequisite component_resolution passed",
+      "path": "gates.semantic_schematic_roundtrip",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "datasheet_evidence",
+        "prerequisite": "component_resolution",
+        "prerequisite_status": "fail"
+      },
+      "message": "datasheet_evidence passed before prerequisite component_resolution passed",
+      "path": "gates.datasheet_evidence",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "bom",
+        "prerequisite": "component_resolution",
+        "prerequisite_status": "fail"
+      },
+      "message": "bom passed before prerequisite component_resolution passed",
+      "path": "gates.bom",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "pin_symbol_footprint",
+        "prerequisite": "component_resolution",
+        "prerequisite_status": "fail"
+      },
+      "message": "pin_symbol_footprint passed before prerequisite component_resolution passed",
+      "path": "gates.pin_symbol_footprint",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "pin_symbol_footprint",
+        "prerequisite": "component_provenance",
+        "prerequisite_status": "fail"
+      },
+      "message": "pin_symbol_footprint passed before prerequisite component_provenance passed",
+      "path": "gates.pin_symbol_footprint",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "interface_integrity",
+        "prerequisite": "power_tree_integrity",
+        "prerequisite_status": "fail"
+      },
+      "message": "interface_integrity passed before prerequisite power_tree_integrity passed",
+      "path": "gates.interface_integrity",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "support_circuit_completeness",
+        "prerequisite": "component_resolution",
+        "prerequisite_status": "fail"
+      },
+      "message": "support_circuit_completeness passed before prerequisite component_resolution passed",
+      "path": "gates.support_circuit_completeness",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "support_circuit_completeness",
+        "prerequisite": "power_tree_integrity",
+        "prerequisite_status": "fail"
+      },
+      "message": "support_circuit_completeness passed before prerequisite power_tree_integrity passed",
+      "path": "gates.support_circuit_completeness",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "reference_firmware_build",
+        "prerequisite": "firmware_interface_contract",
+        "prerequisite_status": "fail"
+      },
+      "message": "reference_firmware_build passed before prerequisite firmware_interface_contract passed",
+      "path": "gates.reference_firmware_build",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "RELEASE_ERROR",
+      "code": "dependency_prerequisite_not_passed",
+      "details": {
+        "gate": "layout_thermal_integrity",
+        "prerequisite": "power_tree_integrity",
+        "prerequisite_status": "fail"
+      },
+      "message": "layout_thermal_integrity passed before prerequisite power_tree_integrity passed",
+      "path": "gates.layout_thermal_integrity",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "design_dependency_graph",
+  "metrics": {
+    "blocked_or_unpassed_nodes": [
+      "autoroute",
+      "component_provenance",
+      "component_resolution",
+      "firmware_interface_contract",
+      "kicad_library_crosscheck",
+      "mechanical_connector_cutouts",
+      "native_drc",
+      "native_erc",
+      "native_mechanical_validation",
+      "native_zephyr_build",
+      "physical_qualification",
+      "power_integrity_estimate",
+      "power_tree_integrity",
+      "sourcing",
+      "sourcing_resilience",
+      "supplier_availability"
+    ],
+    "declared_edges": 88,
+    "evaluated_edges": 45,
+    "nodes": 46
+  },
+  "status": "fail"
+}

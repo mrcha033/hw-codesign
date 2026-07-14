@@ -1,0 +1,77 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "candidate-critic"
+  },
+  "failures": [
+    {
+      "category": "RELEASE_ERROR",
+      "code": "physical_oracle_gap_open",
+      "details": {
+        "gap_categories": [
+          "assembly_quality",
+          "bringup",
+          "emi_emc",
+          "environmental_safety",
+          "firmware_co_design",
+          "mechanical_reliability",
+          "si_pi",
+          "thermal"
+        ],
+        "physical_qualification_status": "blocked",
+        "required_tests": 8
+      },
+      "message": "Candidate still requires external physical qualification evidence; this is not a software gate failure",
+      "path": "validation.physical",
+      "requires_user_decision": false,
+      "severity": "warning"
+    },
+    {
+      "category": "TOOL_ERROR",
+      "code": "native_toolchain_gates_not_run",
+      "details": {
+        "gates": [
+          "autoroute",
+          "kicad_library_crosscheck",
+          "native_drc",
+          "native_erc",
+          "native_mechanical_validation",
+          "native_zephyr_build"
+        ],
+        "include_external": false
+      },
+      "message": "Native toolchain gates were not run; candidate cannot be release-reviewed as fabrication-authoritative",
+      "path": "validation.reports",
+      "requires_user_decision": false,
+      "severity": "warning"
+    }
+  ],
+  "gate": "candidate_critic",
+  "metrics": {
+    "backend": "tscircuit",
+    "critic_version": "candidate_critic_v0",
+    "errors": 0,
+    "include_external": false,
+    "native_toolchain_gates_not_run": [
+      "autoroute",
+      "kicad_library_crosscheck",
+      "native_drc",
+      "native_erc",
+      "native_mechanical_validation",
+      "native_zephyr_build"
+    ],
+    "physical_gap_categories": [
+      "assembly_quality",
+      "bringup",
+      "emi_emc",
+      "environmental_safety",
+      "firmware_co_design",
+      "mechanical_reliability",
+      "si_pi",
+      "thermal"
+    ],
+    "warnings": 2
+  },
+  "status": "pass"
+}

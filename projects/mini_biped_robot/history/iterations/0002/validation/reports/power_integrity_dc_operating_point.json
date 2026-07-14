@@ -1,0 +1,67 @@
+{
+  "artifacts": [],
+  "backend": {
+    "name": "ngspice-dc-op",
+    "tier": "advisory"
+  },
+  "failures": [],
+  "gate": "power_integrity_dc_operating_point",
+  "metrics": {
+    "intermediate_node_voltages": {
+      "ESTOP_OK": 0.0,
+      "I2C_SCL": 3.3,
+      "I2C_SDA": 3.3,
+      "IMU_INT1": 0.0,
+      "MCU_NRST": 0.0,
+      "SERVO1_PWM": 0.0,
+      "SERVO2_PWM": 0.0,
+      "SERVO3_PWM": 0.0,
+      "SERVO4_PWM": 0.0,
+      "SERVO5_PWM": 0.0,
+      "SERVO6_PWM": 0.0,
+      "SERVO_PWM_OE": 0.0,
+      "SWCLK": 0.0,
+      "SWDIO": 0.0,
+      "USB_CC1": 0.0,
+      "USB_CC2": 0.0,
+      "USB_DM": 0.0,
+      "USB_DM_RAW": 0.0,
+      "USB_DP": 0.0,
+      "USB_DP_RAW": 0.0,
+      "VDDCORE": 0.0,
+      "XIN32": 0.0,
+      "XOUT32": 0.0
+    },
+    "ngspice_available": true,
+    "rails": {
+      "USB_VBUS": {
+        "nominal_v": 5.0,
+        "solved_v": 5.0,
+        "within_tolerance": true
+      },
+      "V3V3": {
+        "nominal_v": 3.3,
+        "solved_v": 3.3,
+        "within_tolerance": true
+      },
+      "V5": {
+        "nominal_v": 5.0,
+        "solved_v": 5.0,
+        "within_tolerance": true
+      },
+      "VBAT_FUSED": {
+        "nominal_v": 5.0,
+        "solved_v": 5.0,
+        "within_tolerance": true
+      },
+      "VBAT_RAW": {
+        "nominal_v": 5.0,
+        "solved_v": 5.0,
+        "within_tolerance": true
+      }
+    },
+    "resistor_count": 7,
+    "tier": "advisory"
+  },
+  "status": "pass"
+}

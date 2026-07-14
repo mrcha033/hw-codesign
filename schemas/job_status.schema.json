@@ -19,7 +19,8 @@
         "queued",
         "running",
         "complete",
-        "failed"
+        "failed",
+        "cancelled"
       ]
     },
     "gate_events": {
@@ -33,6 +34,45 @@
         "object",
         "null"
       ]
+    },
+    "tool": {
+      "type": "string"
+    },
+    "arguments": {
+      "type": "object"
+    },
+    "project": {
+      "type": "string"
+    },
+    "submitted_at": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": ["string", "null"]
+    },
+    "finished_at": {
+      "type": ["string", "null"]
+    },
+    "pid": {
+      "type": ["integer", "null"]
+    },
+    "pgid": {
+      "type": ["integer", "null"]
+    },
+    "error": {
+      "type": ["object", "null"]
+    },
+    "committed": {
+      "type": "boolean"
+    },
+    "workspace": {
+      "type": "string"
+    },
+    "stdout_log": {
+      "type": "string"
+    },
+    "stderr_log": {
+      "type": "string"
     }
   }
 }

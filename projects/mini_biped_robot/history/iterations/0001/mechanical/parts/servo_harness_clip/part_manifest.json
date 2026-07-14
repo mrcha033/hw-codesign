@@ -1,0 +1,32 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/servo_harness_clip/servo_harness_clip.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/servo_harness_clip/servo_harness_clip.stl"
+  ],
+  "candidate_only": true,
+  "gate_status": "fail",
+  "intent": {
+    "cable_diameter_mm": 8,
+    "ear_length_mm": 7,
+    "ear_width_mm": 7,
+    "fastener": "M2",
+    "max_overhang_angle_deg": 45,
+    "mount_type": "screw",
+    "opening_mm": 6.8,
+    "wall_mm": 2
+  },
+  "part_name": "servo_harness_clip",
+  "part_type": "cable_clip",
+  "printability": {
+    "max_overhang_deg": 90.0,
+    "min_hole_mm": 2.4,
+    "min_wall_mm": 2.0,
+    "printable": false,
+    "recommended_orientation": "ear flat on bed, arc upright",
+    "stl_manifold": true,
+    "violations": [
+      "45 downward-facing triangles exceed 45.0\u00b0 overhang limit"
+    ]
+  },
+  "release_eligible": false
+}

@@ -65,6 +65,18 @@
         }
       }
     },
+    "root_cause_analysis": {
+      "type": "object",
+      "description": "Root-cause DAG projection that folds downstream failures and orders repairs.",
+      "additionalProperties": true,
+      "properties": {
+        "root_causes": {"type": "array", "items": {"type": "object"}},
+        "top_root_causes": {"type": "array", "maxItems": 3, "items": {"type": "object"}},
+        "affected_gates": {"type": "array", "items": {"type": "string"}},
+        "repair_order": {"type": "array", "items": {"type": "string"}},
+        "folded_gate_count": {"type": "integer"}
+      }
+    },
     "summary": {
       "type": "object",
       "description": "Aggregated pass/fail/blocked/total counts across all gate_reports.",
@@ -168,6 +180,21 @@
         "unresolved_critical_names": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "unresolved_critical_items": {
+          "type": "array",
+          "description": "Decision context retained from the spec for unresolved critical assumptions.",
+          "items": {
+            "type": "object",
+            "required": ["name", "proposed_value", "confidence", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "name":           { "type": "string" },
+              "proposed_value": {},
+              "confidence":     { "type": "string" },
+              "reason":         { "type": "string" }
+            }
+          }
         }
       }
     },

@@ -1,0 +1,5391 @@
+{
+  "blocked_gates": [
+    "supplier_availability",
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export",
+    "autoroute",
+    "native_erc",
+    "native_drc",
+    "kicad_library_crosscheck",
+    "native_mechanical_validation",
+    "native_zephyr_build",
+    "physical_qualification"
+  ],
+  "candidate": {
+    "bundle": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/exports/candidates/0002/mini_biped_robot-0002-candidate.zip",
+    "candidate_only": true,
+    "iteration_id": "0002",
+    "path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/exports/candidates/0002",
+    "release_eligible": false,
+    "status": "candidate"
+  },
+  "failed_gates": [
+    "mechanical_connector_cutouts",
+    "component_resolution",
+    "supplier_availability",
+    "sourcing",
+    "sourcing_resilience",
+    "component_provenance",
+    "power_tree_integrity",
+    "power_integrity_estimate",
+    "firmware_interface_contract",
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export",
+    "autoroute",
+    "native_erc",
+    "native_drc",
+    "kicad_library_crosscheck",
+    "native_mechanical_validation",
+    "native_zephyr_build",
+    "physical_qualification",
+    "design_dependency_graph"
+  ],
+  "generated": {
+    "backend": "tscircuit",
+    "component_resolution": [
+      {
+        "component_id": "usb4105_gf_a",
+        "data": {
+          "constraints": [
+            "usb2",
+            "usb_c_sink_cc"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usb4105_gf_a",
+              "content_sha256": null,
+              "id": "datasheet_usb4105_gf_a",
+              "kind": "datasheet",
+              "locator": "USB4105-GF-A",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Connector_USB:USB_C_GCT_USB4105",
+            "verified": true
+          },
+          "id": "usb4105_gf_a",
+          "lifecycle": "active",
+          "manufacturer": "GCT",
+          "mpn": "USB4105-GF-A",
+          "package": "USB-C-16",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VBUS",
+              "number": "1",
+              "voltage_domain": "USB_5V"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D+",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "D-",
+              "number": "4"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "CC1",
+              "number": "5"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "CC2",
+              "number": "6"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USB4105-GF-A"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_usb4105_gf_a"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usb4105_gf_a",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USB4105-GF-A",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usb4105_gf_a",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USB4105-GF-A"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J1",
+        "resolution": "curated",
+        "role": "power_input"
+      },
+      {
+        "component_id": "rc0603_5k1",
+        "data": {
+          "constraints": [
+            "usb_c_rd",
+            "pulldown"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_5k1",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_5k1",
+              "kind": "datasheet",
+              "locator": "RC0603FR-075K1L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_5k1",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-075K1L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-075K1L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_5k1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R3",
+        "resolution": "curated",
+        "role": "resistor_5k1"
+      },
+      {
+        "component_id": "rc0603_5k1",
+        "data": {
+          "constraints": [
+            "usb_c_rd",
+            "pulldown"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_5k1",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_5k1",
+              "kind": "datasheet",
+              "locator": "RC0603FR-075K1L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_5k1",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-075K1L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-075K1L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_5k1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_5k1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-075K1L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_5k1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-075K1L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R4",
+        "resolution": "curated",
+        "role": "resistor_5k1"
+      },
+      {
+        "component_id": "usblc6_2sc6",
+        "data": {
+          "constraints": [
+            "usb_esd"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "usblc6_2sc6",
+              "content_sha256": null,
+              "id": "datasheet_usblc6_2sc6",
+              "kind": "datasheet",
+              "locator": "USBLC6-2SC6",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+            "verified": true
+          },
+          "id": "usblc6_2sc6",
+          "lifecycle": "active",
+          "manufacturer": "STMicroelectronics",
+          "mpn": "USBLC6-2SC6",
+          "package": "SOT-23-6",
+          "pins": [
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_IN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DP_OUT",
+              "number": "2"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_IN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "DM_OUT",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "USBLC6-2SC6"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Power_Protection:USBLC6-2SC6",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_usblc6_2sc6"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "usblc6_2sc6",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "USBLC6-2SC6",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "usblc6_2sc6",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "USBLC6-2SC6"
+            },
+            "stock": null
+          }
+        },
+        "ref": "D1",
+        "resolution": "curated",
+        "role": "tvs"
+      },
+      {
+        "component_id": "ap2112k_33trg1",
+        "data": {
+          "constraints": [],
+          "datasheet_evidence": [
+            {
+              "component_id": "ap2112k_33trg1",
+              "content_sha256": null,
+              "id": "datasheet_ap2112k_33trg1",
+              "kind": "datasheet",
+              "locator": "AP2112K-3.3TRG1",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-16",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Package_TO_SOT_SMD:SOT-23-5",
+            "verified": true
+          },
+          "id": "ap2112k_33trg1",
+          "lifecycle": "active",
+          "manufacturer": "Diodes Incorporated",
+          "mpn": "AP2112K-3.3TRG1",
+          "package": "SOT-23-5",
+          "pins": [
+            {
+              "electrical_type": "input",
+              "name": "EN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VIN",
+              "number": "3"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "NC",
+              "number": "4"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "VOUT",
+              "number": "5"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-16",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "AP2112K-3.3TRG1"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "AP2112K-3.3TRG1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "ap2112k_33trg1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "AP2112K-3.3TRG1"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "library_id": "Regulator_Linear:AP2112K-3.3",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/ble_sensor_node.yaml",
+          "database_file_sha256": "556810d89f2babd7c28a324d4d9e7ce4a31b93aab716c4416f3c9c508c9ef2a8",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_ap2112k_33trg1"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "ap2112k_33trg1",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "AP2112K-3.3TRG1",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "ap2112k_33trg1",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "AP2112K-3.3TRG1"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U1",
+        "resolution": "curated",
+        "role": "regulator_3v3"
+      },
+      {
+        "component_id": "atsamd21g18a_au",
+        "data": {
+          "constraints": [
+            "cortex_m0plus_48mhz",
+            "256kb_flash",
+            "32kb_sram",
+            "usb_fullspeed_native",
+            "6x_sercom",
+            "12bit_adc",
+            "dfll_from_32khz_for_usb",
+            "1v62_to_3v63v"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "atsamd21g18a_au",
+              "content_sha256": null,
+              "id": "datasheet_atsamd21g18a_au",
+              "kind": "datasheet",
+              "locator": "DS40001882",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "38",
+              "39",
+              "40",
+              "41",
+              "42",
+              "43",
+              "44",
+              "45",
+              "46",
+              "47",
+              "48"
+            ],
+            "library_id": "Package_QFP:TQFP-48_7x7mm_P0.5mm",
+            "verified": true
+          },
+          "id": "atsamd21g18a_au",
+          "lifecycle": "active",
+          "manufacturer": "Microchip Technology",
+          "mpn": "ATSAMD21G18A-AU",
+          "package": "TQFP-48",
+          "pins": [
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA00_XIN32",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA01_XOUT32",
+              "number": "2"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB08_ADC0_2_AIN2",
+              "number": "3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB09_ADC0_3_AIN3",
+              "number": "4"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA04_SERCOM0_0",
+              "number": "5"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA05_SERCOM0_1",
+              "number": "6"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA06_SERCOM0_2",
+              "number": "7"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA07_SERCOM0_3",
+              "number": "8"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDANA",
+              "number": "9",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "10",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB02_SERCOM5_0",
+              "number": "11"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB03_SERCOM5_1",
+              "number": "12"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA08_SERCOM2_0",
+              "number": "13"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA09_SERCOM2_1",
+              "number": "14"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA10_SERCOM2_2",
+              "number": "15"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA11_SERCOM2_3",
+              "number": "16"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDIO",
+              "number": "17",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "18",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB10_SERCOM4_2",
+              "number": "19"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB11_SERCOM4_3",
+              "number": "20"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA12_SERCOM4_0",
+              "number": "21"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA13_SERCOM4_1",
+              "number": "22"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA14",
+              "number": "23"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA15",
+              "number": "24"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA16_SERCOM3_0",
+              "number": "25"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA17_SERCOM3_1",
+              "number": "26"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA18_SERCOM3_2",
+              "number": "27"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA19_SERCOM3_3",
+              "number": "28"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA20_SERCOM5_2",
+              "number": "29"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA21_SERCOM5_3",
+              "number": "30"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA22_SERCOM3_SDA",
+              "number": "31"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA23_SERCOM3_SCL",
+              "number": "32"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA24_USBDM",
+              "number": "33"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA25_USBDP",
+              "number": "34"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDIO",
+              "number": "35",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "36",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB22_SERCOM5_2",
+              "number": "37"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB23_SERCOM5_3",
+              "number": "38"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA27",
+              "number": "39"
+            },
+            {
+              "electrical_type": "input",
+              "name": "~RESETN",
+              "number": "40"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA28",
+              "number": "41"
+            },
+            {
+              "electrical_type": "power_out",
+              "name": "VDDCORE",
+              "number": "42"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDIN",
+              "number": "43",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB02_ADC",
+              "number": "44"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB03_ADC",
+              "number": "45"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA30_SWCLK",
+              "number": "46"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PA31_SWDIO",
+              "number": "47"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "PB30",
+              "number": "48"
+            }
+          ],
+          "resolution_provenance": {
+            "datasheet_locator": "DS60001507",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "ATSAMD21G18A-AU"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "atsamd21g18a_au",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ATSAMD21G18A-AU",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "atsamd21g18a_au",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ATSAMD21G18A-AU"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "38",
+              "39",
+              "40",
+              "41",
+              "42",
+              "43",
+              "44",
+              "45",
+              "46",
+              "47",
+              "48"
+            ],
+            "library_id": "MCU_Microchip_SAMD:ATSAMD21G18A-AU",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/samd21_sensor_hub.yaml",
+          "database_file_sha256": "2f639790554377f18002b2e05e3ee228c744de4f42de73418348e774b92ff307",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_atsamd21g18a_au"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "atsamd21g18a_au",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "ATSAMD21G18A-AU",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "atsamd21g18a_au",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "ATSAMD21G18A-AU"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U2",
+        "resolution": "curated",
+        "role": "mcu"
+      },
+      {
+        "component_id": "lsm6dsoxtr",
+        "data": {
+          "constraints": [
+            "6dof_imu",
+            "accelerometer_gyroscope",
+            "i2c_spi_i3c",
+            "2g_to_16g_accel",
+            "125dps_to_2000dps_gyro",
+            "1v71_to_3v6v",
+            "machine_learning_core",
+            "embedded_functions"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "lsm6dsoxtr",
+              "content_sha256": null,
+              "id": "datasheet_lsm6dsoxtr",
+              "kind": "datasheet",
+              "locator": "DM00651721",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14"
+            ],
+            "library_id": "Package_LGA:LGA-14_3x2.5mm_P0.5mm",
+            "verified": true
+          },
+          "id": "lsm6dsoxtr",
+          "lifecycle": "active",
+          "manufacturer": "STMicroelectronics",
+          "mpn": "LSM6DSOXTR",
+          "package": "LGA-14L",
+          "pins": [
+            {
+              "electrical_type": "bidirectional",
+              "name": "SDO_SA0",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SDX",
+              "number": "2"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SCX",
+              "number": "3"
+            },
+            {
+              "electrical_type": "output",
+              "name": "INT1",
+              "number": "4"
+            },
+            {
+              "electrical_type": "output",
+              "name": "INT2",
+              "number": "5"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD_IO",
+              "number": "6"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "7",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "8",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "9"
+            },
+            {
+              "electrical_type": "input",
+              "name": "OCS_AUX",
+              "number": "10"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SDO_AUX",
+              "number": "11"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SDA_AUX",
+              "number": "12"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SCX_AUX",
+              "number": "13"
+            },
+            {
+              "electrical_type": "input",
+              "name": "CS",
+              "number": "14"
+            }
+          ],
+          "resolution_provenance": {
+            "datasheet_locator": "DM00604461",
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "LSM6DSOXTR"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "lsm6dsoxtr",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "LSM6DSOXTR",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "lsm6dsoxtr",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "LSM6DSOXTR"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14"
+            ],
+            "library_id": "Sensor_Motion:LSM6DSOX",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/motion_sensors.yaml",
+          "database_file_sha256": "5cc470d2746cc85e22d2d5d2e178a9404b2ca484e700dbda73f962dc478b3ec3",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_lsm6dsoxtr"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "lsm6dsoxtr",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "LSM6DSOXTR",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "lsm6dsoxtr",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "LSM6DSOXTR"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U3",
+        "resolution": "curated",
+        "role": "imu"
+      },
+      {
+        "component_id": "bme280",
+        "data": {
+          "constraints": [
+            "i2c_or_spi",
+            "temperature_humidity_pressure",
+            "factory_calibrated"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "bme280",
+              "content_sha256": null,
+              "id": "datasheet_bme280",
+              "kind": "datasheet",
+              "locator": "BME280",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm",
+            "verified": true
+          },
+          "id": "bme280",
+          "lifecycle": "active",
+          "manufacturer": "Bosch Sensortec",
+          "mpn": "BME280",
+          "package": "LGA-8",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VDD",
+              "number": "1",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "power_in",
+              "name": "VDDIO",
+              "number": "2",
+              "voltage_domain": "V3V3"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "open_drain",
+              "name": "SDI_SDA",
+              "number": "4"
+            },
+            {
+              "electrical_type": "open_drain",
+              "name": "SCK_SCL",
+              "number": "5"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SDO_ADDR",
+              "number": "6"
+            },
+            {
+              "electrical_type": "input",
+              "name": "CSB",
+              "number": "7"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND2",
+              "number": "8",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "BME280"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "bme280",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "BME280",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "bme280",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "BME280"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "library_id": "Sensor_Pressure:BME280",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/lora_sensor_node.yaml",
+          "database_file_sha256": "b1dc17c164f3f11a335a9c8615760dbadcc0075628a3aa7dde382d3c7468ff56",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_bme280"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "bme280",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "BME280",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "bme280",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "BME280"
+            },
+            "stock": null
+          }
+        },
+        "ref": "U4",
+        "resolution": "curated",
+        "role": "env_sensor"
+      },
+      {
+        "component_id": "mc_306_32khz",
+        "data": {
+          "constraints": [
+            "32khz_rtc_crystal"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "mc_306_32khz",
+              "content_sha256": null,
+              "id": "datasheet_mc_306_32khz",
+              "kind": "datasheet",
+              "locator": "MC-306-32.768KHZ",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Crystal:Crystal_SMD_Epson_MC-306_3.2x1.5mm",
+            "verified": true
+          },
+          "id": "mc_306_32khz",
+          "lifecycle": "active",
+          "manufacturer": "Epson",
+          "mpn": "MC-306 32.768KHZ",
+          "package": "SMD-2Pin-Crystal",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "XIN",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "XOUT",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "MC-306 32.768KHZ"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "mc_306_32khz",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "MC-306 32.768KHZ",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "mc_306_32khz",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "MC-306 32.768KHZ"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:Crystal",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_mc_306_32khz"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "mc_306_32khz",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "MC-306 32.768KHZ",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "mc_306_32khz",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "MC-306 32.768KHZ"
+            },
+            "stock": null
+          }
+        },
+        "ref": "X1",
+        "resolution": "curated",
+        "role": "rtc_crystal"
+      },
+      {
+        "component_id": "grm216_12p",
+        "data": {
+          "constraints": [
+            "crystal_load_cap"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm216_12p",
+              "content_sha256": null,
+              "id": "datasheet_grm216_12p",
+              "kind": "datasheet",
+              "locator": "GRM2165C1H120JA01D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0805_2012Metric",
+            "verified": true
+          },
+          "id": "grm216_12p",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM2165C1H120JA01D",
+          "package": "0805",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM2165C1H120JA01D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm216_12p",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM2165C1H120JA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm216_12p",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM2165C1H120JA01D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm216_12p"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm216_12p",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM2165C1H120JA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm216_12p",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM2165C1H120JA01D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C4",
+        "resolution": "curated",
+        "role": "rtc_xtal_cap"
+      },
+      {
+        "component_id": "grm216_12p",
+        "data": {
+          "constraints": [
+            "crystal_load_cap"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm216_12p",
+              "content_sha256": null,
+              "id": "datasheet_grm216_12p",
+              "kind": "datasheet",
+              "locator": "GRM2165C1H120JA01D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0805_2012Metric",
+            "verified": true
+          },
+          "id": "grm216_12p",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM2165C1H120JA01D",
+          "package": "0805",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "A",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "B",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM2165C1H120JA01D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm216_12p",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM2165C1H120JA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm216_12p",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM2165C1H120JA01D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm216_12p"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm216_12p",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM2165C1H120JA01D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm216_12p",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM2165C1H120JA01D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C5",
+        "resolution": "curated",
+        "role": "rtc_xtal_cap"
+      },
+      {
+        "component_id": "conn_2x05_2p54",
+        "data": {
+          "constraints": [
+            "swd_10pin_cortex_debug",
+            "jtag_compatible"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "conn_2x05_2p54",
+              "content_sha256": null,
+              "id": "datasheet_conn_2x05_2p54",
+              "kind": "datasheet",
+              "locator": "61201021621",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "library_id": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+            "verified": true
+          },
+          "id": "conn_2x05_2p54",
+          "lifecycle": "active",
+          "manufacturer": "W\u00fcrth Elektronik",
+          "mpn": "61201021621",
+          "package": "PinHeader-2x5-2.54mm",
+          "pins": [
+            {
+              "electrical_type": "power_in",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "bidirectional",
+              "name": "SWDIO",
+              "number": "2"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "3",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "SWDCLK",
+              "number": "4"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "5",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "output",
+              "name": "SWO",
+              "number": "6"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "KEY",
+              "number": "7"
+            },
+            {
+              "electrical_type": "no_connect",
+              "name": "NC",
+              "number": "8"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "9",
+              "voltage_domain": "GND"
+            },
+            {
+              "electrical_type": "input",
+              "name": "RESET",
+              "number": "10"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "61201021621"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "61201021621",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "conn_2x05_2p54",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "61201021621"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "library_id": "Connector_Generic:Conn_02x05_Odd_Even",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_conn_2x05_2p54"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "conn_2x05_2p54",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "61201021621",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "conn_2x05_2p54",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "61201021621"
+            },
+            "stock": null
+          }
+        },
+        "ref": "J2",
+        "resolution": "curated",
+        "role": "debug_header"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R1",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "rc0603_4k7",
+        "data": {
+          "constraints": [
+            "i2c_pullup"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "rc0603_4k7",
+              "content_sha256": null,
+              "id": "datasheet_rc0603_4k7",
+              "kind": "datasheet",
+              "locator": "RC0603FR-074K7L",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-15",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Resistor_SMD:R_0603_1608Metric",
+            "verified": true
+          },
+          "id": "rc0603_4k7",
+          "lifecycle": "active",
+          "manufacturer": "Yageo",
+          "mpn": "RC0603FR-074K7L",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "passive",
+              "name": "SIGNAL",
+              "number": "2"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-15",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "RC0603FR-074K7L"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:R",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/robotics_controller.yaml",
+          "database_file_sha256": "91d6e190296f79fac18edee2bfda346ce42f195a9e2a4c3805131dfbf61ca1bb",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_rc0603_4k7"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "rc0603_4k7",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "RC0603FR-074K7L",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "rc0603_4k7",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-15",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "RC0603FR-074K7L"
+            },
+            "stock": null
+          }
+        },
+        "ref": "R2",
+        "resolution": "curated",
+        "role": "resistor_4k7"
+      },
+      {
+        "component_id": "grm155_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm155_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm155_100n",
+              "kind": "datasheet",
+              "locator": "GRM155R71C104KA88D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0402_1005Metric",
+            "verified": true
+          },
+          "id": "grm155_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM155R71C104KA88D",
+          "package": "0402",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM155R71C104KA88D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm155_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C1",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm155_100n",
+        "data": {
+          "constraints": [
+            "decoupling"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm155_100n",
+              "content_sha256": null,
+              "id": "datasheet_grm155_100n",
+              "kind": "datasheet",
+              "locator": "GRM155R71C104KA88D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0402_1005Metric",
+            "verified": true
+          },
+          "id": "grm155_100n",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM155R71C104KA88D",
+          "package": "0402",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM155R71C104KA88D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm155_100n"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm155_100n",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM155R71C104KA88D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm155_100n",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM155R71C104KA88D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C2",
+        "resolution": "curated",
+        "role": "capacitor_100n"
+      },
+      {
+        "component_id": "grm188_10u",
+        "data": {
+          "constraints": [
+            "bulk_capacitor"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_10u",
+              "content_sha256": null,
+              "id": "datasheet_grm188_10u",
+              "kind": "datasheet",
+              "locator": "GRM188R60J106ME47D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_10u",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R60J106ME47D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R60J106ME47D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R60J106ME47D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_10u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R60J106ME47D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_10u"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R60J106ME47D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_10u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R60J106ME47D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C3",
+        "resolution": "curated",
+        "role": "capacitor_10u_50v"
+      },
+      {
+        "component_id": "grm188_1uf",
+        "data": {
+          "constraints": [
+            "decoupling",
+            "bypass"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_1uf",
+              "content_sha256": null,
+              "id": "datasheet_grm188_1uf",
+              "kind": "datasheet",
+              "locator": "GRM188R61C105KA93D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_1uf",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R61C105KA93D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R61C105KA93D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_1uf",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R61C105KA93D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_1uf",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R61C105KA93D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_1uf"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_1uf",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R61C105KA93D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_1uf",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R61C105KA93D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C6",
+        "resolution": "curated",
+        "role": "capacitor_1uf"
+      },
+      {
+        "component_id": "grm188_10u",
+        "data": {
+          "constraints": [
+            "bulk_capacitor"
+          ],
+          "datasheet_evidence": [
+            {
+              "component_id": "grm188_10u",
+              "content_sha256": null,
+              "id": "datasheet_grm188_10u",
+              "kind": "datasheet",
+              "locator": "GRM188R60J106ME47D",
+              "review_status": "approved",
+              "reviewed_at": "2026-06-21",
+              "source": "manufacturer",
+              "supports": [
+                "identity",
+                "pins",
+                "symbol",
+                "package",
+                "footprint"
+              ],
+              "uri": null
+            }
+          ],
+          "footprint": {
+            "expected_pads": [
+              "1",
+              "2"
+            ],
+            "library_id": "Capacitor_SMD:C_0603_1608Metric",
+            "verified": true
+          },
+          "id": "grm188_10u",
+          "lifecycle": "active",
+          "manufacturer": "Murata",
+          "mpn": "GRM188R60J106ME47D",
+          "package": "0603",
+          "pins": [
+            {
+              "electrical_type": "passive",
+              "name": "VCC",
+              "number": "1"
+            },
+            {
+              "electrical_type": "ground",
+              "name": "GND",
+              "number": "2",
+              "voltage_domain": "GND"
+            }
+          ],
+          "resolution_provenance": {
+            "reviewed_at": "2026-06-21",
+            "source": "manufacturer_datasheet"
+          },
+          "review_status": "approved",
+          "sourcing": {
+            "status": "resolved",
+            "supplier_skus": [
+              "GRM188R60J106ME47D"
+            ]
+          },
+          "supplier_offer": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R60J106ME47D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_10u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R60J106ME47D"
+            },
+            "stock": null
+          },
+          "symbol": {
+            "expected_pins": [
+              "1",
+              "2"
+            ],
+            "library_id": "Device:C",
+            "verified": true
+          }
+        },
+        "provenance": {
+          "database_file": "/Users/mrcha033/Documents/hw-cli/parts/components/common_passives.yaml",
+          "database_file_sha256": "debf50b9535b9bfbbf1e3660d62f73f2c2f5a8fea1611f34dd7e6e23133188c9",
+          "datasheet_catalog": "/Users/mrcha033/Documents/hw-cli/parts/evidence/datasheets.yaml",
+          "datasheet_catalog_sha256": "ffc81ba5e48f17ebb26d1d2caeaba45846bb93d0672fc1766b1438ec7ae9d3af",
+          "datasheet_evidence_ids": [
+            "datasheet_grm188_10u"
+          ],
+          "resolver": "in_repo_curated_v2",
+          "role_set": "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml",
+          "role_set_sha256": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+          "supplier_catalog": "/Users/mrcha033/Documents/hw-cli/parts/suppliers/curated.yaml",
+          "supplier_catalog_sha256": "de3a0852fbe383b6abda8bd095ddf866048e35da75a377f938a07b3a47fa87b3",
+          "supplier_provider": "curated",
+          "supplier_record": {
+            "availability": "unknown",
+            "component_id": "grm188_10u",
+            "observed_at": null,
+            "provider": "curated",
+            "sku": "GRM188R60J106ME47D",
+            "source_record": {
+              "availability": "unknown",
+              "component_id": "grm188_10u",
+              "observed_at": null,
+              "provenance": {
+                "reviewed_at": "2026-06-21",
+                "source": "curated_component_db"
+              },
+              "stock": null,
+              "supplier_sku": "GRM188R60J106ME47D"
+            },
+            "stock": null
+          }
+        },
+        "ref": "C20",
+        "resolution": "curated",
+        "role": "capacitor_10u_50v"
+      }
+    ],
+    "files": {
+      "bom": [
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/bom.csv"
+      ],
+      "electronics": [
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/intent/board.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/intent/sensor_bus.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/intent/connectors.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/intent/power_tree.intent.md",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/electrical_graph.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/semantic/semantic_schematic.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/semantic/semantic_schematic.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/mini_biped_robot.kicad_pcb",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/mini_biped_robot.kicad_pro",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/mini_biped_robot.kicad_sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/mini_biped_robot.sch",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/routing.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/schematic_generation.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/source/tscircuit/board.tsx",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/source/tscircuit/board.compiler.mjs",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/source/tscircuit/source_manifest.json"
+      ],
+      "firmware": [
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/generated/board.cmake",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/generated/devicetree.overlay",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/generated/kconfig.defconfig",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/generated/pinmap.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/generated/pinmap.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/usb_cdc.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/usb_cdc.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/bme280_driver.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/bme280_driver.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/data_streamer.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/data_streamer.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/biped_motion_state.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/biped_motion_state.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/lsm6dsox_driver.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/lsm6dsox_driver.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/pca9685_servo_pwm.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/pca9685_servo_pwm.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/servo_safety_watchdog.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/servo_safety_watchdog.h",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/CMakeLists.txt",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/app/src/main.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_can_loopback.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_estop_fail_safe.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_i2c_imu.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_motor_pwm.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_usb_connection.c",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/boards/arm/robot_controller/robot_controller.dts",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/reference/CMakeLists.txt"
+      ],
+      "mechanical": [
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/assembly.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/connector_cutouts.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/enclosure.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/enclosure_variants.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/fixtures.py",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/mechanical_contract.json",
+        "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/source/source_manifest.json"
+      ]
+    },
+    "resolution_report": {
+      "artifacts": [
+        "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml"
+      ],
+      "backend": {
+        "mutates_database": false,
+        "name": "ComponentResolver"
+      },
+      "failures": [
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role battery_input",
+          "path": "J20",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role fuse",
+          "path": "F20",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role external_buck_module",
+          "path": "U20",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role pwm_driver",
+          "path": "U21",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role safety_gate",
+          "path": "U22",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role pulldown",
+          "path": "R20",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role estop",
+          "path": "J27",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role servo_output",
+          "path": "J21",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role servo_output",
+          "path": "J22",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role servo_output",
+          "path": "J23",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role servo_output",
+          "path": "J24",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role servo_output",
+          "path": "J25",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "role_unresolved",
+          "details": {},
+          "message": "No component selection for role servo_output",
+          "path": "J26",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "component_resolution",
+      "metrics": {
+        "critical_roles": 6,
+        "requested": 32,
+        "resolved": 19,
+        "supplier_provider": "curated"
+      },
+      "status": "fail"
+    },
+    "status": "generated"
+  },
+  "iteration_id": "0002",
+  "passed_gates": [
+    "spec_schema",
+    "requirements_lowering",
+    "semantic_electrical",
+    "mechanical_fit",
+    "firmware_pinmap",
+    "mechanical_connector_retention",
+    "mechanical_mounting_integrity",
+    "firmware_modules",
+    "datasheet_evidence",
+    "bom",
+    "pin_symbol_footprint",
+    "interface_integrity",
+    "semantic_schematic_roundtrip",
+    "support_circuit_completeness",
+    "hw_sw_parity",
+    "ir_erc",
+    "ir_pcb_sanity",
+    "reference_firmware_build",
+    "placement_constraints",
+    "layout_thermal_integrity",
+    "layout_signal_integrity",
+    "power_integrity_dc_operating_point",
+    "reference_fabrication",
+    "candidate_critic"
+  ],
+  "release_gate": {
+    "status": "blocked"
+  },
+  "repair_plan": {
+    "actions": [
+      {
+        "action": "Resolve connector_cutout_missing: Electrical connectors lack mechanical connector-interface cutouts",
+        "failure_code": "connector_cutout_missing",
+        "gate": "mechanical_connector_cutouts",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role battery_input",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role fuse",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role external_buck_module",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role pwm_driver",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role safety_gate",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role pulldown",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role estop",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role servo_output",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role servo_output",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role servo_output",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role servo_output",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role servo_output",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve role_unresolved: No component selection for role servo_output",
+        "failure_code": "role_unresolved",
+        "gate": "component_resolution",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for J1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for R3 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for R4 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for D1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U3 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U4 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for X1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C4 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C5 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for J2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for R1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for R2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C1 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C2 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C3 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C6 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C20 at curated",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "supplier_availability",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: J1 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: R3 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: R4 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: D1 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: U1 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: U2 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: U3 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: U4 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: X1 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C4 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C5 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: J2 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: R1 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: R2 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C1 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C2 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C3 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C6 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J20 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J20 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: F20 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: F20 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: U20 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: U20 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve supplier_availability_unknown: C20 lacks current supplier availability evidence",
+        "failure_code": "supplier_availability_unknown",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: U21 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: U21 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: U22 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: U22 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: R20 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: R20 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J27 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J27 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J21 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J21 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J22 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J22 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J23 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J23 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J24 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J24 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J25 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J25 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve missing_sourcing_metadata: J26 lacks manufacturer or supplier SKU",
+        "failure_code": "missing_sourcing_metadata",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J26 sourcing is not resolved or waived",
+        "failure_code": "sourcing_unresolved",
+        "gate": "sourcing",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role env_sensor has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role imu has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role mcu has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role power_input has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role regulator_3v3 has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve critical_role_resilience_missing: Critical role tvs has neither a curated alternate nor a single-source mitigation",
+        "failure_code": "critical_role_resilience_missing",
+        "gate": "sourcing_resilience",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J20 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J20 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J20 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J20.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J20.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J20.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J20.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J20 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: F20 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: F20 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: F20 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: F20.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: F20.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: F20.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: F20.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: F20 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: U20 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: U20 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: U20 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U20.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U20.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U20.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U20.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U20.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U20.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U20.4 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U20.4 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: U20 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: U21 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: U21 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: U21 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.4 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.4 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.5 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.5 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.6 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.6 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.7 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.7 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.8 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.8 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.9 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.9 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.10 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.10 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U21.11 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U21.11 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: U21 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: U22 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: U22 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: U22 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U22.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U22.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U22.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U22.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U22.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U22.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: U22.4 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: U22.4 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_pin_contract_missing: U22 is missing a required safety_gate pin contract",
+        "failure_code": "component_pin_contract_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_pin_contract_missing: U22 is missing a required safety_gate pin contract",
+        "failure_code": "component_pin_contract_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: U22 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: R20 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: R20 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: R20 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: R20.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: R20.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: R20.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: R20.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: R20 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J27 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J27 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J27 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J27.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J27.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J27.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J27.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J27.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J27.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_pin_contract_missing: J27 is missing a required estop pin contract",
+        "failure_code": "component_pin_contract_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J27 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J21 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J21 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J21 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J21.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J21.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J21.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J21.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J21.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J21.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J21 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J22 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J22 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J22 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J22.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J22.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J22.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J22.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J22.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J22.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J22 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J23 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J23 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J23 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J23.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J23.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J23.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J23.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J23.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J23.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J23 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J24 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J24 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J24 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J24.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J24.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J24.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J24.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J24.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J24.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J24 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J25 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J25 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J25 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J25.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J25.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J25.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J25.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J25.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J25.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J25 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_curated: J26 is not curated",
+        "failure_code": "component_not_curated",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve component_not_approved: J26 review is not approved",
+        "failure_code": "component_not_approved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve unverified_library_metadata: J26 symbol/footprint metadata is not verified",
+        "failure_code": "unverified_library_metadata",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J26.1 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J26.1 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J26.2 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J26.2 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve symbol_pin_missing: J26.3 is absent from curated symbol contract",
+        "failure_code": "symbol_pin_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve footprint_pad_missing: J26.3 is absent from curated footprint contract",
+        "failure_code": "footprint_pad_missing",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve sourcing_unresolved: J26 sourcing is unresolved",
+        "failure_code": "sourcing_unresolved",
+        "gate": "component_provenance",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J20.1 requires unreachable power net VBAT_RAW",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: F20.1 requires unreachable power net VBAT_RAW",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: U20.3 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: C20.1 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J21.2 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J22.2 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J23.2 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J24.2 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J25.2 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve power_net_unreachable: J26.2 requires unreachable power net V5",
+        "failure_code": "power_net_unreachable",
+        "gate": "power_tree_integrity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve rail_decoupling_missing: Rail VBAT_RAW feeds active loads without any local decoupling or bulk capacitor in the graph",
+        "failure_code": "rail_decoupling_missing",
+        "gate": "power_integrity_estimate",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve firmware_estop_pinmap_missing: Emergency-stop support is required but no ESTOP_IN firmware signal is mapped",
+        "failure_code": "firmware_estop_pinmap_missing",
+        "gate": "firmware_interface_contract",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J1 and R3 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J1 and D1 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U1 and J21 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U2 and C4 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U2 and C1 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U2 and U20 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U2 and J22 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U3 and J24 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: U4 and U21 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J2 and J26 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: C3 and J24 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J20 and J21 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J20 and J23 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: F20 and J23 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: F20 and J24 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: R20 and J25 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve estimated_courtyard_overlap: J21 and J23 package envelopes overlap (reference geometry is advisory; native DRC is authoritative)",
+        "failure_code": "estimated_courtyard_overlap",
+        "gate": "placement_constraints",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "tscircuit_compile",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "tscircuit_netlist_extract",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "tscircuit_graph_parity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "tscircuit_footprint_parity",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "tscircuit_layout_completeness",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "tscircuit_manufacturing_export",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: Freerouting was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "autoroute",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: KiCad ERC was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_erc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: KiCad DRC was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_drc",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: KiCad library cross-check was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "kicad_library_crosscheck",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: Native CAD validation was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_mechanical_validation",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve external_gate_not_run: Native Zephyr build was not requested",
+        "failure_code": "external_gate_not_run",
+        "gate": "native_zephyr_build",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: assembly_inspection",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+        "failure_code": "physical_evidence_missing",
+        "gate": "physical_qualification",
+        "patches": [],
+        "requires_user_decision": true
+      },
+      {
+        "action": "Resolve physical_oracle_gap_open: Candidate still requires external physical qualification evidence; this is not a software gate failure",
+        "failure_code": "physical_oracle_gap_open",
+        "gate": "candidate_critic",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve native_toolchain_gates_not_run: Native toolchain gates were not run; candidate cannot be release-reviewed as fabrication-authoritative",
+        "failure_code": "native_toolchain_gates_not_run",
+        "gate": "candidate_critic",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: semantic_schematic_roundtrip passed before prerequisite component_resolution passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: datasheet_evidence passed before prerequisite component_resolution passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: bom passed before prerequisite component_resolution passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: pin_symbol_footprint passed before prerequisite component_resolution passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: pin_symbol_footprint passed before prerequisite component_provenance passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: interface_integrity passed before prerequisite power_tree_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: support_circuit_completeness passed before prerequisite component_resolution passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: support_circuit_completeness passed before prerequisite power_tree_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: reference_firmware_build passed before prerequisite firmware_interface_contract passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      },
+      {
+        "action": "Resolve dependency_prerequisite_not_passed: layout_thermal_integrity passed before prerequisite power_tree_integrity passed",
+        "failure_code": "dependency_prerequisite_not_passed",
+        "gate": "design_dependency_graph",
+        "patches": [],
+        "requires_user_decision": false
+      }
+    ],
+    "agent_actions": [],
+    "project": "mini_biped_robot",
+    "requires_user_decision": true,
+    "status": "generated"
+  },
+  "status": "blocked"
+}

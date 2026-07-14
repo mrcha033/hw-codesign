@@ -1,0 +1,238 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "VBAT_RAW",
+        "pin_number": "1",
+        "ref": "J20"
+      },
+      "message": "J20.1 requires unreachable power net VBAT_RAW",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "VBAT_RAW",
+        "pin_number": "1",
+        "ref": "F20"
+      },
+      "message": "F20.1 requires unreachable power net VBAT_RAW",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "3",
+        "ref": "U20"
+      },
+      "message": "U20.3 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "1",
+        "ref": "C20"
+      },
+      "message": "C20.1 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "2",
+        "ref": "J21"
+      },
+      "message": "J21.2 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "2",
+        "ref": "J22"
+      },
+      "message": "J22.2 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "2",
+        "ref": "J23"
+      },
+      "message": "J23.2 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "2",
+        "ref": "J24"
+      },
+      "message": "J24.2 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "2",
+        "ref": "J25"
+      },
+      "message": "J25.2 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "power_net_unreachable",
+      "details": {
+        "net_name": "V5",
+        "pin_number": "2",
+        "ref": "J26"
+      },
+      "message": "J26.2 requires unreachable power net V5",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "power_tree_integrity",
+  "metrics": {
+    "component_voltage_limits": {
+      "U2": [
+        {
+          "mpn": "ATSAMD21G18A-AU",
+          "net_name": "V3V3",
+          "observed_voltage_v": 3.3,
+          "pin_name": "VDDANA",
+          "pin_number": "9",
+          "supply_voltage_max_v": 3.63,
+          "supply_voltage_min_v": 1.62
+        },
+        {
+          "mpn": "ATSAMD21G18A-AU",
+          "net_name": "V3V3",
+          "observed_voltage_v": 3.3,
+          "pin_name": "VDDIO",
+          "pin_number": "17",
+          "supply_voltage_max_v": 3.63,
+          "supply_voltage_min_v": 1.62
+        },
+        {
+          "mpn": "ATSAMD21G18A-AU",
+          "net_name": "V3V3",
+          "observed_voltage_v": 3.3,
+          "pin_name": "VDDIO",
+          "pin_number": "35",
+          "supply_voltage_max_v": 3.63,
+          "supply_voltage_min_v": 1.62
+        },
+        {
+          "mpn": "ATSAMD21G18A-AU",
+          "net_name": "V3V3",
+          "observed_voltage_v": 3.3,
+          "pin_name": "VDDIN",
+          "pin_number": "43",
+          "supply_voltage_max_v": 3.63,
+          "supply_voltage_min_v": 1.62
+        }
+      ],
+      "U3": [
+        {
+          "mpn": "LSM6DSOXTR",
+          "net_name": "V3V3",
+          "observed_voltage_v": 3.3,
+          "pin_name": "VDD_IO",
+          "pin_number": "6",
+          "supply_voltage_max_v": 3.6,
+          "supply_voltage_min_v": 1.71
+        },
+        {
+          "mpn": "LSM6DSOXTR",
+          "net_name": "V3V3",
+          "observed_voltage_v": 3.3,
+          "pin_name": "VDD",
+          "pin_number": "9",
+          "supply_voltage_max_v": 3.6,
+          "supply_voltage_min_v": 1.71
+        }
+      ]
+    },
+    "errors": 10,
+    "power_loads_checked": 28,
+    "regulator_enable_biases": {
+      "U1": [
+        {
+          "bias_source": "direct_positive_rail",
+          "bias_voltage_v": 5.0,
+          "candidate_bias_components": [],
+          "enabled": true,
+          "net_name": "USB_VBUS",
+          "pin_name": "EN",
+          "pin_number": "1"
+        }
+      ]
+    },
+    "regulator_voltage_limits": {
+      "U1": {
+        "input_nets": [
+          "USB_VBUS"
+        ],
+        "input_voltage_max_v": 6.0,
+        "input_voltage_min_v": 2.5,
+        "min_dropout_headroom_v": 0.25,
+        "mpn": "AP2112K-3.3TRG1",
+        "observed_headroom_v": 1.7000000000000002,
+        "observed_input_voltage_max_v": 5.0,
+        "observed_input_voltage_min_v": 5.0,
+        "output_nets": [
+          "V3V3"
+        ]
+      }
+    },
+    "source_nets": [
+      "USB_VBUS",
+      "V3V3"
+    ],
+    "transfer_components": 2,
+    "warnings": 0
+  },
+  "status": "fail"
+}

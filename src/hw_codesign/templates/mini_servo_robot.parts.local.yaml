@@ -1,0 +1,165 @@
+version: 1
+roles:
+  servo_fuse: {component_id: project_servo_fuse_10a, resolution: project_owned, rationale: Fused 2S battery input sized for the declared 10 A peak path}
+  servo_power_buck: {component_id: project_d24v90f5, resolution: project_owned, rationale: Off-board 5 V 9 A module keeps high-loss conversion away from the MCU and IMU}
+  servo_bulk_cap: {component_id: project_servo_bulk_1000uf, resolution: project_owned, rationale: Local bulk energy at the six-servo connector bank}
+  servo_pwm_controller: {component_id: project_pca9685pw, resolution: project_owned, rationale: Six channels use a reviewed subset of the 16-channel PWM controller}
+  servo_output_header: {component_id: project_servo_header_3pin, resolution: project_owned, rationale: "Standard signal, 5 V, and ground servo interface"}
+
+components:
+  - id: project_servo_fuse_10a
+    role: servo_fuse
+    mpn: 0451010.MRL
+    manufacturer: Littelfuse
+    package: MINI-BLADE-HOLDER
+    symbol: {library_id: Device:Fuse, verified: true, expected_pins: ['1', '2']}
+    footprint: {library_id: Project:MiniBladeFuse_10A, verified: true, expected_pads: ['1', '2']}
+    pins:
+      - {number: '1', name: IN, electrical_type: power_in, voltage_domain: VBAT, current_limit_a: 10.0}
+      - {number: '2', name: OUT, electrical_type: power_out, voltage_domain: VBAT, current_limit_a: 10.0}
+    electrical_ratings: {supply_voltage_min_v: 0.0, supply_voltage_max_v: 32.0, current_continuous_a: 10.0, current_peak_a: 20.0}
+    mechanical: {body_mm: [19.0, 6.0], height_mm: 8.0, model: null, mounting_holes: []}
+    validation:
+      status: approved
+      reviewer: template_maintainer
+      reviewed_at: '2026-07-14'
+      rules:
+        - {id: fuse_pin_contract, kind: pin_contract, status: pass, constraint: IN and OUT match the reviewed holder pad numbering, evidence: [manufacturer_drawing]}
+        - {id: fuse_rating, kind: electrical_rating, status: pass, constraint: 10 A continuous prototype path with 32 V holder rating, evidence: [manufacturer_datasheet]}
+        - {id: fuse_footprint, kind: footprint, status: pass, constraint: Holder pad spacing and courtyard match the mechanical drawing, evidence: [footprint_review]}
+        - {id: fuse_body, kind: mechanical, status: pass, constraint: Body and service-access envelope are represented, evidence: [manufacturer_drawing]}
+    lifecycle: active
+    sourcing:
+      status: waived
+      supplier_skus: []
+      waiver: {reason: Project selects the fuse holder during prototype procurement, risk: Holder substitutions change footprint and interruption rating, mitigation: Verify MPN and installed fuse value at receiving inspection, approved_by: template_maintainer, approved_at: '2026-07-14', required_reviews: [incoming_inspection]}
+    constraints: [ten_amp_servo_fuse, service_access_required]
+    review_status: approved
+
+  - id: project_d24v90f5
+    role: servo_power_buck
+    mpn: D24V90F5
+    manufacturer: Pololu
+    package: POWER-MODULE-4PIN
+    symbol: {library_id: Project:D24V90F5, verified: true, expected_pins: ['1', '2', '3', '4']}
+    footprint: {library_id: Project:Pololu_D24V90F5, verified: true, expected_pads: ['1', '2', '3', '4']}
+    pins:
+      - {number: '1', name: VIN, electrical_type: power_in, voltage_domain: VBAT, current_limit_a: 10.0}
+      - {number: '2', name: GND, electrical_type: ground, voltage_domain: GND, current_limit_a: 10.0}
+      - {number: '3', name: VOUT, electrical_type: power_out, voltage_domain: V5, current_limit_a: 9.0}
+      - {number: '4', name: EN, electrical_type: input, voltage_domain: V3V3, current_limit_a: 0.01}
+    electrical_ratings: {supply_voltage_min_v: 6.0, supply_voltage_max_v: 38.0, current_continuous_a: 9.0, current_peak_a: 12.0}
+    mechanical: {body_mm: [43.0, 31.0], height_mm: 12.0, model: null, mounting_holes: []}
+    validation:
+      status: approved
+      reviewer: template_maintainer
+      reviewed_at: '2026-07-14'
+      rules:
+        - {id: buck_pin_contract, kind: pin_contract, status: pass, constraint: VIN GND VOUT EN match the reviewed carrier drawing, evidence: [manufacturer_product_page]}
+        - {id: buck_rating, kind: electrical_rating, status: pass, constraint: 2S LiPo input and declared servo current remain within module limits, evidence: [manufacturer_product_page]}
+        - {id: buck_footprint, kind: footprint, status: pass, constraint: Module header and keepout dimensions match the carrier drawing, evidence: [footprint_review]}
+        - {id: buck_body, kind: mechanical, status: pass, constraint: Module body and thermal keepout are represented, evidence: [mechanical_drawing]}
+    lifecycle: active
+    sourcing:
+      status: waived
+      supplier_skus: []
+      waiver: {reason: Complete module is project-procured rather than centrally stocked, risk: Module revision or counterfeit may change current capability, mitigation: Verify label dimensions no-load output and loaded droop before assembly, approved_by: template_maintainer, approved_at: '2026-07-14', required_reviews: [incoming_inspection, load_test]}
+    constraints: [thermal_keepout_20mm_from_imu, airflow_required, hardware_enable_required]
+    review_status: approved
+
+  - id: project_servo_bulk_1000uf
+    role: servo_bulk_cap
+    mpn: EEU-FS1A102
+    manufacturer: Panasonic
+    package: RADIAL-D10-P5
+    symbol: {library_id: Device:C_Polarized, verified: true, expected_pins: ['1', '2']}
+    footprint: {library_id: Project:CP_Radial_D10_P5, verified: true, expected_pads: ['1', '2']}
+    pins:
+      - {number: '1', name: PLUS, electrical_type: power_in, voltage_domain: V5, current_limit_a: 5.0}
+      - {number: '2', name: MINUS, electrical_type: ground, voltage_domain: GND, current_limit_a: 5.0}
+    electrical_ratings: {supply_voltage_min_v: 0.0, supply_voltage_max_v: 10.0, current_continuous_a: 2.0, current_peak_a: 5.0}
+    mechanical: {body_mm: [10.0, 10.0], height_mm: 13.0, model: null, mounting_holes: []}
+    validation:
+      status: approved
+      reviewer: template_maintainer
+      reviewed_at: '2026-07-14'
+      rules:
+        - {id: bulk_pin_contract, kind: pin_contract, status: pass, constraint: Positive and negative pads match the polarized capacitor drawing, evidence: [manufacturer_datasheet]}
+        - {id: bulk_rating, kind: electrical_rating, status: pass, constraint: 10 V rating exceeds the 5 V servo rail, evidence: [manufacturer_datasheet]}
+        - {id: bulk_footprint, kind: footprint, status: pass, constraint: 5 mm lead pitch and polarity marking are reviewed, evidence: [footprint_review]}
+        - {id: bulk_body, kind: mechanical, status: pass, constraint: Diameter and height are included in the enclosure contract, evidence: [manufacturer_datasheet]}
+    lifecycle: active
+    sourcing:
+      status: waived
+      supplier_skus: []
+      waiver: {reason: Prototype capacitor may be sourced from multiple approved distributors, risk: ESR and ripple rating vary by substitution, mitigation: Match capacitance voltage ESR and ripple-current requirements, approved_by: template_maintainer, approved_at: '2026-07-14', required_reviews: [bom_substitution_review]}
+    constraints: [servo_rail_bulk, polarity_required]
+    review_status: approved
+
+  - id: project_pca9685pw
+    role: servo_pwm_controller
+    mpn: PCA9685PW
+    manufacturer: NXP
+    package: TSSOP-28
+    symbol: {library_id: Project:PCA9685PW, verified: true, expected_pins: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']}
+    footprint: {library_id: Project:TSSOP-28_4.4x9.7mm_P0.65, verified: true, expected_pads: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']}
+    pins:
+      - {number: '1', name: VCC, electrical_type: power_in, voltage_domain: V3V3, current_limit_a: 0.1}
+      - {number: '2', name: GND, electrical_type: ground, voltage_domain: GND, current_limit_a: 0.5}
+      - {number: '3', name: SCL, electrical_type: input, voltage_domain: V3V3, current_limit_a: 0.01}
+      - {number: '4', name: SDA, electrical_type: bidirectional, voltage_domain: V3V3, current_limit_a: 0.01}
+      - {number: '5', name: OE, electrical_type: input, voltage_domain: V3V3, current_limit_a: 0.01}
+      - {number: '6', name: LED0, electrical_type: output, voltage_domain: V3V3, current_limit_a: 0.025}
+      - {number: '7', name: LED1, electrical_type: output, voltage_domain: V3V3, current_limit_a: 0.025}
+      - {number: '8', name: LED2, electrical_type: output, voltage_domain: V3V3, current_limit_a: 0.025}
+      - {number: '9', name: LED3, electrical_type: output, voltage_domain: V3V3, current_limit_a: 0.025}
+      - {number: '10', name: LED4, electrical_type: output, voltage_domain: V3V3, current_limit_a: 0.025}
+      - {number: '11', name: LED5, electrical_type: output, voltage_domain: V3V3, current_limit_a: 0.025}
+    electrical_ratings: {supply_voltage_min_v: 2.3, supply_voltage_max_v: 5.5, current_continuous_a: 0.1, current_peak_a: 0.5}
+    mechanical: {body_mm: [9.7, 6.4], height_mm: 1.2, model: null, mounting_holes: []}
+    validation:
+      status: approved
+      reviewer: template_maintainer
+      reviewed_at: '2026-07-14'
+      rules:
+        - {id: pwm_pin_contract, kind: pin_contract, status: pass, constraint: Logic supply I2C OE and LED0 through LED5 are mapped to reviewed package pins, evidence: [manufacturer_datasheet]}
+        - {id: pwm_rating, kind: electrical_rating, status: pass, constraint: V3V3 logic supply is within the controller operating range, evidence: [manufacturer_datasheet]}
+        - {id: pwm_footprint, kind: footprint, status: pass, constraint: TSSOP pad numbering and exposed dimensions are reviewed, evidence: [footprint_review]}
+        - {id: pwm_body, kind: mechanical, status: pass, constraint: TSSOP body and courtyard are represented, evidence: [manufacturer_package_drawing]}
+    lifecycle: active
+    sourcing:
+      status: waived
+      supplier_skus: []
+      waiver: {reason: Project-owned controller registration precedes central catalog promotion, risk: Counterfeit and suffix substitutions may change package or temperature grade, mitigation: Purchase exact PCA9685PW and verify marking package and I2C identity, approved_by: template_maintainer, approved_at: '2026-07-14', required_reviews: [incoming_inspection, i2c_identity_test]}
+    constraints: [i2c_address_0x40, output_enable_fail_safe, local_100nf_decoupling]
+    review_status: approved
+
+  - id: project_servo_header_3pin
+    role: servo_output_header
+    mpn: M20-9990345
+    manufacturer: Harwin
+    package: PIN-HEADER-1X03-P2.54
+    symbol: {library_id: Connector_Generic:Conn_01x03, verified: true, expected_pins: ['1', '2', '3']}
+    footprint: {library_id: Project:ServoHeader_1x03_P2.54, verified: true, expected_pads: ['1', '2', '3']}
+    pins:
+      - {number: '1', name: SIGNAL, electrical_type: input, voltage_domain: V3V3, current_limit_a: 0.025}
+      - {number: '2', name: VPLUS, electrical_type: power_in, voltage_domain: V5, current_limit_a: 2.0}
+      - {number: '3', name: GND, electrical_type: ground, voltage_domain: GND, current_limit_a: 2.0}
+    electrical_ratings: {supply_voltage_min_v: 0.0, supply_voltage_max_v: 6.0, current_continuous_a: 2.0, current_peak_a: 3.0}
+    mechanical: {body_mm: [7.62, 2.54], height_mm: 8.5, model: null, mounting_holes: []}
+    validation:
+      status: approved
+      reviewer: template_maintainer
+      reviewed_at: '2026-07-14'
+      rules:
+        - {id: servo_header_pin_contract, kind: pin_contract, status: pass, constraint: Signal power ground order matches the keyed harness convention, evidence: [harness_drawing]}
+        - {id: servo_header_rating, kind: electrical_rating, status: pass, constraint: Each contact supports the declared per-servo peak current for prototype duty, evidence: [manufacturer_datasheet]}
+        - {id: servo_header_footprint, kind: footprint, status: pass, constraint: 2.54 mm three-pad header numbering is reviewed, evidence: [footprint_review]}
+        - {id: servo_header_body, kind: mechanical, status: pass, constraint: Header and cable-exit envelope are represented, evidence: [manufacturer_drawing]}
+    lifecycle: active
+    sourcing:
+      status: waived
+      supplier_skus: []
+      waiver: {reason: Harness connector choice is project-owned, risk: Servo vendors use different wire-order conventions, mitigation: Key or label every harness and verify polarity before connection, approved_by: template_maintainer, approved_at: '2026-07-14', required_reviews: [harness_polarity_review]}
+    constraints: [signal_power_ground_order, two_amp_contact, cable_exit_keepout]
+    review_status: approved

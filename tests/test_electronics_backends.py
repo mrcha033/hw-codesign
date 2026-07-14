@@ -111,6 +111,7 @@ def test_tscircuit_source_uses_solver_coordinates(service, project):
     height = float(graph["placement"]["board_height_mm"])
     expected_x = float(component["pcb_position_mm"][0]) - width / 2.0
     expected_y = float(component["pcb_position_mm"][1]) - height / 2.0
+    expected_rotation = float(component["pcb_rotation_deg"])
     source = project_path / "electronics" / "source" / "tscircuit"
     tsx_line = next(line for line in (source / "board.tsx").read_text(encoding="utf-8").splitlines() if 'name="U1"' in line)
     compiler_line = next(line for line in (source / "board.compiler.mjs").read_text(encoding="utf-8").splitlines() if 'name: "U1"' in line)
@@ -118,9 +119,11 @@ def test_tscircuit_source_uses_solver_coordinates(service, project):
 
     assert f"pcbX={{{expected_x:.3f}}}" in tsx_line
     assert f"pcbY={{{expected_y:.3f}}}" in tsx_line
+    assert f"pcbRotation={{{expected_rotation:.3f}}}" in tsx_line
     assert f"pcbX: {expected_x:.3f}" in compiler_line
     assert f"pcbY: {expected_y:.3f}" in compiler_line
-    assert manifest["placement_contract"]["source"] == "electrical_graph.components[].pcb_position_mm"
+    assert f"pcbRotation: {expected_rotation:.3f}" in compiler_line
+    assert manifest["placement_contract"]["source"] == "electrical_graph.components[].pcb_position_mm + pcb_rotation_deg"
     assert manifest["placement_contract"]["missing_solver_placements"] == []
     assert manifest["placement_contract"]["solver_placements"] == len(graph["components"])
 
@@ -203,6 +206,62 @@ def test_tscircuit_compiled_placement_must_match_solver_coordinates():
     assert drift_checked == 1
     assert [failure.code for failure in drift_failures] == ["placement_coordinate_mismatch"]
     assert drift_failures[0].details["error_mm"] == 10.0
+
+
+def test_tscircuit_compiled_rotation_must_match_solver_rotation():
+    graph = {
+        "placement": {"board_width_mm": 100.0, "board_height_mm": 60.0},
+        "components": [{
+            "ref": "U1",
+            "pcb_position_mm": [20.0, 10.0],
+            "pcb_rotation_deg": 180.0,
+            "placement_source": "solver_edge_antenna",
+        }],
+    }
+    compiled = [
+        {"type": "source_component", "source_component_id": "source_component_0", "name": "U1"},
+        {
+            "type": "pcb_component",
+            "source_component_id": "source_component_0",
+            "center": {"x": -30.0, "y": -20.0},
+            "rotation": "180deg",
+        },
+    ]
+
+    failures, checked = TSCircuitBackend.placement_parity_failures(compiled, graph)
+    drifted = deepcopy(compiled)
+    drifted[1]["rotation"] = 0.0
+    drift_failures, drift_checked = TSCircuitBackend.placement_parity_failures(drifted, graph)
+
+    assert checked == 1
+    assert failures == []
+    assert drift_checked == 1
+    assert [failure.code for failure in drift_failures] == ["placement_rotation_mismatch"]
+    assert drift_failures[0].details["rotation_error_deg"] == 180.0
+
+
+def test_tscircuit_compiled_rotation_may_be_omitted_only_for_zero_rotation():
+    compiled = [
+        {"type": "source_component", "source_component_id": "source_component_0", "name": "U1"},
+        {
+            "type": "pcb_component",
+            "source_component_id": "source_component_0",
+            "center": {"x": -30.0, "y": -20.0},
+        },
+    ]
+    graph = {
+        "placement": {"board_width_mm": 100.0, "board_height_mm": 60.0},
+        "components": [{"ref": "U1", "pcb_position_mm": [20.0, 10.0], "pcb_rotation_deg": 0.0}],
+    }
+
+    zero_failures, zero_checked = TSCircuitBackend.placement_parity_failures(compiled, graph)
+    graph["components"][0]["pcb_rotation_deg"] = 180.0
+    rotated_failures, rotated_checked = TSCircuitBackend.placement_parity_failures(compiled, graph)
+
+    assert zero_checked == 1
+    assert zero_failures == []
+    assert rotated_checked == 1
+    assert [failure.code for failure in rotated_failures] == ["compiled_component_rotation_missing"]
 
 
 def test_tscircuit_backend_is_not_executed_when_external_checks_disabled(service, project, monkeypatch):

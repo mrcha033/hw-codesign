@@ -114,7 +114,7 @@ def test_ble_sensor_node_mechanical_uses_ble_placement(service):
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
     positions = component_positions(graph)
 
-    assert positions["J1"] == (12.0, 4.0), "USB-C should be at front edge anchor"
+    assert positions["J1"] == (12.0, 4.176), "USB-C footprint should preserve copper-to-edge clearance"
     assert positions["U1"] == (25.0, 28.0), "nRF52840 MCU should be at centre anchor"
     assert positions["U5"] == (10.0, 24.0), "SHT31 env sensor away from RF area"
 

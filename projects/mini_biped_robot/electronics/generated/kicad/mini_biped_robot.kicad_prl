@@ -63,7 +63,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "sensor_data_logger.routed.kicad_prl",
+    "filename": "mini_biped_robot.kicad_prl",
     "version": 5
   },
   "net_inspector_panel": {

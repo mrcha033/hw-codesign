@@ -1,0 +1,270 @@
+agent_electronics:
+  blocks:
+  - ref: J20
+    category: battery_input
+    value: 2S LIPO INPUT
+    mpn: XT30PW-M
+    manufacturer: AMASS
+    footprint: XT30PW_M
+    connections:
+      VBAT: VBAT_RAW
+      GND: GND
+    id: J20
+  - ref: F20
+    category: fuse
+    value: 10A SERVO FUSE
+    mpn: 0451010.MRL
+    manufacturer: Littelfuse
+    footprint: Fuseholder_Blade_Mini
+    connections:
+      IN: VBAT_RAW
+      OUT: VBAT_FUSED
+    id: F20
+  - ref: U20
+    category: external_buck_module
+    value: 5V 9A STEP-DOWN MODULE
+    mpn: D24V90F5
+    manufacturer: Pololu
+    footprint: MODULE_POLOLU_D24V90F5
+    connections:
+      VIN: VBAT_FUSED
+      GND: GND
+      VOUT: V5
+      EN: ESTOP_OK
+    candidate_note: Off-board or mezzanine power module; footprint and thermal mounting
+      require human review.
+    id: U20
+  - ref: C20
+    category: bulk_cap
+    value: 1000uF 10V LOW ESR
+    mpn: EEU-FS1A102
+    manufacturer: Panasonic
+    footprint: CP_Radial_D10.0mm_P5.00mm
+    connections:
+      PLUS: V5
+      MINUS: GND
+    id: C20
+  - ref: U21
+    category: pwm_driver
+    value: 16-CHANNEL I2C PWM
+    mpn: PCA9685PW
+    manufacturer: NXP
+    footprint: TSSOP-28_4.4x9.7mm_P0.65mm
+    connections:
+      VCC: V3V3
+      GND: GND
+      SCL: I2C_SCL
+      SDA: I2C_SDA
+      OE: SERVO_PWM_OE
+      LED0: SERVO1_PWM
+      LED1: SERVO2_PWM
+      LED2: SERVO3_PWM
+      LED3: SERVO4_PWM
+      LED4: SERVO5_PWM
+      LED5: SERVO6_PWM
+    id: U21
+  - ref: U22
+    category: safety_gate
+    value: E-STOP PWM INVERTER
+    mpn: SN74LVC1G04DBVR
+    manufacturer: Texas Instruments
+    footprint: SOT-23-5
+    connections:
+      VCC: V3V3
+      GND: GND
+      A: ESTOP_OK
+      Y: SERVO_PWM_OE
+    id: U22
+  - ref: R20
+    category: pulldown
+    value: 10K E-STOP FAIL-SAFE PULLDOWN
+    mpn: RC0603FR-0710KL
+    manufacturer: Yageo
+    footprint: R0603
+    connections:
+      A: ESTOP_OK
+      B: GND
+    id: R20
+  - ref: J27
+    category: estop
+    value: NC E-STOP LOOP
+    mpn: '1935161'
+    manufacturer: Phoenix Contact
+    footprint: TerminalBlock_1x03_P5.08mm
+    connections:
+      VCC: V3V3
+      ESTOP_OK: ESTOP_OK
+      GND: GND
+    id: J27
+  - ref: J21
+    category: servo_output
+    value: SERVO_1_3PIN
+    mpn: M20-9990345
+    manufacturer: Harwin
+    footprint: PinHeader_1x03_P2.54mm_Vertical
+    connections:
+      SIGNAL: SERVO1_PWM
+      VPLUS: V5
+      GND: GND
+    id: J21
+  - ref: J22
+    category: servo_output
+    value: SERVO_2_3PIN
+    mpn: M20-9990345
+    manufacturer: Harwin
+    footprint: PinHeader_1x03_P2.54mm_Vertical
+    connections:
+      SIGNAL: SERVO2_PWM
+      VPLUS: V5
+      GND: GND
+    id: J22
+  - ref: J23
+    category: servo_output
+    value: SERVO_3_3PIN
+    mpn: M20-9990345
+    manufacturer: Harwin
+    footprint: PinHeader_1x03_P2.54mm_Vertical
+    connections:
+      SIGNAL: SERVO3_PWM
+      VPLUS: V5
+      GND: GND
+    id: J23
+  - ref: J24
+    category: servo_output
+    value: SERVO_4_3PIN
+    mpn: M20-9990345
+    manufacturer: Harwin
+    footprint: PinHeader_1x03_P2.54mm_Vertical
+    connections:
+      SIGNAL: SERVO4_PWM
+      VPLUS: V5
+      GND: GND
+    id: J24
+  - ref: J25
+    category: servo_output
+    value: SERVO_5_3PIN
+    mpn: M20-9990345
+    manufacturer: Harwin
+    footprint: PinHeader_1x03_P2.54mm_Vertical
+    connections:
+      SIGNAL: SERVO5_PWM
+      VPLUS: V5
+      GND: GND
+    id: J25
+  - ref: J26
+    category: servo_output
+    value: SERVO_6_3PIN
+    mpn: M20-9990345
+    manufacturer: Harwin
+    footprint: PinHeader_1x03_P2.54mm_Vertical
+    connections:
+      SIGNAL: SERVO6_PWM
+      VPLUS: V5
+      GND: GND
+    id: J26
+placement:
+  constraints:
+  - ref: F20
+    relationship: adjacent_to
+    target: J20
+    max_distance_mm: 5.0
+  - ref: U20
+    relationship: thermal_separation
+    target: U3
+    min_distance_mm: 12.0
+  - ref: U21
+    relationship: adjacent_to
+    target: R1
+    max_distance_mm: 8.0
+  - ref: U22
+    relationship: adjacent_to
+    target: J27
+    max_distance_mm: 5.0
+  - ref: J21
+    relationship: near_connector
+    target: J20
+    side: same_half
+  - ref: J22
+    relationship: near_connector
+    target: J20
+    side: same_half
+  - ref: J23
+    relationship: near_connector
+    target: J20
+    side: same_half
+  - ref: J24
+    relationship: near_connector
+    target: J20
+    side: same_half
+  - ref: J25
+    relationship: near_connector
+    target: J20
+    side: same_half
+  - ref: J26
+    relationship: near_connector
+    target: J20
+    side: same_half
+  - ref: J22
+    relationship: thermal_separation
+    target: J21
+    min_distance_mm: 4.0
+  - ref: J23
+    relationship: thermal_separation
+    target: J21
+    min_distance_mm: 4.0
+  - ref: J24
+    relationship: thermal_separation
+    target: J21
+    min_distance_mm: 4.0
+  - ref: J25
+    relationship: thermal_separation
+    target: J21
+    min_distance_mm: 4.0
+  - ref: J26
+    relationship: thermal_separation
+    target: J21
+    min_distance_mm: 4.0
+  - ref: J23
+    relationship: thermal_separation
+    target: J22
+    min_distance_mm: 4.0
+  - ref: J24
+    relationship: thermal_separation
+    target: J22
+    min_distance_mm: 4.0
+  - ref: J25
+    relationship: thermal_separation
+    target: J22
+    min_distance_mm: 4.0
+  - ref: J26
+    relationship: thermal_separation
+    target: J22
+    min_distance_mm: 4.0
+  - ref: J24
+    relationship: thermal_separation
+    target: J23
+    min_distance_mm: 4.0
+  - ref: J25
+    relationship: thermal_separation
+    target: J23
+    min_distance_mm: 4.0
+  - ref: J26
+    relationship: thermal_separation
+    target: J23
+    min_distance_mm: 4.0
+  - ref: J25
+    relationship: thermal_separation
+    target: J24
+    min_distance_mm: 4.0
+  - ref: J26
+    relationship: thermal_separation
+    target: J24
+    min_distance_mm: 4.0
+  - ref: J26
+    relationship: thermal_separation
+    target: J25
+    min_distance_mm: 4.0
+  - ref: J21
+    relationship: adjacent_to
+    target: J20
+    max_distance_mm: 5.0

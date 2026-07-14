@@ -1,0 +1,247 @@
+project:
+  name: mini_servo_robot
+  target_use: six_dof_mini_servo_robot_controller
+  revision: r1
+  description: Six-servo robot controller with 2S battery input, isolated 5 V servo rail, PCA9685 PWM, SAMD21 MCU, and LSM6DSOX IMU
+  version: 0.1.0
+  template: mini_servo_robot
+  created_at: '2026-07-14'
+
+system:
+  target_application: Six-degree-of-freedom mini biped or articulated servo robot
+  supply:
+    battery:
+      type: 2s_lipo
+      pack_voltage_nominal: 7.4
+      pack_voltage_max: 8.4
+      pack_current_peak_a: 10.0
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.25}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.2}
+      - {name: SERVO_V5, voltage: 5.0, current_peak_a: 8.0}
+
+compute:
+  mcu:
+    family: SAMD21
+    variant: ATSAMD21G18A-AU
+    clock_mhz: 48
+    cores: 1
+    flash_kb: 256
+    sram_kb: 32
+    fpu: false
+    connectivity: [usb_fullspeed_native, i2c, spi, uart]
+    hard_realtime_required: true
+  debug_interface: SWD
+
+actuation:
+  motor_channels: 6
+  motor_channel_peak_current_a: 1.5
+  max_simultaneous_peak_channels: 4
+  gpio_outputs: 8
+  pwm_channels: 6
+  pwm_controller: PCA9685
+  servo_power_rail: SERVO_V5
+
+sensing:
+  imu:
+    ic: LSM6DSOX
+    interface: I2C
+    axes: 6
+    accel_range_g: [2, 4, 8, 16]
+    gyro_range_dps: [125, 250, 500, 1000, 2000]
+  environment:
+    ic: BME280
+    interface: I2C
+    measures: [temperature, humidity, pressure]
+  adc_channels: 4
+  adc_bits: 12
+  e_stop: required
+
+assumptions:
+  servo_peak_concurrency:
+    value: four_of_six_servos_may_reach_stall_peak_together
+    resolved_value: four_of_six_servos_may_reach_stall_peak_together
+    confidence: medium
+    reason: The 8 A servo rail covers four 1.5 A peaks plus controller and transient margin; physical gait-current testing remains required.
+    critical: true
+    requires_user_review: false
+  separated_power_domains:
+    value: usb_logic_and_2s_servo_power_share_ground_only
+    resolved_value: usb_logic_and_2s_servo_power_share_ground_only
+    confidence: high
+    reason: Logic remains USB/3V3 powered while the fused buck supplies only SERVO_V5; common ground preserves PWM reference.
+    critical: true
+    requires_user_review: false
+  hardware_pwm_disable:
+    value: normally_closed_estop_disables_buck_and_pca9685_output_enable
+    resolved_value: normally_closed_estop_disables_buck_and_pca9685_output_enable
+    confidence: high
+    reason: The fail-safe hardware path does not depend on firmware execution.
+    critical: true
+    requires_user_review: false
+
+electronics:
+  backend: tscircuit
+  role_set: samd21_sensor_hub
+  role_extensions:
+    servo_battery_input: {component_id: molex_42820_2212, resolution: curated}
+    servo_safety_gate: {component_id: sn74lvc1g97dbvr, resolution: curated}
+    servo_estop_pulldown: {component_id: rc0402_10k, resolution: curated}
+    servo_estop_connector: {component_id: phoenix_1935161, resolution: curated}
+    servo_pwm_decap: {component_id: grm155_100n, resolution: curated}
+  compiled_backend_required: false
+  power:
+    input_voltage_min_v: 6.0
+    input_voltage_max_v: 8.4
+    input_connector: XT30
+    bus_voltages_v: [7.4, 5.0, 3.3]
+    max_current_ma: 10000
+  pcb:
+    layers: 2
+    width_mm: 100
+    height_mm: 65
+    min_trace_mm: 0.15
+    min_space_mm: 0.15
+    controlled_impedance: false
+
+placement:
+  constraints:
+    - {ref: F20, relationship: adjacent_to, target: J20, max_distance_mm: 18.0}
+    - {ref: U20, relationship: thermal_separation, target: U3, min_distance_mm: 20.0}
+    - {ref: U21, relationship: adjacent_to, target: C21, max_distance_mm: 10.0}
+    - {ref: U22, relationship: adjacent_to, target: J27, max_distance_mm: 18.0}
+
+mechanical:
+  enclosure: printed_robot_torso
+  selected_variant: ventilated_controller_tray
+  variants:
+    - {name: ventilated_controller_tray, lid_style: screw, ventilation: slots, gasket: false}
+  mounting: robot_torso
+  connectors_exposed: true
+  vibration_environment: high
+  cooling: passive_vented
+  envelope:
+    board_width_mm: 100.0
+    board_height_mm: 65.0
+    board_thickness_mm: 1.6
+    max_component_height_top_mm: 14.0
+    max_component_height_bottom_mm: 2.0
+  enclosure_internal_mm: [106.0, 71.0, 22.0]
+  wall_thickness_mm: 2.4
+  insertion_clearance_mm: 1.0
+  assembly_clearance_mm: 1.0
+  tolerance_mm: 0.25
+  max_connector_edge_distance_mm: 6.0
+  default_component_height_mm: 3.0
+  component_heights_mm: {J1: 3.4, J2: 5.0, J20: 8.0, U20: 12.0, C20: 13.0, J21: 8.5, J22: 8.5, J23: 8.5, J24: 8.5, J25: 8.5, J26: 8.5, J27: 10.0}
+  board_origin_mm: [0.0, 0.0, 0.0]
+  mounting_holes:
+    - {x_mm: 3.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 96.5, y_mm: 3.5, diameter_mm: 3.2}
+    - {x_mm: 3.5, y_mm: 61.5, diameter_mm: 3.2}
+    - {x_mm: 96.5, y_mm: 61.5, diameter_mm: 3.2}
+  fixtures:
+    mounting_plate: {enabled: true}
+    frame_brackets: {enabled: true}
+  connector_interfaces:
+    - {ref: J1, side: front, opening_mm: [9.0, 4.0], center_z_mm: 3.0, position_tolerance_mm: 0.5}
+    - {ref: J2, side: rear, opening_mm: [13.0, 5.0], center_z_mm: 4.0, position_tolerance_mm: 0.5}
+    - {ref: J20, side: left, opening_mm: [11.0, 9.0], center_z_mm: 6.0, position_tolerance_mm: 0.7}
+    - {ref: J21, side: right, opening_mm: [8.0, 8.0], center_z_mm: 5.0, position_tolerance_mm: 0.7}
+    - {ref: J22, side: right, opening_mm: [8.0, 8.0], center_z_mm: 5.0, position_tolerance_mm: 0.7}
+    - {ref: J23, side: right, opening_mm: [8.0, 8.0], center_z_mm: 5.0, position_tolerance_mm: 0.7}
+    - {ref: J24, side: right, opening_mm: [8.0, 8.0], center_z_mm: 5.0, position_tolerance_mm: 0.7}
+    - {ref: J25, side: right, opening_mm: [8.0, 8.0], center_z_mm: 5.0, position_tolerance_mm: 0.7}
+    - {ref: J26, side: right, opening_mm: [8.0, 8.0], center_z_mm: 5.0, position_tolerance_mm: 0.7}
+    - {ref: J27, side: rear, opening_mm: [16.0, 11.0], center_z_mm: 7.0, position_tolerance_mm: 0.7}
+
+firmware:
+  framework: zephyr
+  target: atmel_samd21g18a
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
+  rtos: zephyr
+  zephyr_target: atmel_samd21g18a
+  toolchain: arm-none-eabi-gcc
+  frameworks: [zephyr_samd21]
+  modules:
+    - id: usb_cdc
+      behavior: interface_stack
+      stack: usb
+      library: zephyr_usb_cdc_acm
+      required_nets: [USB_DP, USB_DM]
+      required_tests: [usb_cdc_enumeration]
+      init_order: 20
+      stack_size_bytes: 2048
+    - id: lsm6dsox_driver
+      behavior: sensor_poll
+      bus: i2c
+      sensor: lsm6dsox
+      address: 0x6A
+      poll_interval_ms: 5
+      ring_buf_entries: 64
+    - id: pca9685_servo_pwm
+      behavior: interface_stack
+      stack: i2c_pwm
+      library: zephyr_i2c_pca9685
+      required_nets: [I2C_SCL, I2C_SDA, SERVO_PWM_OE]
+      required_tests: [pca9685_probe, servo_neutral_pulse_scope, all_channels_power_off_safe]
+      init_order: 45
+      stack_size_bytes: 1536
+    - id: servo_safety_watchdog
+      behavior: timeout_shutdown
+      trigger: {signal: IMU_INT1, timeout_ms: 100}
+      action: {disable_all: motor_outputs, assert: SERVO_PWM_OE}
+      description: IMU heartbeat watchdog; the hardware E-stop remains independent.
+  ota: false
+
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer_high_current
+    layers: 2
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 2.0
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
+
+safety:
+  regulatory: [prototype_only]
+  isolation_required: false
+  esd_protection: required
+  emergency_stop:
+    required: true
+    fail_safe_hardware_path: true
+  required_protections: [battery_fuse, servo_buck_current_limit, usb_esd, watchdog, hardware_pwm_disable]
+
+sourcing:
+  provider: curated
+  target_unit_cost_usd: 45.00
+  volume: 10
+  lead_time_weeks: 4
+
+test_plan:
+  gate_checks:
+    - usb_cdc_enumeration
+    - lsm6dsox_i2c_whoami
+    - pca9685_i2c_probe
+    - verify_servo_power_off_at_boot
+    - verify_estop_disables_buck_and_pwm
+    - measure_six_servo_peak_current_and_rail_droop
+
+requirements:
+  raw_inputs: []
+  active_lowered:
+    - {id: req_lowered_0001, source: template:mini_servo_robot, spec_path: actuation.motor_channels, status: lowered}
+    - {id: req_lowered_0002, source: template:mini_servo_robot, spec_path: sensing.imu, status: lowered}
+    - {id: req_lowered_0003, source: template:mini_servo_robot, spec_path: system.supply.rails.SERVO_V5, status: lowered}
+  active_unresolved:
+    - id: req_unresolved_0001
+      source: template:mini_servo_robot
+      category: physical_servo_current_profile
+      field_type: retained_assumption
+      status: unresolved
+      release_blocking: true
+      reason: Actual servos, gait, wiring, battery, and buck thermal behavior require instrumented robot testing.
+      required_human_approvals: [robot_bringup_owner]
+      affected_gates: [physical_qualification, power_integrity_estimate]

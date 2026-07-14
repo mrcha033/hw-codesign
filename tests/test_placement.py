@@ -10,10 +10,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from hw_codesign.board_layout import component_positions
+from hw_codesign.board_layout import component_positions, footprint_geometry
+from hw_codesign.footprint_library import canonical_footprint_geometry
 from hw_codesign.models import GateReport, Status
 from hw_codesign.placement import (
     POWER_CATEGORIES,
+    _candidate_positions_for_ref,
     check_layout_signal_integrity,
     check_layout_thermal_integrity,
     check_placement,
@@ -358,6 +360,108 @@ def test_off_board_component_fails(spec: dict, graph: dict):
     assert "off_board" in _codes(report)
 
 
+def test_package_geometry_uses_verified_rf_dimensions():
+    nrf = footprint_geometry({
+        "footprint": "Nordic_nRF52840:nRF52840-QIAA",
+        "package": "aQFN-73",
+        "pins": [{"number": str(index)} for index in range(1, 74)],
+    })
+    esp = footprint_geometry({
+        "footprint": "RF_Module:ESP32-S3-WROOM-1",
+        "package": "LCC-41",
+        "pins": [{"number": str(index)} for index in range(1, 42)],
+    })
+
+    assert nrf.body == (-3.5, -3.5, 3.5, 3.5)
+    assert esp.body == (-9.0, -12.75, 9.0, 12.75)
+    assert nrf.source == "verified_footprint"
+    assert esp.source == "canonical_kicad_snapshot"
+
+    canonical = canonical_footprint_geometry("RF_Module:ESP32-S3-WROOM-1")
+    assert canonical is not None
+    assert canonical.copper_extent == (-9.5, -5.71, 9.5, 13.25)
+    assert canonical.courtyard_extent == (-24.0, -27.75, 24.0, 13.45)
+    assert canonical.pad_forms == 62
+    assert len(canonical.numbered_pads) == 41
+    assert len(canonical.keepout_polygons) == 1
+
+
+def test_curated_parts_have_package_derived_geometry():
+    parts_dir = Path(__file__).parents[1] / "parts" / "components"
+    fallback_ids = []
+    for path in parts_dir.glob("*.yaml"):
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+        components = payload.get("components", [payload] if payload.get("id") else [])
+        for component in components:
+            geometry = footprint_geometry({
+                **component,
+                "footprint": component.get("footprint", {}).get("library_id"),
+                "pins": component.get("pins", []),
+            })
+            if geometry.source == "bounded_fallback":
+                fallback_ids.append(component.get("id"))
+
+    assert fallback_ids == []
+
+
+def test_microfit_8pin_geometry_uses_two_by_four_pad_array():
+    geometry = footprint_geometry({
+        "footprint": "HW_Curated:MicroFit_8Pin",
+        "package": "Micro-Fit-8",
+        "pins": [{"number": str(index)} for index in range(1, 9)],
+    })
+
+    assert geometry.columns == 4
+    assert len({pad[2] for pad in geometry.pads}) == 2
+    assert geometry.extent == (-9.0, -5.0, 9.0, 5.0)
+
+
+def test_synthetic_package_pads_do_not_self_overlap():
+    contracts = [
+        ("Nordic_nRF52840:nRF52840-QIAA", "aQFN-73", 73),
+        ("Package_TO_SOT_SMD:SOT-23-6", "SOT-23-6", 6),
+        ("Package_LGA:LGA-14", "LGA-14", 5),
+        ("HW_Curated:MIDI_Fuse", "MIDI", 2),
+    ]
+    for footprint, package, pin_count in contracts:
+        geometry = footprint_geometry({
+            "footprint": footprint,
+            "package": package,
+            "pins": [{"number": str(index)} for index in range(1, pin_count + 1)],
+        })
+        minimum_distance = min(
+            math.dist(left[1:], right[1:])
+            for index, left in enumerate(geometry.pads)
+            for right in geometry.pads[index + 1:]
+        )
+        assert minimum_distance + 1e-9 >= geometry.pad_diameter_mm, footprint
+
+
+def test_footprint_escape_fails_even_when_anchor_is_on_board(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+    ref = next(iter(proposal.placements))
+    placement = proposal.placements[ref]
+    proposal.placements[ref] = replace(placement, x_mm=0.1, y_mm=0.1)
+
+    report = check_placement(proposal, graph)
+
+    assert report.status == Status.FAIL
+    assert "footprint_off_board" in _codes(report)
+
+
+def test_footprint_edge_clearance_is_blocking_while_still_on_board(spec: dict, graph: dict):
+    proposal = propose_placement(spec, graph)
+    ref = next(iter(proposal.placements))
+    placement = proposal.placements[ref]
+    min_x, _min_y, _max_x, _max_y = placement.extent()
+    proposal.placements[ref] = replace(placement, x_mm=placement.x_mm - min_x + 0.1)
+
+    report = check_placement(proposal, graph)
+
+    assert report.status == Status.FAIL
+    assert "footprint_edge_clearance" in _codes(report)
+
+
 def test_coincident_components_fail(spec: dict, graph: dict):
     proposal = propose_placement(spec, graph)
     refs = list(proposal.placements)
@@ -574,6 +678,53 @@ def test_constraint_solver_repairs_rf_component_away_from_edge(ble_spec: dict, b
 
     assert proposal.placements[rf["ref"]].source == "solver_rf_edge_keepout"
     assert report.status == Status.PASS
+
+
+def test_directional_antenna_rotation_stays_coupled_to_selected_edge():
+    template = Path(__file__).parents[1] / "src" / "hw_codesign" / "templates" / "sensor_data_logger.yaml"
+    sensor_spec = yaml.safe_load(template.read_text(encoding="utf-8"))
+    sensor_graph = build_graph(sensor_spec)
+    rf = next(component for component in sensor_graph["components"] if component["ref"] == "U1")
+    width = float(sensor_spec["mechanical"]["envelope"]["board_width_mm"])
+    height = float(sensor_spec["mechanical"]["envelope"]["board_height_mm"])
+    rf["constraints"] = ["wifi_bt_mcu", "integral_antenna_keepout_required"]
+    rf["pcb_position_mm"] = [width / 2.0, height / 2.0]
+    rf["pcb_rotation_deg"] = 180.0
+
+    proposal = propose_placement(sensor_spec, sensor_graph)
+    placed = proposal.placements["U1"]
+    assert placed.rotation_deg == 180.0
+    assert height - placed.extent()[3] <= 8.0
+
+    centered = dict(proposal.placements)
+    centered["U1"] = replace(
+        placed,
+        x_mm=width / 2.0,
+        y_mm=height / 2.0,
+        source="test_center",
+    )
+    rf_candidates = [
+        candidate
+        for candidate in _candidate_positions_for_ref(
+            "U1",
+            centered,
+            proposal.constraints,
+            sensor_graph,
+            sensor_spec,
+            width,
+            height,
+        )
+        if candidate[2] == "solver_rf_edge_keepout"
+    ]
+    assert len(rf_candidates) == 1
+    assert rf_candidates[0][1] == height - 4.0
+
+    # Moving the same rear-facing antenna to the front edge must not pass merely
+    # because some package edge remains close to Edge.Cuts.
+    front_y = placed.y_mm - placed.extent()[1] + 0.501
+    proposal.placements["U1"] = replace(placed, y_mm=front_y)
+    report = check_layout_signal_integrity(proposal, sensor_graph, sensor_spec)
+    assert "rf_antenna_not_edge_aligned" in _codes(report)
 
 
 def test_layout_signal_integrity_rejects_rf_component_away_from_edge_when_forced(ble_spec: dict, ble_graph: dict):

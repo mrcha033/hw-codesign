@@ -183,6 +183,24 @@ _DESIGN_REPORT_OUTPUT: dict[str, Any] = {
     },
 }
 
+_JOB_OUTPUT: dict[str, Any] = {
+    "type": "object",
+    "required": ["job_id", "status", "gate_events", "result"],
+    "additionalProperties": True,
+    "properties": {
+        "job_id": {"type": "string"},
+        "status": {"type": "string", "enum": ["queued", "running", "complete", "failed", "cancelled"]},
+        "gate_events": {"type": "array", "items": {"type": "object"}},
+        "result": {"type": ["object", "null"]},
+        "error": {"type": ["object", "null"]},
+        "project": {"type": "string"},
+        "tool": {"type": "string"},
+        "pid": {"type": ["integer", "null"]},
+        "pgid": {"type": ["integer", "null"]},
+        "committed": {"type": "boolean"},
+    },
+}
+
 
 # ---------------------------------------------------------------------------
 # Tool registry
@@ -193,6 +211,56 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
     # -------------------------------------------------------------------
     # Project management
     # -------------------------------------------------------------------
+    "hw_submit_job": ToolDef(
+        name="hw_submit_job",
+        description="Submit a long-running hardware operation to a project-locked isolated workspace. Returns a cancellable job ID; changes are atomically promoted only when the operation succeeds.",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "tool": {"type": "string", "description": "Async hw_* tool name"},
+                "arguments": {"type": "object", "description": "Tool arguments including project"},
+            },
+            "required": ["tool", "arguments"],
+            "additionalProperties": False,
+        },
+        output_schema=_JOB_OUTPUT,
+        execution_mode="local",
+    ),
+
+    "hw_get_job": ToolDef(
+        name="hw_get_job",
+        description="Return persistent status, logs, error, and result for an isolated job.",
+        input_schema={
+            "type": "object",
+            "properties": {"job_id": {"type": "string"}},
+            "required": ["job_id"],
+            "additionalProperties": False,
+        },
+        output_schema=_JOB_OUTPUT,
+        execution_mode="local",
+    ),
+
+    "hw_cancel_job": ToolDef(
+        name="hw_cancel_job",
+        description="Cancel a job and terminate its complete process group, including CAD and EDA descendants.",
+        input_schema={
+            "type": "object",
+            "properties": {"job_id": {"type": "string"}},
+            "required": ["job_id"],
+            "additionalProperties": False,
+        },
+        output_schema=_JOB_OUTPUT,
+        execution_mode="local",
+    ),
+
+    "hw_recover_jobs": ToolDef(
+        name="hw_recover_jobs",
+        description="Mark dead workers failed and reclaim stale project-writer locks after abnormal termination.",
+        input_schema={"type": "object", "properties": {}, "additionalProperties": False},
+        output_schema=ref("opaque_result"),
+        execution_mode="local",
+    ),
+
     "hw_create_project": ToolDef(
         name="hw_create_project",
         description="Create a new hardware project from a template and set its top-level target.",
@@ -222,6 +290,28 @@ TOOL_REGISTRY: dict[str, ToolDef] = {
         description="Open an existing project and return its current spec.",
         input_schema=_project_only(),
         output_schema=_OPEN_PROJECT_OUTPUT,
+    ),
+
+    "hw_register_project_part": ToolDef(
+        name="hw_register_project_part",
+        description="Register or replace a project-owned component role with pin, power-rating, footprint, mechanical, sourcing, and validation metadata in parts.local.yaml.",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "project": {"type": "string"},
+                "registration": {"type": "object", "additionalProperties": True},
+            },
+            "required": ["project", "registration"],
+            "additionalProperties": False,
+        },
+        output_schema=ref("opaque_result"),
+    ),
+
+    "hw_list_project_parts": ToolDef(
+        name="hw_list_project_parts",
+        description="List validated project-owned component roles and registrations from parts.local.yaml.",
+        input_schema=_project_only(),
+        output_schema=ref("opaque_result"),
     ),
 
     "hw_snapshot_project": ToolDef(

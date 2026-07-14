@@ -1910,11 +1910,11 @@
     "board_width_mm": 70.0,
     "constraints": [
       {
-        "derived_from": "mechanical.envelope + manufacturing.pcb.min_clearance_mm",
+        "derived_from": "mechanical.envelope + manufacturing.pcb.min_copper_edge_clearance_mm (KiCad default 0.5 mm)",
         "enforced": true,
         "kind": "board_keepout",
         "params": {
-          "edge_margin_mm": 0.15,
+          "edge_margin_mm": 0.5,
           "height_mm": 50.0,
           "width_mm": 70.0
         },
@@ -2035,8 +2035,10 @@
     ],
     "placements": {
       "C1": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "",
         "ref": "C1",
         "rotation_deg": 0.0,
@@ -2046,8 +2048,10 @@
         "y_mm": 39.0
       },
       "C2": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "",
         "ref": "C2",
         "rotation_deg": 0.0,
@@ -2057,8 +2061,10 @@
         "y_mm": 39.0
       },
       "C9": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 1.6,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 3.2,
         "rationale": "",
         "ref": "C9",
         "rotation_deg": 0.0,
@@ -2068,8 +2074,10 @@
         "y_mm": 14.0
       },
       "D1": {
-        "courtyard_h_mm": 7.348,
-        "courtyard_w_mm": 7.348,
+        "courtyard_h_mm": 1.75,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 3.038,
         "rationale": "",
         "ref": "D1",
         "rotation_deg": 0.0,
@@ -2079,8 +2087,10 @@
         "y_mm": 10.0
       },
       "F1": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 4.0,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 10.0,
         "rationale": "",
         "ref": "F1",
         "rotation_deg": 0.0,
@@ -2090,19 +2100,23 @@
         "y_mm": 10.0
       },
       "J1": {
-        "courtyard_h_mm": 7.348,
-        "courtyard_w_mm": 7.348,
-        "rationale": "",
+        "courtyard_h_mm": 7.35,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 9.0,
+        "rationale": " Position was clamped to preserve board copper-edge clearance.",
         "ref": "J1",
         "rotation_deg": 0.0,
         "side": "top",
         "source": "sensor_data_logger_anchor",
         "x_mm": 18.0,
-        "y_mm": 4.0
+        "y_mm": 4.176
       },
       "J2": {
-        "courtyard_h_mm": 9.487,
-        "courtyard_w_mm": 9.487,
+        "courtyard_h_mm": 5.1,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 12.7,
         "rationale": "",
         "ref": "J2",
         "rotation_deg": 0.0,
@@ -2112,8 +2126,10 @@
         "y_mm": 39.0
       },
       "Q1": {
-        "courtyard_h_mm": 7.348,
-        "courtyard_w_mm": 7.348,
+        "courtyard_h_mm": 1.75,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 3.038,
         "rationale": "",
         "ref": "Q1",
         "rotation_deg": 0.0,
@@ -2123,8 +2139,10 @@
         "y_mm": 4.0
       },
       "R1": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "",
         "ref": "R1",
         "rotation_deg": 0.0,
@@ -2134,8 +2152,10 @@
         "y_mm": 38.0
       },
       "R2": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "",
         "ref": "R2",
         "rotation_deg": 0.0,
@@ -2145,8 +2165,10 @@
         "y_mm": 38.0
       },
       "R3": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "",
         "ref": "R3",
         "rotation_deg": 0.0,
@@ -2156,8 +2178,10 @@
         "y_mm": 25.0
       },
       "R5": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "USB-C Rd resistor position derived from the connector CC pins.",
         "ref": "R5",
         "rotation_deg": 0.0,
@@ -2167,8 +2191,10 @@
         "y_mm": 7.0
       },
       "R6": {
-        "courtyard_h_mm": 4.243,
-        "courtyard_w_mm": 4.243,
+        "courtyard_h_mm": 0.8,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 1.6,
         "rationale": "USB-C Rd resistor position derived from the connector CC pins.",
         "ref": "R6",
         "rotation_deg": 0.0,
@@ -2178,19 +2204,23 @@
         "y_mm": 7.0
       },
       "U1": {
-        "courtyard_h_mm": 19.209,
-        "courtyard_w_mm": 19.209,
-        "rationale": "",
+        "courtyard_h_mm": 26.0,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.25,
+        "courtyard_w_mm": 19.0,
+        "rationale": " Position was clamped to preserve board copper-edge clearance.",
         "ref": "U1",
-        "rotation_deg": 0.0,
+        "rotation_deg": 180.0,
         "side": "top",
         "source": "sensor_data_logger_anchor",
         "x_mm": 44.0,
-        "y_mm": 43.0
+        "y_mm": 36.749
       },
       "U2": {
-        "courtyard_h_mm": 6.708,
-        "courtyard_w_mm": 6.708,
+        "courtyard_h_mm": 2.5,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 3.0,
         "rationale": "",
         "ref": "U2",
         "rotation_deg": 0.0,
@@ -2200,8 +2230,10 @@
         "y_mm": 28.0
       },
       "U3": {
-        "courtyard_h_mm": 5.196,
-        "courtyard_w_mm": 5.196,
+        "courtyard_h_mm": 4.0,
+        "courtyard_offset_x_mm": 0.0,
+        "courtyard_offset_y_mm": 0.0,
+        "courtyard_w_mm": 4.0,
         "rationale": "",
         "ref": "U3",
         "rotation_deg": 0.0,

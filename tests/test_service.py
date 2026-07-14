@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from copy import deepcopy
@@ -10,7 +11,7 @@ import pytest
 from hw_codesign.backends.freerouting import FreeroutingBackend
 from hw_codesign.backends.kicad import KiCadBackend
 from hw_codesign.errors import UnsafeChangeError
-from hw_codesign.reference_backend import internal_drc, internal_erc
+from hw_codesign.reference_backend import _zone_net_layers, internal_drc, internal_erc
 from hw_codesign.schematic_generator import generate_kicad_schematic
 
 
@@ -25,7 +26,8 @@ def test_generation_is_deterministic_and_cross_domain(service, project):
     assert (path / "firmware" / "generated" / "pinmap.h").is_file()
     assert (path / "electronics" / "generated" / "bom.csv").is_file()
     routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text())
-    assert routing["mode"] == "plane_preseeded"
+    assert routing["mode"] == "zone_connected_planes"
+    assert routing["plane_connectivity"] == "copper_zones"
     assert routing["signal_routing"] == "deferred_to_freerouting"
 
 
@@ -35,6 +37,7 @@ def test_robotics_controller_kicad_artifacts_keep_four_layer_stackup(service, pr
     kicad_dir = path / "electronics" / "generated" / "kicad"
     legacy_schematic = (kicad_dir / f"{project}.sch").read_text(encoding="utf-8")
     board = (kicad_dir / f"{project}.kicad_pcb").read_text(encoding="utf-8")
+    routing = json.loads((kicad_dir / "routing.json").read_text(encoding="utf-8"))
 
     assert 'Title "Robot Controller"' in legacy_schematic
     assert '(0 "F.Cu" signal)' in board
@@ -43,6 +46,36 @@ def test_robotics_controller_kicad_artifacts_keep_four_layer_stackup(service, pr
     assert '(31 "B.Cu" signal)' in board
     assert '(net_name "GND") (layer "In1.Cu")' in board
     assert '(net_name "V5") (layer "In2.Cu")' in board
+    assert '  (segment (start ' in board
+    assert '  (via (at ' in board
+    assert routing["plane_escape"] == "fcu_segment_to_through_via"
+    assert routing["plane_escape_required"] > 0
+    assert routing["plane_escape_count"] == routing["plane_escape_required"]
+
+
+def test_ir_pcb_sanity_requires_multilayer_smd_plane_escape_via(service, project):
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads(
+        (path / "electronics" / "generated" / "electrical_graph.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    board_path = path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb"
+    board = board_path.read_text(encoding="utf-8")
+    start = board.index("  (via (at ")
+    end = board.index("\n", start)
+    board_path.write_text(board[:start] + board[end + 1:], encoding="utf-8")
+
+    report = internal_drc(path, spec, graph)
+
+    assert report.status.value == "fail"
+    failure = next(item for item in report.failures if item.code == "plane_escape_missing")
+    assert failure.details["missing"]
+    assert {"ref", "pad", "net", "plane_layer", "pad_at_mm"} <= set(
+        failure.details["missing"][0]
+    )
 
 
 def test_ir_pcb_sanity_rejects_layers_outside_stackup(service):
@@ -69,6 +102,62 @@ def test_ir_pcb_sanity_rejects_layers_outside_stackup(service):
     assert "pcb_stackup_layer_mismatch" in codes
     assert "pcb_layer_not_in_stackup" in codes
     assert "In1.Cu" in report.metrics["declared_copper_layers"]
+
+
+def test_ir_pcb_sanity_requires_zone_for_each_declared_plane(service):
+    project = "sensor_logger_missing_plane_zone"
+    service.create_project(project, template="sensor_data_logger")
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    board_path = path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb"
+    board = board_path.read_text(encoding="utf-8")
+    start = board.index('  (zone (net ', board.index('(net_name "GND")') - 30)
+    end = board.index('  (gr_rect', start)
+    board_path.write_text(board[:start] + board[end:], encoding="utf-8")
+
+    report = internal_drc(path, spec, graph)
+
+    assert report.status.value == "fail"
+    assert "plane_zone_missing" in {failure.code for failure in report.failures}
+
+
+def test_ir_pcb_sanity_requires_front_zone_for_front_smd_plane_pads(service):
+    project = "sensor_logger_missing_front_plane_zone"
+    service.create_project(project, template="sensor_data_logger")
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    spec = service.read_spec(project)
+    graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
+    board_path = path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb"
+    board = board_path.read_text(encoding="utf-8")
+    marker = '(net_name "GND") (layer "F.Cu")'
+    marker_index = board.index(marker)
+    start = board.rfind("  (zone (net ", 0, marker_index)
+    end = board.find("  (zone (net ", marker_index)
+    if end < 0:
+        end = board.index("  (gr_rect", marker_index)
+    board_path.write_text(board[:start] + board[end:], encoding="utf-8")
+
+    report = internal_drc(path, spec, graph)
+
+    assert report.status.value == "fail"
+    failure = next(item for item in report.failures if item.code == "plane_zone_missing")
+    assert {tuple(item.values()) for item in failure.details["missing"]} >= {("GND", "F.Cu")}
+
+
+def test_zone_parser_accepts_generated_and_kicad_formatted_net_syntax():
+    board = '''
+  (zone (net 1) (net_name "GND") (layer "B.Cu") (hatch edge 0.5))
+  (zone
+    (net "GND")
+    (layer "F.Cu")
+    (hatch edge 0.5)
+  )
+'''
+
+    assert _zone_net_layers(board) == {"GND": {"B.Cu", "F.Cu"}}
 
 
 def test_kicad_artifact_selection_prefers_canonical_board(service):
@@ -126,9 +215,9 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     assert {"U2.11", "U3.7"} <= nets["QSPI_D3"]
 
     positions = {item["ref"]: item["pcb_position_mm"] for item in graph["components"]}
-    assert positions["J1"] == [3.0, 10.0]
+    assert positions["J1"] == [5.001, 10.0]
     assert positions["U2"] == [18.0, 4.0]
-    assert positions["U3"] == [33.0, 2.0]
+    assert positions["U3"] == [33.0, 2.951]
 
     routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
     assert routing["status"] == "generated"
@@ -280,11 +369,11 @@ def test_samd21_sensor_hub_uses_curated_sensor_and_debug_pin_contracts(service):
     assert {pin["net"] for pin in vddcore_cap["pins"]} == {"VDDCORE", "GND"}
 
     positions = {item["ref"]: item["pcb_position_mm"] for item in graph["components"]}
-    assert positions["J1"] == [12.0, 3.0]
+    assert positions["J1"] == [12.0, 4.176]
     assert positions["D1"] == [18.0, 3.0]
     assert positions["U3"] == [36.0, 12.0]
     assert positions["U4"] == [36.0, 21.0]
-    assert positions["J2"] == [47.0, 21.0]
+    assert positions["J2"] == [46.959, 21.0]
 
     routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
     assert routing["status"] == "generated"
@@ -495,7 +584,35 @@ def test_kicad_schematic_preserves_duplicate_power_pins(tmp_path):
 
 def test_freerouting_log_parser_distinguishes_complete_and_incomplete():
     assert FreeroutingBackend._final_unrouted("final score: 988.64 (1 unrouted)\n") == 1
+    assert FreeroutingBackend._final_unrouted("final score: 861.22 (7 unrouted and 10 violations)\n") == 7
+    assert FreeroutingBackend._final_routing_metrics("final score: 861.22 (7 unrouted and 10 violations)\n") == (7, 10)
     assert FreeroutingBackend._final_unrouted("final score: 992.25\nSaving board\n") == 0
+
+
+def test_freerouting_cache_is_bound_to_board_content(tmp_path, monkeypatch):
+    project = tmp_path / "cache_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "cache_board.kicad_pcb"
+    board.write_text("(kicad_pcb)\n", encoding="utf-8")
+    routing = {
+        "status": "pass",
+        "signal_routing": "complete",
+        "plane_connectivity": "copper_zones",
+        "board_sha256": hashlib.sha256(board.read_bytes()).hexdigest(),
+    }
+    (target / "routing.json").write_text(json.dumps(routing), encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(backend, "_tools", lambda: {"java": None, "jar": None, "kicad_python": None})
+
+    cached = backend.route(project)
+    assert cached.status.value == "pass"
+    assert cached.metrics["cached"] is True
+
+    board.write_text("(kicad_pcb (net 1 \"changed\"))\n", encoding="utf-8")
+    stale = backend.route(project)
+    assert stale.status.value == "blocked"
+    assert stale.failures[0].code == "tool_unavailable"
 
 
 def test_freerouting_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
@@ -524,7 +641,7 @@ def test_freerouting_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
         observed["timeout"] = kwargs["timeout"]
         raise subprocess.TimeoutExpired(command, kwargs["timeout"], output="partial", stderr="still running")
 
-    monkeypatch.setattr("hw_codesign.backends.freerouting.subprocess.run", fake_run)
+    monkeypatch.setattr("hw_codesign.backends.freerouting.run_process_group", fake_run)
 
     report = backend.route(project, timeout_seconds=3)
 

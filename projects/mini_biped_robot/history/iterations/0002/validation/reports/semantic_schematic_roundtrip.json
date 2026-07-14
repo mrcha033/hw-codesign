@@ -1,0 +1,19 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/semantic/semantic_schematic.json",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/semantic/semantic_schematic.py"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "semantic_schematic_dsl"
+  },
+  "failures": [],
+  "gate": "semantic_schematic_roundtrip",
+  "metrics": {
+    "code_roundtrip_exact": true,
+    "components": 32,
+    "nets": 29,
+    "pin_name_connections": 127
+  },
+  "status": "pass"
+}

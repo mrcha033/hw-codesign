@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -9,6 +10,7 @@ from pathlib import Path
 
 from ..io import write_json
 from ..models import Failure, FailureCategory, GateReport, Status
+from ..processes import run_process_group
 
 
 class FreeroutingBackend:
@@ -26,15 +28,22 @@ class FreeroutingBackend:
         ses = target / f"{project.name}.ses"
         routed = target / f"{project.name}.routed.kicad_pcb"
         routing_report = target / "routing.json"
+        source_routing: dict[str, object] = {}
         if board.is_file() and routing_report.is_file():
-            cached = json.loads(routing_report.read_text(encoding="utf-8"))
-            if cached.get("status") == "pass" and cached.get("signal_routing") == "complete":
+            source_routing = json.loads(routing_report.read_text(encoding="utf-8"))
+            board_sha256 = hashlib.sha256(board.read_bytes()).hexdigest()
+            if (
+                source_routing.get("status") == "pass"
+                and source_routing.get("signal_routing") == "complete"
+                and source_routing.get("plane_connectivity") == "copper_zones"
+                and source_routing.get("board_sha256") == board_sha256
+            ):
                 return GateReport(
                     "autoroute",
                     Status.PASS,
-                    metrics={"unrouted": 0, "max_passes": cached.get("max_passes"), "cached": True},
+                    metrics={"unrouted": 0, "max_passes": source_routing.get("max_passes"), "cached": True},
                     artifacts=[str(board), str(routing_report)],
-                    backend={"name": "freerouting", "version": cached.get("freerouting_version", self.VERSION), "cached": True},
+                    backend={"name": "freerouting", "version": source_routing.get("freerouting_version", self.VERSION), "cached": True},
                 )
         tools = self._tools()
         missing = [name for name, path in tools.items() if path is None]
@@ -63,7 +72,7 @@ class FreeroutingBackend:
             "-mp", str(max_passes), "-mt", str(threads), "-l", "en",
         ]
         try:
-            completed = subprocess.run(command, cwd=project.resolve(), capture_output=True, text=True, timeout=timeout_seconds, check=False)
+            completed = run_process_group(command, cwd=project.resolve(), timeout=timeout_seconds)
         except subprocess.TimeoutExpired as exc:
             return GateReport(
                 "autoroute",
@@ -72,15 +81,33 @@ class FreeroutingBackend:
                 backend={**self._backend(command, None, tools), "timeout_seconds": timeout_seconds},
             )
         log = f"{completed.stdout}\n{completed.stderr}"
-        unrouted = self._final_unrouted(log)
+        unrouted, violations = self._final_routing_metrics(log)
         if completed.returncode != 0 or not ses.is_file():
             return self._failure("autoroute_failed", "Freerouting did not produce a session file", completed, tools, command)
-        if unrouted not in {None, 0}:
+        if unrouted is None:
+            return GateReport(
+                "autoroute",
+                Status.FAIL,
+                [Failure(FailureCategory.EDA_ERROR, "routing_completion_unverified", "Freerouting produced a session but no authoritative final-score line was found")],
+                metrics={"unrouted": None, "violations": violations, "max_passes": max_passes},
+                artifacts=[str(dsn), str(ses)],
+                backend={**self._backend(command, completed.returncode, tools, log), "timeout_seconds": timeout_seconds},
+            )
+        if unrouted != 0:
             return GateReport(
                 "autoroute",
                 Status.FAIL,
                 [Failure(FailureCategory.EDA_ERROR, "routing_incomplete", f"Freerouting left {unrouted} connection(s) unrouted", details={"unrouted": unrouted})],
-                metrics={"unrouted": unrouted, "max_passes": max_passes},
+                metrics={"unrouted": unrouted, "violations": violations, "max_passes": max_passes},
+                artifacts=[str(dsn), str(ses)],
+                backend={**self._backend(command, completed.returncode, tools, log), "timeout_seconds": timeout_seconds},
+            )
+        if violations not in {None, 0}:
+            return GateReport(
+                "autoroute",
+                Status.FAIL,
+                [Failure(FailureCategory.EDA_ERROR, "routing_violations", f"Freerouting completed with {violations} rule violation(s)", details={"violations": violations})],
+                metrics={"unrouted": unrouted, "violations": violations, "max_passes": max_passes},
                 artifacts=[str(dsn), str(ses)],
                 backend={**self._backend(command, completed.returncode, tools, log), "timeout_seconds": timeout_seconds},
             )
@@ -97,13 +124,19 @@ class FreeroutingBackend:
         os.replace(routed, board)
         write_json(routing_report, {
             "status": "pass",
-            "mode": "plane_preseeded_freerouting",
+            "mode": "zone_connected_planes_freerouting",
+            "plane_connectivity": "copper_zones",
+            "zone_nets": source_routing.get("zone_nets", []),
             "signal_routing": "complete",
             "freerouting_version": self.VERSION,
             "unrouted": 0,
+            "violations": 0,
             "max_passes": max_passes,
             "failures": [],
         })
+        routed_payload = json.loads(routing_report.read_text(encoding="utf-8"))
+        routed_payload["board_sha256"] = hashlib.sha256(board.read_bytes()).hexdigest()
+        write_json(routing_report, routed_payload)
         return GateReport(
             "autoroute",
             Status.PASS,
@@ -133,18 +166,25 @@ class FreeroutingBackend:
 
     @staticmethod
     def _pcbnew(executable: Path, code: str, *arguments: Path) -> subprocess.CompletedProcess[str]:
-        return subprocess.run([str(executable), "-c", code, *(str(item) for item in arguments)], capture_output=True, text=True, timeout=60, check=False)
+        return run_process_group([str(executable), "-c", code, *(str(item) for item in arguments)], timeout=60)
 
     @staticmethod
     def _final_unrouted(log: str) -> int | None:
-        # Parse the "session completed" line which has the authoritative final score.
-        # Format: "final score: S.SS (N unrouted)" or "final score: S.SS" (0 unrouted).
-        sessions = re.findall(r"(?:session completed:.*?)?final score:\s*[\d.]+\s*(?:\((\d+) unrouted\))?", log)
-        if sessions:
-            return int(sessions[-1]) if sessions[-1] else 0
-        # Fallback: last "(N unrouted)" occurrence from pass lines.
-        matches = re.findall(r"\((\d+) unrouted\)", log)
-        return int(matches[-1]) if matches else None
+        return FreeroutingBackend._final_routing_metrics(log)[0]
+
+    @staticmethod
+    def _final_routing_metrics(log: str) -> tuple[int | None, int | None]:
+        """Return final ``(unrouted, violations)`` from Freerouting's last score line."""
+        score_lines = re.findall(r"final score:[^\r\n]*", log, flags=re.IGNORECASE)
+        if not score_lines:
+            return None, None
+        final = score_lines[-1]
+        unrouted_match = re.search(r"\b(\d+)\s+unrouted\b", final, flags=re.IGNORECASE)
+        violations_match = re.search(r"\b(\d+)\s+violations?\b", final, flags=re.IGNORECASE)
+        return (
+            int(unrouted_match.group(1)) if unrouted_match else 0,
+            int(violations_match.group(1)) if violations_match else 0,
+        )
 
     def _failure(self, code, message, completed, tools, command=None):
         details = {"returncode": completed.returncode, "stdout": completed.stdout[-8000:], "stderr": completed.stderr[-8000:]}

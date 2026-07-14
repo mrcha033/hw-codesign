@@ -1,0 +1,22 @@
+/ {
+  chosen { zephyr,console = &usart3; };
+};
+
+/* usb_cdc */
+/* usb_cdc: usb stack binding via zephyr_usb_cdc_acm */
+
+
+/* bme280_driver */
+/* bme280_driver: bme280 on I2C addr 118 polled every 1000 ms */
+
+
+/* data_streamer */
+/* data_streamer: usb stack binding via zephyr_usb_cdc_acm */
+
+
+/* lsm6dsox_driver */
+/* lsm6dsox_driver: lsm6dsox on I2C addr 0x6A polled every 5 ms */
+
+
+/* pca9685_servo_pwm */
+/* pca9685_servo_pwm: i2c_pwm stack binding via zephyr_i2c_pca9685 */

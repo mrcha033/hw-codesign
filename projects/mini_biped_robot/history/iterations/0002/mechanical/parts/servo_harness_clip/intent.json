@@ -1,0 +1,14 @@
+{
+  "intent": {
+    "cable_diameter_mm": 8,
+    "ear_length_mm": 7,
+    "ear_width_mm": 7,
+    "fastener": "M2",
+    "max_overhang_angle_deg": 45,
+    "mount_type": "screw",
+    "opening_mm": 6.8,
+    "wall_mm": 2
+  },
+  "part_name": "servo_harness_clip",
+  "part_type": "cable_clip"
+}

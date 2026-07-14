@@ -1,0 +1,36 @@
+{
+  "artifact_type": "mechanical_source",
+  "backend": "opencascade",
+  "release_eligible": false,
+  "selected_variant": "bare_pcb",
+  "source_spec_hash": "27db751767ae91f87be1973002f7b3a69db1058a4a7e997ee587f600c086c674",
+  "sources": [
+    {
+      "path": "assembly.py",
+      "sha256": "a9e2bed413dd52387f093e1ef018c71c164d39f8643ea07cc3d13692b1abd7a8"
+    },
+    {
+      "path": "connector_cutouts.py",
+      "sha256": "7d014736b39e4763be95702e74a2be20d335e0815fe815e84ccf997f22485cdf"
+    },
+    {
+      "path": "enclosure.py",
+      "sha256": "b34636c13bfc56427d2a22bd411b330593bf43ac4108dd65f90ce4a615e535c5"
+    },
+    {
+      "path": "enclosure_variants.py",
+      "sha256": "314316f1b9225f1cac53ac0d5ed6ffeeb337d29ed38578c1380cf5cbc404aa03"
+    },
+    {
+      "path": "fixtures.py",
+      "sha256": "36eb5e111d18f9c7b4abea59254305683650f42d8fa598c7c1d3160f402fe7e0"
+    },
+    {
+      "path": "mechanical_contract.json",
+      "sha256": "b96169c5dea59938da3cbbba00e7474e58c06aa227281617c4dd5c80e9792e3f"
+    }
+  ],
+  "variants": [
+    "bare_pcb"
+  ]
+}

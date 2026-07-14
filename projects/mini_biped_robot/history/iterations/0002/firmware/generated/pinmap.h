@@ -1,0 +1,11 @@
+#pragma once
+
+#define PIN_XIN32 "PA00_XIN32"
+#define PIN_XOUT32 "PA01_XOUT32"
+#define PIN_IMU_INT1 "PA18_SERCOM3_2"
+#define PIN_I2C_SDA "PA22_SDA"
+#define PIN_I2C_SCL "PA23_SCL"
+#define PIN_USB_DM "PA24_USBDM"
+#define PIN_USB_DP "PA25_USBDP"
+#define PIN_MCU_NRST "~RESETN"
+#define PIN_VDDCORE "VDDCORE"

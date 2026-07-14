@@ -48,6 +48,8 @@ jobs:
           sudo apt-get install --yes --no-install-recommends kicad-symbols
       - run: npm ci --ignore-scripts
       - run: uv sync --locked --extra dev --extra mcp
+      - name: Enforce MCP stdout protocol hygiene
+        run: uv run pytest -q tests/test_mcp_stdio.py
       - run: uv run pytest
 
   test-windows:
@@ -64,6 +66,8 @@ jobs:
           enable-cache: true
       - run: npm ci --ignore-scripts
       - run: uv sync --locked --extra dev --extra mcp
+      - name: Enforce MCP stdout protocol hygiene
+        run: uv run pytest -q tests/test_mcp_stdio.py
       - run: uv run pytest
         env:
           PYTESTPATH: tests

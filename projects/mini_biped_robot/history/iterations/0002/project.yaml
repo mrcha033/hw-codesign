@@ -1,0 +1,8 @@
+name: mini_biped_robot
+target_use: usb_sensor_hub
+revision: r1
+description: ATSAMD21G18A multi-sensor hub — LSM6DSOX IMU + BME280 env sensor + USB-C
+  + native SWD
+version: 0.1.0
+template: samd21_sensor_hub
+created_at: '2026-06-21'

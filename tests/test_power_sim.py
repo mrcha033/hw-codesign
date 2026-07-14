@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import pytest
 
 from hw_codesign import power_sim
-
 
 # ---------------------------------------------------------------------------
 # Solve-pipeline correctness against an independent (hand-computed) oracle

@@ -11,11 +11,11 @@
     },
     {
       "path": "connector_cutouts.py",
-      "sha256": "4c4142ede839ef00d1fe4f289e0f001535d2d844ac3f8f2ea53b1cbed6258d36"
+      "sha256": "354835a3a58bb3d56b0b0de2d637a4c8c88728758d91ff22ba0a1207b37888f5"
     },
     {
       "path": "enclosure.py",
-      "sha256": "556bd2379c996290b6469013fd3b4112c0d77d1dbff320b8f4e0fa7dd688ab82"
+      "sha256": "b63bb9bdee9eddf65dedc628bb247e4f9064d1c405a081a92162aadbde0a6c72"
     },
     {
       "path": "enclosure_variants.py",
@@ -27,7 +27,7 @@
     },
     {
       "path": "mechanical_contract.json",
-      "sha256": "08abb82b48cd5e1d4907dd44f43be9b51a698579ea52058249de4300898d6f2b"
+      "sha256": "020d91f6afd9830232ac12eef406a47a38b2dc36b9428d53de72b6149b4bc3af"
     }
   ],
   "variants": [

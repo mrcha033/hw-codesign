@@ -20,11 +20,19 @@
     "footprints": 16,
     "layers": 2,
     "pads": 95,
-    "segments": 44,
+    "plane_connectivity": "copper_zones",
+    "segments": 0,
+    "signal_routing": "deferred_to_freerouting",
     "used_copper_layers": [
       "B.Cu",
       "F.Cu"
-    ]
+    ],
+    "zone_layers_by_net": {
+      "GND": [
+        "B.Cu",
+        "F.Cu"
+      ]
+    }
   },
   "status": "pass"
 }

@@ -1,16 +1,30 @@
 from __future__ import annotations
 
+import inspect
 import json
 import os
+import uuid
 from functools import wraps
 from pathlib import Path
 from typing import Any
 
 from .contracts import TOOL_REGISTRY as _TR
+from .jobs import JobManager, ProjectWriterLock
 from .service import HardwareService
+from .stdio import redirect_tool_stdout_to_stderr
 
 _DEFAULT_RELEASE_BLOCKERS = ["hw_check_release_gate must pass before release"]
 _RELEASE_ELIGIBLE_TOOL_NAMES = {"hw_check_release_gate", "hw_export_release_bundle"}
+_PROJECT_WRITE_TOOLS = frozenset({
+    "hw_create_project", "hw_snapshot_project", "hw_update_spec", "hw_update_requirements", "hw_resolve_assumption",
+    "hw_generate_all", "hw_generate_reference_intent", "hw_generate_electronics_source", "hw_generate_mechanical", "hw_generate_firmware",
+    "hw_run_erc", "hw_run_drc", "hw_build_firmware", "hw_generate_bringup_tests", "hw_run_all_checks", "hw_generate_repair_plan", "hw_get_failure_report",
+    "hw_apply_repair_plan", "hw_design_candidate", "hw_explore_design_space", "hw_generate_physical_qualification_plan", "hw_record_physical_evidence",
+    "hw_run_design_iteration", "hw_design_until_release", "hw_check_release_gate", "hw_generate_design_report", "hw_export_release_bundle",
+    "hw_design_part", "hw_design_firmware_module", "hw_add_circuit_block", "hw_set_placement_constraint", "hw_record_design_decision",
+    "hw_prepare_fabrication_review", "hw_export_candidate_bundle", "hw_export_review", "hw_share_review", "hw_add_review_comment",
+    "hw_register_project_part",
+})
 
 
 def _enrich(result: dict[str, Any], **extra: Any) -> dict[str, Any]:
@@ -46,13 +60,28 @@ def create_server(root: Path | str | None = None):
         raise RuntimeError("Install the MCP extra with: pip install -e '.[mcp]'") from exc
 
     service = HardwareService(root or os.environ.get("HW_PLATFORM_ROOT", Path.cwd()))
+    jobs = JobManager(service.root)
     server = FastMCP("hw-codesign-platform")
 
     def _tool(name: str):
         def decorator(fn):
             @wraps(fn)
             def wrapped(*args, **kwargs):
-                result = fn(*args, **kwargs)
+                bound = inspect.signature(fn).bind_partial(*args, **kwargs)
+                project = bound.arguments.get("project")
+                if name == "hw_create_project":
+                    project = bound.arguments.get("name")
+                lock = (
+                    ProjectWriterLock(jobs.runtime_root, str(project), f"sync-{uuid.uuid4().hex}")
+                    if name in _PROJECT_WRITE_TOOLS and isinstance(project, str)
+                    else None
+                )
+                with redirect_tool_stdout_to_stderr():
+                    if lock is None:
+                        result = fn(*args, **kwargs)
+                    else:
+                        with lock:
+                            result = fn(*args, **kwargs)
                 return _mcp_envelope_for_tool(name, result) if isinstance(result, dict) else result
 
             return server.tool(name=name)(wrapped)
@@ -63,6 +92,22 @@ def create_server(root: Path | str | None = None):
     # Project management
     # ------------------------------------------------------------------
 
+    @_tool(name=_TR["hw_submit_job"].name)
+    def submit_job(tool: str, arguments: dict[str, Any]) -> dict[str, Any]:
+        return jobs.submit(tool, arguments)
+
+    @_tool(name=_TR["hw_get_job"].name)
+    def get_job(job_id: str) -> dict[str, Any]:
+        return jobs.status(job_id)
+
+    @_tool(name=_TR["hw_cancel_job"].name)
+    def cancel_job(job_id: str) -> dict[str, Any]:
+        return jobs.cancel(job_id)
+
+    @_tool(name=_TR["hw_recover_jobs"].name)
+    def recover_jobs() -> dict[str, Any]:
+        return jobs.recover_orphans()
+
     @_tool(name=_TR["hw_create_project"].name)
     def create_project(name: str, template: str = "robotics_controller_full", target: str = "manufacturable_pcb_with_enclosure_and_firmware") -> dict[str, Any]:
         result = service.create_project(name, template)
@@ -72,6 +117,14 @@ def create_server(root: Path | str | None = None):
     @_tool(name=_TR["hw_open_project"].name)
     def open_project(project: str) -> dict[str, Any]:
         return {"status": "pass", "project": project, "project_path": str(service.workspace.require_project(project)), "spec": service.read_spec(project)}
+
+    @_tool(name=_TR["hw_register_project_part"].name)
+    def register_project_part_tool(project: str, registration: dict[str, Any]) -> dict[str, Any]:
+        return service.register_project_part(project, registration)
+
+    @_tool(name=_TR["hw_list_project_parts"].name)
+    def list_project_parts_tool(project: str) -> dict[str, Any]:
+        return service.list_project_parts(project)
 
     @_tool(name=_TR["hw_snapshot_project"].name)
     def snapshot_project(project: str) -> dict[str, Any]:
@@ -258,9 +311,7 @@ def create_server(root: Path | str | None = None):
 
     @_tool(name=_TR["hw_get_failure_report"].name)
     def get_failure_report(project: str, gate: str | None = None) -> dict[str, Any]:
-        directory = service.workspace.require_project(project) / "validation" / "reports"
-        reports = [json.loads(item.read_text(encoding="utf-8")) for item in sorted(directory.glob("*.json")) if gate is None or item.stem == gate]
-        return {"status": "pass", "project": project, "reports": reports}
+        return service.get_failure_report(project, gate)
 
     @_tool(name=_TR["hw_apply_repair_plan"].name)
     def apply_repair_plan(project: str, approved: bool = False) -> dict[str, Any]:

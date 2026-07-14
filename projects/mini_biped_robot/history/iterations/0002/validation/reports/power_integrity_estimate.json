@@ -1,0 +1,88 @@
+{
+  "artifacts": [],
+  "backend": {
+    "authority": "heuristic",
+    "name": "power-integrity-estimator"
+  },
+  "failures": [
+    {
+      "category": "ELECTRICAL_SEMANTIC_ERROR",
+      "code": "rail_decoupling_missing",
+      "details": {
+        "loads": [
+          "J20"
+        ],
+        "rail": "VBAT_RAW"
+      },
+      "message": "Rail VBAT_RAW feeds active loads without any local decoupling or bulk capacitor in the graph",
+      "path": "electronics.components",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "power_integrity_estimate",
+  "metrics": {
+    "coverage": {
+      "V3V3": {
+        "bulk": [
+          "C3"
+        ],
+        "declared_peak_current_a": 0.15,
+        "decoupling": [
+          "C1",
+          "C2"
+        ],
+        "high_current_connector_loads": [],
+        "loads": [
+          "J2",
+          "J27",
+          "R1",
+          "R2",
+          "U2",
+          "U21",
+          "U3",
+          "U4"
+        ]
+      },
+      "V5": {
+        "bulk": [
+          "C20"
+        ],
+        "declared_peak_current_a": 0.0,
+        "decoupling": [],
+        "high_current_connector_loads": [],
+        "loads": [
+          "J21",
+          "J22",
+          "J23",
+          "J24",
+          "J25",
+          "J26",
+          "U20"
+        ]
+      },
+      "VBAT_RAW": {
+        "bulk": [],
+        "declared_peak_current_a": 0.25,
+        "decoupling": [],
+        "high_current_connector_loads": [],
+        "loads": [
+          "J20"
+        ]
+      }
+    },
+    "errors": 1,
+    "oracle_boundary": "Heuristic decoupling and bulk-cap coverage only; transient, impedance, and stability still require simulation or bench evidence.",
+    "rails_checked": 3,
+    "regulator_current_limits": {
+      "U1": {
+        "declared_peak_current_a": 0.15,
+        "mpn": "AP2112K-3.3TRG1",
+        "output_current_limit_a": 0.6,
+        "rail": "V3V3"
+      }
+    },
+    "warnings": 0
+  },
+  "status": "fail"
+}

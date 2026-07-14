@@ -1,0 +1,65 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/app/prj.conf",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_can_loopback.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_estop_fail_safe.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_i2c_imu.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_motor_pwm.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/zephyr/tests/test_usb_connection.c"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "firmware-interface-contract"
+  },
+  "failures": [
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_estop_pinmap_missing",
+      "details": {
+        "interface": "estop",
+        "required_signal": "ESTOP_IN"
+      },
+      "message": "Emergency-stop support is required but no ESTOP_IN firmware signal is mapped",
+      "path": "firmware/generated/pinmap.json",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "firmware_interface_contract",
+  "metrics": {
+    "config_options": [
+      "CONFIG_CAN=y",
+      "CONFIG_GPIO=y",
+      "CONFIG_I2C=y",
+      "CONFIG_PWM=y",
+      "CONFIG_RING_BUFFER=y",
+      "CONFIG_SENSOR=y",
+      "CONFIG_USB_CDC_ACM=y",
+      "CONFIG_USB_DEVICE_STACK=y"
+    ],
+    "pinmap_signals": [
+      "I2C_SCL",
+      "I2C_SDA",
+      "IMU_INT1",
+      "MCU_NRST",
+      "USB_DM",
+      "USB_DP",
+      "VDDCORE",
+      "XIN32",
+      "XOUT32"
+    ],
+    "required_interfaces": [
+      "i2c",
+      "estop",
+      "usb"
+    ],
+    "test_files": [
+      "test_can_loopback.c",
+      "test_estop_fail_safe.c",
+      "test_i2c_imu.c",
+      "test_motor_pwm.c",
+      "test_usb_connection.c"
+    ]
+  },
+  "status": "fail"
+}

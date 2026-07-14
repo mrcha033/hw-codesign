@@ -1,0 +1,101 @@
+system:
+  target_application: Wearable sensor node, data logger, IMU reference board, Arduino-Zero-compatible
+    custom board
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.25
+    rails:
+    - name: USB_VBUS
+      voltage: 5.0
+      current_peak_a: 0.25
+    - name: V3V3
+      voltage: 3.3
+      current_peak_a: 0.15
+compute:
+  mcu:
+    family: SAMD21
+    variant: ATSAMD21G18A-AU
+    clock_mhz: 48
+    cores: 1
+    flash_kb: 256
+    sram_kb: 32
+    fpu: false
+    connectivity:
+    - usb_fullspeed_native
+    - i2c
+    - spi
+    - uart
+    hard_realtime_required: false
+  debug_interface: SWD
+actuation:
+  motor_channels: 0
+  motor_channel_peak_current_a: 0.0
+  gpio_outputs: 22
+  pwm_channels: 8
+sensing:
+  imu: required
+  environment:
+    ic: BME280
+    interface: I2C
+    measures:
+    - temperature
+    - humidity
+    - pressure
+  adc_channels: 10
+  adc_bits: 12
+  e_stop: required
+assumptions:
+  dfll_usb_clock:
+    value: dfll96m_locked_to_32768hz_crystal
+    resolved_value: dfll96m_locked_to_32768hz_crystal
+    confidence: high
+    reason: SAMD21 USB peripheral requires precise 48MHz; DFLL from external 32.768kHz
+      achieves USB Full Speed clock tolerance.
+    critical: true
+    requires_user_review: false
+  shared_i2c_bus:
+    value: sercom3_pa22_pa23_lsm6dsox_0x6a_bme280_0x76
+    resolved_value: sercom3_pa22_pa23_lsm6dsox_0x6a_bme280_0x76
+    confidence: high
+    reason: LSM6DSOX and BME280 default I2C addresses do not collide, and both support
+      400kHz fast mode.
+    critical: true
+    requires_user_review: false
+  native_usb_phy:
+    value: pa24_pa25_with_usb_esd_and_no_external_pullup
+    resolved_value: pa24_pa25_with_usb_esd_and_no_external_pullup
+    confidence: high
+    reason: SAMD21 USB PHY has internal D+ pull-up; external protection is modeled
+      by USBLC6-2SC6 on the raw connector pair.
+    critical: true
+    requires_user_review: false
+  swd_debug:
+    value: pa30_pa31_10pin_cortex_debug_header
+    resolved_value: pa30_pa31_10pin_cortex_debug_header
+    confidence: high
+    reason: SAMD21 exposes standard ARM SWD for initial flash and bring-up over a
+      keyed Cortex debug header.
+    critical: true
+    requires_user_review: false
+electronics:
+  backend: tscircuit
+  role_set: samd21_sensor_hub
+  compiled_backend_required: false
+  power:
+    input_voltage_min_v: 4.5
+    input_voltage_max_v: 5.5
+    input_connector: USB-C
+    bus_voltages_v:
+    - 5.0
+    - 3.3
+    max_current_ma: 250
+  pcb:
+    layers: 2
+    width_mm: 50
+    height_mm: 30
+    min_trace_mm: 0.127
+    min_space_mm: 0.127
+    controlled_impedance: false

@@ -1,0 +1,14 @@
+safety:
+  regulatory:
+  - CE
+  isolation_required: false
+  esd_protection: required
+  emergency_stop:
+    required: true
+    fail_safe_hardware_path: true
+  required_protections:
+  - usb_esd
+  - watchdog
+  - servo_power_fuse
+  - hardware_buck_enable_cutoff
+  - pwm_output_disable

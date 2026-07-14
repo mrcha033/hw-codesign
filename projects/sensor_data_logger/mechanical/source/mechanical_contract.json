@@ -6,7 +6,7 @@
         "height_mm": 7.0,
         "ref": "J1",
         "x_mm": 18.0,
-        "y_mm": 4.0
+        "y_mm": 4.176
       },
       {
         "category": "usb_cc_pulldown",
@@ -55,7 +55,7 @@
         "height_mm": 2.5,
         "ref": "U1",
         "x_mm": 44.0,
-        "y_mm": 43.0
+        "y_mm": 36.749
       },
       {
         "category": "imu",
@@ -141,7 +141,7 @@
       "electrical_category": "power_input",
       "enclosure_position_mm": [
         21.0,
-        7.0
+        7.176
       ],
       "opening_mm": [
         10.0,
@@ -149,7 +149,7 @@
       ],
       "pcb_position_mm": [
         18.0,
-        4.0
+        4.176
       ],
       "position_tolerance_mm": 0.5,
       "ref": "J1",

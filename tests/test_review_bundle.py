@@ -175,11 +175,14 @@ def test_review_html_embeds_asset_backed_3d_viewer_without_user_geometry():
             "vrml_asset": "assets/three_d/assembly.wrl",
             "fallback_image": "assets/three_d/assembly-isometric.png",
             "viewer_asset": "assets/three_d/viewer.js",
-            "models": [{
-                "reference": "J1", "footprint": "Connector_USB:USB_C_GCT_USB4105",
-                "model": "Connector_USB.3dshapes/USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step",
-                "available": True,
-            }],
+            "models": [
+                {
+                    "reference": "J1",
+                    "footprint": "Connector_USB:USB_C_GCT_USB4105",
+                    "model": "Connector_USB.3dshapes/USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step",
+                    "available": True,
+                }
+            ],
         },
         "requirements": None,
         "assumptions": None,
@@ -195,6 +198,151 @@ def test_review_html_embeds_asset_backed_3d_viewer_without_user_geometry():
     assert "assets/three_d/viewer.js" in html
     assert 'id="hw-review-vrml"' in html
     assert "YWJj" in html
+
+
+def test_review_html_explains_outcome_and_builds_a_guarded_resolution_workflow():
+    bundle = {
+        "bundle_version": "1.0",
+        "bundle_hash": "abc123",
+        "generated_at": "2026-07-14T00:00:00+00:00",
+        "project": {"name": "beginner_board", "revision": "r1", "target_use": "demo", "backend": "tscircuit"},
+        "gate_reports": [
+            {
+                "gate": "tscircuit_compile",
+                "status": "fail",
+                "failures": [
+                    {
+                        "severity": "error",
+                        "category": "EDA_ERROR",
+                        "code": "compiled_circuit_contains_errors",
+                        "message": "Circuit source contains error elements",
+                        "requires_user_decision": False,
+                    }
+                ],
+                "metrics": {},
+                "artifacts": [],
+                "backend": {},
+            },
+            {
+                "gate": "tscircuit_graph_parity",
+                "status": "blocked",
+                "failures": [
+                    {
+                        "severity": "error",
+                        "category": "EDA_ERROR",
+                        "code": "compile_prerequisite_failed",
+                        "message": "Prerequisite compile gate did not pass",
+                        "requires_user_decision": False,
+                    }
+                ],
+                "metrics": {},
+                "artifacts": [],
+                "backend": {},
+            },
+            {
+                "gate": "release",
+                "status": "blocked",
+                "failures": [
+                    {
+                        "severity": "error",
+                        "category": "RELEASE_ERROR",
+                        "code": "failed_gate",
+                        "message": "Required gate did not pass: tscircuit_compile",
+                        "requires_user_decision": False,
+                    }
+                ],
+                "metrics": {},
+                "artifacts": [],
+                "backend": {},
+            },
+        ],
+        "summary": {"total": 3, "pass": 0, "fail": 1, "blocked": 2, "other": 0},
+        "placement": None,
+        "requirements": None,
+        "assumptions": None,
+        "component_resolution": None,
+        "iterations": [],
+        "candidates": [],
+        "release": None,
+        "artifacts": [],
+        "comments": [],
+    }
+
+    html = render_html(bundle)
+    action_list = html.split('<div id="action-list" class="action-list">', 1)[1].split("</div>", 1)[0]
+
+    assert "This candidate needs changes" in html
+    assert "means the check found a problem" in html
+    assert "Copy agent workflow" in html
+    assert "hw_generate_repair_plan" in html
+    assert "approved=false" in html
+    assert "Never resolve an assumption" in html
+    assert 'data-title="tscircuit compile"' in action_list
+    assert 'data-title="tscircuit graph parity"' not in action_list
+    assert 'data-title="release"' not in action_list
+
+
+def test_review_html_guides_nonexpert_decisions_and_separates_physical_evidence():
+    bundle = {
+        "bundle_version": "1.0",
+        "bundle_hash": "decision123",
+        "generated_at": "2026-07-14T00:00:00+00:00",
+        "project": {"name": "guided_board", "revision": "r1", "target_use": "sensor", "backend": "tscircuit"},
+        "gate_reports": [
+            {
+                "gate": "physical_qualification",
+                "status": "blocked",
+                "failures": [
+                    {
+                        "severity": "error",
+                        "category": "RELEASE_ERROR",
+                        "code": "physical_evidence_missing",
+                        "message": "Required physical qualification evidence is missing: thermal_load_profile",
+                        "requires_user_decision": True,
+                    }
+                ],
+                "metrics": {},
+                "artifacts": [],
+                "backend": {},
+            }
+        ],
+        "summary": {"total": 1, "pass": 0, "fail": 0, "blocked": 1, "other": 0},
+        "placement": None,
+        "requirements": None,
+        "assumptions": {
+            "total": 1,
+            "unresolved_critical": 1,
+            "unresolved_critical_names": ["rf_antenna_clearance"],
+            "unresolved_critical_items": [
+                {
+                    "name": "rf_antenna_clearance",
+                    "proposed_value": "module_integral_antenna",
+                    "confidence": "medium",
+                    "reason": "The module requires a manufacturer-defined copper keep-out.",
+                }
+            ],
+        },
+        "component_resolution": None,
+        "iterations": [],
+        "candidates": [],
+        "release": None,
+        "artifacts": [],
+        "comments": [],
+    }
+
+    html = render_html(bundle)
+
+    assert "Decision to make" in html
+    assert "Recommended starting point" in html
+    assert "Evidence to check" in html
+    assert "When to involve an expert" in html
+    assert "module_integral_antenna" in html
+    assert "medium confidence" in html
+    assert "Use the recommended antenna keep-out" in html
+    assert "Request RF specialist review" in html
+    assert "Reviewer choice:" in html
+    assert 'data-kind="evidence" data-title="physical qualification"' in html
+    assert html.count('class="decision-guide"') == 1
 
 
 def test_export_review_ignores_auxiliary_json_reports(service, project):
@@ -247,15 +395,17 @@ def test_bundle_json_not_mutated_after_comment(service, project, tmp_path):
     original_bytes = bundle_path.read_bytes()
 
     comments_path = tmp_path / "comments.jsonl"
-    entry = json.dumps({
-        "id": "test-id",
-        "timestamp": "2026-06-16T00:00:00+00:00",
-        "target_type": "general",
-        "target_id": None,
-        "author": "tester",
-        "text": "looks good",
-        "bundle_hash": result["bundle_hash"],
-    })
+    entry = json.dumps(
+        {
+            "id": "test-id",
+            "timestamp": "2026-06-16T00:00:00+00:00",
+            "target_type": "general",
+            "target_id": None,
+            "author": "tester",
+            "text": "looks good",
+            "bundle_hash": result["bundle_hash"],
+        }
+    )
     comments_path.write_text(entry + "\n", encoding="utf-8")
 
     merged = _merge_bundle(bundle_path, comments_path)
@@ -316,7 +466,7 @@ def test_html_report_escapes_injection(service, project):
     assert "test & demo" not in html
     assert "test &amp; demo" in html
     # No raw unescaped < in user-controlled values (besides expected HTML tags).
-    assert 'r<1>' not in html
+    assert "r<1>" not in html
 
 
 def test_iterations_included_in_bundle(service, project):
@@ -350,10 +500,7 @@ def test_export_standalone_review_skips_malformed_comment_lines(service, project
     service.generate_all(project)
     service.run_all_checks(project, include_external=False)
     service.export_review(project)
-    comments_path = (
-        service.workspace.require_project(project)
-        / "exports" / "working" / "review" / "comments.jsonl"
-    )
+    comments_path = service.workspace.require_project(project) / "exports" / "working" / "review" / "comments.jsonl"
     comments_path.parent.mkdir(parents=True, exist_ok=True)
     comments_path.write_text('{"id":"c1","text":"ok"}\nNOT_JSON\n{"id":"c2","text":"ok2"}\n', encoding="utf-8")
     result = service.export_standalone_review(project)
@@ -375,10 +522,7 @@ def test_add_and_list_review_comments(service, project):
 
 
 def test_list_review_comments_skips_malformed_lines(service, project):
-    comments_path = (
-        service.workspace.require_project(project)
-        / "exports" / "working" / "review" / "comments.jsonl"
-    )
+    comments_path = service.workspace.require_project(project) / "exports" / "working" / "review" / "comments.jsonl"
     comments_path.parent.mkdir(parents=True, exist_ok=True)
     comments_path.write_text('{"text":"good"}\nBAD\n', encoding="utf-8")
     listing = service.list_review_comments(project)
@@ -400,10 +544,7 @@ def test_list_project_summaries_returns_all_projects(service, project):
 
 
 def test_list_project_summaries_handles_corrupt_bundle(service, project):
-    bundle_path = (
-        service.workspace.require_project(project)
-        / "exports" / "working" / "review" / "bundle.json"
-    )
+    bundle_path = service.workspace.require_project(project) / "exports" / "working" / "review" / "bundle.json"
     bundle_path.parent.mkdir(parents=True, exist_ok=True)
     bundle_path.write_text("NOT_JSON", encoding="utf-8")
     result = service.list_project_summaries()

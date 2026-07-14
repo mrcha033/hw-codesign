@@ -10,16 +10,17 @@ import pytest
 # hw_get_part_types
 # ---------------------------------------------------------------------------
 
-def test_get_part_types_returns_all_five(service, project):
+def test_get_part_types_returns_enclosures_and_robot_mechanisms(service, project):
     result = service.get_part_types()
     assert result["status"] == "pass"
-    assert result["count"] == 5
+    assert result["count"] == 11
     types = result["part_types"]
     assert "pcb_mount_bracket" in types
     assert "standoff_tower" in types
     assert "cable_clip" in types
     assert "din_rail_adapter" in types
     assert "custom_enclosure_variant" in types
+    assert {"servo_horn", "servo_u_bracket", "servo_l_bracket", "robot_link", "revolute_joint", "robot_foot"} <= set(types)
 
 
 def test_get_part_types_includes_intent_schema(service, project):
@@ -73,6 +74,15 @@ def test_design_part_blocked_when_ocp_unavailable(service, project, monkeypatch)
     })
     assert result["status"] == "blocked"
     assert result["code"] == "tool_unavailable"
+
+
+def test_robot_mechanism_schemas_expose_fastening_and_motion_contracts(service, project):
+    types = service.get_part_types()["part_types"]
+    assert "shaft_bore_mm" in types["servo_horn"]["intent_schema"]["properties"]
+    assert "motion_range_deg" in types["servo_u_bracket"]["intent_schema"]["properties"]
+    assert "motion_range_deg" in types["revolute_joint"]["intent_schema"]["properties"]
+    assert "end_fastener" in types["robot_link"]["intent_schema"]["properties"]
+    assert "ankle_fastener" in types["robot_foot"]["intent_schema"]["properties"]
 
 
 # ---------------------------------------------------------------------------
@@ -168,6 +178,42 @@ def test_custom_enclosure_variant_generates_assembly(service, project):
     assert any("assembly" in n for n in names), "Assembly STEP must be produced"
     assert any("_base" in n for n in names), "Base STEP must be produced"
     assert any("_lid" in n for n in names), "Lid STEP must be produced"
+
+
+@ocp_available
+@pytest.mark.parametrize(
+    ("part_type", "intent"),
+    [
+        ("servo_horn", {"arm_length_mm": 24, "shaft_bore_mm": 5.8, "link_hole_radius_mm": 14}),
+        ("servo_u_bracket", {"servo_width_mm": 20, "servo_height_mm": 30, "joint_clearance_mm": 0.5, "motion_range_deg": [-80, 80]}),
+        ("servo_l_bracket", {"leg_a_mm": 20, "leg_b_mm": 24, "width_mm": 18}),
+        ("robot_link", {"length_mm": 60, "width_mm": 12, "end_margin_mm": 8}),
+        ("revolute_joint", {"inner_width_mm": 12, "ear_height_mm": 24, "joint_clearance_mm": 0.5, "motion_range_deg": [-90, 90]}),
+        ("robot_foot", {"length_mm": 70, "width_mm": 36, "ankle_hole_spacing_mm": 14}),
+    ],
+)
+def test_robot_mechanism_generates_contract_artifacts(service, project, part_type, intent):
+    result = service.design_part(project, f"test_{part_type}", part_type, intent)
+
+    assert result["status"] in {"generated", "fail"}
+    assert result["part_type"] == part_type
+    assert len(result["artifacts"]) == 2
+    assert all(Path(path).is_file() for path in result["artifacts"])
+    assert result["fastening_contract"]["verified"] is True
+    assert result["interference_envelope"] is not None
+    assert result["gate_report"]["metrics"]["fastening_verified"] is True
+
+
+@ocp_available
+def test_revolute_joint_rejects_impossible_motion_range(service, project):
+    result = service.design_part(project, "bad_joint", "revolute_joint", {
+        "inner_width_mm": 12,
+        "ear_height_mm": 24,
+        "motion_range_deg": [90, -90],
+    })
+
+    assert result["status"] == "fail"
+    assert "invalid_motion_range" in {failure["code"] for failure in result["gate_report"]["failures"]}
 
 
 @ocp_available

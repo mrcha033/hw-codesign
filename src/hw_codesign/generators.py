@@ -35,7 +35,7 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
     graph = build_graph(spec)
     resolver = ComponentResolver(parts_root)
     role_set = spec.get("electronics", {}).get("role_set", "robotics_controller")
-    resolved, resolution_report = resolver.resolve(spec, role_set, graph["components"])
+    resolved, resolution_report = resolver.resolve(spec, role_set, graph["components"], project=project)
     by_ref = {item.ref: item for item in resolved}
     for component in graph["components"]:
         match = by_ref.get(component["ref"])
@@ -43,7 +43,7 @@ def generate_electronics(project: Path, spec: dict[str, Any], parts_root: Path, 
             component["resolution"] = "unresolved"
             continue
         data = match.data
-        component.update({"mpn": data["mpn"], "manufacturer": data["manufacturer"], "package": data["package"], "symbol": data["symbol"], "footprint": data["footprint"]["library_id"], "footprint_metadata": data["footprint"], "pin_contracts": _curated_pin_contracts(data), "lifecycle": data["lifecycle"], "sourcing": data["sourcing"], "supplier_offer": data.get("supplier_offer"), "datasheet_evidence": data.get("datasheet_evidence", []), "constraints": data["constraints"], "review_status": data["review_status"], "resolution": match.resolution, "component_id": match.component_id, "resolution_provenance": match.provenance})
+        component.update({"mpn": data["mpn"], "manufacturer": data["manufacturer"], "package": data["package"], "symbol": data["symbol"], "footprint": data["footprint"]["library_id"], "footprint_metadata": data["footprint"], "pin_contracts": _curated_pin_contracts(data), "electrical_ratings": data.get("electrical_ratings"), "mechanical": data.get("mechanical"), "validation_metadata": data.get("validation"), "lifecycle": data["lifecycle"], "sourcing": data["sourcing"], "supplier_offer": data.get("supplier_offer"), "datasheet_evidence": data.get("datasheet_evidence", []), "constraints": data["constraints"], "review_status": data["review_status"], "resolution": match.resolution, "component_id": match.component_id, "resolution_provenance": match.provenance})
         _complete_unmapped_package_pins(component)
     proposal = propose_placement(spec, graph)
     graph = apply_placement_to_graph(graph, proposal)

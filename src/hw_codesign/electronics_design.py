@@ -387,7 +387,7 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
 def _domain(name: str) -> str | None:
     if name == "GND": return "GND"
     if name.startswith("VBAT") or name == "VSYS": return "VBAT"
-    if name == "V5": return "V5"
+    if name in {"V5", "SERVO_V5"}: return "V5"
     if name == "USB_VBUS": return "USB_5V"
     return "V3V3"
 
@@ -1453,6 +1453,89 @@ def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_mini_servo_robot_graph(spec: dict[str, Any]) -> dict[str, Any]:
+    """SAMD21 + IMU logic domain with an isolated 2S-to-5V six-servo power domain."""
+
+    base = build_samd21_sensor_hub_graph(spec)
+    components = list(base["components"])
+    components.extend([
+        component("J20", "battery_input", "2S LIPO INPUT", "XT30PW-M", "Project:XT30PW_M", [
+            pin(1, "VBAT", "VBAT_RAW", "power_in"), pin(2, "GND", "GND", "ground"),
+        ], role="servo_battery_input"),
+        component("F20", "fuse", "10A SERVO FUSE", "0451010.MRL", "Project:MiniBladeFuse", [
+            pin(1, "IN", "VBAT_RAW", "power_in"), pin(2, "OUT", "VBAT_FUSED", "power_out"),
+        ], role="servo_fuse"),
+        component("U20", "external_buck_module", "5V 9A STEP-DOWN", "D24V90F5", "Project:Pololu_D24V90F5", [
+            pin(1, "VIN", "VBAT_FUSED", "power_in"), pin(2, "GND", "GND", "ground"),
+            pin(3, "VOUT", "SERVO_V5", "power_out"), pin(4, "EN", "ESTOP_OK", "input"),
+        ], role="servo_power_buck"),
+        component("C20", "bulk_cap", "1000uF SERVO BULK", "EEU-FS1A102", "Project:CP_Radial_D10_P5", [
+            pin(1, "PLUS", "SERVO_V5", "power_in"), pin(2, "MINUS", "GND", "ground"),
+        ], role="servo_bulk_cap"),
+        component("U21", "pwm_driver", "16-CHANNEL I2C PWM", "PCA9685PW", "Project:TSSOP-28_P0.65", [
+            pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground"),
+            pin(3, "SCL", "I2C_SCL", "input"), pin(4, "SDA", "I2C_SDA", "bidirectional"),
+            pin(5, "OE", "SERVO_PWM_OE", "input"),
+            *[pin(6 + index, f"LED{index}", f"SERVO{index + 1}_PWM", "output") for index in range(6)],
+        ], role="servo_pwm_controller"),
+        component("C21", "decoupling", "100nF PWM DECOUPLING", "GRM155R71C104KA88D", "Project:C_0402", [
+            pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground"),
+        ], role="servo_pwm_decap"),
+        component("U22", "safety_gate", "E-STOP PWM INVERTER", "SN74LVC1G04DBVR", "Project:SOT-23-5", [
+            pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground"),
+            pin(3, "A", "ESTOP_OK", "input"), pin(4, "Y", "SERVO_PWM_OE", "output"),
+        ], role="servo_safety_gate"),
+        component("R20", "pulldown", "10K E-STOP PULLDOWN", "RC0603FR-0710KL", "Project:R_0603", [
+            pin(1, "A", "ESTOP_OK", "passive"), pin(2, "B", "GND", "ground"),
+        ], role="servo_estop_pulldown"),
+        component("J27", "estop", "NC E-STOP LOOP", "1935161", "Project:TerminalBlock_1x03", [
+            pin(1, "VCC", "V3V3", "power_in"), pin(2, "ESTOP_OK", "ESTOP_OK", "output"), pin(3, "GND", "GND", "ground"),
+        ], role="servo_estop_connector"),
+        *[
+            component(f"J{21 + index}", "servo_output", f"SERVO {index + 1}", "M20-9990345", "Project:ServoHeader_1x03", [
+                pin(1, "SIGNAL", f"SERVO{index + 1}_PWM", "input"),
+                pin(2, "VPLUS", "SERVO_V5", "power_in"),
+                pin(3, "GND", "GND", "ground"),
+            ], role="servo_output_header")
+            for index in range(6)
+        ],
+    ])
+    net_classes = {
+        **{net["name"]: net.get("signal_class", "signal") for net in base["nets"]},
+        "VBAT_RAW": "power", "VBAT_FUSED": "power", "SERVO_V5": "power",
+        "ESTOP_OK": "signal", "SERVO_PWM_OE": "signal",
+        **{f"SERVO{index}_PWM": "pwm" for index in range(1, 7)},
+    }
+    endpoints: dict[str, list[str]] = defaultdict(list)
+    for item in components:
+        for item_pin in item["pins"]:
+            if item_pin.get("net"):
+                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
+    nets = [
+        {
+            "name": name,
+            "signal_class": net_classes.get(name, "signal"),
+            "voltage_domain": _domain(name),
+            "connected_pins": sorted(pins),
+            "required_track_width_mm": 2.5 if name in {"VBAT_RAW", "VBAT_FUSED", "SERVO_V5"} else (0.5 if net_classes.get(name) == "power" else 0.15),
+        }
+        for name, pins in sorted(endpoints.items())
+    ]
+    return {
+        "components": components,
+        "nets": nets,
+        "design_basis": {
+            "architecture": "samd21_pca9685_six_servo_robot",
+            "mcu_family": "SAMD21",
+            "usb_native": True,
+            "i2c_sensor_bus": True,
+            "servo_channels": 6,
+            "logic_servo_power_domains_separated": True,
+            "board_carries_motor_power": True,
+        },
+    }
+
+
 def build_nrf52840_dongle_graph(spec: dict[str, Any]) -> dict[str, Any]:
     usbc_pins = usb_c_connector_pins(raw_data=True)
     tvs_pins = usb_esd_bridge_pins()
@@ -1549,7 +1632,9 @@ def build_graph_from_spec(spec: dict[str, Any]) -> dict[str, Any]:
     """
     role_set = spec.get("electronics", {}).get("role_set", "")
     template = spec.get("project", {}).get("template", "")
-    if role_set == "ble_sensor_node" or template == "ble_sensor_node":
+    if template == "mini_servo_robot":
+        base_graph = build_mini_servo_robot_graph(spec)
+    elif role_set == "ble_sensor_node" or template == "ble_sensor_node":
         base_graph = build_ble_sensor_node_graph(spec)
     elif role_set == "sensor_data_logger" or template == "sensor_data_logger":
         base_graph = build_sensor_data_logger_graph(spec)

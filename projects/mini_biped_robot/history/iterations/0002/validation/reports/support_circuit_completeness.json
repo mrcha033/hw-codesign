@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/samd21_sensor_hub.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "support-circuit-contract"
+  },
+  "failures": [],
+  "gate": "support_circuit_completeness",
+  "metrics": {
+    "components": 32,
+    "critical_roles": 6,
+    "net_contract_checks": 0,
+    "resolved_critical_roles": 6,
+    "role_set": "samd21_sensor_hub",
+    "status_leds_checked": 0
+  },
+  "status": "pass"
+}

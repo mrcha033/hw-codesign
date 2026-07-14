@@ -1,0 +1,77 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_torso_enclosure/controller_torso_enclosure_base.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_torso_enclosure/controller_torso_enclosure_base.stl",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_torso_enclosure/controller_torso_enclosure_lid.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_torso_enclosure/controller_torso_enclosure_lid.stl",
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/mechanical/parts/controller_torso_enclosure/controller_torso_enclosure_assembly.step"
+  ],
+  "candidate_only": true,
+  "gate_status": "fail",
+  "intent": {
+    "gland_holes": [
+      {
+        "center_x_mm": 28,
+        "center_z_mm": 10,
+        "diameter_mm": 12,
+        "label": "E-stop cable",
+        "side": "left"
+      }
+    ],
+    "internal_mm": [
+      58,
+      40,
+      22
+    ],
+    "lid": true,
+    "max_overhang_angle_deg": 45,
+    "panel_cutouts": [
+      {
+        "center_x_mm": 14,
+        "center_z_mm": 8,
+        "height_mm": 5,
+        "label": "USB-C",
+        "side": "front",
+        "width_mm": 10
+      },
+      {
+        "center_x_mm": 16,
+        "center_z_mm": 9,
+        "height_mm": 8,
+        "label": "XT30 servo power",
+        "side": "rear",
+        "width_mm": 10
+      },
+      {
+        "center_x_mm": 28,
+        "center_z_mm": 10,
+        "height_mm": 10,
+        "label": "servo harness",
+        "side": "right",
+        "width_mm": 22
+      }
+    ],
+    "vent_slots": {
+      "count": 4,
+      "side": "top",
+      "slot_height_mm": 16,
+      "slot_width_mm": 2.5,
+      "spacing_mm": 5
+    },
+    "wall_thickness_mm": 2.0
+  },
+  "part_name": "controller_torso_enclosure",
+  "part_type": "custom_enclosure_variant",
+  "printability": {
+    "max_overhang_deg": 76.2,
+    "min_hole_mm": 12.0,
+    "min_wall_mm": 2.0,
+    "printable": false,
+    "recommended_orientation": "base flat on bed",
+    "stl_manifold": true,
+    "violations": [
+      "12 downward-facing triangles exceed 45.0\u00b0 overhang limit"
+    ]
+  },
+  "release_eligible": false
+}

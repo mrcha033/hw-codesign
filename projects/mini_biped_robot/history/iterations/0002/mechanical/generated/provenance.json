@@ -1,0 +1,13 @@
+{
+  "backend": "tscircuit",
+  "command": [],
+  "compiler_version": "0.1.1491",
+  "component_db_hash": "506bfd3a28aa5e84cbc970dd584a4debcb845586e55282376d39984d0ae7a569",
+  "release_eligible": false,
+  "role_set_hash": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+  "source_spec_hash": "27db751767ae91f87be1973002f7b3a69db1058a4a7e997ee587f600c086c674",
+  "timestamp": "1970-01-01T00:00:00+00:00",
+  "tool_versions": {
+    "python": "3.14.6"
+  }
+}

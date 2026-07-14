@@ -1,0 +1,38 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/electronics/generated/kicad/mini_biped_robot.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "declared_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "expected_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "footprints": 32,
+    "layers": 2,
+    "pads": 167,
+    "plane_connectivity": "copper_zones",
+    "segments": 0,
+    "signal_routing": "deferred_to_freerouting",
+    "used_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "zone_layers_by_net": {
+      "GND": [
+        "B.Cu",
+        "F.Cu"
+      ]
+    }
+  },
+  "status": "pass"
+}

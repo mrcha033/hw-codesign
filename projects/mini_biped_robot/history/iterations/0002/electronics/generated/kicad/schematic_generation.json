@@ -1,0 +1,6 @@
+{
+  "code": "kicad_symbol_instantiation_failed",
+  "fallback": "mini_biped_robot.kicad_sch",
+  "message": "Label text cannot be empty",
+  "status": "blocked"
+}

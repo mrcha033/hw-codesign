@@ -89,7 +89,7 @@ class ResolvedComponent:
     ref: str
     role: str
     component_id: str
-    resolution: Literal["curated", "registry_candidate", "unresolved"]
+    resolution: Literal["curated", "project_owned", "registry_candidate", "unresolved"]
     data: dict[str, Any]
     provenance: dict[str, Any]
 

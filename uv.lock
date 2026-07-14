@@ -733,6 +733,7 @@ dependencies = [
     { name = "jsonschema" },
     { name = "kicad-sch-api" },
     { name = "pyyaml" },
+    { name = "sexpdata" },
 ]
 
 [package.optional-dependencies]
@@ -758,6 +759,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9" },
+    { name = "sexpdata", specifier = "==1.0.2" },
 ]
 provides-extras = ["mcp", "cad", "dev"]
 

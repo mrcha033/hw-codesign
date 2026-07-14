@@ -1,22 +1,31 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import io
 import json
+import math
 import os
 import re
 import shutil
 import subprocess
-from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from sexpdata import Symbol, loads
+
 from .artifacts import box_stl, deterministic_zip, step_box
-from .board_layout import component_positions
+from .board_layout import (
+    component_positions,
+    connector_sides,
+    copper_edge_clearance_mm,
+    footprint_geometry,
+    mirrored_refs,
+)
 from .electronics_design import build_graph_from_spec
+from .footprint_library import render_canonical_footprint
 from .io import atomic_write_text, write_json
 from .models import Failure, FailureCategory, GateReport, Status
-from .pcb_router import route_board
 from .schematic_generator import generate_kicad_schematic
 
 REFERENCE_FIRMWARE_TIMEOUT_SECONDS = 120
@@ -73,7 +82,11 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
     ):
         for stale in target.glob(pattern):
             stale.unlink()
-    pro = {"board": {"design_settings": {"rules": {"min_clearance": spec["manufacturing"]["pcb"]["min_clearance_mm"], "min_track_width": spec["manufacturing"]["pcb"]["min_track_width_mm"]}}}, "meta": {"filename": f"{name}.kicad_pro", "version": 1}}
+    pro = {"board": {"design_settings": {"rules": {
+        "min_clearance": spec["manufacturing"]["pcb"]["min_clearance_mm"],
+        "min_copper_edge_clearance": copper_edge_clearance_mm(spec),
+        "min_track_width": spec["manufacturing"]["pcb"]["min_track_width_mm"],
+    }}}, "meta": {"filename": f"{name}.kicad_pro", "version": 1}}
     write_json(target / f"{name}.kicad_pro", pro)
     schematic = _legacy_schematic(spec, graph)
     atomic_write_text(target / f"{name}.sch", schematic)
@@ -90,10 +103,30 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
         })
     board_text, routing_failures = _kicad_board(spec, graph)
     atomic_write_text(target / f"{name}.kicad_pcb", board_text)
+    _layers, _copper_layers, plane_layers = _kicad_stackup(spec)
+    plane_escape_required = (
+        len(_front_smd_plane_pad_sites(board_text, set(plane_layers)))
+        if len(_copper_layers) > 2
+        else 0
+    )
+    plane_escape_unplaced = sum(
+        1 for failure in routing_failures
+        if failure.get("code") == "plane_escape_unplaceable"
+    )
     write_json(target / "routing.json", {
         "status": "fail" if routing_failures else "generated",
-        "mode": "plane_preseeded",
+        "mode": "zone_connected_planes",
+        "plane_connectivity": "copper_zones",
+        "plane_escape": (
+            "fcu_segment_to_through_via"
+            if len(_copper_layers) > 2
+            else "front_copper_zone"
+        ),
+        "plane_escape_required": plane_escape_required,
+        "plane_escape_count": max(0, plane_escape_required - plane_escape_unplaced),
+        "zone_nets": sorted(plane_layers),
         "signal_routing": "deferred_to_freerouting",
+        "board_sha256": hashlib.sha256(board_text.encode("utf-8")).hexdigest(),
         "failures": routing_failures,
     })
     return [str(path) for path in sorted(target.iterdir())]
@@ -115,52 +148,285 @@ def _legacy_schematic(spec: dict[str, Any], graph: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _sexp_head(form: Any, name: str) -> bool:
+    return (
+        isinstance(form, list)
+        and bool(form)
+        and isinstance(form[0], Symbol)
+        and form[0].value() == name
+    )
+
+
+def _sexp_direct(form: list[Any], name: str) -> list[list[Any]]:
+    return [item for item in form[1:] if _sexp_head(item, name)]
+
+
+def _sexp_atom(value: Any) -> str:
+    return value.value() if isinstance(value, Symbol) else str(value)
+
+
+def _sexp_coordinate(form: list[Any], name: str) -> tuple[float, float] | None:
+    matches = _sexp_direct(form, name)
+    if not matches or len(matches[0]) < 3:
+        return None
+    return float(matches[0][1]), float(matches[0][2])
+
+
+def _front_smd_plane_pad_sites(
+    board_text: str,
+    plane_nets: set[str],
+) -> list[dict[str, Any]]:
+    """Return absolute F.Cu SMD pad sites that need a plane escape.
+
+    A numbered pad that also has a plated through-hole form is already connected
+    through the copper stackup, so its companion SMD form does not need a second
+    escape. This matters for canonical exposed-pad footprints such as the ESP32
+    module, whose ground pad is represented by one SMD form plus thermal vias.
+    """
+    root = loads(board_text)
+    if not isinstance(root, list) or not _sexp_head(root, "kicad_pcb"):
+        raise ValueError("Expected one kicad_pcb S-expression")
+
+    sites: list[dict[str, Any]] = []
+    for footprint in _sexp_direct(root, "footprint"):
+        properties = {
+            _sexp_atom(item[1]): _sexp_atom(item[2])
+            for item in _sexp_direct(footprint, "property")
+            if len(item) >= 3
+        }
+        ref = properties.get("Reference")
+        footprint_at = _sexp_direct(footprint, "at")
+        if ref is None or not footprint_at or len(footprint_at[0]) < 3:
+            continue
+        anchor_x, anchor_y = float(footprint_at[0][1]), float(footprint_at[0][2])
+        rotation = float(footprint_at[0][3]) if len(footprint_at[0]) > 3 else 0.0
+        theta = math.radians(rotation)
+        cosine, sine = math.cos(theta), math.sin(theta)
+        plated_pad_keys: set[tuple[str, str]] = set()
+        smd_sites: list[dict[str, Any]] = []
+        for pad in _sexp_direct(footprint, "pad"):
+            if len(pad) < 3:
+                continue
+            net_forms = _sexp_direct(pad, "net")
+            if not net_forms or len(net_forms[0]) < 3:
+                continue
+            pad_number = _sexp_atom(pad[1])
+            pad_kind = _sexp_atom(pad[2])
+            net_name = _sexp_atom(net_forms[0][2])
+            if net_name not in plane_nets:
+                continue
+            layers_forms = _sexp_direct(pad, "layers")
+            layers = {
+                _sexp_atom(layer)
+                for layer in (layers_forms[0][1:] if layers_forms else [])
+            }
+            key = (pad_number, net_name)
+            copper_pad_layers = {layer for layer in layers if layer.endswith(".Cu")}
+            if pad_kind == "thru_hole" and (
+                "*.Cu" in layers or len(copper_pad_layers) > 1
+            ):
+                plated_pad_keys.add(key)
+                continue
+            if pad_kind != "smd" or "F.Cu" not in layers:
+                continue
+            local_at = _sexp_coordinate(pad, "at")
+            if local_at is None:
+                continue
+            local_x, local_y = local_at
+            smd_sites.append({
+                "ref": ref,
+                "pad": pad_number,
+                "net": net_name,
+                "pad_at_mm": (
+                    anchor_x + local_x * cosine - local_y * sine,
+                    anchor_y + local_x * sine + local_y * cosine,
+                ),
+                "anchor_at_mm": (anchor_x, anchor_y),
+            })
+        sites.extend(
+            site
+            for site in smd_sites
+            if (str(site["pad"]), str(site["net"])) not in plated_pad_keys
+        )
+
+    unique: dict[tuple[str, str, str, float, float], dict[str, Any]] = {}
+    for site in sites:
+        pad_x, pad_y = site["pad_at_mm"]
+        key = (
+            str(site["ref"]),
+            str(site["pad"]),
+            str(site["net"]),
+            round(float(pad_x), 6),
+            round(float(pad_y), 6),
+        )
+        unique[key] = site
+    return [unique[key] for key in sorted(unique)]
+
+
+def _plane_escape_endpoint(
+    site: dict[str, Any],
+    *,
+    lane: int,
+    width_mm: float,
+    height_mm: float,
+    edge_margin_mm: float,
+    occupied: list[tuple[float, float]],
+) -> tuple[float, float] | None:
+    pad_x, pad_y = (float(value) for value in site["pad_at_mm"])
+    anchor_x, anchor_y = (float(value) for value in site["anchor_at_mm"])
+    delta_x, delta_y = pad_x - anchor_x, pad_y - anchor_y
+    magnitude = math.hypot(delta_x, delta_y)
+    if magnitude < 1e-9:
+        outward = (1.0, 0.0)
+    else:
+        outward = (delta_x / magnitude, delta_y / magnitude)
+    directions = (
+        outward,
+        (-outward[0], -outward[1]),
+        (-outward[1], outward[0]),
+        (outward[1], -outward[0]),
+    )
+    # A 0.6 mm via needs its 0.3 mm copper radius in addition to the board's
+    # copper-to-Edge.Cuts clearance; bounding only the via center would recreate
+    # the very edge-clearance violation this placement contract prevents.
+    center_edge_margin = edge_margin_mm + 0.3
+    # Alternate two radial lanes to keep 0.5 mm-pitch pad escapes from placing
+    # adjacent 0.6 mm vias on top of each other.
+    base_distance = 0.8 + 0.8 * (lane % 2)
+    for distance in (base_distance, base_distance + 0.8, base_distance + 1.6):
+        for direction_x, direction_y in directions:
+            candidate = (
+                round(pad_x + direction_x * distance, 3),
+                round(pad_y + direction_y * distance, 3),
+            )
+            if not (
+                center_edge_margin <= candidate[0] <= width_mm - center_edge_margin
+                and center_edge_margin <= candidate[1] <= height_mm - center_edge_margin
+            ):
+                continue
+            if any(math.dist(candidate, other) < 0.8 - 1e-9 for other in occupied):
+                continue
+            return candidate
+    return None
+
+
 def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
     env = spec["mechanical"]["envelope"]
     width, height = env["board_width_mm"], env["board_height_mm"]
     layers, copper_layers, plane_layers = _kicad_stackup(spec)
     net_ids = {item["name"]: index for index, item in enumerate(graph["nets"], 1)}
-    routed_nets = [{**item, "id": net_ids[item["name"]]} for item in graph["nets"]]
     net_declarations = "\n".join(f'  (net {index} "{name}")' for name, index in net_ids.items())
     footprints = []
-    pad_positions: dict[str, list[tuple[float, float]]] = defaultdict(list)
-    fixed_positions = component_positions(graph)
-    right_edge_refs = {
-        str(interface.get("ref"))
-        for interface in spec.get("mechanical", {}).get("connector_interfaces", [])
-        if interface.get("side") == "right" and interface.get("ref")
-    }
+    routing_failures: list[dict[str, Any]] = []
+    right_edge_refs = mirrored_refs(spec)
+    fixed_positions = component_positions(
+        graph,
+        board_width_mm=width,
+        board_height_mm=height,
+        mirrored=right_edge_refs,
+        edge_sides=connector_sides(spec),
+    )
     for i, item in enumerate(graph["components"]):
         x, y = fixed_positions.get(item["ref"], (10 + (i % 7) * 20, 10 + (i // 7) * 15))
-        high_current = any(str(item_pin.get("net") or "").startswith("VBAT") or item_pin.get("net") == "VSYS" for item_pin in item["pins"])
-        pitch = 3.0 if high_current else 2.0
-        columns = 1 if high_current else min(7, max(2, len(item["pins"])))
+        rotation = float(item.get("pcb_rotation_deg", 0.0) or 0.0)
+        canonical, canonical_failures = render_canonical_footprint(
+            str(item["footprint"]),
+            item,
+            float(x),
+            float(y),
+            rotation,
+            net_ids,
+            copper_layers,
+        )
+        routing_failures.extend(canonical_failures)
+        if canonical is not None:
+            footprints.append("  " + canonical)
+            continue
+        geometry = footprint_geometry(item, mirror_x=item["ref"] in right_edge_refs)
         pads = []
-        mirror_x = item["ref"] in right_edge_refs or item["ref"] in {f"J{index}" for index in range(17, 23)}
-        for pin_index, item_pin in enumerate(item["pins"]):
-            px = (pin_index % columns) * pitch * (-1 if mirror_x else 1)
-            py = (pin_index // columns) * pitch
+        for (number, px, py), item_pin in zip(geometry.pads, item["pins"]):
             net_name = item_pin.get("net")
             net_clause = ""
             if net_name in net_ids:
                 net_id = net_ids[net_name]
-                pad_positions[net_name].append((x + px, y + py))
                 net_clause = f' (net {net_id} "{net_name}")'
-            pads.append(f'    (pad "{item_pin["number"]}" thru_hole circle (at {px:.3f} {py:.3f}) (size 0.75 0.75) (drill 0.35) (layers "*.Cu" "*.Mask"){net_clause})')
-        body_width = max(4.0, (columns - 1) * pitch + 2.0)
-        body_height = max(3.0, ((len(item["pins"]) - 1) // columns) * pitch + 2.0)
-        body_start_x, body_end_x = (-body_width + 1.0, 1.0) if mirror_x else (-1.0, body_width)
-        footprints.append(f'''  (footprint "{item['footprint']}" (layer "F.Cu") (at {x} {y})
+            diameter = geometry.pad_diameter_mm
+            if geometry.through_hole:
+                pad_clause = (
+                    f'thru_hole circle (at {px:.3f} {py:.3f}) '
+                    f'(size {diameter:.3f} {diameter:.3f}) (drill {max(0.3, diameter * 0.45):.3f}) '
+                    f'(layers "*.Cu" "*.Mask")'
+                )
+            else:
+                pad_clause = (
+                    f'smd roundrect (at {px:.3f} {py:.3f}) '
+                    f'(size {diameter:.3f} {diameter:.3f}) '
+                    f'(layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.2)'
+                )
+            pads.append(f'    (pad "{number}" {pad_clause}{net_clause})')
+        body_start_x, body_start_y, body_end_x, body_end_y = geometry.body
+        footprints.append(f'''  (footprint "{item['footprint']}" (layer "F.Cu") (at {x} {y} {rotation})
     (property "Reference" "{item['ref']}" (at 0 -3 0) (layer "F.Fab"))
     (property "Value" "{item['value']}" (at 0 3 0) (layer "F.Fab"))
     (property "MPN" "{item['mpn']}")
     (property "Lifecycle" "{item['lifecycle']}")
     (property "Substitute_MPN" "{item.get('substitute_mpn') or ''}")
-    (fp_rect (start {body_start_x:.3f} -1) (end {body_end_x:.3f} {body_height:.3f}) (stroke (width 0.2) (type default)) (fill none) (layer "F.Fab"))
+    (fp_rect (start {body_start_x:.3f} {body_start_y:.3f}) (end {body_end_x:.3f} {body_end_y:.3f}) (stroke (width 0.2) (type default)) (fill none) (layer "F.Fab"))
 {_kicad_model_clause(str(item['footprint']))}{chr(10).join(pads)})''')
-    mounting_hole_list = spec.get("mechanical", {}).get("mounting_holes", [])
-    npth = [(h["x_mm"], h["y_mm"], h["diameter_mm"]) for h in mounting_hole_list]
-    segments, vias, routing_failures = route_board(routed_nets, pad_positions, width, height, route_signals=False, layers=copper_layers, plane_layer_by_net=plane_layers, npth_holes=npth)
+    # Signal tracks remain deferred to Freerouting. Plane nets are different: on
+    # a multilayer board, every F.Cu SMD plane pad needs an explicit F.Cu fanout
+    # and plated via before it can reach its assigned internal/B.Cu zone.
+    segments: list[str] = []
+    vias: list[str] = []
+    if len(copper_layers) > 2:
+        footprint_board = f"(kicad_pcb\n{chr(10).join(footprints)}\n)"
+        escape_sites = _front_smd_plane_pad_sites(footprint_board, set(plane_layers))
+        occupied_vias: list[tuple[float, float]] = []
+        lane_counts: dict[tuple[str, str], int] = {}
+        track_width = max(0.2, float(spec["manufacturing"]["pcb"]["min_track_width_mm"]))
+        edge_margin = max(0.3, copper_edge_clearance_mm(spec))
+        for site in escape_sites:
+            pad_x, pad_y = (float(value) for value in site["pad_at_mm"])
+            anchor_x, anchor_y = (float(value) for value in site["anchor_at_mm"])
+            delta_x, delta_y = pad_x - anchor_x, pad_y - anchor_y
+            if abs(delta_x) >= abs(delta_y):
+                side = "right" if delta_x >= 0.0 else "left"
+            else:
+                side = "bottom" if delta_y >= 0.0 else "top"
+            lane_key = (str(site["ref"]), side)
+            lane = lane_counts.get(lane_key, 0)
+            lane_counts[lane_key] = lane + 1
+            via_at = _plane_escape_endpoint(
+                site,
+                lane=lane,
+                width_mm=float(width),
+                height_mm=float(height),
+                edge_margin_mm=edge_margin,
+                occupied=occupied_vias,
+            )
+            if via_at is None:
+                routing_failures.append({
+                    "ref": site["ref"],
+                    "pad": site["pad"],
+                    "net": site["net"],
+                    "code": "plane_escape_unplaceable",
+                    "message": "No in-board via location satisfied the deterministic plane escape contract",
+                })
+                continue
+            occupied_vias.append(via_at)
+            net_name = str(site["net"])
+            net_id = net_ids[net_name]
+            start_x, start_y = round(pad_x, 3), round(pad_y, 3)
+            via_x, via_y = via_at
+            segments.append(
+                f'  (segment (start {start_x:.3f} {start_y:.3f}) '
+                f'(end {via_x:.3f} {via_y:.3f}) (width {track_width:.3f}) '
+                f'(layer "F.Cu") (net {net_id}))'
+            )
+            vias.append(
+                f'  (via (at {via_x:.3f} {via_y:.3f}) (size 0.600) (drill 0.300) '
+                f'(layers "F.Cu" "B.Cu") (net {net_id}))'
+            )
     zones = []
     emitted_zone_layers: set[tuple[str, str]] = set()
     for net_name, layer in plane_layers.items():
@@ -238,6 +504,110 @@ def _kicad_stackup(spec: dict[str, Any]) -> tuple[str, tuple[str, ...], dict[str
     return "\n".join(layer_lines), ("F.Cu", "In1.Cu", "In2.Cu", "B.Cu"), {"GND": "In1.Cu", "V5": "In2.Cu", "V3V3": "B.Cu"}
 
 
+def _coordinate_key(coordinate: tuple[float, float]) -> tuple[float, float]:
+    return round(float(coordinate[0]), 3), round(float(coordinate[1]), 3)
+
+
+def _via_spans_layer(
+    via_layers: set[str],
+    target_layer: str,
+    copper_layers: tuple[str, ...],
+) -> bool:
+    if "*.Cu" in via_layers or target_layer in via_layers:
+        return True
+    indexed = [copper_layers.index(layer) for layer in via_layers if layer in copper_layers]
+    if len(indexed) < 2 or target_layer not in copper_layers:
+        return False
+    target_index = copper_layers.index(target_layer)
+    return min(indexed) <= target_index <= max(indexed)
+
+
+def _missing_plane_escape_connections(
+    board_text: str,
+    plane_layers: dict[str, str],
+    copper_layers: tuple[str, ...],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Find F.Cu SMD plane pads without a same-net path to a spanning via."""
+    sites = _front_smd_plane_pad_sites(board_text, set(plane_layers))
+    root = loads(board_text)
+    if not isinstance(root, list) or not _sexp_head(root, "kicad_pcb"):
+        raise ValueError("Expected one kicad_pcb S-expression")
+    net_names = {
+        _sexp_atom(net[1]): _sexp_atom(net[2])
+        for net in _sexp_direct(root, "net")
+        if len(net) >= 3
+    }
+    adjacency: dict[str, dict[tuple[float, float], set[tuple[float, float]]]] = {}
+    for segment in _sexp_direct(root, "segment"):
+        layers = _sexp_direct(segment, "layer")
+        nets = _sexp_direct(segment, "net")
+        start = _sexp_coordinate(segment, "start")
+        end = _sexp_coordinate(segment, "end")
+        if (
+            not layers
+            or len(layers[0]) < 2
+            or _sexp_atom(layers[0][1]) != "F.Cu"
+            or not nets
+            or len(nets[0]) < 2
+            or start is None
+            or end is None
+        ):
+            continue
+        net_name = net_names.get(_sexp_atom(nets[0][1]))
+        if net_name is None:
+            continue
+        start_key, end_key = _coordinate_key(start), _coordinate_key(end)
+        graph = adjacency.setdefault(net_name, {})
+        graph.setdefault(start_key, set()).add(end_key)
+        graph.setdefault(end_key, set()).add(start_key)
+
+    spanning_vias: dict[str, dict[str, set[tuple[float, float]]]] = {}
+    for via in _sexp_direct(root, "via"):
+        at = _sexp_coordinate(via, "at")
+        layers = _sexp_direct(via, "layers")
+        nets = _sexp_direct(via, "net")
+        if at is None or not layers or not nets or len(nets[0]) < 2:
+            continue
+        net_name = net_names.get(_sexp_atom(nets[0][1]))
+        if net_name is None:
+            continue
+        via_layers = {_sexp_atom(layer) for layer in layers[0][1:]}
+        for target_layer in set(plane_layers.values()):
+            if _via_spans_layer(via_layers, target_layer, copper_layers):
+                spanning_vias.setdefault(net_name, {}).setdefault(target_layer, set()).add(
+                    _coordinate_key(at)
+                )
+
+    missing: list[dict[str, Any]] = []
+    for site in sites:
+        net_name = str(site["net"])
+        target_layer = plane_layers[net_name]
+        start = _coordinate_key(site["pad_at_mm"])
+        targets = spanning_vias.get(net_name, {}).get(target_layer, set())
+        pending = [start]
+        visited: set[tuple[float, float]] = set()
+        connected = False
+        graph = adjacency.get(net_name, {})
+        while pending:
+            node = pending.pop()
+            if node in visited:
+                continue
+            visited.add(node)
+            if node in targets:
+                connected = True
+                break
+            pending.extend(graph.get(node, set()) - visited)
+        if not connected:
+            missing.append({
+                "ref": site["ref"],
+                "pad": site["pad"],
+                "net": net_name,
+                "plane_layer": target_layer,
+                "pad_at_mm": [start[0], start[1]],
+            })
+    return sites, missing
+
+
 def internal_erc(graph: dict[str, Any]) -> GateReport:
     architecture = graph.get("design_basis", {}).get("architecture")
     if architecture == "nrf52840_ble_sensor":
@@ -277,7 +647,8 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
     if spec["manufacturing"]["pcb"]["min_clearance_mm"] < 0.15:
         failures.append(Failure(FailureCategory.EDA_ERROR, "drc_clearance", "Manufacturing clearance is below the supported profile"))
     text = pcb.read_text(encoding="utf-8") if pcb.is_file() else ""
-    expected_copper_layers = set(_kicad_stackup(spec)[1])
+    ordered_copper_layers = _kicad_stackup(spec)[1]
+    expected_copper_layers = set(ordered_copper_layers)
     declared_copper_layers = set(_declared_kicad_copper_layers(text))
     used_copper_layers = set(_used_kicad_copper_layers(text))
     extra_declared_layers = sorted(declared_copper_layers - expected_copper_layers)
@@ -310,16 +681,76 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
     expected_pads = sum(len(item.get("pins", [])) for item in graph["components"])
     if text.count("(pad ") < expected_pads:
         failures.append(Failure(FailureCategory.EDA_ERROR, "pad_pin_parity", "PCB pad count is lower than the electrical pin mapping", details={"expected": expected_pads, "actual": text.count("(pad ")}))
-    routable_nets = [item for item in graph["nets"] if item["name"] not in {"GND", "V5", "V3V3"}]
     routing_path = project / "electronics" / "generated" / "kicad" / "routing.json"
     routing = {}
     if routing_path.exists():
         routing = json.loads(routing_path.read_text(encoding="utf-8"))
         for item in routing.get("failures", []):
-            failures.append(Failure(FailureCategory.EDA_ERROR, "routing_failed", f"Router could not connect {item['net']}", details=item))
-    routing_complete = routing.get("status") == "pass" and routing.get("signal_routing") == "complete"
-    if not routing_complete and segment_count < len(routable_nets):
-        failures.append(Failure(FailureCategory.EDA_ERROR, "routing_incomplete", "PCB signal routing is deferred or incomplete", details={"nets": len(routable_nets), "segments": segment_count, "routing_status": routing.get("status")}))
+            code = str(item.get("code") or "routing_failed")
+            subject = item.get("net") or item.get("ref") or item.get("footprint") or "design item"
+            failures.append(Failure(FailureCategory.EDA_ERROR, code, f"Routing/footprint contract failed for {subject}", details=item))
+    plane_layers = _kicad_stackup(spec)[2]
+    zone_layers = _zone_net_layers(text)
+    graph_nets = {item["name"] for item in graph["nets"]}
+    missing_plane_zones = []
+    for net_name, layer in plane_layers.items():
+        if net_name not in graph_nets:
+            continue
+        required_layers = {layer}
+        if len(expected_copper_layers) == 2 and any(
+            pin.get("net") == net_name and not footprint_geometry(component).through_hole
+            for component in graph.get("components", [])
+            for pin in component.get("pins", [])
+        ):
+            required_layers.add("F.Cu")
+        for required_layer in sorted(required_layers):
+            if required_layer not in zone_layers.get(net_name, set()):
+                missing_plane_zones.append({"net": net_name, "layer": required_layer})
+    if missing_plane_zones:
+        failures.append(Failure(
+            FailureCategory.EDA_ERROR,
+            "plane_zone_missing",
+            "A declared plane net has no copper zone on its assigned layer",
+            details={"missing": missing_plane_zones},
+        ))
+    if routing and routing.get("plane_connectivity") != "copper_zones":
+        failures.append(Failure(
+            FailureCategory.EDA_ERROR,
+            "plane_connectivity_contract_mismatch",
+            "Reference routing metadata must declare copper-zone plane connectivity",
+            details={"plane_connectivity": routing.get("plane_connectivity")},
+        ))
+    plane_escape_site_count = 0
+    if len(ordered_copper_layers) > 2 and text:
+        try:
+            plane_escape_sites, missing_plane_escapes = _missing_plane_escape_connections(
+                text,
+                plane_layers,
+                ordered_copper_layers,
+            )
+            plane_escape_site_count = len(plane_escape_sites)
+            if missing_plane_escapes:
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "plane_escape_missing",
+                    "An F.Cu SMD plane pad has no same-net copper path to a via spanning its plane layer",
+                    details={"missing": missing_plane_escapes},
+                ))
+        except Exception as exc:
+            failures.append(Failure(
+                FailureCategory.EDA_ERROR,
+                "plane_escape_contract_unreadable",
+                "The multilayer plane escape topology could not be parsed from the KiCad board",
+                details={"error": str(exc)},
+            ))
+        declared_escape = routing.get("plane_escape") if routing else None
+        if declared_escape not in {None, "fcu_segment_to_through_via"}:
+            failures.append(Failure(
+                FailureCategory.EDA_ERROR,
+                "plane_escape_contract_mismatch",
+                "Multilayer routing metadata declares an incompatible plane escape mechanism",
+                details={"plane_escape": declared_escape},
+            ))
     return GateReport(
         "ir_pcb_sanity",
         Status.FAIL if failures else Status.PASS,
@@ -328,6 +759,11 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
             "footprints": len(graph["components"]),
             "pads": expected_pads,
             "segments": segment_count,
+            "signal_routing": routing.get("signal_routing"),
+            "plane_connectivity": routing.get("plane_connectivity"),
+            "plane_escape": routing.get("plane_escape"),
+            "plane_escape_sites": plane_escape_site_count,
+            "zone_layers_by_net": {net: sorted(layers) for net, layers in sorted(zone_layers.items())},
             "layers": spec["manufacturing"]["pcb"]["layers"],
             "expected_copper_layers": sorted(expected_copper_layers),
             "declared_copper_layers": sorted(declared_copper_layers),
@@ -359,6 +795,21 @@ def _used_kicad_copper_layers(board_text: str) -> list[str]:
     return sorted(used)
 
 
+def _zone_net_layers(board_text: str) -> dict[str, set[str]]:
+    zones: dict[str, set[str]] = {}
+    pattern = re.compile(
+        r'\(zone\s+(?:'
+        r'\(net\s+\d+\)\s+\(net_name\s+"([^"]+)"\)'
+        r'|\(net\s+"([^"]+)"\)'
+        r')\s+\(layer\s+"([^"]+\.Cu)"\)',
+    )
+    for match in pattern.finditer(board_text):
+        net_name = match.group(1) or match.group(2)
+        layer = match.group(3)
+        zones.setdefault(net_name, set()).add(layer)
+    return zones
+
+
 def export_fabrication(project: Path, spec: dict[str, Any], graph: dict[str, Any], release: Path) -> list[str]:
     from .board_layout import component_positions as _cp
     fab = release / "fabrication"; fab.mkdir(parents=True, exist_ok=True)
@@ -376,7 +827,7 @@ def export_fabrication(project: Path, spec: dict[str, Any], graph: dict[str, Any
     ))
 
     # F.Cu Gerber with pad apertures at real component positions
-    positions = _cp(graph)
+    positions = _cp(graph, board_width_mm=width, board_height_mm=height)
     fcu_gerber = fab / f"{project.name}-F_Cu.gtl"
     fcu_lines = [
         "G04 HW co-design reference Gerber — F.Cu (centroids only — route deferred to Freerouting)*",
@@ -458,7 +909,15 @@ def export_fabrication(project: Path, spec: dict[str, Any], graph: dict[str, Any
     pnp_writer.writerow(("Ref", "Val", "PosX", "PosY", "Rotation", "Side"))
     for i, item in enumerate(graph["components"]):
         x, y = positions.get(item["ref"], (10.0 + (i % 6) * 24.0, 12.0 + (i // 6) * 18.0))
-        pnp_writer.writerow((item["ref"], item["value"], f"{x:.3f}", f"{y:.3f}", 0, "Top"))
+        rotation = float(item.get("pcb_rotation_deg", 0.0) or 0.0)
+        pnp_writer.writerow((
+            item["ref"],
+            item["value"],
+            f"{x:.3f}",
+            f"{y:.3f}",
+            f"{rotation:.3f}",
+            "Top",
+        ))
     atomic_write_text(fab / "pick_and_place.csv", pnp_out.getvalue())
 
     # Assembly drawing SVG with real positions and reference labels

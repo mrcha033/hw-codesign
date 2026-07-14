@@ -11,6 +11,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from .models import Failure, FailureCategory, GateReport, ResolvedComponent, Status
+from .project_parts import load_project_parts
 from .sourcing_policy import sourcing_waiver_failures
 from .supplier_adapters import supplier_adapter
 
@@ -85,7 +86,14 @@ class ComponentResolver:
             by_component.setdefault(evidence.get("component_id"), []).append(evidence)
         return by_component, path, failures
 
-    def resolve(self, spec: dict[str, Any], role_set: str, components: list[dict[str, Any]]) -> tuple[list[ResolvedComponent], GateReport]:
+    def resolve(
+        self,
+        spec: dict[str, Any],
+        role_set: str,
+        components: list[dict[str, Any]],
+        *,
+        project: Path | None = None,
+    ) -> tuple[list[ResolvedComponent], GateReport]:
         role_path = self.parts_root / "role_sets" / f"{role_set}.yaml"
         component_dir = self.parts_root / "components"
         if not role_path.is_file() or not component_dir.is_dir():
@@ -109,6 +117,26 @@ class ComponentResolver:
                     database_failures.append(Failure(FailureCategory.BOM_ERROR, "ambiguous_component_id", f"Duplicate curated component id {item['id']}", path=str(path)))
                 else:
                     database[item["id"]] = {**item, "_database_file": str(path)}
+        local_path = project / "parts.local.yaml" if project is not None else None
+        local_payload: dict[str, Any] = {"roles": {}, "components": []}
+        if project is not None:
+            local_payload, local_failures = load_project_parts(project, self.parts_root.parent / "schemas")
+            database_failures.extend(local_failures)
+            for item in local_payload.get("components", []):
+                component_id = item["id"]
+                if component_id in database:
+                    database_failures.append(Failure(
+                        FailureCategory.BOM_ERROR,
+                        "project_component_shadows_curated",
+                        f"Project component {component_id} cannot replace a curated component",
+                        path=str(local_path),
+                    ))
+                else:
+                    database[component_id] = {
+                        **item,
+                        "_database_file": str(local_path),
+                        "_project_owned": True,
+                    }
         if database_failures:
             return [], GateReport("component_resolution", Status.FAIL, database_failures)
         provider = spec.get("sourcing", {}).get("provider", "curated")
@@ -124,11 +152,15 @@ class ComponentResolver:
         resolved: list[ResolvedComponent] = []
         critical = set(role_data.get("critical_roles", []))
         role_overrides = spec.get("electronics", {}).get("role_overrides") or {}
+        role_extensions = spec.get("electronics", {}).get("role_extensions", {})
+        if not isinstance(role_extensions, dict):
+            role_extensions = {}
+        local_roles = {**role_extensions, **local_payload.get("roles", {})}
         if not isinstance(role_overrides, dict):
             role_overrides = {}
         for instance in components:
             role = role_for_component(instance)
-            base_selection = role_data.get("roles", {}).get(role)
+            base_selection = role_data.get("roles", {}).get(role) or local_roles.get(role)
             if not base_selection:
                 failures.append(Failure(FailureCategory.BOM_ERROR, "role_unresolved", f"No component selection for role {role}", path=instance["ref"]))
                 continue
@@ -171,13 +203,49 @@ class ComponentResolver:
             if not part:
                 failures.append(Failure(FailureCategory.BOM_ERROR, "component_missing", f"Selected component {selection.get('component_id')} is absent from curated DB", path=instance["ref"]))
                 continue
-            if role in critical and resolution != "curated":
+            project_owned = bool(part.get("_project_owned"))
+            project_validation = part.get("validation", {}) if project_owned else {}
+            project_rules = project_validation.get("rules", []) if isinstance(project_validation, dict) else []
+            project_validated = (
+                project_validation.get("status") == "approved"
+                and bool(project_rules)
+                and all(rule.get("status") == "pass" for rule in project_rules)
+                and part.get("review_status") == "approved"
+                and part.get("symbol", {}).get("verified") is True
+                and part.get("footprint", {}).get("verified") is True
+            )
+            if project_owned and resolution != "project_owned":
+                failures.append(Failure(FailureCategory.BOM_ERROR, "project_component_resolution_invalid", f"Project component {part['id']} must use project_owned resolution", path=instance["ref"]))
+            if project_owned and not project_validated:
+                failures.append(Failure(
+                    FailureCategory.BOM_ERROR,
+                    "project_component_validation_incomplete",
+                    f"Project component {part['id']} lacks approved pin, rating, footprint, or mechanical validation",
+                    path=instance["ref"],
+                    details={"validation_status": project_validation.get("status"), "rule_statuses": [rule.get("status") for rule in project_rules]},
+                ))
+            if role in critical and resolution not in {"curated", "project_owned"}:
                 failures.append(Failure(FailureCategory.BOM_ERROR, "critical_role_not_curated", f"Critical role {role} must resolve to curated data", path=instance["ref"]))
             if resolution == "registry_candidate":
                 failures.append(Failure(FailureCategory.BOM_ERROR, "registry_candidate_not_release_eligible", f"Registry candidate for {role} requires curation", path=instance["ref"]))
             database_file = Path(part.pop("_database_file"))
+            part.pop("_project_owned", None)
             supplier_record = supplier_records.get(part["id"])
             evidence = evidence_records.get(part["id"], [])
+            if project_owned:
+                evidence = [
+                    {
+                        "id": f"project:{part['id']}:{rule.get('id')}",
+                        "component_id": part["id"],
+                        "kind": "project_validation",
+                        "source": "project_owner",
+                        "locator": str(local_path),
+                        "review_status": "approved" if rule.get("status") == "pass" else "pending",
+                        "reviewed_at": project_validation.get("reviewed_at"),
+                        "supports": _supports_for_project_rule(str(rule.get("kind", "custom"))),
+                    }
+                    for rule in project_rules
+                ]
             normalized_offer = adapter.normalize(supplier_record).to_dict() if supplier_record else None
             part["supplier_offer"] = normalized_offer
             part["datasheet_evidence"] = evidence
@@ -186,7 +254,8 @@ class ComponentResolver:
                 "role_set_sha256": self._file_hash(role_path),
                 "database_file": str(database_file),
                 "database_file_sha256": self._file_hash(database_file),
-                "resolver": "in_repo_curated_v2",
+                "resolver": "project_local_v1" if project_owned else "in_repo_curated_v2",
+                "ownership": "project" if project_owned else "platform",
                 "supplier_provider": provider,
                 "supplier_catalog": str(supplier_path) if supplier_path else None,
                 "supplier_catalog_sha256": self._file_hash(supplier_path) if supplier_path else None,
@@ -213,6 +282,7 @@ class ComponentResolver:
         evidence_blocked = any(failure.code == "datasheet_catalog_missing" for failure in evidence_failures)
         evidence_failed = any(failure.code != "datasheet_catalog_missing" for failure in evidence_failures)
         for item in resolved:
+            project_owned = item.resolution == "project_owned"
             offer = item.data.get("supplier_offer")
             sourcing_waived = item.data.get("sourcing", {}).get("status") == "waived"
             if sourcing_waived:
@@ -223,7 +293,8 @@ class ComponentResolver:
                 continue
             if not offer:
                 availability_blocked = True
-                availability_failures.append(Failure(FailureCategory.BOM_ERROR, "supplier_record_missing", f"No {provider} supplier record for {item.component_id}", path=item.ref))
+                code = "project_supplier_record_missing" if project_owned else "supplier_record_missing"
+                availability_failures.append(Failure(FailureCategory.BOM_ERROR, code, f"No {provider} supplier record for {item.component_id}", path=item.ref))
             elif offer.get("availability") in {"out_of_stock", "discontinued"}:
                 availability_failed = True
                 availability_failures.append(Failure(FailureCategory.BOM_ERROR, "supplier_unavailable", f"{item.ref} is {offer['availability']} at {provider}", path=item.ref))
@@ -237,7 +308,9 @@ class ComponentResolver:
             if not evidence:
                 evidence_failed = True
                 evidence_gate_failures.append(Failure(FailureCategory.BOM_ERROR, "datasheet_evidence_missing", f"No datasheet evidence is attached to {item.ref}", path=item.ref))
-            elif not any(entry.get("review_status") == "approved" and {"pins", "package", "footprint"}.issubset(set(entry.get("supports", []))) for entry in evidence):
+            elif not (
+                ({"pins", "package", "footprint"}.issubset({support for entry in evidence if entry.get("review_status") == "approved" for support in entry.get("supports", [])}))
+            ):
                 evidence_failed = True
                 evidence_gate_failures.append(Failure(FailureCategory.BOM_ERROR, "datasheet_evidence_unapproved", f"Approved pin/package/footprint datasheet evidence is missing for {item.ref}", path=item.ref))
         availability_status = Status.FAIL if availability_failed else (Status.BLOCKED if availability_blocked else Status.PASS)
@@ -245,7 +318,20 @@ class ComponentResolver:
         self.supplier_availability_report = GateReport("supplier_availability", availability_status, availability_failures, metrics={"provider": provider, "components_checked": len(resolved)}, artifacts=[str(supplier_path)] if supplier_path else [], backend={"provider": provider, "normalized_contract": "supplier_offer_v1"})
         self.datasheet_evidence_report = GateReport("datasheet_evidence", evidence_status, evidence_gate_failures, metrics={"components_checked": len(resolved)}, artifacts=[str(evidence_path)] if evidence_path else [])
         status = Status.FAIL if failures else Status.PASS
-        return resolved, GateReport("component_resolution", status, failures, metrics={"resolved": len(resolved), "requested": len(components), "critical_roles": len(critical), "supplier_provider": provider}, artifacts=[str(role_path)], backend={"name": "ComponentResolver", "mutates_database": False})
+        return resolved, GateReport(
+            "component_resolution",
+            status,
+            failures,
+            metrics={
+                "resolved": len(resolved),
+                "requested": len(components),
+                "critical_roles": len(critical),
+                "project_owned": sum(item.resolution == "project_owned" for item in resolved),
+                "supplier_provider": provider,
+            },
+            artifacts=[str(role_path), *([str(local_path)] if local_path and local_path.is_file() else [])],
+            backend={"name": "ComponentResolver", "mutates_database": False, "project_local_catalog": bool(local_path and local_path.is_file())},
+        )
 
     @staticmethod
     def serialize(items: list[ResolvedComponent]) -> list[dict[str, Any]]:
@@ -259,3 +345,13 @@ def _evidence_is_stale(observed_at: str) -> bool:
         return datetime.now(UTC) - ts > timedelta(days=SUPPLIER_EVIDENCE_MAX_AGE_DAYS)
     except (ValueError, AttributeError):
         return True
+
+
+def _supports_for_project_rule(kind: str) -> list[str]:
+    return {
+        "pin_contract": ["identity", "pins", "symbol"],
+        "footprint": ["identity", "package", "footprint"],
+        "mechanical": ["identity", "package"],
+        "electrical_rating": ["identity"],
+        "sourcing": ["identity"],
+    }.get(kind, ["identity"])

@@ -1,0 +1,119 @@
+{
+  "backend": "tscircuit",
+  "backend_release_capable": true,
+  "compiler_version": "0.1.1491",
+  "contract_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "fabrication_release_eligible": false,
+  "hdl_source_release_eligible": false,
+  "netlist_release_eligible": false,
+  "pcb_disabled": false,
+  "placement_contract": {
+    "coordinate_transform": "board_origin_top_left_to_tscircuit_center",
+    "missing_solver_placements": [],
+    "solver_placements": 32,
+    "source": "electrical_graph.components[].pcb_position_mm"
+  },
+  "provenance": {
+    "backend": "tscircuit",
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/mini_biped_robot/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "compiler_version": "0.1.1491",
+    "component_db_hash": "506bfd3a28aa5e84cbc970dd584a4debcb845586e55282376d39984d0ae7a569",
+    "release_eligible": false,
+    "release_tier": "fabrication",
+    "role_set_hash": "ff27c1ffa4efde7cecd56e031841142978fb804ddeca1419a8f5e937ae44dc73",
+    "source_spec_hash": "27db751767ae91f87be1973002f7b3a69db1058a4a7e997ee587f600c086c674",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "release_blocking_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "release_tier": "fabrication",
+  "routing_disabled": false,
+  "source_release_eligible": false,
+  "sources": [
+    {
+      "path": "board.compiler.mjs",
+      "sha256": "fa494e9890a279f2134c2729ca3e6972eeb906682892f3f8990bab329086a6de"
+    },
+    {
+      "path": "board.tsx",
+      "sha256": "794dc86d2f3eeb4b509ebaa0cf1c764cb423a91b4486409de464d8b8d67a7b91"
+    }
+  ],
+  "unsupported_footprints": [
+    {
+      "footprint": "XT30PW_M",
+      "ref": "J20"
+    },
+    {
+      "footprint": "Fuseholder_Blade_Mini",
+      "ref": "F20"
+    },
+    {
+      "footprint": "MODULE_POLOLU_D24V90F5",
+      "ref": "U20"
+    },
+    {
+      "footprint": "TSSOP-28_4.4x9.7mm_P0.65mm",
+      "ref": "U21"
+    },
+    {
+      "footprint": "SOT-23-5",
+      "ref": "U22"
+    },
+    {
+      "footprint": "R0603",
+      "ref": "R20"
+    },
+    {
+      "footprint": "TerminalBlock_1x03_P5.08mm",
+      "ref": "J27"
+    },
+    {
+      "footprint": "PinHeader_1x03_P2.54mm_Vertical",
+      "ref": "J21"
+    },
+    {
+      "footprint": "PinHeader_1x03_P2.54mm_Vertical",
+      "ref": "J22"
+    },
+    {
+      "footprint": "PinHeader_1x03_P2.54mm_Vertical",
+      "ref": "J23"
+    },
+    {
+      "footprint": "PinHeader_1x03_P2.54mm_Vertical",
+      "ref": "J24"
+    },
+    {
+      "footprint": "PinHeader_1x03_P2.54mm_Vertical",
+      "ref": "J25"
+    },
+    {
+      "footprint": "PinHeader_1x03_P2.54mm_Vertical",
+      "ref": "J26"
+    }
+  ]
+}

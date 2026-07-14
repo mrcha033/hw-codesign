@@ -1,0 +1,99 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: 'Create a tabletop mini biped robot candidate using the supported SAMD21
+      sensor-hub architecture as the controller base, without claiming a new native
+      board family. The robot uses two legs and six 9 g metal-gear hobby servos: left/right
+      hip roll, hip pitch, and knee pitch. Target standing height is 180 to 220 mm
+      and total mass is below 800 g. Use a 3D-printable torso/controller enclosure,
+      replaceable leg links, wide non-slip feet, M2/M3 fasteners, and accessible service
+      connectors. Keep controller logic USB powered and isolated from servo brownouts.
+      A 2S LiPo pack feeds an external 5 V high-current buck module and a fused servo
+      distribution rail. Add a PCA9685 I2C PWM controller, six keyed three-pin servo
+      outputs, bulk capacitance, and a normally-closed emergency stop path that removes
+      buck enable and disables PWM output in hardware. The on-board LSM6DSOX IMU is
+      required for tilt and fall detection. Firmware candidate behavior includes safe
+      boot, calibration, neutral stand, forward walk, left/right turn, stop, fallen,
+      and fault states; 200 Hz IMU polling; 50 Hz servo command updates; per-joint
+      center and angle limits; smooth motion limiting; watchdog shutdown; USB CDC
+      commands; and telemetry for state, attitude, and faults. Generate electronics,
+      PCB, firmware, sourcing, body enclosure/mounting artifacts, validation reports,
+      and a staged bench, tethered-stand, and free-walk physical qualification plan.
+      Treat the result as a candidate only until native gates and real physical evidence
+      pass. Do not invent measurements.'
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: sensing.e_stop
+    spec_path: sensing.e_stop
+    value: required
+    field_type: enum
+    source_span: emergency stop
+    source_range: &id002
+      start: 763
+      end: 777
+    affected_gates: &id001
+    - semantic_electrical
+    - firmware_pinmap
+    - firmware_interface_contract
+    status: lowered
+  - id: req_0002
+    source: sensing.imu
+    spec_path: sensing.imu
+    value: required
+    field_type: enum
+    source_span: imu
+    source_range: &id003
+      start: 867
+      end: 870
+    affected_gates: *id001
+    status: lowered
+  active_unresolved: []
+  compiler_ir:
+    version: requirements_ir_v1
+    input_id: req_input_0001
+    lowered_fields:
+    - spec_path: sensing.e_stop
+      value: required
+      field_type: enum
+      source_span: emergency stop
+      source_range: *id002
+      affected_gates: *id001
+      status: lowered
+    - spec_path: sensing.imu
+      value: required
+      field_type: enum
+      source_span: imu
+      source_range: *id003
+      affected_gates: *id001
+      status: lowered
+    resolved_assumptions: []
+    unresolved_assumptions: []
+    unsupported_constraints: []
+    conflicting_fields: []
+    tokens:
+    - id: req_token_lowered_0001
+      kind: lowered_field
+      status: lowered
+      spec_path: sensing.e_stop
+      field_type: enum
+      value: required
+      source_span: emergency stop
+      source_range: *id002
+      affected_gates: *id001
+      required_human_approvals: []
+    - id: req_token_lowered_0002
+      kind: lowered_field
+      status: lowered
+      spec_path: sensing.imu
+      field_type: enum
+      value: required
+      source_span: imu
+      source_range: *id003
+      affected_gates: *id001
+      required_human_approvals: []
+    required_human_approvals: []
+    affected_gates:
+    - firmware_interface_contract
+    - firmware_pinmap
+    - semantic_electrical

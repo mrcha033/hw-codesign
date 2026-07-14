@@ -12,6 +12,7 @@ dependencies = [
   "PyYAML>=6.0.2",
   "jsonschema>=4.23",
   "kicad-sch-api==0.5.6",
+  "sexpdata==1.0.2",
 ]
 
 [project.optional-dependencies]
@@ -31,7 +32,7 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-hw_codesign = ["templates/*.yaml"]
+hw_codesign = ["templates/*.yaml", "footprints/*"]
 
 [tool.setuptools.data-files]
 "share/hw-codesign/schemas" = ["schemas/*.json"]

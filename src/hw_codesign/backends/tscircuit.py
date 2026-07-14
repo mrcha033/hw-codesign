@@ -71,9 +71,10 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             conn_js = "{" + ", ".join(f"{json.dumps(key)}: {value}" for key, value in connections.items()) + "}"
             footprint_prop = f" footprint={json.dumps(tscircuit_footprint)}" if tscircuit_footprint else ""
             x, y, has_solver_position = self._source_position(item, index, board_width, board_height)
+            rotation = float(item.get("pcb_rotation_deg", 0.0) or 0.0)
             if not has_solver_position:
                 missing_solver_placements.append(str(item["ref"]))
-            placement_prop = f" pcbX={{{x:.3f}}} pcbY={{{y:.3f}}}"
+            placement_prop = f" pcbX={{{x:.3f}}} pcbY={{{y:.3f}}} pcbRotation={{{rotation:.3f}}}"
             mpn_prop = " supplierPartNumbers={{lcsc: []}}"
             components.append(
                 f'      <chip name={json.dumps(item["ref"])}{footprint_prop}{placement_prop}{mpn_prop} pinLabels={{{labels_js}}} connections={{{conn_js}}} />'
@@ -81,7 +82,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             # connections must remain unquoted JS expressions (sel.net.*), not JSON strings
             esm_extra = f", footprint: {json.dumps(tscircuit_footprint)}" if tscircuit_footprint else ""
             esm_components.append(
-                f"    React.createElement(\"chip\", {{ name: {json.dumps(item['ref'])}{esm_extra}, pcbX: {x:.3f}, pcbY: {y:.3f}, pinLabels: {labels_js}, connections: {conn_js} }})"
+                f"    React.createElement(\"chip\", {{ name: {json.dumps(item['ref'])}{esm_extra}, pcbX: {x:.3f}, pcbY: {y:.3f}, pcbRotation: {rotation:.3f}, pinLabels: {labels_js}, connections: {conn_js} }})"
             )
         source = (
             "import React from \"react\"\n"
@@ -118,7 +119,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
             "routing_disabled": False,
             "unsupported_footprints": unsupported_footprints,
             "placement_contract": {
-                "source": "electrical_graph.components[].pcb_position_mm",
+                "source": "electrical_graph.components[].pcb_position_mm + pcb_rotation_deg",
                 "coordinate_transform": "board_origin_top_left_to_tscircuit_center",
                 "solver_placements": len(graph.get("components", [])) - len(missing_solver_placements),
                 "missing_solver_placements": missing_solver_placements,
@@ -352,6 +353,7 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                     "placement_parity_checked": placement_parity_checked,
                     "placement_parity_failures": len(placement_parity_failures),
                     "placement_tolerance_mm": 0.05,
+                    "placement_rotation_tolerance_deg": 0.05,
                 },
                 backend=backend,
             )
@@ -374,12 +376,37 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
     def _identifier(value: str) -> str:
         return re.sub(r"[^A-Za-z0-9_]", "_", value)
 
+    @staticmethod
+    def _rotation_degrees(value: Any) -> float | None:
+        if isinstance(value, bool):
+            return None
+        if isinstance(value, (int, float)):
+            return float(value) if math.isfinite(value) else None
+        if not isinstance(value, str):
+            return None
+        match = re.fullmatch(
+            r"\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s*(deg|rad)?\s*",
+            value,
+            flags=re.IGNORECASE,
+        )
+        if match is None:
+            return None
+        parsed = float(match.group(1))
+        if match.group(2) and match.group(2).lower() == "rad":
+            parsed = math.degrees(parsed)
+        return parsed if math.isfinite(parsed) else None
+
+    @staticmethod
+    def _rotation_error_degrees(actual: float, expected: float) -> float:
+        return abs((actual - expected + 180.0) % 360.0 - 180.0)
+
     @classmethod
     def placement_parity_failures(
         cls,
         circuit_json: list[dict[str, Any]],
         graph: dict[str, Any],
         tolerance_mm: float = 0.05,
+        rotation_tolerance_deg: float = 0.05,
     ) -> tuple[list[Failure], int]:
         placement = graph.get("placement", {})
         board_width = placement.get("board_width_mm")
@@ -448,6 +475,58 @@ class TSCircuitBackend(ElectronicsBackendAdapter):
                         "compiled_tscircuit_center_mm": [compiled_x, compiled_y],
                         "error_mm": round(error_mm, 6),
                         "tolerance_mm": tolerance_mm,
+                        "placement_source": component.get("placement_source"),
+                    },
+                ))
+            expected_rotation_value = component.get("pcb_rotation_deg", 0.0)
+            expected_rotation = cls._rotation_degrees(expected_rotation_value)
+            if expected_rotation is None:
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "solver_component_rotation_invalid",
+                    f"{ref} has a non-numeric pcb_rotation_deg in the electrical graph",
+                    details={"ref": ref, "pcb_rotation_deg": expected_rotation_value},
+                ))
+                continue
+
+            compiled_rotation_value = compiled.get("rotation")
+            if compiled_rotation_value is None:
+                if cls._rotation_error_degrees(expected_rotation, 0.0) <= rotation_tolerance_deg:
+                    continue
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "compiled_component_rotation_missing",
+                    f"{ref} pcb_component has no rotation in Circuit JSON",
+                    details={
+                        "ref": ref,
+                        "expected_rotation_deg": expected_rotation,
+                        "rotation_tolerance_deg": rotation_tolerance_deg,
+                    },
+                ))
+                continue
+
+            compiled_rotation = cls._rotation_degrees(compiled_rotation_value)
+            if compiled_rotation is None:
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "compiled_component_rotation_invalid",
+                    f"{ref} pcb_component has a non-numeric rotation in Circuit JSON",
+                    details={"ref": ref, "rotation": compiled_rotation_value},
+                ))
+                continue
+
+            rotation_error_deg = cls._rotation_error_degrees(compiled_rotation, expected_rotation)
+            if rotation_error_deg > rotation_tolerance_deg:
+                failures.append(Failure(
+                    FailureCategory.EDA_ERROR,
+                    "placement_rotation_mismatch",
+                    f"{ref} compiled tscircuit rotation differs from the solver proposal by {rotation_error_deg:.3f} degrees",
+                    details={
+                        "ref": ref,
+                        "expected_rotation_deg": expected_rotation,
+                        "compiled_rotation_deg": compiled_rotation,
+                        "rotation_error_deg": round(rotation_error_deg, 6),
+                        "rotation_tolerance_deg": rotation_tolerance_deg,
                         "placement_source": component.get("placement_source"),
                     },
                 ))

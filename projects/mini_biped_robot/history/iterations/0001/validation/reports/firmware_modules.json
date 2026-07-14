@@ -1,0 +1,196 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_stack_net_missing",
+      "details": {
+        "known_signals": [],
+        "missing_nets": [
+          "USB_DM",
+          "USB_DP"
+        ]
+      },
+      "message": "Module 'usb_cdc' declares stack nets not present in the firmware pinmap or hardware graph",
+      "path": "firmware.modules.usb_cdc.required_nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_module_artifact_missing",
+      "details": {
+        "artifact_path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/usb_cdc.c",
+        "artifact_type": "c_source",
+        "module_id": "usb_cdc"
+      },
+      "message": "Rendered firmware module 'usb_cdc' is missing c_source",
+      "path": "firmware.modules",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_module_artifact_missing",
+      "details": {
+        "artifact_path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/usb_cdc.h",
+        "artifact_type": "h_source",
+        "module_id": "usb_cdc"
+      },
+      "message": "Rendered firmware module 'usb_cdc' is missing h_source",
+      "path": "firmware.modules",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_sensor_bus_missing",
+      "details": {
+        "bus": "i2c",
+        "known_signals": []
+      },
+      "message": "Module 'bme280_driver' polls over I2C, but the hardware graph exposes no matching bus",
+      "path": "firmware.modules.bme280_driver.bus",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_sensor_target_missing",
+      "details": {
+        "known_components": [],
+        "sensor": "bme280"
+      },
+      "message": "Module 'bme280_driver' polls sensor 'bme280', but no matching component is resolved in the hardware graph",
+      "path": "firmware.modules.bme280_driver.sensor",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_module_artifact_missing",
+      "details": {
+        "artifact_path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/bme280_driver.c",
+        "artifact_type": "c_source",
+        "module_id": "bme280_driver"
+      },
+      "message": "Rendered firmware module 'bme280_driver' is missing c_source",
+      "path": "firmware.modules",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_module_artifact_missing",
+      "details": {
+        "artifact_path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/bme280_driver.h",
+        "artifact_type": "h_source",
+        "module_id": "bme280_driver"
+      },
+      "message": "Rendered firmware module 'bme280_driver' is missing h_source",
+      "path": "firmware.modules",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_stack_net_missing",
+      "details": {
+        "known_signals": [],
+        "missing_nets": [
+          "USB_DM",
+          "USB_DP"
+        ]
+      },
+      "message": "Module 'data_streamer' declares stack nets not present in the firmware pinmap or hardware graph",
+      "path": "firmware.modules.data_streamer.required_nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_module_artifact_missing",
+      "details": {
+        "artifact_path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/data_streamer.c",
+        "artifact_type": "c_source",
+        "module_id": "data_streamer"
+      },
+      "message": "Rendered firmware module 'data_streamer' is missing c_source",
+      "path": "firmware.modules",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_module_artifact_missing",
+      "details": {
+        "artifact_path": "/Users/mrcha033/Documents/hw-cli/projects/mini_biped_robot/firmware/modules/data_streamer.h",
+        "artifact_type": "h_source",
+        "module_id": "data_streamer"
+      },
+      "message": "Rendered firmware module 'data_streamer' is missing h_source",
+      "path": "firmware.modules",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_sensor_bus_missing",
+      "details": {
+        "bus": "i2c",
+        "known_signals": []
+      },
+      "message": "Module 'lsm6dsox_driver' polls over I2C, but the hardware graph exposes no matching bus",
+      "path": "firmware.modules.lsm6dsox_driver.bus",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_sensor_target_missing",
+      "details": {
+        "known_components": [],
+        "sensor": "lsm6dsox"
+      },
+      "message": "Module 'lsm6dsox_driver' polls sensor 'lsm6dsox', but no matching component is resolved in the hardware graph",
+      "path": "firmware.modules.lsm6dsox_driver.sensor",
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "FIRMWARE_ERROR",
+      "code": "firmware_stack_net_missing",
+      "details": {
+        "known_signals": [],
+        "missing_nets": [
+          "I2C_SCL",
+          "I2C_SDA",
+          "SERVO_PWM_OE"
+        ]
+      },
+      "message": "Module 'pca9685_servo_pwm' declares stack nets not present in the firmware pinmap or hardware graph",
+      "path": "firmware.modules.pca9685_servo_pwm.required_nets",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "firmware_modules",
+  "metrics": {
+    "artifact_check_enabled": true,
+    "isr_count": 1,
+    "module_count": 7,
+    "rendered_module_ids": [
+      "biped_motion_state",
+      "bme280_driver",
+      "data_streamer",
+      "lsm6dsox_driver",
+      "pca9685_servo_pwm",
+      "servo_safety_watchdog",
+      "usb_cdc"
+    ],
+    "required_behaviors": [],
+    "total_stack_bytes": 11776
+  },
+  "status": "fail"
+}

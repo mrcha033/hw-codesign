@@ -1,0 +1,42 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [
+    {
+      "category": "MECHANICAL_ERROR",
+      "code": "connector_cutout_missing",
+      "details": {
+        "references": [
+          "J27"
+        ]
+      },
+      "message": "Electrical connectors lack mechanical connector-interface cutouts",
+      "path": "mechanical.connector_interfaces",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "mechanical_connector_cutouts",
+  "metrics": {
+    "alignment_failure_refs": [],
+    "connector_refs": [
+      "J1",
+      "J27"
+    ],
+    "errors": 1,
+    "interface_refs": [
+      "J1",
+      "J2"
+    ],
+    "invalid_opening_refs": [],
+    "max_connector_edge_distance_mm": 6.0,
+    "missing_component_refs": [],
+    "missing_cutout_refs": [
+      "J27"
+    ],
+    "out_of_bounds_refs": [],
+    "required": true,
+    "warnings": 0
+  },
+  "status": "fail"
+}
