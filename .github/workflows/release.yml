@@ -21,7 +21,11 @@ jobs:
   build:
     name: Build and verify release
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # The authoritative CI suite is sharded for feedback speed; the release
+    # build intentionally reruns the complete Python 3.11 suite in one job.
+    # Give that integrity gate enough time to finish instead of timing out at
+    # the historical ~46-minute serial-suite duration.
+    timeout-minutes: 90
     permissions:
       contents: read
       id-token: write
