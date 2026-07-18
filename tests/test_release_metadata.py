@@ -89,7 +89,8 @@ def test_default_branch_surfaces_do_not_claim_unpublished_channels():
     package_readme = _normalized("PYPI_README.md")
 
     assert "This source checkout is the only currently verified public installation route." in readme
-    assert "No package index, container registry, tagged release, or hosted review endpoint is claimed" in readme
+    assert "No package index, container registry, or tagged release is claimed" in readme
+    assert "The self-contained review is also live at" in readme
     assert "does not currently claim a package-index distribution" in plugin_readme
     assert "Release-only metadata." in package_readme
     assert "become valid only after the release workflow publishes that tag and package" in package_readme
@@ -98,7 +99,7 @@ def test_default_branch_surfaces_do_not_claim_unpublished_channels():
     assert "pip install hw-codesign" not in default_branch_surfaces
     assert "pip install \"hw-codesign" not in default_branch_surfaces
     assert "docker pull ghcr.io" not in default_branch_surfaces
-    assert "mrcha033.github.io" not in default_branch_surfaces
+    assert "mrcha033.github.io/hw-cli/" in readme
 
 
 def test_release_workflows_retain_unpublished_channel_mechanisms():
