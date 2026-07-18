@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_erc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "sch",
+      "erc",
+      "--format",
+      "json",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_erc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_sch"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 0 violations\nSaved ERC Report to /Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_erc.json\n"
+  },
+  "failures": [],
+  "gate": "native_erc",
+  "metrics": {
+    "footprint_link_issues": 0,
+    "violations": 0
+  },
+  "status": "pass"
+}

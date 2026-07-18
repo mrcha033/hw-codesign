@@ -1,7 +1,7 @@
 # Adapting the design system
 
 The included templates are maintained design families, not a fully generic board
-generator. hw-cli is built for AI agents to author and revise candidates inside
+generator. hw-codesign is built for AI agents to author and revise candidates inside
 those families, then promote only evidence-backed candidates. There are two
 different levels of adaptation.
 
@@ -31,8 +31,8 @@ actuation:
 ```
 
 ```bash
-uvx --from hw-codesign-platform hw --root . validate-spec my_controller
-uvx --from hw-codesign-platform hw --root . iterate my_controller --no-external
+hw --root . validate-spec my_controller
+hw --root . iterate my_controller --no-external
 ```
 
 Do not treat a schema-valid edit as an engineering approval. Semantic, sourcing,

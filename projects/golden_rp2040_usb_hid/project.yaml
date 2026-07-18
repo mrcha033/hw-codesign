@@ -1,0 +1,8 @@
+name: golden_rp2040_usb_hid
+description: Raspberry Pi RP2040 USB device — HID/CDC with external 2MB QSPI flash
+  and USB-C
+version: 0.1.0
+revision: r1
+target_use: usb_hid_and_cdc_peripheral
+template: rp2040_usb_device
+created_at: '2026-07-18'

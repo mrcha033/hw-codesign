@@ -2,11 +2,21 @@ project:
   name: avr_32u4_hid
   description: ATmega32U4 native USB HID controller — keyboard/gamepad/mouse with ICSP programming
   version: 0.1.0
+  revision: r1
+  target_use: native_usb_hid_controller
   template: avr_32u4_hid
   created_at: '2026-06-21'
 
 system:
   target_application: USB HID device, custom keyboard, gamepad controller, USB peripheral
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.5
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.5}
 
 compute:
   mcu:
@@ -24,26 +34,52 @@ compute:
 
 actuation:
   motor_channels: 0
+  motor_channel_peak_current_a: 0.0
   gpio_outputs: 20
   pwm_channels: 7
 
 sensing:
+  imu: not_required
+  e_stop: not_required
   adc_channels: 12
   adc_bits: 10
 
 assumptions:
-  - id: ASM-01
-    text: 16 MHz crystal required for USB timing compliance; internal RC oscillator not suitable for USB
-    rationale: USB full-speed requires ±0.25% frequency accuracy; RC oscillator is ±10%
-  - id: ASM-02
-    text: 5V bus-powered via USB; no separate LDO needed as ATmega32U4 operates at 5V
-    rationale: native USB D+/D- at 3.3V via internal 3V3 regulator output pin; no external reg needed
-  - id: ASM-03
-    text: ICSP header for AVR ISP programming; no USB bootloader in production fuses
-    rationale: custom HID firmware ships with production fuses; USB DFU bootloader optional via Caterina
-  - id: ASM-04
-    text: HWB pin pulled low for normal boot; USB bootloader can be triggered via HWB+RESET
-    rationale: allows field reflash without ICSP hardware when Caterina bootloader installed
+  usb_clock_source:
+    value: external_16mhz_crystal
+    resolved_value: external_16mhz_crystal
+    confidence: high
+    reason: A 16 MHz crystal is required for USB timing compliance; the internal RC oscillator is not suitable for USB full-speed timing.
+    rationale: USB full-speed requires ±0.25% frequency accuracy; the internal RC oscillator is specified much more loosely.
+    source_id: ASM-01
+    critical: true
+    requires_user_review: false
+  usb_bus_power:
+    value: direct_5v_usb_bus_power
+    resolved_value: direct_5v_usb_bus_power
+    confidence: high
+    reason: The ATmega32U4 candidate is powered directly from USB VBUS and does not use a separate core LDO.
+    rationale: The MCU operates at 5 V and provides its USB interface supply internally.
+    source_id: ASM-02
+    critical: true
+    requires_user_review: false
+  production_programming:
+    value: icsp_with_optional_caterina_bootloader
+    confidence: medium
+    reason: The board exposes ICSP for production programming; a Caterina-compatible USB bootloader remains an optional firmware choice.
+    rationale: Production fuses and bootloader policy must be selected before firmware release.
+    source_id: ASM-03
+    critical: false
+    requires_user_review: false
+  hardware_boot_pin:
+    value: hwb_pulldown_with_reset_entry
+    resolved_value: hwb_pulldown_with_reset_entry
+    confidence: high
+    reason: HWB is pulled low for normal boot and can be combined with RESET to enter a compatible USB bootloader.
+    rationale: This preserves a field-reflash path when a Caterina-compatible bootloader is installed.
+    source_id: ASM-04
+    critical: true
+    requires_user_review: false
 
 electronics:
   backend: tscircuit
@@ -79,16 +115,29 @@ mechanical:
     max_component_height_top_mm: 3.5
     max_component_height_bottom_mm: 1.0
   enclosure_internal_mm: [55.0, 30.0, 5.0]
+  wall_thickness_mm: 1.6
   insertion_clearance_mm: 1.0
   assembly_clearance_mm: 0.5
   tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 6.0
+  default_component_height_mm: 2.0
+  component_heights_mm: {J1: 3.3, J2: 8.5, U1: 1.2}
+  board_origin_mm: [0.0, 0.0, 0.0]
   mounting_holes:
     - {x_mm: 2.5, y_mm: 2.5, diameter_mm: 2.2}
     - {x_mm: 52.5, y_mm: 2.5, diameter_mm: 2.2}
     - {x_mm: 2.5, y_mm: 27.5, diameter_mm: 2.2}
     - {x_mm: 52.5, y_mm: 27.5, diameter_mm: 2.2}
+  fixtures:
+    mounting_plate: {enabled: false}
+    frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: left, opening_mm: [9.0, 3.3], center_z_mm: 2.5, position_tolerance_mm: 0.5}
 
 firmware:
+  framework: lufa
+  target: atmega32u4
+  outputs: [pinmap, driver_stubs, bringup_tests]
   rtos: bare_metal
   zephyr_target: null
   avr_target: atmega32u4
@@ -111,8 +160,16 @@ manufacturing:
     layers: 2
     min_clearance_mm: 0.127
     min_track_width_mm: 0.127
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
 
 safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog]
   regulatory: [CE, FCC_B]
   isolation_required: false
   esd_protection: required
@@ -131,11 +188,12 @@ test_plan:
     - hid_report_latency_under_1ms
 
 requirements:
-  performance:
-    - id: REQ-01
-      text: HID report latency ≤ 1 ms at 1000 Hz polling rate
-    - id: REQ-02
-      text: Key matrix scan cycle ≤ 500 µs for 80-key matrix
-  reliability:
-    - id: REQ-03
-      text: No missed keystrokes at sustained 6-key rollover
+  raw_inputs:
+    - {id: req_input_0001, text: HID report latency ≤ 1 ms at 1000 Hz polling rate, created_by: template:avr_32u4_hid}
+    - {id: req_input_0002, text: Key matrix scan cycle ≤ 500 µs for 80-key matrix, created_by: template:avr_32u4_hid}
+    - {id: req_input_0003, text: No missed keystrokes at sustained 6-key rollover, created_by: template:avr_32u4_hid}
+  active_lowered: []
+  active_unresolved:
+    - {id: req_unresolved_0001, source: req_input_0001, category: firmware_latency_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: The latency target requires firmware timing measurements on a programmed board., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0002, source: req_input_0002, category: firmware_scan_timing_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: The matrix scan-cycle target requires firmware timing measurements with the selected matrix configuration., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0003, source: req_input_0003, category: hid_reliability_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Rollover reliability requires a sustained host-and-device integration test., required_human_approvals: [bringup_owner], affected_gates: [physical_qualification]}

@@ -1,0 +1,42 @@
+name: Board-family proposal
+description: Propose a bounded, manufacturer-grounded supported board family.
+title: "[family] "
+labels: [enhancement]
+body:
+  - type: input
+    id: outcome
+    attributes:
+      label: Narrow target outcome
+      placeholder: "Example: USB-powered RP2350 data-acquisition board"
+    validations:
+      required: true
+  - type: textarea
+    id: parts
+    attributes:
+      label: Critical manufacturer parts
+      description: List manufacturer MPNs and authoritative datasheet links; avoid placeholders.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Typed constraints and interfaces
+      description: State supply, interfaces, board envelope, layers, firmware target, and manufacturing profile.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required gates and physical evidence
+      description: Explain what would make the candidate reviewable and what remains a fabrication blocker.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This is a reusable board family, not a request for an arbitrary one-off PCB.
+          required: true
+        - label: I understand generated artifacts remain candidates until release and physical gates pass.
+          required: true

@@ -11,9 +11,49 @@ from typing import Any
 from sexpdata import Symbol, dumps, loads
 
 _ASSETS: dict[str, tuple[str, str]] = {
+    "Capacitor_SMD:C_0402_1005Metric": (
+        "C_0402_1005Metric.kicad_mod",
+        "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5",
+    ),
+    "Capacitor_SMD:C_0603_1608Metric": (
+        "C_0603_1608Metric.kicad_mod",
+        "fe0dbfefbb181a0466f93a8de52d84ba7b00fcd9acdbb69575f4128a0af4e405",
+    ),
+    "Connector_IDC:IDC-Header_2x05_P2.54mm_Vertical": (
+        "IDC-Header_2x05_P2.54mm_Vertical.kicad_mod",
+        "b605d7a816a5b5681d09bd120b547ac748d74440e7d55a8371007b9c53afb092",
+    ),
+    "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal": (
+        "USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.kicad_mod",
+        "3b8d7da3cae5114ec83022a759a78925113bc2eeec100ea447594f6d8687e4b8",
+    ),
+    "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm": (
+        "Crystal_SMD_3225-4Pin_3.2x2.5mm.kicad_mod",
+        "7648bca15399a8bd7856b5da6a1d2bc3a87049dc63958f8e8a3ab7409941a8e4",
+    ),
+    "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm": (
+        "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm.kicad_mod",
+        "516b5c14ad87b1a5ef29c098b603ec48c6bd9cefe21e8d479613cacf18458d8b",
+    ),
+    "Package_SO:SOIC-8_5.3x5.3mm_P1.27mm": (
+        "SOIC-8_5.3x5.3mm_P1.27mm.kicad_mod",
+        "cc86a7083c9df1c1bf808dfa469e913d446455fd7ab7a7941e18681b80e8b9b5",
+    ),
+    "Package_TO_SOT_SMD:SOT-23-5": (
+        "SOT-23-5.kicad_mod",
+        "455a3f7c3e5eb5b8847eaa5df23e18651e78ab9f75afd09a0883758a0d901761",
+    ),
+    "Package_TO_SOT_SMD:SOT-23-6": (
+        "SOT-23-6.kicad_mod",
+        "f341c73aac9dcb553456f68bf3fee3d26eb14acf6d8a1cae82b50418fe1d71ca",
+    ),
     "RF_Module:ESP32-S3-WROOM-1": (
         "ESP32-S3-WROOM-1.kicad_mod",
         "d0cfbb31fef0c47396c0d061ec5a3bff60f0567d8d4ea8dd4769c84f52bd656f",
+    ),
+    "Resistor_SMD:R_0603_1608Metric": (
+        "R_0603_1608Metric.kicad_mod",
+        "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23",
     ),
 }
 
@@ -197,6 +237,26 @@ def _scrub_uuid_fields(form: Any) -> Any:
     return cleaned
 
 
+def _compose_pad_rotation(at_form: list[Any], footprint_rotation_deg: float) -> None:
+    """Write a pad's absolute KiCad board angle into its ``(at ...)`` form.
+
+    Pad centres remain footprint-local, but KiCad board files store a child
+    pad's angle in board coordinates.  Consequently an omitted local angle is
+    not inherited from the footprint and must be serialized explicitly; an
+    existing local angle must be composed with the placed footprint rotation.
+    """
+    if len(at_form) < 3:
+        return
+    local_rotation_deg = float(at_form[3]) if len(at_form) > 3 else 0.0
+    composed = (local_rotation_deg + float(footprint_rotation_deg)) % 360.0
+    if math.isclose(composed, 0.0, abs_tol=1e-12):
+        composed = 0.0
+    if len(at_form) > 3:
+        at_form[3] = composed
+    else:
+        at_form.append(composed)
+
+
 def render_canonical_footprint(
     library_id: str,
     component: dict[str, Any],
@@ -250,6 +310,9 @@ def render_canonical_footprint(
     for form in ast[2:]:
         if _head(form, "pad") and len(form) > 1:
             form[:] = [item for item in form if not _head(item, "net")]
+            at_forms = _direct(form, "at")
+            if at_forms:
+                _compose_pad_rotation(at_forms[0], rotation_deg)
             pad_number = _atom(form[1])
             net_name = pin_nets.get(pad_number)
             if net_name is not None:

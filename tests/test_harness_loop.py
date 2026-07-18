@@ -176,6 +176,23 @@ def test_update_requirements_does_not_lower_continuous_current_as_peak(service, 
     assert "current_rating" in unresolved_categories
 
 
+def test_update_requirements_lowers_explicit_board_envelope(service, project):
+    brief = "Use a 2-layer board within 65 mm by 30 mm."
+
+    result = service.update_requirements(project, brief)
+    spec = service.read_spec(project)
+    requirements = spec["requirements"]
+    lowered = {item["spec_path"]: item for item in requirements["active_lowered"]}
+
+    assert result["status"] == "generated"
+    assert spec["mechanical"]["envelope"]["board_width_mm"] == 65.0
+    assert spec["mechanical"]["envelope"]["board_height_mm"] == 30.0
+    assert lowered["mechanical.envelope.board_width_mm"]["value"] == 65.0
+    assert lowered["mechanical.envelope.board_height_mm"]["value"] == 30.0
+    assert lowered["mechanical.envelope.board_width_mm"]["source_span"] == "board within 65 mm by 30 mm"
+    assert lowered["mechanical.envelope.board_height_mm"]["source_span"] == "board within 65 mm by 30 mm"
+
+
 def test_requirements_lowering_gate_blocks_release(service, project):
     service.update_requirements(project, "16 channel 24V battery, IP67, CAN-FD")
     checks = service.run_all_checks(project, include_external=False)

@@ -1,0 +1,58 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.ses",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/routing.json"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-07-18 21:29:19.851 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-07-18 21:29:19.880 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-07-18 21:29:20.010 WARN   Analytics tracking: first delivery failure in this window - /v1/analytics/identify - UnknownHostException: api.freerouting.app. Further failures will be aggregated and reported every 60 minutes. \u2192 Action: DNS resolution failed. Verify that this host has network access and that api.freerouting.app is reachable (try: nslookup api.freerouting.app).\n2026-07-18 21:29:20.971 WARN   Failed to check for new version\n2026-07-18 21:29:21.055 INFO   [C53CCC\\CCFFF1] Job 'C53CCC\\CCFFF1' started at 2026-07-18T12:29:21.053346Z.\n2026-07-18 21:29:22.536 INFO   [C53CCC\\CCFFF1] Auto-router pass #1 on board '46ce55e2a6198788602fa5c803c04c84' was completed in 1.37 seconds with the score of 905.01 (19 unrouted), using 0.83 CPU seconds and the job allocated 0.54 GB of memory so far.\n2026-07-18 21:29:23.430 INFO   [C53CCC\\CCFFF1] Auto-router pass #2 on board '97928385d6bcec9785845238181a18b6' was completed in 0.88 seconds with the score of 922.64 (16 unrouted), using 1.64 CPU seconds and the job allocated 1.45 GB of memory so far.\n2026-07-18 21:29:24.523 INFO   [C53CCC\\CCFFF1] Auto-router pass #3 on board '2677985093dd3e4a608a87045246a7c5' was completed in 1.08 seconds with the score of 944.70 (12 unrouted), using 2.44 CPU seconds and the job allocated 2.30 GB of memory so far.\n2026-07-18 21:29:25.208 INFO   [C53CCC\\CCFFF1] Auto-router pass #4 on board '03ff9a3fec00608ceb297eae0405cd30' was completed in 0.67 seconds with the score of 967.63 (7 unrouted), using 3.28 CPU seconds and the job allocated 3.28 GB of memory so far.\n2026-07-18 21:29:25.546 INFO   [C53CCC\\CCFFF1] Auto-router pass #5 on board 'df0a9364c01acfd5ed4728fe81d82951' was completed in 0.33 seconds with the score of 980.10 (4 unrouted), using 3.28 CPU seconds and the job allocated 3.28 GB of memory so far.\n2026-07-18 21:29:25.860 INFO   [C53CCC\\CCFFF1] Auto-router pass #6 on board '2dd2b906786c00368b48036128156b82' was completed in 0.30 seconds with the score of 980.12 (4 unrouted), using 3.28 CPU seconds and the job allocated 3.28 GB of memory so far.\n2026-07-18 21:29:26.168 INFO   [C53CCC\\CCFFF1] Auto-router pass #7 on board 'dddcef1bff64b1df7e9b6f3647c4c81e' was completed in 0.30 seconds with the score of 984.25 (3 unrouted), using 4.22 CPU seconds and the job allocated 4.54 GB of memory so far.\n2026-07-18 21:29:26.477 INFO   [C53CCC\\CCFFF1] Auto-router pass #8 on board 'efef242d17519b5b39ac22aeefde501e' was completed in 0.30 seconds with the score of 984.25 (3 unrouted), using 4.22 CPU seconds and the job allocated 4.54 GB of memory so far.\n2026-07-18 21:29:26.935 INFO   [C53CCC\\CCFFF1] Auto-router pass #9 on board 'efef242d17519b5b39ac22aeefde501e' was completed in 0.45 seconds with the score of 984.24 (3 unrouted), using 4.22 CPU seconds and the job allocated 4.54 GB of memory so far.\n2026-07-18 21:29:27.278 INFO   [C53CCC\\CCFFF1] Auto-router pass #10 on board 'ff6b9a06a3dccba40f1b39111c7ef286' was completed in 0.33 seconds with the score of 988.06 (2 unrouted), using 5.13 CPU seconds and the job allocated 5.74 GB of memory so far.\n2026-07-18 21:29:27.467 INFO   [C53CCC\\CCFFF1] Auto-router pass #11 on board 'e4481590ac02724eb4de24bcf02a1f03' was completed in 0.18 seconds with the score of 988.11 (2 unrouted), using 5.13 CPU seconds and the job allocated 5.74 GB of memory so far.\n2026-07-18 21:29:27.756 INFO   [C53CCC\\CCFFF1] Auto-router pass #12 on board '9a3ec980366a9803075a9a3cf0ca6f26' was completed in 0.28 seconds with the score of 988.11 (2 unrouted), using 5.13 CPU seconds and the job allocated 5.74 GB of memory so far.\n2026-07-18 21:29:28.074 INFO   [C53CCC\\CCFFF1] Auto-router pass #13 on board '9a3ec980366a9803075a9a3cf0ca6f26' was completed in 0.31 seconds with the score of 988.07 (2 unrouted), using 5.13 CPU seconds and the job allocated 5.74 GB of memory so far.\n2026-07-18 21:29:29.295 INFO   [C53CCC\\CCFFF1] Auto-router pass #14 on board '46e686358c8f6d5c894c6e05c61b0ad7' was completed in 1.21 seconds with the score of 991.93 (1 unrouted), using 7.05 CPU seconds and the job allocated 8.89 GB of memory so far.\n2026-07-18 21:29:29.504 INFO   [C53CCC\\CCFFF1] Auto-router pass #15 on board 'cae31566c9088117c4ffb386ab8bc8a5' was completed in 0.20 seconds with the score of 991.97 (1 unrouted), using 7.05 CPU seconds and the job allocated 8.89 GB of memory so far.\n2026-07-18 21:29:29.549 INFO   [C53CCC\\CCFFF1] Auto-router pass #16 on board '25f734bc81b450597a846b1f3fbb01b3' was completed in 0.04 seconds with the score of 995.66, using 7.05 CPU seconds and the job allocated 8.89 GB of memory so far.\n2026-07-18 21:29:29.557 INFO   [C53CCC\\CCFFF1] Auto-router pass #17 on board 'ea6d292b249f8fea43087867c018766d' was completed in 0.00 seconds with the score of 995.66, using 7.05 CPU seconds and the job allocated 8.89 GB of memory so far.\n2026-07-18 21:29:29.566 INFO   [C53CCC\\CCFFF1] Auto-router session completed: started with 59 unrouted nets, completed in 8.46 seconds, final score: 995.66, using 7.05 total CPU seconds, 8.89 GB total allocated, and 324.48 MB peak heap usage.\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "timeout_seconds": 600,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "routing_incomplete_after_zone_fill",
+      "details": {
+        "unconnected": 3
+      },
+      "message": "KiCad found 3 unconnected item(s) after session import and zone fill",
+      "path": "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "autoroute",
+  "metrics": {
+    "filled_polygon_count": 1,
+    "freerouting_unrouted": 0,
+    "max_passes": 20,
+    "unrouted": 3,
+    "zone_count": 1
+  },
+  "status": "fail"
+}

@@ -1,0 +1,23 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "placement-proposal",
+    "release_authoritative": false
+  },
+  "failures": [],
+  "gate": "placement_constraints",
+  "metrics": {
+    "authoritative": false,
+    "constraints": 23,
+    "cost": 0,
+    "cost_breakdown": {},
+    "errors": 0,
+    "finding_counts": {},
+    "method": "constraint_driven_placement_proposal",
+    "placements": 31,
+    "solver_iterations": 0,
+    "warnings": 0
+  },
+  "status": "pass"
+}

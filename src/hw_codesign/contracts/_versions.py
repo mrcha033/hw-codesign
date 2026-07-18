@@ -7,7 +7,7 @@ try:
     from importlib.metadata import PackageNotFoundError
     from importlib.metadata import version as _pkg_version
     try:
-        ENGINE_VERSION: str = _pkg_version("hw-codesign-platform")
+        ENGINE_VERSION: str = _pkg_version("hw-codesign")
     except PackageNotFoundError:
         ENGINE_VERSION = "0.1.0+local"
 except Exception:

@@ -46,6 +46,7 @@ _FOOTPRINT_BODY_SIZE_MM: dict[str, tuple[float, float]] = {
     "Diode_SMD:D_SMC": (7.9, 6.2),
     "Crystal:Crystal_SMD_HC-49S": (11.4, 4.8),
     "Connector_USB:USB_C_GCT_USB4105": (9.0, 7.35),
+    "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal": (9.0, 7.35),
     "Connector_Samtec:FTSH-105": (12.7, 5.1),
     "Connector_RJ45:RJ45_Hanrun_HR911105A": (16.0, 16.0),
     "Connector_Coaxial:Hirose_U.FL-R-SMT-1_Vertical": (3.0, 3.1),
@@ -152,7 +153,7 @@ def _body_size_from_contract(component: dict[str, Any]) -> tuple[tuple[float, fl
     if isinstance(body_mm, list) and len(body_mm) == 2 and all(isinstance(value, (int, float)) and value > 0 for value in body_mm):
         return (float(body_mm[0]), float(body_mm[1])), "project_mechanical_contract"
     if footprint in _FOOTPRINT_BODY_SIZE_MM:
-        return _FOOTPRINT_BODY_SIZE_MM[footprint], "verified_footprint"
+        return _FOOTPRINT_BODY_SIZE_MM[footprint], "verified_body_synthetic_pads"
     if package in _PACKAGE_BODY_SIZE_MM:
         return _PACKAGE_BODY_SIZE_MM[package], "package_contract"
 
@@ -233,6 +234,15 @@ def _perimeter_pads(
     side_count = max(1, math.ceil(len(perimeter_numbers) / 4))
     x_edge = max(0.0, width / 2.0 - min(0.35, width / 4.0))
     y_edge = max(0.0, height / 2.0 - min(0.35, height / 4.0))
+    # If a package contract has more pins than a single synthetic perimeter can
+    # physically hold, expand the candidate copper extent rather than compress
+    # the declared pitch or overlap adjacent-side pads at the corners.  This is
+    # intentionally a conservative placement surrogate, not a manufacturer
+    # land pattern; canonical footprints remain required for fabrication.
+    maximum_offset = max(0.0, (side_count - 1) * pitch / 2.0)
+    synthetic_edge = maximum_offset + pitch / 2.0
+    x_edge = max(x_edge, synthetic_edge)
+    y_edge = max(y_edge, synthetic_edge)
     positions: list[tuple[float, float]] = []
     for index in range(len(perimeter_numbers)):
         side, offset_index = divmod(index, side_count)
@@ -240,10 +250,13 @@ def _perimeter_pads(
         # Keep the end pads away from shared corners. The previous full-edge
         # interpolation placed adjacent sides on the same coordinate, creating
         # copper shorts inside the synthetic footprint itself.
-        axis_limit = y_edge if side in {0, 2} else x_edge
-        corner_gap = min(max(0.35, pitch * 0.5), axis_limit * 0.75)
-        usable_span = max(0.0, (axis_limit - corner_gap) * 2.0)
-        side_pitch = min(pitch, usable_span / max(1, count_on_side - 1))
+        # A declared package pitch is a physical contract.  Silently squeezing
+        # a dense synthetic perimeter into the nominal body can create a pad
+        # field that is impossible to route at the declared clearance (the
+        # 73-pad nRF52840 fallback used to collapse 0.5 mm pitch to 0.329 mm).
+        # Preserve pitch and let ``FootprintGeometry.extent`` expose any excess
+        # copper span to placement checks instead of inventing denser copper.
+        side_pitch = pitch
         offset = (offset_index - (count_on_side - 1) / 2.0) * side_pitch
         if side == 0:
             point = (-x_edge, -offset)
@@ -509,12 +522,12 @@ def component_positions(
         if "pcb_position_mm" in item:
             pos = item["pcb_position_mm"]
             positions[ref] = (float(pos[0]), float(pos[1]))
+        elif ref in table:
+            positions[ref] = table[ref][0]
         elif item.get("category") == "usb_cc_pulldown":
             positions[ref] = _usb_c_rd_seed_position(item, graph, positions, table)
         elif item.get("category") == "xtal_cap":
             positions[ref] = _xtal_cap_seed_position(item, graph, positions, table)
-        elif ref in table:
-            positions[ref] = table[ref][0]
         elif board_width_mm and board_height_mm:
             unanchored.append(item)
         else:
@@ -611,8 +624,14 @@ def _usb_c_rd_seed_position(
             x_mm, y_mm = table[connector_ref][0]
         else:
             continue
-        x_offset = 4.0 if "USB_CC1" in cc_nets else 8.0
-        return (x_mm + x_offset, y_mm + 3.0)
+        connector_extent = footprint_geometry(connector).extent
+        resistor_extent = footprint_geometry(item).extent
+        # Keep the Rd parts connector-side and physically clear of the USB-C
+        # shell/courtyard.  The old fixed +4/+8 mm offsets put both resistors
+        # inside the full USB4105 footprint once the real KiCad geometry was used.
+        x_anchor = x_mm + connector_extent[2] + 0.5 - resistor_extent[0]
+        y_offset = -1.3 if "USB_CC1" in cc_nets else 1.3
+        return (x_anchor, y_mm + y_offset)
     return _grid_fallback(len(positions))
 
 
@@ -645,6 +664,10 @@ def _xtal_cap_seed_position(
 _BLE_SENSOR_NODE_ANCHORS: dict[str, tuple[float, float]] = {
     # Power path: left edge top to right edge top
     "J1":  (12.0, 4.0),   # USB-C, top-left edge
+    # Keep both USB-C Rd resistors close to J1 without stacking them on F1,
+    # which occupies the connector's right-hand escape path.
+    "R5":  (7.0, 10.0),
+    "R6":  (17.0, 10.0),
     "F1":  (17.0, 4.0),   # fuse, next in power path
     "Q1":  (24.0, 4.0),   # reverse-polarity mosfet
     "U2":  (30.0, 4.0),   # LiPo charger, near power path
@@ -686,23 +709,42 @@ def _ble_sensor_node_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
 
 
 _RP2040_USB_HID_ANCHORS: dict[str, tuple[float, float]] = {
-    # Board: 51x21 mm, usable area 1..50 x 1..20.
-    # U2 (RP2040, 20 pins): 7-col placeholder, pads at (18-30, 4-8).
-    # U3 (Flash, 8 pins): 7-col placeholder, pads at (33-45, 2-4).
-    # QSPI_D3 path: U2(18,4) to U3(45,2); other QSPI paths are <= 20 mm.
-    "J1": (3.0,  10.0),   # USB-C, left edge; pads (3-9, 10)
-    "D1": (10.0, 10.0),   # USB ESD, inline on USB data path; pads (10-14, 10)
-    "U1": (3.0,  15.0),   # 3V3 LDO, near USB_VBUS; pads (3-7, 15)
-    "U2": (18.0,  4.0),   # RP2040 MCU, center; pads (18-30, 4-8)
-    "U3": (33.0,  2.0),   # 2 MB QSPI Flash, right of MCU; pads (33-45, 2-4)
-    "X1": (33.0, 10.0),   # 12 MHz crystal, near MCU XIN/XOUT; pads (33-35, 10)
-    "C5": (36.0,  7.0),   # XIN load cap, beside crystal.
-    "C6": (36.0, 13.0),   # XOUT load cap, beside crystal.
-    "J2": (18.0, 12.0),   # SWD 10-pin, below MCU; pads (18-30, 12-14)
-    "C1": (3.0,   5.0),   # 100 nF decoupling; pads (3-5, 5)
-    "C2": (7.0,   5.0),   # 100 nF decoupling; pads (7-9, 5)
-    "C3": (11.0,  5.0),   # 10 uF bulk cap; pads (11-13, 5)
-    "C4": (9.0,  15.0),   # 10 uF USB_VBUS input bulk cap, near USB/LDO input path.
+    # Board: 65x30 mm, 1.0 mm stackup reference. Coordinates are grounded in
+    # the exact vendored KiCad footprints, whose origins are not all centred.
+    # USB4105 local +Y faces the receptacle mouth.  With a 270 degree KiCad
+    # rotation, x=3.1 maps the footprint's explicit "PCB Edge" datum to x=0.
+    "J1": (3.1, 15.0),
+    "D1": (15.5, 15.0),   # Flow-through ESD device immediately after J1.
+    "R1": (20.0, 13.5),   # USB D+ 27R, MCU side of ESD.
+    "R2": (20.0, 16.5),   # USB D- 27R, MCU side of ESD.
+    "U1": (15.5, 24.0),   # AP2112K and its local 1 uF capacitors.
+    "U2": (30.0, 15.0),   # RP2040 QFN-56 central logic island.
+    "U3": (43.0, 8.0),    # W25Q16JV close to the RP2040 QSPI bank.
+    "X1": (40.0, 20.0),   # ABM8-272-T3 close to XIN/XOUT.
+    "R3": (36.0, 20.0),   # 1K crystal damping resistor.
+    "R4": (43.0, 13.5),   # QSPI CS pull-up.
+    "R5": (11.0, 8.0),    # USB-C CC1 Rd, clear of the receptacle courtyard.
+    "R6": (11.0, 22.0),   # USB-C CC2 Rd, clear of the receptacle courtyard.
+    "J2": (55.0, 11.1),   # Clears the H4 NPTH/courtyard at (62.5, 27.5).
+    # RP2040 per-pin bypass ring, kept outside the QFN courtyard.
+    "C1": (24.8, 13.0),
+    "C2": (24.8, 16.0),
+    "C3": (27.0, 20.5),
+    "C4": (33.2, 20.5),
+    "C5": (35.1, 16.0),
+    "C6": (35.1, 12.5),
+    "C7": (34.5, 10.5),
+    "C8": (30.5, 8.5),
+    "C9": (28.0, 8.5),
+    "C10": (25.5, 8.5),
+    # The verified 0603 courtyard is 2.96 mm wide.  Keep 2.97 mm between
+    # C11/C12 origins so both the courtyard and copper-clearance contracts pass.
+    "C11": (35.97, 8.0),  # VREG_VIN 1 uF.
+    "C12": (33.0, 8.0),  # VREG_VOUT 1 uF.
+    "C13": (43.0, 11.5),  # Flash 100 nF.
+    "C14": (15.5, 18.0),  # USBLC6 VBUS 100 nF.
+    "C15": (10.8, 24.0),  # AP2112K input 1 uF.
+    "C16": (17.2, 24.0),  # AP2112K output 1 uF.
 }
 
 
@@ -714,22 +756,9 @@ def _rp2040_usb_hid_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
 
 
 def _usb_hid_controller_seed_table() -> dict[str, tuple[tuple[float, float], str]]:
-    anchors = dict(_RP2040_USB_HID_ANCHORS)
-    # usb_hid_controller reuses the RP2040 topology but its refs differ:
-    # U1 is the RP2040 MCU and U2 is the LDO. Keep the physical roles aligned
-    # with the RP2040 seed so oscillator and USB placement stay grounded.
-    anchors["U1"] = _RP2040_USB_HID_ANCHORS["U2"]
-    anchors["U2"] = _RP2040_USB_HID_ANCHORS["U1"]
-    anchors.pop("X1", None)
-    anchors.pop("C5", None)
-    anchors["Y1"] = (33.0, 10.0)
-    anchors["C6"] = (36.0, 7.0)
-    anchors["C7"] = (36.0, 13.0)
-    anchors["R3"] = (41.0, 17.0)
-    anchors["D2"] = (46.0, 17.0)
     return {
         ref: (xy, "usb_hid_controller_anchor")
-        for ref, xy in anchors.items()
+        for ref, xy in _RP2040_USB_HID_ANCHORS.items()
     }
 
 

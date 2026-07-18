@@ -16,16 +16,17 @@ records:
   - {component_id: rc0603_120r, supplier_sku: RC0603FR-07120RL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: samtec_ftsh_105, supplier_sku: FTSH-105-01-L-DV-K, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: samtec_ftsh_105_uart, supplier_sku: FTSH-105-01-L-DV-K, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
-  - {component_id: usb4105_gf_a, supplier_sku: USB4105-GF-A, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
-  - {component_id: usblc6_2sc6, supplier_sku: USBLC6-2SC6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
+  - {component_id: usb4105_gf_a, supplier_sku: USB4105-GF-A, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
+  - {component_id: usblc6_2sc6, supplier_sku: USBLC6-2SC6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
   - {component_id: rc0603_100k, supplier_sku: RC0603FR-07100KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: rc0603_4k7, supplier_sku: RC0603FR-074K7L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-15'}}
   - {component_id: rc0603_5k1, supplier_sku: RC0603FR-075K1L, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: rc0603_1k, supplier_sku: RC0603FR-071KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-16'}}
   - {component_id: rc0603_10k, supplier_sku: RC0603FR-0710KL, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-16'}}
-  - {component_id: rp2040, supplier_sku: RP2040, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
-  - {component_id: w25q16jv, supplier_sku: W25Q16JVSSIQ, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
-  - {component_id: w25q32jv, supplier_sku: W25Q32JVSSIQ, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
+  - {component_id: rp2040, supplier_sku: RP2040, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
+  - {component_id: w25q16jv, supplier_sku: W25Q16JVSSIQ, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
+  - {component_id: abm8_272_t3, supplier_sku: ABM8-272-T3, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
+  - {component_id: w25q32jv, supplier_sku: W25Q32JVSSIQ, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
   - {component_id: abm8_12m, supplier_sku: ABM8-12.000MHZ-B2-T, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: stm32l071czt6, supplier_sku: STM32L071CZT6, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: sx1276imltrt, supplier_sku: SX1276IMLTRT, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
@@ -88,8 +89,8 @@ records:
   - {component_id: ssd1306_oled_128x32, supplier_sku: UG-2832HSWEG04, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: ina219aidr, supplier_sku: INA219AIDR, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   # --- rp2040_usb_device / samd21_sensor_hub / nrf52840_dongle ---
-  - {component_id: ap2112k_33trg1, supplier_sku: AP2112K-3.3TRG1, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
-  - {component_id: conn_2x05_2p54, supplier_sku: '61201021621', availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
+  - {component_id: ap2112k_33trg1, supplier_sku: AP2112K-3.3TRG1, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
+  - {component_id: conn_2x05_2p54, supplier_sku: '61201021621', availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-07-18'}}
   - {component_id: atsamd21g18a_au, supplier_sku: ATSAMD21G18A-AU, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   - {component_id: lsm6dsoxtr, supplier_sku: LSM6DSOXTR, availability: unknown, stock: null, observed_at: null, provenance: {source: curated_component_db, reviewed_at: '2026-06-21'}}
   # --- new power management ICs ---

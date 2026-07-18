@@ -1,7 +1,7 @@
 {
   "name": "hw-codesign",
   "version": "0.1.0",
-  "description": "Agentic hardware design with evidence-backed release gates",
+  "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
   "author": {
     "name": "mrcha033",
     "url": "https://github.com/mrcha033"
@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "hw-codesign",
-    "shortDescription": "Design hardware with evidence-backed gates.",
+    "shortDescription": "Turn a supported-board brief into a candidate and fabrication blockers.",
     "longDescription": "Create and iterate PCB electronics, mechanical parts, firmware interfaces, sourcing decisions, manufacturing candidates, and review bundles. Release promotion remains gated by explicit digital, native-tool, and physical evidence.",
     "developerName": "mrcha033",
     "category": "Productivity",

@@ -1,0 +1,6 @@
+board:
+  name: rp2040_usb_device
+  full_name: HW Co-design RP2040 USB Device
+  vendor: hw
+  socs:
+    - name: rp2040

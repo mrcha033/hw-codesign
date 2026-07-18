@@ -1,186 +1,208 @@
-# hw-codesign: agentic hardware design system
+# hw-codesign
 
 [![CI](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/hw-codesign-platform)](https://pypi.org/project/hw-codesign-platform/)
-[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://pypi.org/project/hw-codesign-platform/)
-[![Platforms](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey)](#development-setup)
-[![MCP](https://img.shields.io/badge/MCP-FastMCP%203.4-purple)](docs/mcp-tools.md)
+[![License](https://img.shields.io/github/license/mrcha033/hw-cli)](LICENSE)
 
-![hw-cli logo](docs/assets/hero.png)
+**For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.**
 
-An MCP server and CLI that lets AI agents — Claude Code, Claude Desktop, Codex, or any
-MCP-capable agent — design PCB electronics, mechanical parts, firmware interfaces, sourcing
-decisions, and manufacturing outputs. Agents author cross-domain hardware candidates through
-structured tool calls; the platform promotes only evidence-backed candidates through tiered
-release gates.
+[![20-second prompt-to-board demo](docs/demo/prompt-to-board-20s.gif)](docs/demo/README.md)
 
-Three board family templates ship ready to use: an STM32H7 robotics motor controller, an
-ESP32-S3 IoT sensor data logger, and an nRF52840 BLE sensor node. Each has a generated
-candidate bundle, review bundle, and digital gate report an agent can inspect without running
-a local toolchain.
+[Download the self-contained read-only review](docs/demo/index.html) ·
+[inspect the demo evidence and hashes](docs/demo/README.md) ·
+[read the validation contract](docs/validation-contract.md)
 
-> **Evidence status:** generated Gerbers, STEP files, BOM, firmware, and digital gate reports
-> are included. These are not fabricated, electrically brought-up, thermally qualified, or
-> EMC-tested boards.
+<!-- golden-demo-evidence:start -->
+The demo is a dated full-toolchain repository run against the RP2040 USB-device
+family. It produced a candidate, not a fabrication-qualified board: 44 of 48
+recorded gates passed, 1 failed, and 3 were blocked. Freerouting reports zero
+raw unrouted connections and KiCad reports zero post-fill unconnected items;
+native ERC and DRC each report zero violations. The native Zephyr build is
+blocked because the selected ARM toolchain lacks newlib runtime files.
 
----
+The remaining evidence is material: sourcing fails, current supplier
+availability is blocked, the native Zephyr build is blocked on ARM newlib, and
+physical qualification is blocked. The
+board has not been fabricated, and the U2.57 via-in-pad fill/cap/tent process is
+unqualified. Bundle `7d6731501a24716965593f7fcdc168a3d739d1b0a1b7a57f7a0b29fee51c1b84` records those boundaries.
+<!-- golden-demo-evidence:end -->
 
-## Connect an agent
+## The 20-second product loop
 
-### Codex
+| Brief | Candidate | Blocker report |
+|---|---|---|
+| Natural-language constraints are lowered into typed project fields with provenance. | The run emits electronics source, KiCad artifacts, firmware, BOM, review bundle, and hashes. | Every gate is `pass`, `fail`, or `blocked`; physical evidence gaps stay release-blocking. |
 
-Install the repository-owned plugin from a local clone:
+`hw-codesign` is available as a CLI (`hw`), an MCP server (`hw-mcp`), and a
+repository-owned agent plugin. Its design surface is template- and
+contract-driven. It is not an arbitrary-prompt PCB oracle.
+
+## Install from source
+
+Python 3.11 or newer is required.
 
 ```bash
-codex plugin marketplace add "$PWD"
-codex plugin add hw-codesign@hw-cli
+git clone https://github.com/mrcha033/hw-cli.git
+cd hw-cli
+python3.11 -m venv .venv
+.venv/bin/pip install '.[mcp]'
+export PATH="$PWD/.venv/bin:$PATH"
+hw --help
 ```
 
-Start a new Codex task, then invoke `$design-hardware` or ask Codex to create, inspect,
-validate, compare, or prepare a hardware candidate for release. The plugin runs the MCP
-server from the checked-out source with Python 3.11+ and uses the repository root as
-`HW_PLATFORM_ROOT`.
+This source checkout is the only currently verified public installation route.
+No package index, container registry, tagged release, or hosted review endpoint
+is claimed until that endpoint is live and independently smoke-tested.
 
-### Claude Desktop
+Create the same candidate class used in the demo:
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+```bash
+mkdir my-hardware-workspace
+cd my-hardware-workspace
+
+hw --root . create-project my_usb_board --template rp2040_usb_device
+hw --root . update-requirements my_usb_board \
+  "Design a 2-layer RP2040 USB HID and CDC board powered from USB-C. Use Zephyr."
+hw --root . design-candidate my_usb_board --brief \
+  "Design a 2-layer RP2040 USB HID and CDC board powered from USB-C. Use Zephyr."
+hw --root . export-standalone-review my_usb_board
+```
+
+The generated HTML review is self-contained. No receiver or cloud account is
+required to inspect it.
+
+### MCP clients
+
+Claude Desktop configuration:
 
 ```json
 {
   "mcpServers": {
     "hw-codesign": {
-      "command": "uvx",
-      "args": ["--from", "hw-codesign-platform[mcp]", "hw-mcp"],
+      "command": "/absolute/path/to/hw-cli/.venv/bin/hw-mcp",
+      "args": [],
       "env": {
-        "HW_PLATFORM_ROOT": "/absolute/path/to/hardware-workspace"
+        "HW_PLATFORM_ROOT": "/absolute/path/to/a/writable/hardware-workspace"
       }
     }
   }
 }
 ```
 
-### Claude Code
+Claude Code:
 
 ```bash
 claude mcp add hw-codesign \
   -e HW_PLATFORM_ROOT="$PWD" \
-  -- uvx --from 'hw-codesign-platform[mcp]' hw-mcp
+  -- /absolute/path/to/hw-cli/.venv/bin/hw-mcp
 ```
 
-### Full toolchain container (KiCad, OpenCASCADE, Freerouting, Zephyr)
+For Codex or Claude plugin use, clone this repository and install the
+`hw-codesign` marketplace entry:
 
 ```bash
-docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest hw-mcp
+codex plugin marketplace add /absolute/path/to/hw-cli
+codex plugin add hw-codesign@hw-codesign
 ```
 
-Point the MCP client at `stdio` transport from the container. Toolchain-dependent gates
-(`native_erc`, `native_drc`, `autoroute`, `native_zephyr_build`) become available only when
-the corresponding native tool is reachable from the server process.
+## What the statuses mean
 
-The workspace path must be writable; the server creates projects, validation reports, review
-bundles, and release artifacts beneath it.
-
----
-
-## What an agent does with this server
-
-The canonical agent workflow, from the [MCP tool reference](docs/mcp-tools.md):
-
-```
-hw_get_capabilities            ← which backends and native tools are installed
-hw_create_project              ← instantiate a board family template
-hw_update_requirements         ← lower requirements into typed fields plus resolved/unresolved assumption IR
-
-# Author topology, placement, and firmware
-hw_propose_circuit_block       ← search the component catalog before committing
-hw_add_circuit_block           ← add a circuit block; ERC runs and result is returned immediately
-hw_set_placement_constraint    ← express adjacent_to / near_connector / thermal_separation; gate runs and coordinates refresh
-hw_design_firmware_module      ← author a firmware behavior (timeout_shutdown, periodic_transmit, …)
-hw_check_cross_domain_consistency
-
-hw_design_candidate            ← generate all domains, run gates, return semantic representation
-                                  and review bundle; always release_eligible=false until gates pass
-hw_explore_design_space        ← score backend, component, mechanical, and supplier alternatives
-hw_run_grounding_benchmark     ← adversarial check: injected defects must be caught by gates
-hw_run_design_benchmark        ← held-out intents: gate pass-rate plus physical evidence gaps
-hw_generate_physical_qualification_plan
-hw_record_physical_evidence    ← attach bench measurements; physical_qualification gate requires them
-
-hw_check_release_gate          ← the only tool that sets release_eligible=true
-hw_export_release_bundle       ← ZIP the release directory; release_eligible=true on status=released
-```
-
-Every tool response carries `release_eligible`, `candidate_only`, and
-`release_blocking_failures`. `release_eligible: true` is set only by `hw_check_release_gate`
-(status `pass`) and `hw_export_release_bundle` (status `released`). An agent cannot self-report
-a release. See [MCP tool reference](docs/mcp-tools.md) for the full response envelope.
-
----
-
-## Board families
-
-Three templates are maintained and have generated candidate artifacts an agent can open
-immediately with `hw_open_project`:
-
-| Template | MCU | Layers | Generated artifacts |
-|---|---|---|---|
-| `robotics_controller_full` | STM32H743VIT6 LQFP-100 | 4 (6-layer option) | [proof index](examples/robotics-motor-controller/README.md) |
-| `sensor_data_logger` | ESP32-S3-WROOM-1 | 2 | [proof index](examples/sensor-data-logger/README.md) |
-| `ble_sensor_node` | nRF52840-QIAA | 2 | [proof index](examples/ble-sensor-node/README.md) |
-
-An agent starts a new project with:
-
-```
-hw_create_project(name="my_board", template="sensor_data_logger")
-```
-
-To use a materially different topology, see [Adapting the design system](docs/adapting-a-spec.md).
-
----
-
-## Documentation
-
-| Doc | Contents |
+| Status | Meaning |
 |---|---|
-| [MCP tool reference](docs/mcp-tools.md) | Setup, canonical agent workflow, all tools, response envelope, resources |
-| [Zero to first candidate report](docs/first-run.md) | CLI walkthrough: candidate generation without native toolchains |
-| [Capabilities reference](docs/capabilities.md) | Electronics, placement, mechanical, firmware, sourcing, release |
-| [Adapting the design system](docs/adapting-a-spec.md) | Spec parameters, topology extension, backend selection, new board families |
-| [Platform architecture](docs/architecture.md) | Board families, backend maturity, repo layout, module map |
-| [Validation contract](docs/validation-contract.md) | Gate statuses, release tiers, adapter contract, physical evidence boundary |
+| `pass` | The named gate ran and its declared checks passed. |
+| `fail` | The gate ran and found a concrete defect or unmet contract. |
+| `blocked` | Evidence or a required tool/input is missing. This is never treated as pass. |
+| `candidate` | Reviewable generated artifacts exist, but release promotion is not authorized. |
+| `released` | The configured release gate passed and the release bundle was exported. This does not imply physical qualification unless physical evidence is present and approved. |
 
----
+Every public tool response carries `release_eligible`, `candidate_only`, and
+`release_blocking_failures`. Only the release-gate and release-export paths can
+set `release_eligible: true`.
 
-## Development setup
+## Supported board families
+
+All 13 shipped templates conform to the current typed spec schema. Their design
+and physical maturity are not identical; inspect each candidate's gate report.
+
+| Group | Templates |
+|---|---|
+| USB devices | `rp2040_usb_device`, `usb_hid_controller`, `avr_32u4_hid`, `nrf52840_dongle` |
+| Sensors and gateways | `ble_sensor_node`, `sensor_data_logger`, `lora_sensor_node`, `esp32_wifi_gateway`, `samd21_sensor_hub`, `stm32g0_power_monitor` |
+| Robotics and power | `robotics_controller_full`, `mini_servo_robot`, `bldc_esc` |
+
+Use `hw diagnose-environment` to inspect the installed native backends, or see
+[Adapting the design system](docs/adapting-a-spec.md) before adding a materially
+different topology.
+
+## Agent workflow
+
+The MCP names use the same lifecycle as the CLI:
+
+```text
+hw_get_capabilities
+  → hw_create_project
+  → hw_update_requirements
+  → hw_design_candidate
+  → hw_check_cross_domain_consistency
+  → hw_generate_physical_qualification_plan
+  → hw_record_physical_evidence
+  → hw_check_release_gate
+  → hw_export_release_bundle
+```
+
+Agents can also author circuit blocks, placement constraints, and firmware
+modules, explore alternatives, compare candidates, and run adversarial grounding
+benchmarks. See the [MCP tool reference](docs/mcp-tools.md) for the complete
+contract.
+
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| `src/hw_codesign/` | CLI, MCP service, generators, validators, and review UI |
+| `src/hw_codesign/templates/` | Supported family specifications |
+| `parts/` | Curated components, role sets, supplier records, and datasheet evidence |
+| `projects/golden_rp2040_usb_hid/` | Date-stamped golden candidate and current evidence gaps |
+| `docs/demo/` | 20-second demo and self-contained read-only review |
+| `schemas/` | Typed project and result contracts |
+| `tests/` | Cross-platform regression and evidence-boundary tests |
+
+## Development
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 .venv/bin/pip install '.[dev,mcp]'
 npm ci --ignore-scripts
-PYTHONPATH=src python3 -m hw_codesign.cli --root . design-candidate quadruped_robot_controller
+pytest -q
+ruff check .
 ```
 
-Without native toolchains all external gates return `blocked`. Install native macOS backends
-and run the complete flow:
+Native gates require their corresponding tools. Diagnose the current machine
+before interpreting a blocked result:
 
 ```bash
-make toolchains
-PYTHONPATH=src python3 -m hw_codesign.cli --root . design-until-release quadruped_robot_controller --external
+hw diagnose-environment --target fabrication_release --backend kicad
+hw check my_usb_board
 ```
 
----
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution scope, tests, and claim
+boundaries. Security reports should follow [SECURITY.md](SECURITY.md).
 
 ## Known limits
 
-- The `reference` backend is candidate-only. The canonical fabrication backends are
-  `tscircuit` (Circuit JSON -> KiCad bridge) and native `kicad`; `python_netlist`
-  is netlist-release-eligible (`netlist/compiled_netlist.json`); `atopile` is
-  HDL-source-release-eligible (`source/atopile/design.ato`). All release paths
-  require every configured gate to pass.
-- Digital gates cannot certify load thermals, EMI/EMC, vibration, abuse safety, ingress
-  protection, transients, or connector life. These gaps are stated explicitly in every generated
-  report and cannot be closed by software.
-- The complete cross-domain flow depends on native KiCad, OpenCASCADE, Freerouting, tscircuit,
-  and Zephyr. Validated paths: Linux container (CI), macOS (`make toolchains`), and Windows
-  (Python test suite — native toolchains not yet installed on Windows runners).
-- Hosted MCP registry publication is deferred until the public tool interface and versioning policy are stable; the repository-owned Codex plugin is installable from a local clone.
+- Generated artifacts remain candidates until every configured release gate
+  passes. A Gerber ZIP is not proof that a board is safe or manufacturable.
+- Digital checks cannot certify thermal performance, EMI/EMC, vibration,
+  ingress, abuse safety, connector life, assembly quality, or electrical
+  bring-up. Those require traceable physical evidence.
+- The RP2040 golden candidate has not yet been fabricated. Its current blocker
+  report is published deliberately, and no bench measurements are claimed.
+- Supplier catalog entries identify parts and provenance, but current stock and
+  alternates require fresh supplier evidence.
+- The receiver binds only to loopback. Remote use requires an authenticated SSH
+  tunnel or reverse proxy; it is not a multi-tenant hosted service.
+
+## License
+
+The project is licensed under [Apache-2.0](LICENSE). The vendored KiCad footprint
+under `src/hw_codesign/footprints/` retains its CC-BY-SA 4.0 license with the
+KiCad libraries exception; see [NOTICE](NOTICE) for the boundary.

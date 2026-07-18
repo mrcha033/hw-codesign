@@ -2,11 +2,22 @@ project:
   name: stm32g0_power_monitor
   description: STM32G030 power monitor with INA226 current/voltage sensing and SSD1306 OLED display
   version: 0.1.0
+  revision: r1
+  target_use: usb_powered_dc_power_monitor
   template: stm32g0_power_monitor
   created_at: '2026-06-21'
 
 system:
   target_application: Bench power monitor, battery analyzer, current logger
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.15
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.15}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.12}
 
 compute:
   mcu:
@@ -23,9 +34,12 @@ compute:
 
 actuation:
   motor_channels: 0
+  motor_channel_peak_current_a: 0.0
   gpio_outputs: 4
 
 sensing:
+  imu: not_required
+  e_stop: not_required
   power_monitor:
     ic: INA226
     interface: I2C
@@ -39,18 +53,41 @@ sensing:
     type: OLED
 
 assumptions:
-  - id: ASM-01
-    text: INA226 shunt resistor 10 mΩ (1206 package) for ≤8A measurement with 80 mV full-scale
-    rationale: balances power dissipation (640 mW at 8A) vs resolution; 2.5 µV LSB gives 0.25 mA resolution
-  - id: ASM-02
-    text: SSD1306 and INA226 share I2C bus; INA226 at 0x40, SSD1306 at 0x3C by default
-    rationale: both devices have fixed addresses; no address collision on default config
-  - id: ASM-03
-    text: USB-C for power input and optional CDC-ACM data logging; no USB bootloader
-    rationale: STM32G030 lacks native USB FS; CH340N USB-UART bridge used for CDC serial
-  - id: ASM-04
-    text: Measured bus voltage range 0–36V (3.3V I/O isolated from high-voltage bus)
-    rationale: INA226 VBUS input rated to 36V; STM32 I2C pins see only INA226 I2C lines at 3.3V
+  current_shunt:
+    value: 10milliohm_1206_8a_target
+    resolved_value: 10milliohm_1206_8a_target
+    confidence: high
+    reason: The INA226 path uses a 10 mΩ 1206 shunt for the candidate's 8 A full-scale target.
+    rationale: This trades shunt dissipation at full scale against the INA226 voltage resolution.
+    source_id: ASM-01
+    critical: true
+    requires_user_review: false
+  shared_i2c_bus:
+    value: ina226_0x40_and_ssd1306_0x3c
+    resolved_value: ina226_0x40_and_ssd1306_0x3c
+    confidence: high
+    reason: INA226 and SSD1306 share the I2C bus at their non-conflicting default addresses.
+    rationale: The default 0x40 and 0x3C addresses avoid a bus-address collision.
+    source_id: ASM-02
+    critical: true
+    requires_user_review: false
+  usb_serial_path:
+    value: ch340n_uart_bridge_without_usb_bootloader
+    resolved_value: ch340n_uart_bridge_without_usb_bootloader
+    confidence: high
+    reason: USB-C powers the board and a CH340N bridge provides host serial logging; the STM32G030 does not implement native USB on this candidate.
+    rationale: Programming remains on SWD while UART carries the CSV logging stream.
+    source_id: ASM-03
+    critical: true
+    requires_user_review: false
+  measured_bus_range:
+    value: 0_to_36v_nonisolated_dc
+    confidence: medium
+    reason: The sensing input targets a 0–36 V DC bus while MCU-facing I2C remains on the 3.3 V logic domain.
+    rationale: INA226 supports the target common-mode range, but the assembled board is not galvanically isolated and needs bench validation.
+    source_id: ASM-04
+    critical: true
+    requires_user_review: true
 
 electronics:
   backend: tscircuit
@@ -87,16 +124,29 @@ mechanical:
     max_component_height_top_mm: 10.0
     max_component_height_bottom_mm: 1.0
   enclosure_internal_mm: [80.0, 50.0, 30.0]
+  wall_thickness_mm: 2.0
   insertion_clearance_mm: 1.5
   assembly_clearance_mm: 0.8
   tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 6.0
+  default_component_height_mm: 2.0
+  component_heights_mm: {J1: 3.3, J2: 10.0, J3: 5.0, U2: 1.0}
+  board_origin_mm: [7.5, 7.5, 2.0]
   mounting_holes:
     - {x_mm: 3.5, y_mm: 3.5, diameter_mm: 3.2}
     - {x_mm: 61.5, y_mm: 3.5, diameter_mm: 3.2}
     - {x_mm: 3.5, y_mm: 31.5, diameter_mm: 3.2}
     - {x_mm: 61.5, y_mm: 31.5, diameter_mm: 3.2}
+  fixtures:
+    mounting_plate: {enabled: false}
+    frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: left, opening_mm: [9.0, 3.3], center_z_mm: 4.0, position_tolerance_mm: 0.5}
 
 firmware:
+  framework: stm32cube_hal
+  target: stm32g030c8t6
+  outputs: [pinmap, driver_stubs, bringup_tests]
   rtos: bare_metal
   zephyr_target: stm32g030xx
   modules:
@@ -116,8 +166,16 @@ manufacturing:
     layers: 2
     min_clearance_mm: 0.2
     min_track_width_mm: 0.2
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
 
 safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog, dc_bus_input_warning]
   regulatory: [CE]
   isolation_required: false
   esd_protection: required
@@ -138,13 +196,14 @@ test_plan:
     - uart_csv_output
 
 requirements:
-  performance:
-    - id: REQ-01
-      text: Current measurement accuracy ≤ 1% of full scale (80 mA at 8A FS)
-    - id: REQ-02
-      text: Display refresh rate ≥ 4 Hz
-    - id: REQ-03
-      text: Bus voltage measurement range 0–36V
-  reliability:
-    - id: REQ-04
-      text: Continuous operation ≥ 72 hours without reset
+  raw_inputs:
+    - {id: req_input_0001, text: Current measurement accuracy ≤ 1% of full scale (80 mA at 8 A full scale), created_by: template:stm32g0_power_monitor}
+    - {id: req_input_0002, text: Display refresh rate ≥ 4 Hz, created_by: template:stm32g0_power_monitor}
+    - {id: req_input_0003, text: Bus voltage measurement range 0–36 V DC, created_by: template:stm32g0_power_monitor}
+    - {id: req_input_0004, text: Continuous operation ≥ 72 hours without reset, created_by: template:stm32g0_power_monitor}
+  active_lowered: []
+  active_unresolved:
+    - {id: req_unresolved_0001, source: req_input_0001, category: measurement_accuracy_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Accuracy requires calibration against traceable current and voltage references on assembled hardware., required_human_approvals: [bringup_owner], affected_gates: [physical_qualification]}
+    - {id: req_unresolved_0002, source: req_input_0002, category: display_refresh_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Refresh rate requires firmware timing measurement with the selected display module., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0003, source: req_input_0003, category: dc_bus_range_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: The full DC input range requires controlled bench validation and operator-safety review., required_human_approvals: [bringup_owner, safety_reviewer], affected_gates: [power_tree_integrity, physical_qualification]}
+    - {id: req_unresolved_0004, source: req_input_0004, category: power_monitor_soak_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: The 72-hour target requires a physical soak test with reset and temperature logging., required_human_approvals: [bringup_owner], affected_gates: [physical_qualification]}

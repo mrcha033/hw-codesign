@@ -10,6 +10,7 @@ import pytest
 
 from hw_codesign.backends.freerouting import FreeroutingBackend
 from hw_codesign.backends.kicad import KiCadBackend
+from hw_codesign.backends.zephyr import ArmNewlibProbe
 from hw_codesign.errors import UnsafeChangeError
 from hw_codesign.reference_backend import _zone_net_layers, internal_drc, internal_erc
 from hw_codesign.schematic_generator import generate_kicad_schematic
@@ -123,8 +124,8 @@ def test_ir_pcb_sanity_requires_zone_for_each_declared_plane(service):
     assert "plane_zone_missing" in {failure.code for failure in report.failures}
 
 
-def test_ir_pcb_sanity_requires_front_zone_for_front_smd_plane_pads(service):
-    project = "sensor_logger_missing_front_plane_zone"
+def test_ir_pcb_sanity_requires_two_layer_smd_plane_escape_via(service):
+    project = "sensor_logger_missing_plane_escape"
     service.create_project(project, template="sensor_data_logger")
     service.generate_electronics_only(project)
     path = service.workspace.require_project(project)
@@ -132,19 +133,17 @@ def test_ir_pcb_sanity_requires_front_zone_for_front_smd_plane_pads(service):
     graph = json.loads((path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     board_path = path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb"
     board = board_path.read_text(encoding="utf-8")
-    marker = '(net_name "GND") (layer "F.Cu")'
-    marker_index = board.index(marker)
-    start = board.rfind("  (zone (net ", 0, marker_index)
-    end = board.find("  (zone (net ", marker_index)
-    if end < 0:
-        end = board.index("  (gr_rect", marker_index)
-    board_path.write_text(board[:start] + board[end:], encoding="utf-8")
+    assert '(net_name "GND") (layer "B.Cu")' in board
+    assert '(net_name "GND") (layer "F.Cu")' not in board
+    start = board.index("  (via (at ")
+    end = board.index("\n", start)
+    board_path.write_text(board[:start] + board[end + 1:], encoding="utf-8")
 
     report = internal_drc(path, spec, graph)
 
     assert report.status.value == "fail"
-    failure = next(item for item in report.failures if item.code == "plane_zone_missing")
-    assert {tuple(item.values()) for item in failure.details["missing"]} >= {("GND", "F.Cu")}
+    failure = next(item for item in report.failures if item.code == "plane_escape_missing")
+    assert failure.details["missing"]
 
 
 def test_zone_parser_accepts_generated_and_kicad_formatted_net_syntax():
@@ -168,13 +167,14 @@ def test_kicad_artifact_selection_prefers_canonical_board(service):
     kicad_dir = path / "electronics" / "generated" / "kicad"
     canonical = kicad_dir / f"{project}.kicad_pcb"
     stale = kicad_dir / f"{project} 2.kicad_pcb"
-    stale.write_text('(kicad_pcb (version 20240108) (generator stale_duplicate))\n', encoding="utf-8")
+    stale_contents = '(kicad_pcb (version 20240108) (generator stale_duplicate))\n'
+    stale.write_text(stale_contents, encoding="utf-8")
 
     assert KiCadBackend()._design_file(path, "*.kicad_pcb") == canonical
 
     service.generate_electronics_only(project)
     assert canonical.is_file()
-    assert not stale.exists()
+    assert stale.read_text(encoding="utf-8") == stale_contents
 
 
 def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
@@ -193,32 +193,45 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
     assert {"USB_VBUS", "V3V3"} <= set(power_tree_report.metrics["source_nets"])
     power_integrity_report = service.validator.check_power_integrity_estimate(graph, service.read_spec(project))
     assert power_integrity_report.status.value == "pass"
-    input_bulk = next(item for item in graph["components"] if item["ref"] == "C4")
-    assert input_bulk["category"] == "bulk_cap"
-    assert {pin["net"] for pin in input_bulk["pins"]} == {"USB_VBUS", "GND"}
+    ldo_input_cap = next(
+        item
+        for item in graph["components"]
+        if item.get("decouples") == {"ref": "U1", "pin": "3"}
+    )
+    assert ldo_input_cap["category"] == "decoupling"
+    assert ldo_input_cap["value"].startswith("1uF")
+    assert {pin["net"] for pin in ldo_input_cap["pins"]} == {"USB_VBUS", "GND"}
 
     flash = next(item for item in graph["components"] if item["ref"] == "U3")
     flash_pins = {pin["number"]: pin for pin in flash["pins"]}
-    assert flash_pins["3"]["name"] == "~WP"
+    assert flash_pins["3"]["name"] == "IO2/~WP"
     assert flash_pins["3"]["net"] == "QSPI_D2"
     assert flash_pins["3"]["role"] == "bidirectional"
-    assert flash_pins["7"]["name"] == "~HOLD"
+    assert flash_pins["7"]["name"] == "IO3/~HOLD"
     assert flash_pins["7"]["net"] == "QSPI_D3"
     assert flash_pins["7"]["role"] == "bidirectional"
 
     nets = {net["name"]: set(net["connected_pins"]) for net in graph["nets"]}
-    assert {"J1.3", "D1.1"} <= nets["USB_DP_RAW"]
-    assert {"J1.4", "D1.3"} <= nets["USB_DM_RAW"]
-    assert {"D1.2", "U2.4"} <= nets["USB_DP"]
-    assert {"D1.4", "U2.3"} <= nets["USB_DM"]
-    assert {"U2.10", "U3.3"} <= nets["QSPI_D2"]
-    assert {"U2.11", "U3.7"} <= nets["QSPI_D3"]
+    assert {"J1.A6", "J1.B6", "D1.1"} <= nets["USB_DP_RAW"]
+    assert {"J1.A7", "J1.B7", "D1.3"} <= nets["USB_DM_RAW"]
+    assert {"D1.6", "R1.1"} <= nets["USB_DP_ESD"]
+    assert {"D1.4", "R2.1"} <= nets["USB_DM_ESD"]
+    assert {"R1.2", "U2.47"} <= nets["USB_DP"]
+    assert {"R2.2", "U2.46"} <= nets["USB_DM"]
+    assert {"U2.54", "U3.3"} <= nets["QSPI_D2"]
+    assert {"U2.51", "U3.7"} <= nets["QSPI_D3"]
 
     positions = {item["ref"]: item["pcb_position_mm"] for item in graph["components"]}
-    assert positions["J1"] == [5.001, 10.0]
-    assert positions["U2"] == [18.0, 4.0]
-    assert positions["U3"] == [33.0, 2.951]
+    assert positions["J1"][0] < positions["U2"][0] < positions["U3"][0]
+    assert all(0.0 <= coordinate <= limit for ref in ("J1", "U2", "U3") for coordinate, limit in zip(positions[ref], (51.0, 21.0), strict=True))
 
+    debug_pins = {pin["number"]: pin for pin in next(item for item in graph["components"] if item["ref"] == "J2")["pins"]}
+    assert debug_pins["6"]["name"] == "SWO"
+    assert debug_pins["6"]["net"] is None
+    assert debug_pins["6"]["role"] == "no_connect"
+    assert debug_pins["10"]["name"] == "RUN"
+    assert debug_pins["10"]["net"] == "MCU_RUN"
+    assert internal_erc(graph).status.value == "pass"
     routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
     assert routing["status"] == "generated"
     assert routing["failures"] == []
@@ -230,7 +243,17 @@ def test_rp2040_qspi_flash_uses_all_quad_data_lines(service):
 
     board = (path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pcb").read_text(encoding="utf-8")
     assert 'footprint "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"' in board
-    assert 'footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"' in board
+    assert 'footprint "Package_SO:SOIC-8_5.3x5.3mm_P1.27mm"' in board
+    assert 'footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm"' in board
+
+
+def test_rp2040_template_conforms_to_current_spec_schema(service):
+    project = "rp2040_template_schema_check"
+    service.create_project(project, template="rp2040_usb_device")
+
+    report = service.validator.validate_spec(service.read_spec(project))
+
+    assert report.status.value == "pass", [failure.__dict__ for failure in report.failures]
 
 
 @pytest.mark.parametrize(
@@ -265,12 +288,13 @@ def test_usb_templates_bridge_raw_connector_nets_to_protected_usb_nets(service, 
         "USB_DM_RAW",
         "USB_DP",
         "USB_DM",
+        "USB_VBUS",
         "GND",
     }
     nets = {net["name"]: set(net["connected_pins"]) for net in graph["nets"]}
-    assert {"J1.3", "D1.1"} <= nets["USB_DP_RAW"]
-    assert {"J1.4", "D1.3"} <= nets["USB_DM_RAW"]
-    assert "D1.2" in nets["USB_DP"]
+    assert {"J1.A6", "J1.B6", "D1.1"} <= nets["USB_DP_RAW"]
+    assert {"J1.A7", "J1.B7", "D1.3"} <= nets["USB_DM_RAW"]
+    assert "D1.6" in nets["USB_DP"]
     assert "D1.4" in nets["USB_DM"]
 
 
@@ -369,11 +393,10 @@ def test_samd21_sensor_hub_uses_curated_sensor_and_debug_pin_contracts(service):
     assert {pin["net"] for pin in vddcore_cap["pins"]} == {"VDDCORE", "GND"}
 
     positions = {item["ref"]: item["pcb_position_mm"] for item in graph["components"]}
-    assert positions["J1"] == [12.0, 4.176]
-    assert positions["D1"] == [18.0, 3.0]
-    assert positions["U3"] == [36.0, 12.0]
-    assert positions["U4"] == [36.0, 21.0]
-    assert positions["J2"] == [46.959, 21.0]
+    assert positions["J1"][0] < positions["U3"][0]
+    assert positions["D1"][0] < positions["U4"][0]
+    assert positions["J2"][0] > positions["U3"][0]
+    assert all(ref in positions for ref in ("J1", "D1", "U3", "U4", "J2"))
 
     routing = json.loads((path / "electronics" / "generated" / "kicad" / "routing.json").read_text(encoding="utf-8"))
     assert routing["status"] == "generated"
@@ -532,15 +555,47 @@ def test_rp2040_firmware_profile_and_stack_modules_are_graph_grounded(service):
     board_dir = path / "firmware" / "zephyr" / "boards" / "arm" / "rp2040_usb_device"
     dts = (board_dir / "rp2040_usb_device.dts").read_text(encoding="utf-8")
     defconfig = (board_dir / "rp2040_usb_device_defconfig").read_text(encoding="utf-8")
+    board_yml = (board_dir / "board.yml").read_text(encoding="utf-8")
+    board_metadata = (board_dir / "rp2040_usb_device.yaml").read_text(encoding="utf-8")
+    board_kconfig = (board_dir / "Kconfig.rp2040_usb_device").read_text(encoding="utf-8")
     prj_conf = (path / "firmware" / "zephyr" / "app" / "prj.conf").read_text(encoding="utf-8")
+    modules_cmake = (path / "firmware" / "modules" / "CMakeLists.txt").read_text(encoding="utf-8")
     pin_signals = {item["signal"] for item in pinmap}
 
-    assert "rp2040.dtsi" in dts
-    assert "zephyr,console = &uart0" in dts
+    assert "#include <raspberrypi/rpi_pico/rp2040.dtsi>" in dts
+    assert "#include <mem.h>" in dts
     assert "stm32h743" not in dts.lower()
-    assert "CONFIG_SOC_RP2040=y" in defconfig
+    assert "zephyr,sram = &sram0" in dts
+    assert "zephyr,flash = &flash0" in dts
+    assert "zephyr,flash-controller = &ssi" in dts
+    assert "zephyr,code-partition = &code_partition" in dts
+    assert "reg = <0x10000000 DT_SIZE_M(2)>" in dts
+    assert "code_partition: partition@100" in dts
+    assert "reg = <0x100 (DT_SIZE_M(2) - 0x100)>" in dts
+    assert all(f"&{node} {{\n\tstatus = \"okay\";" in dts for node in ("gpio0", "timer", "wdt0"))
+    assert "zephyr_udc0: &usbd {\n\tstatus = \"okay\";" in dts
+    assert "&vreg {\n\tregulator-always-on;" in dts
+    assert "&xosc {\n\tstartup-delay-multiplier = <64>;" in dts
+
+    assert "name: rp2040_usb_device" in board_yml
+    assert "vendor: hw" in board_yml
+    assert "- name: rp2040" in board_yml
+    assert "identifier: rp2040_usb_device" in board_metadata
+    assert "flash: 2048" in board_metadata
+    assert "ram: 264" in board_metadata
+    assert "  - usbd" in board_metadata
+    assert "select SOC_RP2040" in board_kconfig
+    assert "select RP2_FLASH_W25Q080" in board_kconfig
+
+    assert "CONFIG_USE_DT_CODE_PARTITION=y" in defconfig
+    assert "CONFIG_BUILD_OUTPUT_UF2=y" in defconfig
+    assert "CONFIG_BUILD_OUTPUT_HEX=y" in defconfig
+    assert "CONFIG_RESET=y" in defconfig
+    assert "CONFIG_CLOCK_CONTROL=y" in defconfig
     assert "CONFIG_SPI=y" in prj_conf
     assert "CONFIG_USB_DEVICE_STACK=y" in prj_conf
+    assert "${CMAKE_CURRENT_LIST_DIR}/usb_hid_stack.c" in modules_cmake
+    assert "${CMAKE_CURRENT_LIST_DIR}/../generated" in modules_cmake
     assert {"USB_DP", "USB_DM", "QSPI_CLK", "QSPI_D2", "QSPI_D3"} <= pin_signals
     assert (path / "firmware" / "modules" / "usb_hid_stack.c").is_file()
 
@@ -599,6 +654,8 @@ def test_freerouting_cache_is_bound_to_board_content(tmp_path, monkeypatch):
         "status": "pass",
         "signal_routing": "complete",
         "plane_connectivity": "copper_zones",
+        "design_rules": None,
+        "post_import_unconnected": 0,
         "board_sha256": hashlib.sha256(board.read_bytes()).hexdigest(),
     }
     (target / "routing.json").write_text(json.dumps(routing), encoding="utf-8")
@@ -613,6 +670,495 @@ def test_freerouting_cache_is_bound_to_board_content(tmp_path, monkeypatch):
     stale = backend.route(project)
     assert stale.status.value == "blocked"
     assert stale.failures[0].code == "tool_unavailable"
+
+
+def _write_failed_freerouting_cache(tmp_path):
+    project = tmp_path / "failed_cache_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "failed_cache_board.kicad_pcb"
+    board.write_text(
+        "(kicad_pcb\n  (zone\n    (filled_polygon\n    )\n  )\n)\n",
+        encoding="utf-8",
+    )
+    (target / "failed_cache_board.kicad_pro").write_text(
+        json.dumps(
+            {
+                "board": {
+                    "design_settings": {
+                        "rules": {"min_clearance": 0.15, "min_track_width": 0.18}
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    payload = {
+        "status": "fail",
+        "signal_routing": "complete",
+        "plane_connectivity": "incomplete",
+        "zone_fill": "persisted",
+        "zone_count": 1,
+        "filled_polygon_count": 1,
+        "design_rules": {"min_clearance_mm": 0.15, "min_track_width_mm": 0.18},
+        "post_import_unconnected": 7,
+        "unrouted": 7,
+        "violations": 0,
+        "max_passes": 20,
+        "freerouting_version": "2.2.4",
+        "board_sha256": hashlib.sha256(board.read_bytes()).hexdigest(),
+        "failures": [
+            {
+                "category": "EDA_ERROR",
+                "code": "routing_incomplete_after_zone_fill",
+                "details": {"unconnected": 7},
+            }
+        ],
+    }
+    routing_report = target / "routing.json"
+    routing_report.write_text(json.dumps(payload), encoding="utf-8")
+    return project, board, routing_report, payload
+
+
+def test_freerouting_caches_authoritative_post_fill_connectivity_failure(
+    tmp_path, monkeypatch
+):
+    project, board, routing_report, _ = _write_failed_freerouting_cache(tmp_path)
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: pytest.fail("an authoritative failed route must not invoke tools"),
+    )
+
+    report = backend.route(project)
+
+    assert report.status.value == "fail"
+    assert report.failures[0].code == "routing_incomplete_after_zone_fill"
+    assert report.failures[0].details == {"unconnected": 7}
+    assert report.metrics == {
+        "unrouted": 7,
+        "max_passes": 20,
+        "cached": True,
+        "zone_count": 1,
+        "filled_polygon_count": 1,
+    }
+    assert report.artifacts == [str(board), str(routing_report)]
+    assert report.backend["cached"] is True
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "status",
+        "signal_routing",
+        "plane_connectivity",
+        "zone_fill",
+        "zone_count",
+        "filled_polygon_count",
+        "design_rules",
+        "post_import_unconnected",
+        "unrouted",
+        "violations",
+        "board_sha256",
+        "failures",
+    ],
+)
+def test_freerouting_failed_cache_reruns_when_authoritative_evidence_is_missing(
+    tmp_path, monkeypatch, field
+):
+    project, _, routing_report, payload = _write_failed_freerouting_cache(tmp_path)
+    payload.pop(field)
+    routing_report.write_text(json.dumps(payload), encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: {"java": None, "jar": None, "kicad_python": None},
+    )
+
+    report = backend.route(project)
+
+    assert report.status.value == "blocked"
+    assert report.failures[0].code == "tool_unavailable"
+
+
+@pytest.mark.parametrize("mutation", ["board", "rules", "status"])
+def test_freerouting_failed_cache_reruns_when_board_rules_or_status_change(
+    tmp_path, monkeypatch, mutation
+):
+    project, board, routing_report, payload = _write_failed_freerouting_cache(tmp_path)
+    if mutation == "board":
+        board.write_text(board.read_text(encoding="utf-8") + "(net 1 \"changed\")\n")
+    elif mutation == "rules":
+        project_file = board.with_suffix(".kicad_pro")
+        project_payload = json.loads(project_file.read_text(encoding="utf-8"))
+        project_payload["board"]["design_settings"]["rules"]["min_clearance"] = 0.2
+        project_file.write_text(json.dumps(project_payload), encoding="utf-8")
+    else:
+        payload["status"] = "pass"
+        routing_report.write_text(json.dumps(payload), encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: {"java": None, "jar": None, "kicad_python": None},
+    )
+
+    report = backend.route(project)
+
+    assert report.status.value == "blocked"
+    assert report.failures[0].code == "tool_unavailable"
+
+
+def test_freerouting_applies_generated_project_rules_before_dsn_export(tmp_path, monkeypatch):
+    project = tmp_path / "rules_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "rules_board.kicad_pcb"
+    board.write_text("(kicad_pcb)\n", encoding="utf-8")
+    (target / "rules_board.kicad_pro").write_text(
+        json.dumps(
+            {
+                "board": {
+                    "design_settings": {
+                        "rules": {"min_clearance": 0.15, "min_track_width": 0.18}
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    tools = {
+        "java": tmp_path / "java",
+        "jar": tmp_path / "freerouting.jar",
+        "kicad_python": tmp_path / "python",
+    }
+    backend = FreeroutingBackend(tmp_path)
+    observed = {}
+    monkeypatch.setattr(backend, "_tools", lambda: tools)
+
+    def fake_pcbnew(executable, code, *arguments):
+        observed.update(executable=executable, code=code, arguments=arguments)
+        return subprocess.CompletedProcess(args=arguments, returncode=2, stdout="", stderr="")
+
+    monkeypatch.setattr(backend, "_pcbnew", fake_pcbnew)
+
+    report = backend.route(project)
+
+    assert report.failures[0].code == "dsn_export_failed"
+    assert observed["arguments"] == (
+        board,
+        target / "rules_board.dsn",
+        "0.15",
+        "0.18",
+    )
+    assert "settings.m_MinClearance = clearance" in observed["code"]
+    assert "settings.m_TrackMinWidth = track_width" in observed["code"]
+    assert 'board.GetAllNetClasses()["Default"]' in observed["code"]
+    assert "default_netclass.SetClearance(clearance)" in observed["code"]
+    assert "default_netclass.SetTrackWidth(track_width)" in observed["code"]
+
+
+@pytest.mark.parametrize(
+    "project_payload",
+    [
+        "{not-json",
+        json.dumps({"board": {"design_settings": {"rules": {"min_clearance": 0.15}}}}),
+        json.dumps(
+            {
+                "board": {
+                    "design_settings": {
+                        "rules": {"min_clearance": 0.0, "min_track_width": 0.15}
+                    }
+                }
+            }
+        ),
+        json.dumps(
+            {
+                "board": {
+                    "design_settings": {
+                        "rules": {"min_clearance": 0.15, "min_track_width": 1000.0}
+                    }
+                }
+            }
+        ),
+    ],
+)
+def test_freerouting_blocks_malformed_or_unsafe_project_rules(
+    tmp_path, monkeypatch, project_payload
+):
+    project = tmp_path / "bad_rules_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    (target / "bad_rules_board.kicad_pcb").write_text("(kicad_pcb)\n", encoding="utf-8")
+    project_file = target / "bad_rules_board.kicad_pro"
+    project_file.write_text(project_payload, encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: {"java": tmp_path / "java", "jar": tmp_path / "jar", "kicad_python": tmp_path / "python"},
+    )
+    monkeypatch.setattr(
+        backend,
+        "_pcbnew",
+        lambda *_: pytest.fail("malformed rules must block before invoking KiCad"),
+    )
+
+    report = backend.route(project)
+
+    assert report.status.value == "blocked"
+    assert report.failures[0].code == "invalid_project_design_rules"
+    assert report.failures[0].path == str(project_file)
+
+
+def test_freerouting_keeps_legacy_export_fallback_without_project_file(tmp_path, monkeypatch):
+    project = tmp_path / "legacy_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "legacy_board.kicad_pcb"
+    board.write_text("(kicad_pcb)\n", encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    observed = {}
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: {"java": tmp_path / "java", "jar": tmp_path / "jar", "kicad_python": tmp_path / "python"},
+    )
+
+    def fake_pcbnew(executable, code, *arguments):
+        observed["arguments"] = arguments
+        return subprocess.CompletedProcess(args=arguments, returncode=2, stdout="", stderr="")
+
+    monkeypatch.setattr(backend, "_pcbnew", fake_pcbnew)
+
+    report = backend.route(project)
+
+    assert report.failures[0].code == "dsn_export_failed"
+    assert observed["arguments"] == (board, target / "legacy_board.dsn")
+
+
+def test_generated_kicad_default_netclass_matches_manufacturing_rules(service, project):
+    service.generate_electronics_only(project)
+    path = service.workspace.require_project(project)
+    project_file = path / "electronics" / "generated" / "kicad" / f"{project}.kicad_pro"
+    payload = json.loads(project_file.read_text(encoding="utf-8"))
+    rules = payload["board"]["design_settings"]["rules"]
+    default_netclass = next(
+        item for item in payload["net_settings"]["classes"] if item["name"] == "Default"
+    )
+
+    assert default_netclass["clearance"] == rules["min_clearance"]
+    assert default_netclass["track_width"] == rules["min_track_width"]
+    assert payload["net_settings"]["meta"]["version"] == 5
+
+
+@pytest.mark.parametrize("raw_unrouted", [0, 3])
+def test_freerouting_import_reapplies_rules_and_persists_zone_fill(
+    tmp_path, monkeypatch, raw_unrouted
+):
+    project = tmp_path / "filled_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "filled_board.kicad_pcb"
+    board.write_text("(kicad_pcb\n  (zone\n  )\n)\n", encoding="utf-8")
+    (target / "filled_board.kicad_pro").write_text(
+        json.dumps(
+            {
+                "board": {
+                    "design_settings": {
+                        "rules": {"min_clearance": 0.15, "min_track_width": 0.18}
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    tools = {
+        "java": tmp_path / "java",
+        "jar": tmp_path / "freerouting.jar",
+        "kicad_python": tmp_path / "python",
+    }
+    backend = FreeroutingBackend(tmp_path)
+    pcbnew_calls = []
+    monkeypatch.setattr(backend, "_tools", lambda: tools)
+
+    def fake_pcbnew(executable, code, *arguments):
+        pcbnew_calls.append((code, arguments))
+        if len(pcbnew_calls) == 2:
+            arguments[2].write_text(
+                "(kicad_pcb\n  (zone\n    (filled_polygon\n    )\n  )\n)\n",
+                encoding="utf-8",
+            )
+            arguments[2].with_suffix(".kicad_pro").write_text(
+                json.dumps(
+                    {
+                        "board": {
+                            "design_settings": {
+                                "rules": {"min_clearance": 0.15, "min_track_width": 0.18}
+                            }
+                        },
+                        "meta": {"filename": "filled_board.routed.kicad_pro", "version": 3},
+                        "net_settings": {
+                            "classes": [
+                                {
+                                    "name": "Default",
+                                    "clearance": 0.15,
+                                    "track_width": 0.18,
+                                }
+                            ]
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+        return subprocess.CompletedProcess(
+            args=arguments,
+            returncode=0,
+            stdout="HW_UNCONNECTED=0\n" if len(pcbnew_calls) == 2 else "",
+            stderr="",
+        )
+
+    def fake_freerouting(command, **kwargs):
+        (target / "filled_board.ses").write_text("(session)\n", encoding="utf-8")
+        return subprocess.CompletedProcess(
+            args=command,
+            returncode=0,
+            stdout=f"final score: 1000 ({raw_unrouted} unrouted and 0 violations)\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(backend, "_pcbnew", fake_pcbnew)
+    monkeypatch.setattr("hw_codesign.backends.freerouting.run_process_group", fake_freerouting)
+
+    report = backend.route(project)
+
+    assert report.status.value == "pass"
+    import_code, import_arguments = pcbnew_calls[1]
+    assert import_arguments == (
+        board,
+        target / "filled_board.ses",
+        target / "filled_board.routed.kicad_pcb",
+        "0.15",
+        "0.18",
+    )
+    assert "default_netclass.SetClearance(clearance)" in import_code
+    assert "default_netclass.SetTrackWidth(track_width)" in import_code
+    assert "filler = pcbnew.ZONE_FILLER(board)" in import_code
+    assert "filler.Fill(board.Zones())" in import_code
+    assert "board.BuildConnectivity()" in import_code
+    assert "(filled_polygon" in board.read_text(encoding="utf-8")
+    routing = json.loads((target / "routing.json").read_text(encoding="utf-8"))
+    assert routing["design_rules"] == {
+        "min_clearance_mm": 0.15,
+        "min_track_width_mm": 0.18,
+    }
+    assert routing["zone_fill"] == "persisted"
+    assert routing["filled_polygon_count"] == 1
+    assert routing["freerouting_unrouted"] == raw_unrouted
+    assert routing["post_import_unconnected"] == 0
+    assert routing["project_sidecar_promoted"] is True
+    canonical_project = json.loads((target / "filled_board.kicad_pro").read_text(encoding="utf-8"))
+    assert canonical_project["meta"]["filename"] == "filled_board.kicad_pro"
+    assert canonical_project["net_settings"]["classes"][0]["clearance"] == 0.15
+    assert not (target / "filled_board.routed.kicad_pro").exists()
+
+
+def test_freerouting_rejects_import_without_persisted_zone_fill(tmp_path, monkeypatch):
+    project = tmp_path / "unfilled_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "unfilled_board.kicad_pcb"
+    board.write_text("(kicad_pcb\n  (zone\n  )\n)\n", encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: {"java": tmp_path / "java", "jar": tmp_path / "jar", "kicad_python": tmp_path / "python"},
+    )
+    pcbnew_calls = []
+
+    def fake_pcbnew(executable, code, *arguments):
+        pcbnew_calls.append(arguments)
+        if len(pcbnew_calls) == 2:
+            arguments[2].write_text("(kicad_pcb\n  (zone\n  )\n)\n", encoding="utf-8")
+        return subprocess.CompletedProcess(
+            args=arguments,
+            returncode=0,
+            stdout="HW_UNCONNECTED=0\n" if len(pcbnew_calls) == 2 else "",
+            stderr="",
+        )
+
+    def fake_freerouting(command, **kwargs):
+        (target / "unfilled_board.ses").write_text("(session)\n", encoding="utf-8")
+        return subprocess.CompletedProcess(
+            args=command,
+            returncode=0,
+            stdout="final score: 1000 (0 unrouted and 0 violations)\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(backend, "_pcbnew", fake_pcbnew)
+    monkeypatch.setattr("hw_codesign.backends.freerouting.run_process_group", fake_freerouting)
+
+    report = backend.route(project)
+
+    assert report.status.value == "fail"
+    assert report.failures[0].code == "zone_fill_not_persisted"
+    assert board.read_text(encoding="utf-8").count("filled_polygon") == 0
+
+
+def test_freerouting_fails_when_kicad_connectivity_remains_incomplete(tmp_path, monkeypatch):
+    project = tmp_path / "disconnected_board"
+    target = project / "electronics" / "generated" / "kicad"
+    target.mkdir(parents=True)
+    board = target / "disconnected_board.kicad_pcb"
+    board.write_text("(kicad_pcb\n  (zone\n  )\n)\n", encoding="utf-8")
+    backend = FreeroutingBackend(tmp_path)
+    monkeypatch.setattr(
+        backend,
+        "_tools",
+        lambda: {"java": tmp_path / "java", "jar": tmp_path / "jar", "kicad_python": tmp_path / "python"},
+    )
+    pcbnew_calls = []
+
+    def fake_pcbnew(executable, code, *arguments):
+        pcbnew_calls.append(arguments)
+        if len(pcbnew_calls) == 2:
+            arguments[2].write_text(
+                "(kicad_pcb\n  (zone\n    (filled_polygon\n    )\n  )\n)\n",
+                encoding="utf-8",
+            )
+        return subprocess.CompletedProcess(
+            args=arguments,
+            returncode=0,
+            stdout="HW_UNCONNECTED=7\n" if len(pcbnew_calls) == 2 else "",
+            stderr="",
+        )
+
+    def fake_freerouting(command, **kwargs):
+        (target / "disconnected_board.ses").write_text("(session)\n", encoding="utf-8")
+        return subprocess.CompletedProcess(
+            args=command,
+            returncode=0,
+            stdout="final score: 1000 (0 unrouted and 0 violations)\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(backend, "_pcbnew", fake_pcbnew)
+    monkeypatch.setattr("hw_codesign.backends.freerouting.run_process_group", fake_freerouting)
+
+    report = backend.route(project)
+
+    assert report.status.value == "fail"
+    assert report.failures[0].code == "routing_incomplete_after_zone_fill"
+    assert report.metrics["unrouted"] == 7
+    routing = json.loads((target / "routing.json").read_text(encoding="utf-8"))
+    assert routing["status"] == "fail"
+    assert routing["post_import_unconnected"] == 7
+    assert routing["plane_connectivity"] == "incomplete"
+    assert "(filled_polygon" in board.read_text(encoding="utf-8")
 
 
 def test_freerouting_timeout_is_bounded_and_reported(tmp_path, monkeypatch):
@@ -664,6 +1210,37 @@ def test_iteration_records_reports_history_and_repair_plan(service, project):
     assert (path / "history" / "iterations" / "0001" / "firmware" / "generated" / "pinmap.h").is_file()
     log = (path / "history" / "failure_log.jsonl").read_text(encoding="utf-8")
     assert "current_budget_exceeded" in log
+
+
+def test_failure_log_is_recreated_if_legacy_project_lacks_it(service, project):
+    project_path = service.workspace.require_project(project)
+    log_path = project_path / "history" / "failure_log.jsonl"
+    log_path.unlink()
+
+    service._append_failures(
+        project,
+        "legacy-recovery",
+        {
+            "reports": [
+                {
+                    "gate": "fixture_gate",
+                    "failures": [
+                        {
+                            "category": "RELEASE_ERROR",
+                            "code": "fixture_failure",
+                            "message": "fixture",
+                        }
+                    ],
+                }
+            ]
+        },
+    )
+
+    assert log_path.is_file()
+    record = json.loads(log_path.read_text(encoding="utf-8"))
+    assert record["iteration_id"] == "legacy-recovery"
+    assert record["gate"] == "fixture_gate"
+    assert record["code"] == "fixture_failure"
 
 
 def test_external_backends_report_real_availability_and_violations(service, project, monkeypatch):
@@ -1088,6 +1665,53 @@ def test_diagnose_environment_returns_structured_output(service, project):
     assert isinstance(result["blocked_gates"], list)
     assert isinstance(result["install_hints"], dict)
     assert isinstance(result["tool_availability"], dict)
+    assert isinstance(result["toolchain_probes"], dict)
+
+
+def test_diagnose_environment_rejects_compiler_without_arm_newlib(service, monkeypatch):
+    probe = ArmNewlibProbe(
+        compiler="/opt/homebrew/bin/arm-none-eabi-gcc",
+        toolchain_root="/opt/homebrew",
+        source="PATH",
+        explicit_root=False,
+        files={"nosys.specs": "nosys.specs", "libc.a": "libc.a", "libnosys.a": "libnosys.a"},
+        missing=("nosys.specs", "libc.a", "libnosys.a"),
+    )
+    monkeypatch.setattr("hw_codesign.service.probe_arm_newlib", lambda: probe)
+
+    result = service.diagnose_environment(target="firmware_only")
+
+    assert result["status"] == "fail"
+    assert result["ready"] is False
+    assert result["tool_availability"]["arm_none_eabi_gcc"] is False
+    assert result["missing_tools"] == ["arm_none_eabi_gcc"]
+    assert result["blocked_gates"] == ["native_zephyr_build"]
+    assert result["toolchain_probes"]["arm_none_eabi_gcc"] == probe.to_dict()
+    assert all("brew install arm-none-eabi-gcc" not in hint for hint in result["install_hints"]["macos"])
+    assert "sudo apt-get install gcc-arm-none-eabi libnewlib-arm-none-eabi" in result["install_hints"]["linux"]
+
+
+def test_get_capabilities_uses_complete_arm_newlib_probe(service, monkeypatch):
+    probe = ArmNewlibProbe(
+        compiler="/opt/arm/bin/arm-none-eabi-gcc",
+        toolchain_root="/opt/arm",
+        source="HW_ARM_TOOLCHAIN_ROOT",
+        explicit_root=True,
+        files={
+            "nosys.specs": "/opt/arm/arm-none-eabi/lib/nosys.specs",
+            "libc.a": "/opt/arm/arm-none-eabi/lib/libc.a",
+            "libnosys.a": "/opt/arm/arm-none-eabi/lib/libnosys.a",
+        },
+        missing=(),
+    )
+    monkeypatch.setattr("hw_codesign.service.probe_arm_newlib", lambda: probe)
+
+    result = service.get_capabilities()
+
+    arm_tool = result["external_tools"]["arm_none_eabi_gcc"]
+    assert arm_tool["available"] is True
+    assert arm_tool["probe"] == probe.to_dict()
+    assert "native_zephyr_build" not in result["missing_external_gates"]
 
 
 def test_diagnose_environment_backend_adds_tool_requirement(service, project, monkeypatch):

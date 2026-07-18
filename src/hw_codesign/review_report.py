@@ -295,7 +295,7 @@ pre { margin: .6rem 0 0; padding: .8rem; overflow: auto; border-radius: 7px; bac
 <header class="site-header">
   <div class="brand">
     <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true"><path d="M5 1.5h18l3.5 3.5v22L23 30.5H5L1.5 27V5z" fill="none" stroke="currentColor" stroke-width="1.5"/><path class="signal" d="M14 5v21" stroke-width="2"/><circle cx="18.5" cy="25.5" r="1.8" fill="currentColor"/></svg>
-    <span>hw-cli / review</span>
+    <span>hw-codesign / review</span>
   </div>
   <div class="header-meta"><span>Evidence snapshot</span><br>@@HASH_SHORT@@</div>
 </header>
@@ -372,7 +372,7 @@ pre { margin: .6rem 0 0; padding: .8rem; overflow: auto; border-radius: 7px; bac
     </div>
     <div class="detail-grid">@@DETAIL_CARDS@@</div>
   </section>
-  <footer class="footer">hw-cli evidence snapshot · bundle @@BUNDLE_HASH@@ · generated @@GENERATED_AT@@</footer>
+  <footer class="footer">hw-codesign evidence snapshot · bundle @@BUNDLE_HASH@@ · generated @@GENERATED_AT@@</footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>

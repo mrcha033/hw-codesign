@@ -399,8 +399,8 @@ def test_support_circuit_contract_accepts_avr_16mhz_usb_crystal(service):
 
 
 def test_support_circuit_contract_passes_grounded_status_led_path(service):
-    project = "usb_hid_status_led_contract"
-    service.create_project(project, template="usb_hid_controller")
+    project = "ble_status_led_contract"
+    service.create_project(project, template="ble_sensor_node")
     service.generate_electronics_only(project)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -412,10 +412,10 @@ def test_support_circuit_contract_passes_grounded_status_led_path(service):
     led = next(component for component in graph["components"] if component["category"] == "led")
     resistor = next(component for component in graph["components"] if component["category"] == "led_resistor")
     assert {pin["name"]: pin["net"] for pin in led["pins"]} == {
-        "K": "STATUS_LED",
-        "A": "STATUS_LED_A",
+        "K": "LED_BLE",
+        "A": "LED_BLE_A",
     }
-    assert {pin["net"] for pin in resistor["pins"]} == {"V3V3", "STATUS_LED_A"}
+    assert {pin["net"] for pin in resistor["pins"]} == {"V3V3", "LED_BLE_A"}
     led_resolution = next(item for item in graph["component_resolution"] if item["ref"] == led["ref"])
     assert (led_resolution["role"], led_resolution["component_id"], led_resolution["resolution"]) == (
         "led",
@@ -429,8 +429,8 @@ def test_support_circuit_contract_passes_grounded_status_led_path(service):
 
 
 def test_support_circuit_contract_requires_status_led_device(service):
-    project = "usb_hid_missing_status_led"
-    service.create_project(project, template="usb_hid_controller")
+    project = "ble_missing_status_led"
+    service.create_project(project, template="ble_sensor_node")
     service.generate_electronics_only(project)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -448,8 +448,8 @@ def test_support_circuit_contract_requires_status_led_device(service):
 
 
 def test_support_circuit_contract_rejects_reversed_status_led(service):
-    project = "usb_hid_reversed_status_led"
-    service.create_project(project, template="usb_hid_controller")
+    project = "ble_reversed_status_led"
+    service.create_project(project, template="ble_sensor_node")
     service.generate_electronics_only(project)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -467,8 +467,8 @@ def test_support_circuit_contract_rejects_reversed_status_led(service):
 
 
 def test_support_circuit_contract_rejects_ambiguous_status_led_resistors(service):
-    project = "usb_hid_ambiguous_status_led_resistors"
-    service.create_project(project, template="usb_hid_controller")
+    project = "ble_ambiguous_status_led_resistors"
+    service.create_project(project, template="ble_sensor_node")
     service.generate_electronics_only(project)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -485,8 +485,8 @@ def test_support_circuit_contract_rejects_ambiguous_status_led_resistors(service
 
 
 def test_support_circuit_contract_rejects_status_led_overcurrent(service):
-    project = "usb_hid_status_led_overcurrent"
-    service.create_project(project, template="usb_hid_controller")
+    project = "ble_status_led_overcurrent"
+    service.create_project(project, template="ble_sensor_node")
     service.generate_electronics_only(project)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
@@ -522,24 +522,24 @@ def test_support_circuit_contract_requires_boot_strap_bias(service):
 
 
 def test_support_circuit_contract_rejects_boot_strap_wrong_bias_rail(service):
-    project = "rp2040_boot_strap_contract"
-    service.create_project(project, template="usb_hid_controller")
+    project = "avr_boot_strap_wrong_rail_contract"
+    service.create_project(project, template="avr_32u4_hid")
     service.generate_electronics_only(project)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     bad_graph = deepcopy(graph)
-    boot_resistor = next(component for component in bad_graph["components"] if component["category"] == "boot_resistor")
-    rail_pin = next(pin for pin in boot_resistor["pins"] if pin["net"] == "V3V3")
-    rail_pin["net"] = "GND"
-    rail_pin["voltage_domain"] = "GND"
+    boot_resistor = next(component for component in bad_graph["components"] if component["category"] == "hwb_pulldown")
+    rail_pin = next(pin for pin in boot_resistor["pins"] if pin["net"] == "GND")
+    rail_pin["net"] = "V3V3"
+    rail_pin["voltage_domain"] = "V3V3"
 
     report = service._support_circuit_completeness_report(service.read_spec(project), bad_graph)
 
     assert report.status == "fail"
     failure = next(item for item in report.failures if item.code == "boot_strap_bias_missing")
-    assert failure.details["pin_name"] == "GPIO23"
-    assert failure.details["net_name"] == "BOOTSEL"
-    assert failure.details["expected_net"] == "V3V3"
+    assert failure.details["pin_name"] == "PB3"
+    assert failure.details["net_name"] == "HWB"
+    assert failure.details["expected_net"] == "GND"
 
 
 def test_support_circuit_contract_passes_generated_stm32_boot0_bias(service):
@@ -555,8 +555,8 @@ def test_support_circuit_contract_passes_generated_stm32_boot0_bias(service):
 
 
 def test_grounding_benchmark_catches_missing_boot_strap_bias(service):
-    project = "rp2040_grounding_boot_strap"
-    service.create_project(project, template="usb_hid_controller")
+    project = "avr_grounding_boot_strap"
+    service.create_project(project, template="avr_32u4_hid")
     service.generate_electronics_only(project)
     service.generate_firmware_only(project)
 
@@ -582,8 +582,8 @@ def test_grounding_benchmark_catches_wrong_crystal_load_cap_value(service):
 
 
 def test_grounding_benchmark_catches_status_led_support_failures(service):
-    project = "usb_hid_grounding_status_led"
-    service.create_project(project, template="usb_hid_controller")
+    project = "ble_grounding_status_led"
+    service.create_project(project, template="ble_sensor_node")
     service.generate_all(project)
 
     benchmark = service.run_grounding_benchmark(project)
@@ -755,7 +755,8 @@ def test_power_tree_integrity_tracks_regulator_enable_bias(service):
     report = service.validator.check_power_tree(graph, service.read_spec(project))
 
     assert report.status == "pass"
-    enable_biases = report.metrics["regulator_enable_biases"]["U2"]
+    regulator_ref = next(component["ref"] for component in graph["components"] if str(component.get("category", "")).startswith("regulator"))
+    enable_biases = report.metrics["regulator_enable_biases"][regulator_ref]
     assert enable_biases[0]["enabled"] is True
     assert enable_biases[0]["bias_source"] == "direct_positive_rail"
     assert enable_biases[0]["net_name"] == "USB_VBUS"
@@ -768,7 +769,7 @@ def test_power_tree_integrity_rejects_unbiased_regulator_enable(service):
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     bad_graph = deepcopy(graph)
-    regulator = next(component for component in bad_graph["components"] if component["ref"] == "U2")
+    regulator = next(component for component in bad_graph["components"] if str(component.get("category", "")).startswith("regulator"))
     enable = next(pin for pin in regulator["pins"] if pin["name"] == "EN")
     enable["net"] = None
 
@@ -776,7 +777,7 @@ def test_power_tree_integrity_rejects_unbiased_regulator_enable(service):
 
     assert report.status == "fail"
     failure = next(item for item in report.failures if item.code == "regulator_enable_unbiased")
-    assert failure.details["ref"] == "U2"
+    assert failure.details["ref"] == regulator["ref"]
     assert failure.details["pin_name"] == "EN"
     assert failure.details["expected_bias"] == "pullup_or_direct_positive_rail"
 
@@ -788,7 +789,7 @@ def test_power_tree_integrity_accepts_regulator_enable_resistive_pullup(service)
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     pullup_graph = deepcopy(graph)
-    regulator = next(component for component in pullup_graph["components"] if component["ref"] == "U2")
+    regulator = next(component for component in pullup_graph["components"] if str(component.get("category", "")).startswith("regulator"))
     enable = next(pin for pin in regulator["pins"] if pin["name"] == "EN")
     enable["net"] = "REG_EN"
     pullup_graph["components"].append({
@@ -806,7 +807,7 @@ def test_power_tree_integrity_accepts_regulator_enable_resistive_pullup(service)
     report = service.validator.check_power_tree(pullup_graph, service.read_spec(project))
 
     assert report.status == "pass"
-    enable_bias = report.metrics["regulator_enable_biases"]["U2"][0]
+    enable_bias = report.metrics["regulator_enable_biases"][regulator["ref"]][0]
     assert enable_bias["enabled"] is True
     assert enable_bias["bias_source"] == "resistive_pullup"
     assert enable_bias["bias_component"] == "R_EN"
@@ -819,7 +820,7 @@ def test_power_tree_integrity_rejects_regulator_enable_self_output_pullup(servic
     project_path = service.workspace.require_project(project)
     graph = json.loads((project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     pullup_graph = deepcopy(graph)
-    regulator = next(component for component in pullup_graph["components"] if component["ref"] == "U2")
+    regulator = next(component for component in pullup_graph["components"] if str(component.get("category", "")).startswith("regulator"))
     enable = next(pin for pin in regulator["pins"] if pin["name"] == "EN")
     enable["net"] = "REG_EN"
     pullup_graph["components"].append({
@@ -838,7 +839,7 @@ def test_power_tree_integrity_rejects_regulator_enable_self_output_pullup(servic
 
     assert report.status == "fail"
     failure = next(item for item in report.failures if item.code == "regulator_enable_unbiased")
-    assert failure.details["ref"] == "U2"
+    assert failure.details["ref"] == regulator["ref"]
     assert failure.details["candidate_bias_components"][0]["positive_rails"] == []
 
 
@@ -903,6 +904,9 @@ def test_power_integrity_estimate_passes_generated_graph(service, project):
     assert report.status == "pass"
     assert report.metrics["rails_checked"] > 0
     assert "V3V3" in report.metrics["coverage"]
+    assert report.metrics["coverage"]["USB_VBUS"]["declared_peak_current_a"] == 0.0
+    assert report.metrics["coverage"]["USB_VBUS"]["decoupling"] == ["C11"]
+    assert report.metrics["coverage"]["V3V3"]["bulk"] == ["C12"]
     assert report.metrics["regulator_current_limits"]["U5"]["output_current_limit_a"] == 3.0
 
 

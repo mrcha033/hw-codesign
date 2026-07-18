@@ -1,6 +1,6 @@
 # Platform architecture
 
-hw-cli is a command-line and MCP-server design system for AI agents. From a structured YAML spec
+hw-codesign is a command-line and MCP-server design system for AI agents. From a structured YAML spec
 and agent-authored design actions, it generates PCB topology, parametric mechanical source, firmware
 pinmaps and interfaces, sourcing decisions, manufacturing outputs, and review bundles. Release
 bundles are produced only after every configured gate reaches `pass`. Physical qualification risks
@@ -12,7 +12,8 @@ pinmap remain machine-readable before native EDA/CAD outputs are emitted.
 
 ## Board families
 
-Three maintained templates are included:
+Thirteen maintained board templates are shipped. Three representative families
+are summarized here:
 
 | Template | MCU | Layers | Key features |
 |---|---|---|---|

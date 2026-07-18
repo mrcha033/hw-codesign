@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "backend": {
+    "name": "kicad-cli"
+  },
+  "failures": [],
+  "gate": "kicad_library_crosscheck",
+  "metrics": {
+    "issues": 0,
+    "method": "native_erc_drc_library_resolution"
+  },
+  "status": "pass"
+}

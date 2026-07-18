@@ -88,7 +88,7 @@ def build_dc_netlist(graph: dict[str, Any], spec: dict[str, Any]) -> DcNetlist:
         if voltage is not None and voltage > 0.0:
             sourced_rails[net] = float(voltage)
 
-    lines: list[str] = ["* hw-cli DC operating point (advisory)"]
+    lines: list[str] = ["* hw-codesign DC operating point (advisory)"]
 
     for idx, (net, voltage) in enumerate(sorted(sourced_rails.items())):
         lines.append(f"V{idx} {node_by_net[net]} 0 DC {voltage:g}")

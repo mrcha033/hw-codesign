@@ -2,11 +2,22 @@ project:
   name: esp32_wifi_gateway
   description: ESP32-WROOM-32E WiFi gateway with W5500 Ethernet and CH340N USB-UART bridge
   version: 0.1.0
+  revision: r1
+  target_use: wifi_ethernet_gateway
   template: esp32_wifi_gateway
   created_at: '2026-06-21'
 
 system:
   target_application: WiFi/Ethernet bridge, IoT gateway, data aggregator
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.8
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.8}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.6}
 
 compute:
   mcu:
@@ -23,8 +34,11 @@ compute:
 
 actuation:
   motor_channels: 0
+  motor_channel_peak_current_a: 0.0
 
 sensing:
+  imu: not_required
+  e_stop: not_required
   ethernet:
     controller: W5500
     interface: SPI
@@ -34,15 +48,32 @@ sensing:
     baud_max: 2000000
 
 assumptions:
-  - id: ASM-01
-    text: USB-UART bridge requires host-side CH340 driver (included in Linux kernel ≥4.x, Windows needs vendor driver)
-    rationale: CH340N is lowest-cost option; CP2102 would be driver-free but costs 3× more
-  - id: ASM-02
-    text: W5500 SPI runs at 33 MHz max; ESP32 SPI master clocked at 26 MHz for margin
-    rationale: keep MCLK ≤ 80% of W5500 SCLK max to allow PCB trace capacitance
-  - id: ASM-03
-    text: 3.3V I/O throughout; CH340N VCCIO tied to 3V3 for direct ESP32 compatibility
-    rationale: eliminates level-shifter BOM cost
+  usb_uart_host_driver:
+    value: ch340n_host_driver_required
+    confidence: high
+    reason: The CH340N bridge needs host driver support; it is included by common Linux kernels and may require a vendor driver on Windows.
+    rationale: CH340N was selected as the lower-cost USB-UART bridge.
+    source_id: ASM-01
+    critical: false
+    requires_user_review: false
+  ethernet_spi_clock:
+    value: 26mhz_with_w5500_margin
+    resolved_value: 26mhz_with_w5500_margin
+    confidence: high
+    reason: The ESP32 SPI master clocks the W5500 at 26 MHz, below the controller's maximum, to retain board-level timing margin.
+    rationale: The selected clock keeps margin for PCB trace capacitance and signal-integrity variation.
+    source_id: ASM-02
+    critical: true
+    requires_user_review: false
+  logic_voltage:
+    value: 3v3_io_with_ch340n_vccio_on_v3v3
+    resolved_value: 3v3_io_with_ch340n_vccio_on_v3v3
+    confidence: high
+    reason: ESP32, W5500, and CH340N logic operate on the board's 3.3 V I/O domain.
+    rationale: Tying CH340N VCCIO to V3V3 avoids an external level shifter.
+    source_id: ASM-03
+    critical: true
+    requires_user_review: false
 
 electronics:
   backend: tscircuit
@@ -75,19 +106,33 @@ mechanical:
     board_width_mm: 70.0
     board_height_mm: 50.0
     board_thickness_mm: 1.6
-    max_component_height_top_mm: 5.0
+    max_component_height_top_mm: 14.0
     max_component_height_bottom_mm: 1.0
   enclosure_internal_mm: [80.0, 60.0, 25.0]
+  wall_thickness_mm: 2.0
   insertion_clearance_mm: 1.5
   assembly_clearance_mm: 0.8
   tolerance_mm: 0.2
+  max_connector_edge_distance_mm: 6.0
+  default_component_height_mm: 2.0
+  component_heights_mm: {J1: 3.3, J2: 13.5, U2: 3.2}
+  board_origin_mm: [5.0, 5.0, 2.0]
   mounting_holes:
     - {x_mm: 3.5, y_mm: 3.5, diameter_mm: 3.2}
     - {x_mm: 66.5, y_mm: 3.5, diameter_mm: 3.2}
     - {x_mm: 3.5, y_mm: 46.5, diameter_mm: 3.2}
     - {x_mm: 66.5, y_mm: 46.5, diameter_mm: 3.2}
+  fixtures:
+    mounting_plate: {enabled: false}
+    frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: left, opening_mm: [9.0, 3.3], center_z_mm: 4.0, position_tolerance_mm: 0.5}
+    - {ref: J2, side: right, opening_mm: [16.0, 14.0], center_z_mm: 9.0, position_tolerance_mm: 0.8}
 
 firmware:
+  framework: esp-idf
+  target: esp32
+  outputs: [pinmap, driver_stubs, bringup_tests]
   rtos: esp-idf-freertos
   zephyr_target: null
   esp_idf_target: esp32
@@ -108,8 +153,16 @@ manufacturing:
     layers: 2
     min_clearance_mm: 0.127
     min_track_width_mm: 0.127
+    controlled_impedance: not_required
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
 
 safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog]
   regulatory: [CE, FCC_mod]
   isolation_required: false
   esd_protection: required
@@ -128,11 +181,12 @@ test_plan:
     - ota_update_cycle
 
 requirements:
-  performance:
-    - id: REQ-01
-      text: TCP bridge throughput ≥ 5 Mbps sustained
-    - id: REQ-02
-      text: UART baud ≥ 921600 error-free
-  reliability:
-    - id: REQ-03
-      text: WiFi reconnect within 10 s of AP drop
+  raw_inputs:
+    - {id: req_input_0001, text: TCP bridge throughput ≥ 5 Mbps sustained, created_by: template:esp32_wifi_gateway}
+    - {id: req_input_0002, text: UART baud ≥ 921600 error-free, created_by: template:esp32_wifi_gateway}
+    - {id: req_input_0003, text: WiFi reconnect within 10 s of AP drop, created_by: template:esp32_wifi_gateway}
+  active_lowered: []
+  active_unresolved:
+    - {id: req_unresolved_0001, source: req_input_0001, category: network_throughput_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Sustained bridge throughput requires an integration benchmark over the generated Ethernet and WiFi paths., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0002, source: req_input_0002, category: uart_reliability_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Error-free UART operation at the target baud rate requires host-and-board testing., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0003, source: req_input_0003, category: wifi_reconnect_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Reconnect time must be measured against a controlled access-point interruption., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}

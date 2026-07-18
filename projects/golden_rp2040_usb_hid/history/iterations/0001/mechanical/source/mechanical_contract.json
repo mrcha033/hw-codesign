@@ -1,0 +1,318 @@
+{
+  "board": {
+    "component_height_map": [
+      {
+        "category": "power_input",
+        "height_mm": 3.3,
+        "ref": "J1",
+        "x_mm": 3.1,
+        "y_mm": 15.0
+      },
+      {
+        "category": "tvs",
+        "height_mm": 2.0,
+        "ref": "D1",
+        "x_mm": 15.5,
+        "y_mm": 15.0
+      },
+      {
+        "category": "usb_series_resistor",
+        "height_mm": 2.0,
+        "ref": "R1",
+        "x_mm": 20.0,
+        "y_mm": 13.5
+      },
+      {
+        "category": "usb_series_resistor",
+        "height_mm": 2.0,
+        "ref": "R2",
+        "x_mm": 20.0,
+        "y_mm": 16.5
+      },
+      {
+        "category": "regulator_3v3",
+        "height_mm": 2.0,
+        "ref": "U1",
+        "x_mm": 15.5,
+        "y_mm": 24.0
+      },
+      {
+        "category": "mcu",
+        "height_mm": 1.0,
+        "ref": "U2",
+        "x_mm": 30.0,
+        "y_mm": 15.0
+      },
+      {
+        "category": "flash",
+        "height_mm": 1.0,
+        "ref": "U3",
+        "x_mm": 43.0,
+        "y_mm": 8.0
+      },
+      {
+        "category": "crystal_12m",
+        "height_mm": 2.0,
+        "ref": "X1",
+        "x_mm": 40.0,
+        "y_mm": 20.0
+      },
+      {
+        "category": "xtal_series_resistor",
+        "height_mm": 2.0,
+        "ref": "R3",
+        "x_mm": 36.0,
+        "y_mm": 20.0
+      },
+      {
+        "category": "flash_cs_pullup",
+        "height_mm": 2.0,
+        "ref": "R4",
+        "x_mm": 43.0,
+        "y_mm": 13.5
+      },
+      {
+        "category": "usb_cc_pulldown",
+        "height_mm": 2.0,
+        "ref": "R5",
+        "x_mm": 11.0,
+        "y_mm": 8.0
+      },
+      {
+        "category": "usb_cc_pulldown",
+        "height_mm": 2.0,
+        "ref": "R6",
+        "x_mm": 11.0,
+        "y_mm": 22.0
+      },
+      {
+        "category": "debug_header",
+        "height_mm": 5.0,
+        "ref": "J2",
+        "x_mm": 55.0,
+        "y_mm": 11.1
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C1",
+        "x_mm": 24.8,
+        "y_mm": 13.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C2",
+        "x_mm": 24.8,
+        "y_mm": 16.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C3",
+        "x_mm": 29.7,
+        "y_mm": 20.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C4",
+        "x_mm": 31.7,
+        "y_mm": 20.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C5",
+        "x_mm": 35.1,
+        "y_mm": 16.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C6",
+        "x_mm": 35.1,
+        "y_mm": 12.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C7",
+        "x_mm": 34.5,
+        "y_mm": 10.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C8",
+        "x_mm": 30.5,
+        "y_mm": 8.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C9",
+        "x_mm": 28.0,
+        "y_mm": 8.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C10",
+        "x_mm": 25.5,
+        "y_mm": 8.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C11",
+        "x_mm": 35.97,
+        "y_mm": 8.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C12",
+        "x_mm": 33.0,
+        "y_mm": 8.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C13",
+        "x_mm": 43.0,
+        "y_mm": 11.5
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C14",
+        "x_mm": 15.5,
+        "y_mm": 18.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C15",
+        "x_mm": 10.8,
+        "y_mm": 24.0
+      },
+      {
+        "category": "decoupling",
+        "height_mm": 2.0,
+        "ref": "C16",
+        "x_mm": 24.4,
+        "y_mm": 19.7
+      },
+      {
+        "category": "xtal_cap",
+        "height_mm": 2.0,
+        "ref": "C17",
+        "x_mm": 43.0,
+        "y_mm": 17.0
+      },
+      {
+        "category": "xtal_cap",
+        "height_mm": 2.0,
+        "ref": "C18",
+        "x_mm": 43.0,
+        "y_mm": 23.0
+      }
+    ],
+    "height_mm": 30.0,
+    "max_component_height_bottom_mm": 1.0,
+    "max_component_height_top_mm": 3.5,
+    "origin_mm": [
+      2.0,
+      2.0,
+      2.0
+    ],
+    "thickness_mm": 1.0,
+    "width_mm": 65.0
+  },
+  "clearances": {
+    "assembly_mm": 0.5,
+    "insertion_mm": 1.0,
+    "max_connector_edge_distance_mm": 10.0,
+    "tolerance_mm": 0.2
+  },
+  "connector_component_refs": [
+    "J1"
+  ],
+  "connector_cutouts": [
+    {
+      "center_z_mm": 3.2,
+      "component_present": true,
+      "electrical_category": "power_input",
+      "enclosure_position_mm": [
+        5.1,
+        17.0
+      ],
+      "opening_mm": [
+        9.0,
+        3.3
+      ],
+      "pcb_position_mm": [
+        3.1,
+        15.0
+      ],
+      "position_tolerance_mm": 0.5,
+      "ref": "J1",
+      "side": "left"
+    }
+  ],
+  "connector_retention": {},
+  "contract_version": 1,
+  "enclosure": {
+    "internal_mm": [
+      69.0,
+      34.0,
+      8.5
+    ],
+    "wall_thickness_mm": 2.0
+  },
+  "fixtures": {
+    "frame_brackets": {
+      "enabled": false
+    },
+    "mounting_plate": {
+      "enabled": false
+    }
+  },
+  "mounting_holes": [
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 2.5,
+      "y_mm": 2.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 62.5,
+      "y_mm": 2.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 2.5,
+      "y_mm": 27.5
+    },
+    {
+      "diameter_mm": 2.2,
+      "x_mm": 62.5,
+      "y_mm": 27.5
+    }
+  ],
+  "provenance": {
+    "component_db_hash": "d7422cd41f4e98cf09c4a1afb61e8d53cf860abc73f51536fa38f3c9d0615709",
+    "role_set_hash": "3fb3be9334730d6fe74fcede99aca48d62d083917511288f5fc8389c8445ac34",
+    "source_spec_hash": "62c1cae1c89aa9534603f13be0017c38d77b4fd6e0e770612db8bc1e60c149f3"
+  },
+  "selected_variant": "bare_pcb",
+  "variants": [
+    {
+      "gasket": false,
+      "lid_style": "none",
+      "name": "bare_pcb",
+      "ventilation": "none"
+    }
+  ]
+}

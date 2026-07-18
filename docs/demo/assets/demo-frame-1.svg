@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#0b0f14"/>
+  <text x="64" y="72" fill="#35e08b" font-family="DejaVu Sans Mono, monospace" font-size="28" font-weight="700">hw-codesign</text>
+  <text x="1136" y="72" text-anchor="end" fill="#768394" font-family="DejaVu Sans Mono, monospace" font-size="18">PROMPT → CANDIDATE → BLOCKERS</text>
+  <rect x="64" y="116" width="1072" height="452" rx="18" fill="#111822" stroke="#293545" stroke-width="2"/>
+  <circle cx="96" cy="148" r="7" fill="#ff6b6b"/><circle cx="120" cy="148" r="7" fill="#ffd166"/><circle cx="144" cy="148" r="7" fill="#35e08b"/>
+  <text x="96" y="205" fill="#35e08b" font-family="DejaVu Sans Mono, monospace" font-size="20">$ hw --root . design-candidate golden_rp2040_usb_hid --brief \</text>
+  <text x="96" y="249" fill="#dce7f3" font-family="DejaVu Sans Mono, monospace" font-size="20">&quot;Design a 2-layer RP2040 USB HID and CDC board powered</text>
+  <text x="96" y="283" fill="#dce7f3" font-family="DejaVu Sans Mono, monospace" font-size="20"> from USB-C, with 2 MB QSPI flash, a 12 MHz crystal,</text>
+  <text x="96" y="317" fill="#dce7f3" font-family="DejaVu Sans Mono, monospace" font-size="20"> USB ESD protection, SWD debug, 1 ms HID reports, and</text>
+  <text x="96" y="351" fill="#dce7f3" font-family="DejaVu Sans Mono, monospace" font-size="20"> enumeration within 500 ms. Use Zephyr and keep the board</text>
+  <text x="96" y="385" fill="#dce7f3" font-family="DejaVu Sans Mono, monospace" font-size="20"> within 65 mm by 30 mm.&quot;</text>
+  <text x="96" y="437" fill="#768394" font-family="DejaVu Sans Mono, monospace" font-size="19">lowering requirements… resolving parts… generating source… running gates…</text>
+  <rect x="96" y="476" width="314" height="48" rx="24" fill="#153829" stroke="#35e08b"/>
+  <text x="253" y="507" text-anchor="middle" fill="#8ff0bd" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700">SUPPORTED FAMILY: RP2040</text>
+  <text x="64" y="625" fill="#768394" font-family="DejaVu Sans, sans-serif" font-size="18">Repository evidence snapshot · no fabricated-board claim</text>
+</svg>

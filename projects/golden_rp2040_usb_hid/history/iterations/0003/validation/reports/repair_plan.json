@@ -1,0 +1,1689 @@
+{
+  "actions": [
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for J1 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for R5 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for R6 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for D1 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U1 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U2 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for U3 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for X1 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C5 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C6 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for J2 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C1 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C2 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C3 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: Current availability is not evidenced for C4 at curated",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "supplier_availability",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: J1 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: R5 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: R6 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: D1 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: U1 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: U2 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: U3 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: X1 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: C5 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: C6 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: J2 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: C1 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: C2 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: C3 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve supplier_availability_unknown: C4 lacks current supplier availability evidence",
+      "failure_code": "supplier_availability_unknown",
+      "gate": "sourcing",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: can",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: efuse",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: fuse",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: imu",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: motor_io",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: regulator",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: reverse_polarity",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve missing_required_block: Missing schematic block: safety_gate",
+      "failure_code": "missing_required_block",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve single_pin_net: MCU_RUN has fewer than two endpoints",
+      "failure_code": "single_pin_net",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve single_pin_net: SWO has fewer than two endpoints",
+      "failure_code": "single_pin_net",
+      "gate": "ir_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "tscircuit_compile",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "tscircuit_netlist_extract",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "tscircuit_graph_parity",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "tscircuit_footprint_parity",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "tscircuit_layout_completeness",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: tscircuit backend execution was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "tscircuit_manufacturing_export",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: Freerouting was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "autoroute",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: KiCad ERC was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "native_erc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: KiCad DRC was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "native_drc",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: Native CAD validation was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "native_mechanical_validation",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve external_gate_not_run: Native Zephyr build was not requested",
+      "failure_code": "external_gate_not_run",
+      "gate": "native_zephyr_build",
+      "patches": [],
+      "requires_user_decision": false
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: assembly_inspection",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    },
+    {
+      "action": "Resolve physical_evidence_missing: Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+      "failure_code": "physical_evidence_missing",
+      "gate": "physical_qualification",
+      "patches": [],
+      "requires_user_decision": true
+    }
+  ],
+  "affected_gates": [
+    "kicad_library_crosscheck",
+    "sourcing_resilience"
+  ],
+  "agent_actions": [
+    {
+      "args": {
+        "category": "can"
+      },
+      "reason": "'can' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "efuse"
+      },
+      "reason": "'efuse' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "fuse"
+      },
+      "reason": "'fuse' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "imu"
+      },
+      "reason": "'imu' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "motor_io"
+      },
+      "reason": "'motor_io' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "regulator"
+      },
+      "reason": "'regulator' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "reverse_polarity"
+      },
+      "reason": "'reverse_polarity' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {
+        "category": "safety_gate"
+      },
+      "reason": "'safety_gate' block is missing from schematic",
+      "tool": "hw_propose_circuit_block"
+    },
+    {
+      "args": {},
+      "reason": "A net has only one connection \u2014 add the missing component or correct the net name",
+      "tool": "hw_add_circuit_block"
+    },
+    {
+      "args": {},
+      "reason": "A net has only one connection \u2014 add the missing component or correct the net name",
+      "tool": "hw_add_circuit_block"
+    }
+  ],
+  "folded_gate_count": 2,
+  "project": "golden_rp2040_usb_hid",
+  "repair_order": [
+    "sourcing",
+    "ir_erc",
+    "native_drc",
+    "native_erc",
+    "autoroute",
+    "native_mechanical_validation",
+    "native_zephyr_build",
+    "physical_qualification",
+    "supplier_availability",
+    "tscircuit_compile",
+    "tscircuit_footprint_parity",
+    "tscircuit_graph_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export",
+    "tscircuit_netlist_extract"
+  ],
+  "requires_user_decision": true,
+  "root_causes": [
+    {
+      "affected_gates": [
+        "sourcing_resilience"
+      ],
+      "failure_codes": [
+        "supplier_availability_unknown"
+      ],
+      "failures": [
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "J1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "R5 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "R6 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "D1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "U1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "U2 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "U3 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "X1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C5 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C6 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "J2 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C2 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C3 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C4 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "sourcing",
+      "id": "sourcing:supplier_availability_unknown",
+      "impact_count": 1,
+      "repair_order": 1,
+      "status": "fail",
+      "summary": "J1 lacks current supplier availability evidence"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "missing_required_block",
+        "single_pin_net"
+      ],
+      "failures": [
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: can",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: efuse",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: fuse",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: imu",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: motor_io",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: regulator",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: reverse_polarity",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: safety_gate",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "single_pin_net",
+          "details": {},
+          "message": "MCU_RUN has fewer than two endpoints",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "single_pin_net",
+          "details": {},
+          "message": "SWO has fewer than two endpoints",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "ir_erc",
+      "id": "ir_erc:missing_required_block+single_pin_net",
+      "impact_count": 0,
+      "repair_order": 2,
+      "status": "fail",
+      "summary": "Missing schematic block: can"
+    },
+    {
+      "affected_gates": [
+        "kicad_library_crosscheck"
+      ],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad DRC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_drc",
+      "id": "native_drc:external_gate_not_run",
+      "impact_count": 1,
+      "repair_order": 3,
+      "status": "blocked",
+      "summary": "KiCad DRC was not requested"
+    },
+    {
+      "affected_gates": [
+        "kicad_library_crosscheck"
+      ],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad ERC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_erc",
+      "id": "native_erc:external_gate_not_run",
+      "impact_count": 1,
+      "repair_order": 4,
+      "status": "blocked",
+      "summary": "KiCad ERC was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Freerouting was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "autoroute",
+      "id": "autoroute:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 5,
+      "status": "blocked",
+      "summary": "Freerouting was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Native CAD validation was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_mechanical_validation",
+      "id": "native_mechanical_validation:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 6,
+      "status": "blocked",
+      "summary": "Native CAD validation was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "Native Zephyr build was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_zephyr_build",
+      "id": "native_zephyr_build:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 7,
+      "status": "blocked",
+      "summary": "Native Zephyr build was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "physical_evidence_missing"
+      ],
+      "failures": [
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "assembly_quality",
+            "evidence_required": [
+              "photos",
+              "assembly_checklist",
+              "bom_lot_trace"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: assembly_inspection",
+          "path": "validation.physical_evidence.assembly_inspection",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "bringup",
+            "evidence_required": [
+              "bench_supply_log",
+              "rail_voltage_measurements",
+              "thermal_image_optional"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: current_limited_power_up",
+          "path": "validation.physical_evidence.current_limited_power_up",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "firmware_co_design",
+            "evidence_required": [
+              "flash_log",
+              "interface_probe_log",
+              "firmware_revision_hash"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: firmware_interface_bringup",
+          "path": "validation.physical_evidence.firmware_interface_bringup",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "thermal",
+            "evidence_required": [
+              "thermal_camera_capture",
+              "load_profile_log",
+              "ambient_temperature_log"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: thermal_load_profile",
+          "path": "validation.physical_evidence.thermal_load_profile",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "emi_emc",
+            "evidence_required": [
+              "emi_prescan_report",
+              "test_setup_photos",
+              "cable_configuration"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: emi_emc_prescan",
+          "path": "validation.physical_evidence.emi_emc_prescan",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "si_pi",
+            "evidence_required": [
+              "oscilloscope_captures",
+              "probe_points",
+              "load_state_log"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: signal_power_integrity_probe",
+          "path": "validation.physical_evidence.signal_power_integrity_probe",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "mechanical_reliability",
+            "evidence_required": [
+              "vibration_test_log",
+              "post_test_inspection_photos",
+              "connector_retention_measurements"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: vibration_connector_retention",
+          "path": "validation.physical_evidence.vibration_connector_retention",
+          "requires_user_decision": true,
+          "severity": "error"
+        },
+        {
+          "category": "RELEASE_ERROR",
+          "code": "physical_evidence_missing",
+          "details": {
+            "category": "environmental_safety",
+            "evidence_required": [
+              "ingress_test_report_or_waiver",
+              "esd_test_log_or_waiver",
+              "enclosure_photos"
+            ]
+          },
+          "message": "Required physical qualification evidence is missing or unapproved: ingress_esd_abuse_check",
+          "path": "validation.physical_evidence.ingress_esd_abuse_check",
+          "requires_user_decision": true,
+          "severity": "error"
+        }
+      ],
+      "gate": "physical_qualification",
+      "id": "physical_qualification:physical_evidence_missing",
+      "impact_count": 0,
+      "repair_order": 8,
+      "status": "blocked",
+      "summary": "Required physical qualification evidence is missing or unapproved: assembly_inspection"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "supplier_availability_unknown"
+      ],
+      "failures": [
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for J1 at curated",
+          "path": "J1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for R5 at curated",
+          "path": "R5",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for R6 at curated",
+          "path": "R6",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for D1 at curated",
+          "path": "D1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for U1 at curated",
+          "path": "U1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for U2 at curated",
+          "path": "U2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for U3 at curated",
+          "path": "U3",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for X1 at curated",
+          "path": "X1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C5 at curated",
+          "path": "C5",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C6 at curated",
+          "path": "C6",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for J2 at curated",
+          "path": "J2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C1 at curated",
+          "path": "C1",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C2 at curated",
+          "path": "C2",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C3 at curated",
+          "path": "C3",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {},
+          "message": "Current availability is not evidenced for C4 at curated",
+          "path": "C4",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "supplier_availability",
+      "id": "supplier_availability:supplier_availability_unknown",
+      "impact_count": 0,
+      "repair_order": 9,
+      "status": "blocked",
+      "summary": "Current availability is not evidenced for J1 at curated"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "tscircuit backend execution was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_compile",
+      "id": "tscircuit_compile:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 10,
+      "status": "blocked",
+      "summary": "tscircuit backend execution was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "tscircuit backend execution was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_footprint_parity",
+      "id": "tscircuit_footprint_parity:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 11,
+      "status": "blocked",
+      "summary": "tscircuit backend execution was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "tscircuit backend execution was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_graph_parity",
+      "id": "tscircuit_graph_parity:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 12,
+      "status": "blocked",
+      "summary": "tscircuit backend execution was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "tscircuit backend execution was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_layout_completeness",
+      "id": "tscircuit_layout_completeness:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 13,
+      "status": "blocked",
+      "summary": "tscircuit backend execution was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "tscircuit backend execution was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_manufacturing_export",
+      "id": "tscircuit_manufacturing_export:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 14,
+      "status": "blocked",
+      "summary": "tscircuit backend execution was not requested"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "tscircuit backend execution was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "tscircuit_netlist_extract",
+      "id": "tscircuit_netlist_extract:external_gate_not_run",
+      "impact_count": 0,
+      "repair_order": 15,
+      "status": "blocked",
+      "summary": "tscircuit backend execution was not requested"
+    }
+  ],
+  "status": "generated",
+  "top_root_causes": [
+    {
+      "affected_gates": [
+        "sourcing_resilience"
+      ],
+      "failure_codes": [
+        "supplier_availability_unknown"
+      ],
+      "failures": [
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "J1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "R5 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "R6 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "D1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "U1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "U2 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "U3 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "X1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C5 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C6 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "J2 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C1 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C2 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C3 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "BOM_ERROR",
+          "code": "supplier_availability_unknown",
+          "details": {
+            "availability": "unknown",
+            "provider": "curated"
+          },
+          "message": "C4 lacks current supplier availability evidence",
+          "path": "electronics.components",
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "sourcing",
+      "id": "sourcing:supplier_availability_unknown",
+      "impact_count": 1,
+      "repair_order": 1,
+      "status": "fail",
+      "summary": "J1 lacks current supplier availability evidence"
+    },
+    {
+      "affected_gates": [],
+      "failure_codes": [
+        "missing_required_block",
+        "single_pin_net"
+      ],
+      "failures": [
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: can",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: efuse",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: fuse",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: imu",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: motor_io",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: regulator",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: reverse_polarity",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "missing_required_block",
+          "details": {},
+          "message": "Missing schematic block: safety_gate",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "single_pin_net",
+          "details": {},
+          "message": "MCU_RUN has fewer than two endpoints",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        },
+        {
+          "category": "EDA_ERROR",
+          "code": "single_pin_net",
+          "details": {},
+          "message": "SWO has fewer than two endpoints",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "ir_erc",
+      "id": "ir_erc:missing_required_block+single_pin_net",
+      "impact_count": 0,
+      "repair_order": 2,
+      "status": "fail",
+      "summary": "Missing schematic block: can"
+    },
+    {
+      "affected_gates": [
+        "kicad_library_crosscheck"
+      ],
+      "failure_codes": [
+        "external_gate_not_run"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "code": "external_gate_not_run",
+          "details": {},
+          "message": "KiCad DRC was not requested",
+          "path": null,
+          "requires_user_decision": false,
+          "severity": "error"
+        }
+      ],
+      "gate": "native_drc",
+      "id": "native_drc:external_gate_not_run",
+      "impact_count": 1,
+      "repair_order": 3,
+      "status": "blocked",
+      "summary": "KiCad DRC was not requested"
+    }
+  ]
+}

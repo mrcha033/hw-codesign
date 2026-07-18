@@ -1,6 +1,6 @@
 # Promotion and validation contract
 
-hw-cli is an agentic hardware design system: AI agents generate electronics,
+hw-codesign is an agentic hardware design system: AI agents generate electronics,
 mechanical, firmware, sourcing, manufacturing, and review candidates, then the
 platform promotes only evidence-backed candidates through tiered release gates.
 This document defines the statuses, adapter obligations, artifact integrity
@@ -138,6 +138,25 @@ The reference-fabrication candidate export uses the current placed electrical
 graph, including agent-authored placement constraints applied after initial
 electronics generation, so pick-and-place and assembly artifacts cannot silently
 fall back to stale seed coordinates after the placement gates pass.
+
+A native KiCad manufacturing export is a separate evidence surface. It stages
+Gerber copper, mask, paste, silkscreen, and outline layers; machine drill data;
+KiCad pick-and-place; the resolved BOM; and the board STEP model from one stable
+board revision. `fabrication/fabrication_manifest.json` binds those outputs to
+the exact board, BOM, and any available routing receipt with SHA-256 records,
+then verifies both each outer archive and every declared archive member. KiCad
+creation timestamps are normalized and drill-map PDFs are excluded from the
+machine-drill archive so repeat exports of the same inputs are reproducible. A
+candidate fails when the native pick-and-place output contains components on an
+assembly side but KiCad does not emit that side's solder-paste Gerber.
+
+`fabrication/readiness_manifest.json` is a vendor-neutral RFQ input. It records
+the board hash, declared stackup assumptions, routing-receipt binding, and
+declared-versus-observed via-in-pad count and geometry. It also lists the
+fabricator capability, stackup, process, and inspection evidence that must be
+returned. It always states `order_ready: false`; neither this receipt nor a
+passing digital manufacturing-export gate selects a fabricator, authorizes an
+order, or establishes physical qualification.
 
 The benchmark passes only when all injected cases are detected. It is evidence
 that the current digital validators catch those classes of false positives; it

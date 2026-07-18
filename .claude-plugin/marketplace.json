@@ -1,6 +1,6 @@
 {
-  "name": "hw-cli",
-  "description": "Agentic hardware co-design plugins for Claude Code, backed by the hw-codesign MCP server.",
+  "name": "hw-codesign",
+  "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
   "owner": {
     "name": "mrcha033",
     "url": "https://github.com/mrcha033"
@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "hw-codesign",
-      "description": "Create and iterate PCB electronics, mechanical parts, firmware interfaces, sourcing decisions, manufacturing candidates, and review bundles. Release promotion stays gated by explicit digital, native-tool, and physical evidence.",
+      "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
       "source": "./plugins/hw-codesign",
       "category": "productivity",
       "tags": [

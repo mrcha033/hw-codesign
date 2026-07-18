@@ -1,0 +1,10 @@
+# Byte-pinned EDA assets must have identical content hashes on every runner.
+*.kicad_mod text eol=lf
+*.kicad_sym text eol=lf
+
+# Deterministic browser bundle inputs and generated receipts.
+src/hw_codesign/review_3d_viewer.js text eol=lf
+src/hw_codesign/review_3d_viewer.bundle.js text eol=lf
+src/hw_codesign/review_3d_viewer.bundle.json text eol=lf
+src/hw_codesign/third_party/three/* text eol=lf
+scripts/build_review_3d_viewer.py text eol=lf

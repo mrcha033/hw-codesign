@@ -1,0 +1,46 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.ses",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/routing.json"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-07-18 23:44:56.493 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-07-18 23:44:56.590 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-07-18 23:44:58.491 INFO   [E83E47\\2DF4CD] Job 'E83E47\\2DF4CD' started at 2026-07-18T14:44:58.491208Z.\n2026-07-18 23:44:58.589 INFO   New version available: v2.2.4\n2026-07-18 23:45:04.834 INFO   [E83E47\\2DF4CD] Auto-router pass #1 on board '73717f38813ddf4f7eecf966d4565b67' was completed in 6.11 seconds with the score of 918.02 (17 unrouted), using 2.65 CPU seconds and the job allocated 0.92 GB of memory so far.\n2026-07-18 23:45:08.869 INFO   [E83E47\\2DF4CD] Auto-router pass #2 on board '9b5653213f82de57e88b773e4685081d' was completed in 3.92 seconds with the score of 941.41 (12 unrouted), using 4.45 CPU seconds and the job allocated 1.76 GB of memory so far.\n2026-07-18 23:45:11.761 INFO   [E83E47\\2DF4CD] Auto-router pass #3 on board 'a7180c2f84fee8024b6ce645fefd3cf1' was completed in 2.85 seconds with the score of 937.98 (13 unrouted), using 6.00 CPU seconds and the job allocated 2.56 GB of memory so far.\n2026-07-18 23:45:15.566 INFO   [E83E47\\2DF4CD] Auto-router pass #4 on board '8acb6445fd64d24bfaacf108e06ce62a' was completed in 3.77 seconds with the score of 983.77 (3 unrouted), using 7.34 CPU seconds and the job allocated 3.27 GB of memory so far.\n2026-07-18 23:45:17.089 INFO   [E83E47\\2DF4CD] Auto-router pass #5 on board '4e18eecd59cd3b0ab83df5c4bae0ffb3' was completed in 1.38 seconds with the score of 995.40, using 8.03 CPU seconds and the job allocated 3.61 GB of memory so far.\n2026-07-18 23:45:17.170 INFO   [E83E47\\2DF4CD] Auto-router pass #6 on board 'a4904de7e99820af6c46b90175066a09' was completed in 0.01 seconds with the score of 995.40, using 8.03 CPU seconds and the job allocated 3.61 GB of memory so far.\n2026-07-18 23:45:17.231 INFO   [E83E47\\2DF4CD] Auto-router session completed: started with 59 unrouted nets, completed in 18.60 seconds, final score: 995.40, using 8.03 total CPU seconds, 3.61 GB total allocated, and 447.80 MB peak heap usage.\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "timeout_seconds": 600,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
+  "failures": [],
+  "gate": "autoroute",
+  "metrics": {
+    "filled_polygon_count": 1,
+    "freerouting_unrouted": 0,
+    "max_passes": 20,
+    "unrouted": 0,
+    "zone_count": 1
+  },
+  "status": "pass"
+}

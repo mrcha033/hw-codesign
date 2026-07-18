@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#0b0f14"/>
+  <text x="64" y="72" fill="#35e08b" font-family="DejaVu Sans Mono, monospace" font-size="28" font-weight="700">hw-codesign</text>
+  <text x="1136" y="72" text-anchor="end" fill="#768394" font-family="DejaVu Sans Mono, monospace" font-size="18">REVIEWABLE CANDIDATE</text>
+  <rect x="64" y="116" width="432" height="466" rx="18" fill="#111822" stroke="#293545" stroke-width="2"/>
+  <text x="96" y="171" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="30" font-weight="700">Candidate generated</text>
+  <text x="96" y="214" fill="#8ff0bd" font-family="DejaVu Sans Mono, monospace" font-size="17">golden_rp2040_usb_hid</text>
+  <line x1="96" y1="244" x2="464" y2="244" stroke="#293545"/>
+  <text x="96" y="286" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="20">31 resolved components</text>
+  <text x="96" y="326" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="20">Freerouting raw 0 · post-fill 0</text>
+  <text x="96" y="366" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="20">Native ERC 0 · DRC 0</text>
+  <text x="96" y="406" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="20">Zephyr build BLOCKED · ARM newlib</text>
+  <text x="96" y="446" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="20">Bundle 7d6731501a24</text>
+  <rect x="96" y="495" width="238" height="48" rx="24" fill="#153829" stroke="#35e08b"/>
+  <text x="215" y="526" text-anchor="middle" fill="#8ff0bd" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700">CANDIDATE ONLY</text>
+  <rect x="528" y="116" width="608" height="466" rx="18" fill="#f6f7f9" stroke="#293545" stroke-width="2"/>
+  <image x="548" y="138" width="568" height="420" preserveAspectRatio="xMidYMid meet" xlink:href="golden-rp2040-assembly.png"/>
+  <text x="64" y="625" fill="#768394" font-family="DejaVu Sans, sans-serif" font-size="18">CAD and compiler gates pass; this assembly drawing is generated evidence, not a fabricated board.</text>
+</svg>

@@ -1,0 +1,46 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/zephyr/app/prj.conf",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/zephyr/tests/test_qspi_flash_xip.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/zephyr/tests/test_swd_attach.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/zephyr/tests/test_usb_cdc_console.c",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/zephyr/tests/test_usb_hid_enumeration.c"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "firmware-interface-contract"
+  },
+  "failures": [],
+  "gate": "firmware_interface_contract",
+  "metrics": {
+    "config_options": [
+      "CONFIG_GPIO=y",
+      "CONFIG_SPI=y",
+      "CONFIG_USB_CDC_ACM=y",
+      "CONFIG_USB_DEVICE_STACK=y"
+    ],
+    "pinmap_signals": [
+      "MCU_RUN",
+      "QSPI_CLK",
+      "QSPI_CS",
+      "QSPI_D2",
+      "QSPI_D3",
+      "QSPI_MISO",
+      "QSPI_MOSI",
+      "USB_DM",
+      "USB_DP",
+      "XIN",
+      "XOUT"
+    ],
+    "required_interfaces": [
+      "usb"
+    ],
+    "test_files": [
+      "test_qspi_flash_xip.c",
+      "test_swd_attach.c",
+      "test_usb_cdc_console.c",
+      "test_usb_hid_enumeration.c"
+    ]
+  },
+  "status": "pass"
+}

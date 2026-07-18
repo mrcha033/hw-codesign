@@ -1,5 +1,5 @@
 {
-  "name": "hw-cli-offline-electronics-toolchain",
+  "name": "hw-codesign",
   "private": true,
   "version": "0.1.0",
   "devDependencies": {

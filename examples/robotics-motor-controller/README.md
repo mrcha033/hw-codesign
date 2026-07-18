@@ -54,7 +54,7 @@ The committed portable review bundle has hash:
 Regenerate the machine-readable review bundle locally with:
 
 ```bash
-uvx --from hw-codesign-platform hw --root . export-review quadruped_robot_controller
+.venv/bin/hw --root . export-review quadruped_robot_controller
 ```
 
 The output is
@@ -62,7 +62,8 @@ The output is
 Generated working exports are intentionally ignored; the committed sample above
 is copied from that output after path normalization. The
 [bundle schema](../../schemas/review_bundle.schema.json) is tracked today, and
-tagged GitHub releases attach the canonical bundle and schema.
+the release workflow is configured to attach the canonical bundle and schema to
+future tagged GitHub releases. No public release is claimed until one exists.
 
 ## Evidence not yet present
 

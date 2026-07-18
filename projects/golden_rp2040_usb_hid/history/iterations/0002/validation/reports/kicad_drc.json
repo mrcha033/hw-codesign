@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-18T21:31:29",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error"
+    ],
+    "kicad_version": "10.0.3",
+    "schematic_parity": [],
+    "source": "golden_rp2040_usb_hid.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 25 [SWDIO] of U2 on F.Cu",
+                    "pos": {
+                        "x": 31.4,
+                        "y": 18.4375
+                    },
+                    "uuid": "d06bade9-e88a-4381-8745-ecdf04b68465"
+                },
+                {
+                    "description": "PTH pad 2 [SWDIO] of J2",
+                    "pos": {
+                        "x": 57.54,
+                        "y": 11.1
+                    },
+                    "uuid": "6e43185a-9e34-44ff-b5e5-bba7a1f8a8f3"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 24 [SWCLK] of U2 on F.Cu",
+                    "pos": {
+                        "x": 31.0,
+                        "y": 18.4375
+                    },
+                    "uuid": "3d60fa51-120d-461c-8952-d49f01ad282d"
+                },
+                {
+                    "description": "PTH pad 4 [SWCLK] of J2",
+                    "pos": {
+                        "x": 57.54,
+                        "y": 13.64
+                    },
+                    "uuid": "731250a7-4db4-435f-bca3-28737a0782c8"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 21 [XOUT] of U2 on F.Cu",
+                    "pos": {
+                        "x": 29.8,
+                        "y": 18.4375
+                    },
+                    "uuid": "1d5630fe-b727-45ea-a848-2cda29aae75c"
+                },
+                {
+                    "description": "Pad 1 [XOUT] of R3 on F.Cu",
+                    "pos": {
+                        "x": 35.175,
+                        "y": 20.0
+                    },
+                    "uuid": "4a33ddd4-1cbf-4ba7-8874-ae15455eac38"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": []
+}

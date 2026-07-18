@@ -24,7 +24,7 @@ from .backends.kicad import KiCadBackend
 from .backends.mechanical import OpenCascadeMechanicalBackend
 from .backends.python_netlist import PythonNetlistBackend
 from .backends.tscircuit import TSCircuitBackend
-from .backends.zephyr import ZephyrBackend
+from .backends.zephyr import ZephyrBackend, probe_arm_newlib
 from .diagnostics import analyze_root_causes
 from .generators import firmware_profile, generate_bom, generate_electronics, generate_firmware, generate_mechanical
 from .io import atomic_write_text, read_yaml, write_json, write_yaml
@@ -52,6 +52,18 @@ _POSIX_ABSOLUTE_PATH = re.compile(r"^/(?:[^/\s]+/)*[^/\s]*$")
 _RELEASE_ELIGIBLE_BACKENDS = frozenset({"tscircuit", "kicad", "python_netlist", "atopile"})
 _FABRICATION_RELEASE_BACKENDS = frozenset({"tscircuit", "kicad"})
 _CANONICAL_FABRICATION_BACKENDS = ("tscircuit", "kicad")
+
+
+def _is_user_conflict_copy(path: Path, project_path: Path) -> bool:
+    """Keep same-prefix KiCad conflict copies out of generated evidence bundles."""
+    kicad_dir = project_path / "electronics" / "generated" / "kicad"
+    try:
+        if path.parent != kicad_dir:
+            return False
+    except (OSError, ValueError):
+        return False
+    stem = re.escape(project_path.name)
+    return re.match(rf"^{stem}(?:\.routed)? \d+\.", path.name) is not None
 _RELEASE_TIER_BY_BACKEND: dict[str, str] = {
     "reference": "candidate",
     "python_netlist": "netlist",
@@ -307,6 +319,23 @@ def _review_artifact_record(reference: str, workspace_root: Path, project_path: 
     return record
 
 
+def _merge_review_artifact_record(records_by_path: dict[str, dict[str, Any]], record: dict[str, Any]) -> None:
+    """De-duplicate one artifact path while retaining every evidence source."""
+    path = record["path"]
+    existing = records_by_path.get(path)
+    if existing is None:
+        sources = [record["source"]]
+        records_by_path[path] = {**record, "sources": sources}
+        return
+    sources = sorted({*existing.get("sources", [existing["source"]]), record["source"]})
+    # Prefer the resolved record if equivalent references were resolved through
+    # different path forms. Integrity metadata still describes one file path.
+    if record.get("exists") and not existing.get("exists"):
+        existing.update(record)
+    existing["sources"] = sources
+    existing["source"] = sources[0]
+
+
 def _crystal_load_cap_value_failure(
     crystal: dict[str, Any],
     capacitor: dict[str, Any],
@@ -538,6 +567,20 @@ class HardwareService:
             (r"(\d+(?:\.\d+)?)\s*V\s*(?:배터리|battery)", ["system", "supply", "battery", "pack_voltage_nominal"], float, "number"),
             (r"(STM32H7\w*|ESP32S3|RP2040)", ["compute", "mcu", "family"], str.upper, "string"),
             (r"(\d+)\s*[- ]?layer", ["manufacturing", "pcb", "layers"], int, "integer"),
+            (
+                r"\bboard(?:\s+envelope)?\s+(?:within|under|max(?:imum)?)?\s*"
+                r"(\d+(?:\.\d+)?)\s*mm\s*(?:by|x|×)\s*\d+(?:\.\d+)?\s*mm",
+                ["mechanical", "envelope", "board_width_mm"],
+                float,
+                "number",
+            ),
+            (
+                r"\bboard(?:\s+envelope)?\s+(?:within|under|max(?:imum)?)?\s*"
+                r"\d+(?:\.\d+)?\s*mm\s*(?:by|x|×)\s*(\d+(?:\.\d+)?)\s*mm",
+                ["mechanical", "envelope", "board_height_mm"],
+                float,
+                "number",
+            ),
         ]
         _ROOTS = {
             "actuation": system_file,
@@ -1351,6 +1394,8 @@ class HardwareService:
             reports.append(self.validator.check_power_tree(graph, spec))
             reports.append(self.validator.check_power_integrity_estimate(graph, spec))
             reports.append(self.validator.check_interface_integrity(graph))
+            if self.validator.rp2040_reference_circuit_applicable(spec, graph):
+                reports.append(self.validator.check_rp2040_reference_circuit(graph))
             reports.append(self._semantic_schematic_roundtrip_report(path, graph))
             reports.append(self._support_circuit_completeness_report(spec, graph))
             reports.append(self.validator.check_hw_sw_parity(graph, pinmap))
@@ -3304,7 +3349,7 @@ class HardwareService:
             "supplier_availability": ["component_resolution"],
             "bom": ["component_resolution"],
             "sourcing": ["component_resolution"],
-            "sourcing_resilience": ["component_resolution", "sourcing", "component_provenance"],
+            "sourcing_resilience": ["component_resolution", "component_provenance"],
             "component_provenance": ["component_resolution", "datasheet_evidence"],
             "pin_symbol_footprint": ["component_resolution", "component_provenance"],
             "power_tree_integrity": ["pin_symbol_footprint", "component_provenance"],
@@ -3510,7 +3555,10 @@ class HardwareService:
                     component
                     for component in components
                     if component is not crystal
-                    and role_for_component(component) in {"xtal_cap", "rtc_xtal_cap"}
+                    and (
+                        str(component.get("category", "")).lower() in {"xtal_cap", "crystal_load_cap"}
+                        or role_for_component(component).startswith(("xtal_cap", "rtc_xtal_cap"))
+                    )
                     and net_name in {pin.get("net") for pin in component.get("pins", [])}
                 ]
                 grounded_caps = [
@@ -5547,6 +5595,15 @@ class HardwareService:
         markdown_path = plan_dir / "qualification_plan.md"
         evidence_dir = path / "validation" / "physical_evidence"
         tests = self._physical_qualification_tests(spec, graph)
+        via_in_pad_required = any(item.get("id") == "via_in_pad_process_qualification" for item in tests)
+        oracle_boundary = [
+            "Digital validators cannot certify thermal load behavior, EMI/EMC, SI/PI, vibration, ingress, connector fatigue, assembly quality, or board bring-up.",
+            "Each required test needs approved external evidence before the physical_qualification gate can pass.",
+        ]
+        if via_in_pad_required:
+            oracle_boundary.append(
+                "Connectivity and DRC results do not select or qualify a via-in-pad tenting, filling, capping, or assembly process."
+            )
         plan = {
             "artifact_type": "physical_qualification_plan",
             "status": "generated",
@@ -5555,10 +5612,7 @@ class HardwareService:
             "evidence_directory": str(evidence_dir),
             "release_gate": "physical_qualification",
             "tests": tests,
-            "oracle_boundary": [
-                "Digital validators cannot certify thermal load behavior, EMI/EMC, SI/PI, vibration, ingress, connector fatigue, assembly quality, or board bring-up.",
-                "Each required test needs approved external evidence before the physical_qualification gate can pass.",
-            ],
+            "oracle_boundary": oracle_boundary,
         }
         write_json(plan_path, plan)
         atomic_write_text(markdown_path, self._physical_qualification_markdown(plan))
@@ -5631,6 +5685,7 @@ class HardwareService:
         connectors_exposed = bool(mechanical.get("connectors_exposed", True))
         battery = system.get("supply", {}).get("battery", {})
         peak_current = battery.get("pack_current_peak_a")
+        via_in_pad = spec.get("manufacturing", {}).get("pcb", {}).get("via_in_pad", {})
 
         def test(
             test_id: str,
@@ -5736,6 +5791,43 @@ class HardwareService:
                 },
             ),
         ]
+        if via_in_pad.get("used") and via_in_pad.get("qualification_status") != "qualified":
+            process = via_in_pad.get("process", {})
+            tests.insert(
+                1,
+                test(
+                    "via_in_pad_process_qualification",
+                    "assembly_process",
+                    "Qualify the fabrication and assembly process for each declared via-in-pad site before treating the board as fabrication-qualified.",
+                    [
+                        "fabricator_via_in_pad_capability_statement",
+                        "released_fabrication_and_assembly_notes",
+                        "microsection_or_certificate_of_conformance",
+                        "xray_or_equivalent_joint_inspection",
+                        "first_article_yield_report",
+                    ],
+                    [
+                        "Every declared via-in-pad site, including component reference and pad number, is traceable in the released fabrication and assembly data",
+                        "Released notes document whether each via is tented, filled, and/or capped and the fabricator confirms that disposition is compatible with the assembly process",
+                        "When a planar solderable exposed-pad surface is required, fill and cap or plate-over requirements are specified and verified by microsection or certificate of conformance",
+                        "X-ray or equivalent inspection shows no unacceptable solder wicking, voiding, bridging, or open exposed-pad connection",
+                        "First-article sample size and minimum first-pass yield threshold are approved before fabrication, and the resulting lot report meets both values",
+                    ],
+                    [
+                        "spec/manufacturing.yaml",
+                        "electronics/generated/kicad/*.kicad_pcb",
+                        "docs/assembly_drawing.pdf",
+                    ],
+                    {
+                        "qualification_status": via_in_pad.get("qualification_status"),
+                        "process_selection_status": process.get("selection_status"),
+                        "declared_via_disposition": process.get("via_disposition"),
+                        "declared_cap_finish": process.get("cap_finish"),
+                        "declared_locations": via_in_pad.get("locations", []),
+                        "process_characteristics_to_document": ["tented", "filled", "capped_or_plated_over"],
+                    },
+                ),
+            )
         if connectors_exposed:
             tests.append(
                 test(
@@ -6215,7 +6307,7 @@ class HardwareService:
                 item.relative_to(it).as_posix()
                 for domain in ("electronics", "mechanical", "firmware")
                 for item in (it / domain).rglob("*")
-                if item.is_file() and "build" not in item.parts
+                if item.is_file() and "build" not in item.parts and not _is_user_conflict_copy(item, it)
             }
 
         files_a = _iter_files(candidate_a)
@@ -6417,11 +6509,12 @@ class HardwareService:
         if target not in _TARGETS:
             return {"status": "blocked", "code": "unknown_target", "target": target, "available_targets": sorted(_TARGETS)}
 
+        arm_newlib_probe = probe_arm_newlib()
         tool_availability: dict[str, bool] = {
             "kicad_cli": bool(resolve_tool("kicad-cli")),
             "java": bool(self.freerouting._tools().get("java")),
             "node": bool(shutil.which("node")),
-            "arm_none_eabi_gcc": bool(shutil.which("arm-none-eabi-gcc")),
+            "arm_none_eabi_gcc": arm_newlib_probe.available,
             "ato": bool(shutil.which("ato")),
             "cadquery_ocp": _cadquery_available(),
         }
@@ -6450,28 +6543,30 @@ class HardwareService:
             "kicad_cli": {
                 "macos": ["brew install kicad", "# or: make toolchains"],
                 "linux": ["sudo apt-get install kicad", "# or: make toolchains"],
-                "docker": ["docker run ghcr.io/mrcha033/hw-cli:latest hw ..."],
-                "ci": ["# use ghcr.io/mrcha033/hw-cli:latest image in CI"],
             },
             "java": {
                 "macos": ["brew install openjdk", "# or: make toolchains"],
                 "linux": ["sudo apt-get install default-jre", "# or: make toolchains"],
-                "docker": ["docker run ghcr.io/mrcha033/hw-cli:latest hw ..."],
             },
             "arm_none_eabi_gcc": {
-                "macos": ["brew install arm-none-eabi-gcc", "# or: make toolchains"],
-                "linux": ["sudo apt-get install gcc-arm-none-eabi", "# or: make toolchains"],
-                "docker": ["docker run ghcr.io/mrcha033/hw-cli:latest hw ..."],
+                "macos": [
+                    "# Install the complete official Arm GNU Toolchain (compiler + newlib)",
+                    "# https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads",
+                    "export HW_ARM_TOOLCHAIN_ROOT=/path/to/arm-gnu-toolchain",
+                    "# then: make toolchains",
+                ],
+                "linux": [
+                    "sudo apt-get install gcc-arm-none-eabi libnewlib-arm-none-eabi",
+                    "# or: make toolchains",
+                ],
             },
             "cadquery_ocp": {
                 "macos": ["uv pip install cadquery-ocp", "# or: make toolchains"],
                 "linux": ["uv pip install cadquery-ocp", "# or: make toolchains"],
-                "docker": ["docker run ghcr.io/mrcha033/hw-cli:latest hw ..."],
             },
             "node": {
                 "macos": ["brew install node", "# or: make toolchains"],
                 "linux": ["curl -fsSL https://fnm.vercel.app/install | bash && fnm use --install-if-missing 22"],
-                "docker": ["docker run ghcr.io/mrcha033/hw-cli:latest hw ..."],
             },
         }
         install_hints: dict[str, list[str]] = {}
@@ -6489,12 +6584,14 @@ class HardwareService:
             "blocked_gates": blocked_gates,
             "install_hints": install_hints,
             "tool_availability": tool_availability,
+            "toolchain_probes": {"arm_none_eabi_gcc": arm_newlib_probe.to_dict()},
         }
 
     def get_capabilities(self) -> dict[str, Any]:
         """Return available backends, external tools, and which gates each tool enables."""
         import shutil
 
+        arm_newlib_probe = probe_arm_newlib()
         backends: dict[str, Any] = {
             "reference": {
                 "name": "reference",
@@ -6557,9 +6654,10 @@ class HardwareService:
                 "gates": ["tscircuit_compile", "tscircuit_manufacturing_export"],
             },
             "arm_none_eabi_gcc": {
-                "available": bool(shutil.which("arm-none-eabi-gcc")),
-                "description": "ARM cross-compiler — native Zephyr firmware build",
+                "available": arm_newlib_probe.available,
+                "description": "Complete Arm GNU Toolchain (GCC + newlib) — native Zephyr firmware build",
                 "gates": ["native_zephyr_build"],
+                "probe": arm_newlib_probe.to_dict(),
             },
             "ato": {
                 "available": bool(shutil.which("ato")),
@@ -6735,7 +6833,7 @@ class HardwareService:
             (item, item.relative_to(path).as_posix())
             for domain in ("electronics", "mechanical", "firmware")
             for item in (path / domain).rglob("*")
-            if item.is_file() and "build" not in item.parts
+            if item.is_file() and "build" not in item.parts and not _is_user_conflict_copy(item, path)
         ]
         bundle = target / f"{project}-{iteration_id}-candidate.zip"
         deterministic_zip(bundle, sources)
@@ -7346,7 +7444,7 @@ class HardwareService:
             (item, item.relative_to(path).as_posix())
             for domain in ("electronics", "mechanical", "firmware")
             for item in (path / domain).rglob("*")
-            if item.is_file() and "build" not in item.parts
+            if item.is_file() and "build" not in item.parts and not _is_user_conflict_copy(item, path)
         ]
         bundle = target / f"{project}-{iteration_id}-candidate.zip"
         deterministic_zip(bundle, sources)
@@ -7493,14 +7591,16 @@ class HardwareService:
             ],
             key=lambda r: r["gate"],
         )
-        artifacts_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+        artifacts_by_path: dict[str, dict[str, Any]] = {}
         for report in raw_gate_reports:
             source = f"gate:{report.get('gate', 'unknown')}"
             for artifact in report.get("artifacts", []):
                 if not isinstance(artifact, str):
                     continue
+                if _is_user_conflict_copy(Path(artifact), path):
+                    continue
                 record = _review_artifact_record(artifact, self.workspace.root, path, source)
-                artifacts_by_key[(record["source"], record["path"])] = record
+                _merge_review_artifact_record(artifacts_by_path, record)
         gate_reports = raw_gate_reports
         gate_reports = _portable_review_value(gate_reports, self.workspace.root)
 
@@ -7624,7 +7724,7 @@ class HardwareService:
                         if not isinstance(artifact, dict) or not isinstance(artifact.get("path"), str):
                             continue
                         record = _review_artifact_record(str(latest / artifact["path"]), self.workspace.root, path, "release_manifest")
-                        artifacts_by_key[(record["source"], record["path"])] = record
+                        _merge_review_artifact_record(artifacts_by_path, record)
         output_dir = path / "exports" / "working" / "review"
         output_dir.mkdir(parents=True, exist_ok=True)
         from .review_3d import build_review_3d_preview
@@ -7635,7 +7735,7 @@ class HardwareService:
         # gate evidence or let renderer variation perturb bundle identity.
         raw_three_d_preview.pop("artifacts", None)
         three_d_preview = _portable_review_value(raw_three_d_preview, self.workspace.root)
-        artifacts = [artifacts_by_key[key] for key in sorted(artifacts_by_key)]
+        artifacts = [artifacts_by_path[key] for key in sorted(artifacts_by_path)]
 
         # Canonical content (generated_at excluded from hash for determinism).
         canonical: dict[str, Any] = {
@@ -7693,8 +7793,8 @@ class HardwareService:
                 "code": "destination_required",
                 "message": (
                     "Hosted upload requires an explicit destination URL. "
-                    "Re-run with --destination <url> once you have configured a receiver endpoint "
-                    "(e.g. hw serve-receiver --port 7476 on a shared machine)."
+                    "Re-run with --destination <url> once you have configured a loopback receiver "
+                    "(use an authenticated SSH tunnel for remote collaboration)."
                 ),
                 "bundle": str(bundle_path),
                 "bundle_hash": export_result["bundle_hash"],
@@ -7742,7 +7842,7 @@ class HardwareService:
             "destination": destination,
             "http_status": http_status,
             "response": body,
-            "note": "Bundle uploaded. Ensure the receiver endpoint is on a private network if the bundle contains proprietary data.",
+            "note": "Bundle uploaded. The built-in receiver is loopback-only; authenticate any tunnel or proxy carrying proprietary data.",
         }
 
     def export_standalone_review(self, project: str) -> dict[str, Any]:
@@ -7890,7 +7990,7 @@ class HardwareService:
 
     def _append_failures(self, project: str, iteration_id: str, checks: dict[str, Any]) -> None:
         path = self.workspace.require_project(project) / "history" / "failure_log.jsonl"
-        existing = path.read_text(encoding="utf-8").strip()
+        existing = path.read_text(encoding="utf-8").strip() if path.is_file() else ""
         if existing == "[]":
             existing = ""
         entries = []

@@ -1,0 +1,39 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "reference-ir-drc"
+  },
+  "failures": [],
+  "gate": "ir_pcb_sanity",
+  "metrics": {
+    "declared_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "expected_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "footprints": 31,
+    "layers": 2,
+    "pads": 155,
+    "plane_connectivity": "copper_zones",
+    "plane_escape": "fcu_segment_to_through_via",
+    "plane_escape_sites": 28,
+    "segments": 28,
+    "signal_routing": "deferred_to_freerouting",
+    "used_copper_layers": [
+      "B.Cu",
+      "F.Cu"
+    ],
+    "zone_layers_by_net": {
+      "GND": [
+        "B.Cu"
+      ]
+    }
+  },
+  "status": "pass"
+}

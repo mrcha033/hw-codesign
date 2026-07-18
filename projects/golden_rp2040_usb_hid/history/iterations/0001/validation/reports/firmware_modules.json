@@ -1,0 +1,20 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "firmware_modules",
+  "metrics": {
+    "artifact_check_enabled": true,
+    "isr_count": 0,
+    "module_count": 4,
+    "rendered_module_ids": [
+      "flash_xip",
+      "pio_ws2812",
+      "usb_cdc_stack",
+      "usb_hid_stack"
+    ],
+    "required_behaviors": [],
+    "total_stack_bytes": 5632
+  },
+  "status": "pass"
+}

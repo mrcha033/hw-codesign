@@ -1,0 +1,21 @@
+{
+  "artifacts": [],
+  "backend": {
+    "deterministic": true,
+    "name": "structural_dependency_graph"
+  },
+  "failures": [],
+  "gate": "design_dependency_graph",
+  "metrics": {
+    "blocked_or_unpassed_nodes": [
+      "native_zephyr_build",
+      "physical_qualification",
+      "sourcing",
+      "supplier_availability"
+    ],
+    "declared_edges": 87,
+    "evaluated_edges": 69,
+    "nodes": 47
+  },
+  "status": "pass"
+}

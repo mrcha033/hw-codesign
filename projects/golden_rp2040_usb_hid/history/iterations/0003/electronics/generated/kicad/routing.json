@@ -1,0 +1,37 @@
+{
+  "board_sha256": "8372eb2304cc3bd0ae61254d1db7c2a64da5517ef3ff223812c19a5560a79d17",
+  "design_rules": {
+    "min_clearance_mm": 0.15,
+    "min_track_width_mm": 0.15
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "routing_incomplete_after_zone_fill",
+      "details": {
+        "unconnected": 3
+      },
+      "message": "KiCad found 3 unconnected item(s) after session import and zone fill",
+      "path": "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb",
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "filled_polygon_count": 1,
+  "freerouting_unrouted": 0,
+  "freerouting_version": "2.2.4",
+  "max_passes": 20,
+  "mode": "zone_connected_planes_freerouting",
+  "plane_connectivity": "incomplete",
+  "post_import_unconnected": 3,
+  "project_sidecar_promoted": true,
+  "signal_routing": "complete",
+  "status": "fail",
+  "unrouted": 3,
+  "violations": 0,
+  "zone_count": 1,
+  "zone_fill": "persisted",
+  "zone_nets": [
+    "GND"
+  ]
+}

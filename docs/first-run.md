@@ -7,11 +7,12 @@ gates, not a manufacturing release.
 
 ## 1. Create a workspace
 
-Run these commands from an empty writable directory:
+Install the checkout as shown in the repository README, then run these commands
+from an empty writable directory with `hw` on `PATH`:
 
 ```bash
-uvx --from hw-codesign-platform hw --root . create-project first_board
-uvx --from hw-codesign-platform hw --root . design-candidate first_board \
+hw --root . create-project first_board
+hw --root . design-candidate first_board \
   --brief "16 channel 24V battery, peak 6A, STM32H7, IMU, emergency stop, Zephyr, 6-layer"
 ```
 
@@ -108,7 +109,7 @@ backend remain visible and prevent release promotion.
 Explore deterministic design alternatives:
 
 ```bash
-uvx --from hw-codesign-platform hw --root . design-space first_board --max-candidates 6
+hw --root . design-space first_board --max-candidates 6
 ```
 
 The result ranks the current baseline, electronics backend paths, curated
@@ -120,7 +121,7 @@ blockers, and evidence paths, and the full result is written to
 Run the adversarial grounding benchmark against the generated graph and pinmap:
 
 ```bash
-uvx --from hw-codesign-platform hw --root . grounding-benchmark first_board
+hw --root . grounding-benchmark first_board
 ```
 
 Expected benchmark summary:
@@ -153,7 +154,7 @@ bring-up evidence.
 Generate the physical qualification contract:
 
 ```bash
-uvx --from hw-codesign-platform hw --root . physical-qualification-plan first_board
+hw --root . physical-qualification-plan first_board
 ```
 
 The plan is written to:
@@ -211,7 +212,7 @@ A gate status means:
 The candidate is retained for review even though release is refused:
 
 ```bash
-uvx --from hw-codesign-platform hw --root . release-gate first_board
+hw --root . release-gate first_board
 ```
 
 The expected result is `status: blocked`. Typical release failures include:
@@ -239,7 +240,7 @@ it is not promoted when required evidence is absent.
 ## 4. Open the review bundle
 
 ```bash
-uvx --from hw-codesign-platform hw --root . serve-review first_board
+hw --root . serve-review first_board
 ```
 
 `design-candidate` writes normalized JSON and HTML under:
@@ -254,10 +255,12 @@ comments in a sidecar JSONL file without mutating the evidence bundle.
 
 ## 5. Run native gates
 
-Use the full-toolchain image for the supported Linux path:
+Build the repository-owned toolchain image locally before using the container
+path; no public registry image is claimed:
 
 ```bash
-docker run --rm -v "$PWD:/workspace" ghcr.io/mrcha033/hw-cli:latest \
+docker build -f docker/Dockerfile -t hw-codesign:local .
+docker run --rm -v "$PWD:/workspace" hw-codesign:local \
   iterate first_board
 ```
 

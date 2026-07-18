@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a reproducible CLI, MCP, generator, validator, or review defect.
+title: "[bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for filing a focused, evidence-backed report. Do not include secrets or proprietary board data."
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: "0.1.0 or git SHA"
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - CLI
+        - MCP server
+        - Electronics generation
+        - Mechanical generation
+        - Firmware generation
+        - Validation gate
+        - Review bundle or receiver
+        - Packaging or installation
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the command or tool call and the smallest non-sensitive spec that reproduces it.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed result
+      description: Include the exact status, gate, and failure code where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Evidence boundary
+      options:
+        - label: I have not relabeled a blocked or generated result as physically validated.
+          required: true

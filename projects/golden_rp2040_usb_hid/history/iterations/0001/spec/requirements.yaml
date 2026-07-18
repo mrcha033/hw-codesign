@@ -1,0 +1,193 @@
+requirements:
+  raw_inputs:
+  - id: req_input_0001
+    text: Design a 2-layer RP2040 USB HID and CDC board powered from USB-C, with 2
+      MB QSPI flash, a 12 MHz crystal, USB ESD protection, SWD debug, 1 ms HID reports,
+      and enumeration within 500 ms. Use Zephyr and keep the board within 51 mm by
+      21 mm.
+    created_by: user
+  - id: req_input_0002
+    text: Design a 2-layer RP2040 USB HID and CDC board powered from USB-C, with 2
+      MB QSPI flash, a 12 MHz crystal, USB ESD protection, SWD debug, 1 ms HID reports,
+      and enumeration within 500 ms. Use Zephyr and keep the board within 65 mm by
+      30 mm.
+    created_by: user
+  active_lowered:
+  - id: req_0001
+    source: compute.mcu.family
+    spec_path: compute.mcu.family
+    value: RP2040
+    field_type: string
+    source_span: RP2040
+    source_range: &id002
+      start: 17
+      end: 23
+    affected_gates: &id003
+    - pin_symbol_footprint
+    - firmware_pinmap
+    - native_zephyr_build
+    status: lowered
+  - id: req_0002
+    source: firmware.framework
+    spec_path: firmware.framework
+    value: zephyr
+    field_type: string
+    source_span: zephyr
+    source_range: &id004
+      start: 190
+      end: 196
+    affected_gates: &id005
+    - firmware_interface_contract
+    - firmware_pinmap
+    - firmware_modules
+    - native_zephyr_build
+    status: lowered
+  - id: req_0003
+    source: manufacturing.pcb.layers
+    spec_path: manufacturing.pcb.layers
+    value: 2
+    field_type: integer
+    source_span: 2-layer
+    source_range: &id006
+      start: 9
+      end: 16
+    affected_gates: &id007
+    - ir_pcb_sanity
+    - layout_signal_integrity
+    - native_drc
+    - reference_fabrication
+    status: lowered
+  - id: req_0004
+    source: mechanical.envelope.board_height_mm
+    spec_path: mechanical.envelope.board_height_mm
+    value: 30.0
+    field_type: number
+    source_span: board within 65 mm by 30 mm
+    source_range: &id008
+      start: 210
+      end: 237
+    affected_gates: &id001
+    - mechanical_fit
+    - layout_thermal_integrity
+    - physical_qualification
+    status: lowered
+  - id: req_0005
+    source: mechanical.envelope.board_width_mm
+    spec_path: mechanical.envelope.board_width_mm
+    value: 65.0
+    field_type: number
+    source_span: board within 65 mm by 30 mm
+    source_range: &id009
+      start: 210
+      end: 237
+    affected_gates: *id001
+    status: lowered
+  active_unresolved: []
+  compiler_ir:
+    version: requirements_ir_v1
+    input_id: req_input_0002
+    lowered_fields:
+    - spec_path: compute.mcu.family
+      value: RP2040
+      field_type: string
+      source_span: RP2040
+      source_range: *id002
+      affected_gates: *id003
+      status: lowered
+    - spec_path: firmware.framework
+      value: zephyr
+      field_type: string
+      source_span: zephyr
+      source_range: *id004
+      affected_gates: *id005
+      status: lowered
+    - spec_path: manufacturing.pcb.layers
+      value: 2
+      field_type: integer
+      source_span: 2-layer
+      source_range: *id006
+      affected_gates: *id007
+      status: lowered
+    - spec_path: mechanical.envelope.board_height_mm
+      value: 30.0
+      field_type: number
+      source_span: board within 65 mm by 30 mm
+      source_range: *id008
+      affected_gates: *id001
+      status: lowered
+    - spec_path: mechanical.envelope.board_width_mm
+      value: 65.0
+      field_type: number
+      source_span: board within 65 mm by 30 mm
+      source_range: *id009
+      affected_gates: *id001
+      status: lowered
+    resolved_assumptions: []
+    unresolved_assumptions: []
+    unsupported_constraints: []
+    conflicting_fields: []
+    tokens:
+    - id: req_token_lowered_0001
+      kind: lowered_field
+      status: lowered
+      spec_path: compute.mcu.family
+      field_type: string
+      value: RP2040
+      source_span: RP2040
+      source_range: *id002
+      affected_gates: *id003
+      required_human_approvals: []
+    - id: req_token_lowered_0002
+      kind: lowered_field
+      status: lowered
+      spec_path: firmware.framework
+      field_type: string
+      value: zephyr
+      source_span: zephyr
+      source_range: *id004
+      affected_gates: *id005
+      required_human_approvals: []
+    - id: req_token_lowered_0003
+      kind: lowered_field
+      status: lowered
+      spec_path: manufacturing.pcb.layers
+      field_type: integer
+      value: 2
+      source_span: 2-layer
+      source_range: *id006
+      affected_gates: *id007
+      required_human_approvals: []
+    - id: req_token_lowered_0004
+      kind: lowered_field
+      status: lowered
+      spec_path: mechanical.envelope.board_height_mm
+      field_type: number
+      value: 30.0
+      source_span: board within 65 mm by 30 mm
+      source_range: *id008
+      affected_gates: *id001
+      required_human_approvals: []
+    - id: req_token_lowered_0005
+      kind: lowered_field
+      status: lowered
+      spec_path: mechanical.envelope.board_width_mm
+      field_type: number
+      value: 65.0
+      source_span: board within 65 mm by 30 mm
+      source_range: *id009
+      affected_gates: *id001
+      required_human_approvals: []
+    required_human_approvals: []
+    affected_gates:
+    - firmware_interface_contract
+    - firmware_modules
+    - firmware_pinmap
+    - ir_pcb_sanity
+    - layout_signal_integrity
+    - layout_thermal_integrity
+    - mechanical_fit
+    - native_drc
+    - native_zephyr_build
+    - physical_qualification
+    - pin_symbol_footprint
+    - reference_fabrication

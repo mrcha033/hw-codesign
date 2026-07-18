@@ -1,7 +1,7 @@
 {
   "name": "hw-codesign",
   "version": "0.1.0",
-  "description": "Agentic hardware design with evidence-backed release gates: PCB electronics, mechanical parts, firmware interfaces, sourcing, manufacturing, and review bundles via the hw-codesign MCP server.",
+  "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
   "author": {
     "name": "mrcha033",
     "url": "https://github.com/mrcha033"

@@ -2,13 +2,9 @@
   "mcpServers": {
     "hw-codesign": {
       "title": "hw-codesign",
-      "description": "Agentic PCB, mechanical, firmware, sourcing, validation, and release workflows.",
-      "command": "uvx",
-      "args": [
-        "--from",
-        "hw-codesign-platform[mcp] @ git+https://github.com/mrcha033/hw-cli",
-        "hw-mcp"
-      ]
+      "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
+      "command": "hw-mcp",
+      "args": []
     }
   }
 }

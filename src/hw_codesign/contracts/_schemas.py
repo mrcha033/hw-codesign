@@ -1149,6 +1149,7 @@ SHARED_SCHEMAS: dict[str, dict[str, Any]] = {
             "blocked_gates":    {"type": "array", "items": {"type": "string"}},
             "install_hints":    {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
             "tool_availability": {"type": "object", "additionalProperties": {"type": "boolean"}},
+            "toolchain_probes": {"type": "object", "additionalProperties": True},
         },
     },
 

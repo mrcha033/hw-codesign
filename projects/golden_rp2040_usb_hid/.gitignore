@@ -1,0 +1,10 @@
+# Recreated by `hw generate` / `hw check`; these contain machine-local paths.
+/electronics/generated/electrical_graph.json
+/electronics/generated/semantic/
+/electronics/source/tscircuit/source_manifest.json
+/history/failure_log.jsonl
+/validation/physical/qualification_plan.json
+/validation/reports/
+
+# KiCad per-user workspace state is not evidence.
+/electronics/generated/kicad/*.kicad_prl

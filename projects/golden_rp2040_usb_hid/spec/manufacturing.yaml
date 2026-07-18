@@ -1,0 +1,35 @@
+manufacturing:
+  pcb:
+    profile: jlcpcb_2layer
+    layers: 2
+    min_clearance_mm: 0.15
+    min_track_width_mm: 0.15
+    controlled_impedance: required
+    via_in_pad:
+      used: true
+      qualification_status: unqualified
+      process:
+        selection_status: unselected
+        via_disposition: unselected
+        cap_finish: unselected
+        fabricator_process_id: null
+      locations:
+      - reference: U2
+        pad: '57'
+        via_count: 9
+        purpose: exposed_pad_ground_via_array
+        geometry:
+          pattern: square_grid
+          rows: 3
+          columns: 3
+          pitch_mm: 1.275
+          via_diameter_mm: 0.6
+          drill_diameter_mm: 0.35
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports:
+  - gerber
+  - drill
+  - bom
+  - pick_and_place
+  - schematic_pdf

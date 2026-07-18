@@ -12,7 +12,7 @@ GATE_DEPENDENCIES: dict[str, list[str]] = {
     "supplier_availability": ["component_resolution"],
     "bom": ["component_resolution"],
     "sourcing": ["component_resolution"],
-    "sourcing_resilience": ["component_resolution", "sourcing", "component_provenance"],
+    "sourcing_resilience": ["component_resolution", "component_provenance"],
     "component_provenance": ["component_resolution", "datasheet_evidence"],
     "pin_symbol_footprint": ["component_resolution", "component_provenance"],
     "power_tree_integrity": ["pin_symbol_footprint", "component_provenance"],

@@ -170,6 +170,44 @@ class Validator:
         maximum = battery.get("pack_voltage_max")
         if isinstance(nominal, (int, float)) and isinstance(maximum, (int, float)) and nominal > maximum:
             failures.append(_failure(FailureCategory.SPEC_ERROR, "contradictory_requirement", "Battery nominal voltage exceeds maximum voltage", "system.supply.battery"))
+        via_in_pad = spec.get("manufacturing", {}).get("pcb", {}).get("via_in_pad", {})
+        for index, location in enumerate(via_in_pad.get("locations", [])):
+            geometry = location.get("geometry") or {}
+            if not geometry:
+                continue
+            rows = geometry.get("rows")
+            columns = geometry.get("columns")
+            via_count = location.get("via_count")
+            if all(
+                isinstance(value, int) and not isinstance(value, bool)
+                for value in (rows, columns, via_count)
+            ) and rows * columns != via_count:
+                failures.append(_failure(
+                    FailureCategory.SPEC_ERROR,
+                    "via_array_count_mismatch",
+                    "Declared via count does not match the via-array rows and columns",
+                    f"manufacturing.pcb.via_in_pad.locations.{index}.geometry",
+                    via_count=via_count,
+                    rows=rows,
+                    columns=columns,
+                ))
+            via_diameter = geometry.get("via_diameter_mm")
+            drill_diameter = geometry.get("drill_diameter_mm")
+            if (
+                isinstance(via_diameter, (int, float))
+                and not isinstance(via_diameter, bool)
+                and isinstance(drill_diameter, (int, float))
+                and not isinstance(drill_diameter, bool)
+                and drill_diameter >= via_diameter
+            ):
+                failures.append(_failure(
+                    FailureCategory.SPEC_ERROR,
+                    "via_annulus_invalid",
+                    "Via drill diameter must be smaller than the copper-land diameter",
+                    f"manufacturing.pcb.via_in_pad.locations.{index}.geometry.drill_diameter_mm",
+                    via_diameter_mm=via_diameter,
+                    drill_diameter_mm=drill_diameter,
+                ))
         assumptions = spec.get("assumptions", {})
         if isinstance(assumptions, dict):
             for name, assumption in assumptions.items():
@@ -798,6 +836,8 @@ class Validator:
         regulator_voltage_limits: dict[str, dict[str, Any]] = {}
         regulator_enable_biases: dict[str, list[dict[str, Any]]] = {}
         component_voltage_limits: dict[str, list[dict[str, Any]]] = {}
+        declared_power_transfers_checked = 0
+        invalid_declared_power_transfers = 0
 
         for component in graph.get("components", []):
             category = component.get("category")
@@ -816,6 +856,58 @@ class Validator:
                 power_outputs |= {pin.get("net") for pin in component.get("pins", []) if str(pin.get("name", "")).upper() == "OUT" and pin.get("net")}
             if category in source_categories:
                 reachable |= power_inputs
+            declared_transfers = component.get("power_transfers")
+            if declared_transfers is not None:
+                pins_by_number, _duplicate_pins = _pins_by_number(component)
+                if not isinstance(declared_transfers, list) or not declared_transfers:
+                    invalid_declared_power_transfers += 1
+                    failures.append(_failure(
+                        FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                        "power_transfer_contract_invalid",
+                        f"{component.get('ref', '?')} power_transfers must be a non-empty list of pin-to-pin contracts",
+                        "electronics.components",
+                        ref=component.get("ref"),
+                        power_transfers=declared_transfers,
+                    ))
+                else:
+                    for index, transfer in enumerate(declared_transfers):
+                        input_number = str(transfer.get("input_pin")) if isinstance(transfer, dict) else ""
+                        output_number = str(transfer.get("output_pin")) if isinstance(transfer, dict) else ""
+                        input_pin = pins_by_number.get(input_number)
+                        output_pin = pins_by_number.get(output_number)
+                        input_net = input_pin.get("net") if input_pin else None
+                        output_net = output_pin.get("net") if output_pin else None
+                        issues: list[str] = []
+                        if not isinstance(transfer, dict):
+                            issues.append("entry_not_object")
+                        if input_pin is None:
+                            issues.append("input_pin_unresolved")
+                        elif input_pin.get("role") != "power_in" or not input_net:
+                            issues.append("input_pin_not_power_input")
+                        if output_pin is None:
+                            issues.append("output_pin_unresolved")
+                        elif output_pin.get("role") != "power_out" or not output_net:
+                            issues.append("output_pin_not_power_output")
+                        if input_net and output_net and input_net == output_net:
+                            issues.append("input_output_net_identical")
+                        if issues:
+                            invalid_declared_power_transfers += 1
+                            failures.append(_failure(
+                                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                                "power_transfer_contract_invalid",
+                                f"{component.get('ref', '?')} declared power transfer {index} is malformed",
+                                "electronics.components",
+                                ref=component.get("ref"),
+                                transfer_index=index,
+                                input_pin=input_number or None,
+                                output_pin=output_number or None,
+                                input_net=input_net,
+                                output_net=output_net,
+                                issues=issues,
+                            ))
+                        else:
+                            declared_power_transfers_checked += 1
+                            transfers.append((component, {str(input_net)}, {str(output_net)}))
             if _component_category_matches(component, transfer_categories):
                 transfers.append((component, power_inputs, power_outputs))
                 if not power_inputs or not power_outputs:
@@ -1012,6 +1104,8 @@ class Validator:
             "regulator_voltage_limits": regulator_voltage_limits,
             "regulator_enable_biases": regulator_enable_biases,
             "component_voltage_limits": component_voltage_limits,
+            "declared_power_transfers_checked": declared_power_transfers_checked,
+            "invalid_declared_power_transfers": invalid_declared_power_transfers,
             "power_loads_checked": sum(
                 1
                 for component in graph.get("components", [])
@@ -1318,9 +1412,12 @@ class Validator:
                 ))
 
         usb_nets = {"USB_DP_RAW", "USB_DM_RAW", "USB_DP", "USB_DM"}
+        usb_esd_stage_nets = {"USB_DP_ESD", "USB_DM_ESD"}
         present_usb_nets = usb_nets & net_names
         usb_bridge_present = False
         usb_bridge_pin_contracts_checked = 0
+        usb_staged_protection_present = False
+        usb_series_resistors_checked = 0
         if present_usb_nets:
             if present_usb_nets != usb_nets:
                 failures.append(_failure(
@@ -1331,17 +1428,55 @@ class Validator:
                     missing_nets=sorted(usb_nets - present_usb_nets),
                     present_nets=sorted(present_usb_nets),
                 ))
-            usb_bridge_present = any(
-                _component_category_matches(component, {"usb_esd", "tvs"})
-                and _component_has_nets(component, usb_nets | {"GND"})
+            direct_protection = [
+                component
                 for component in components
-            )
-            for component in components:
-                if not (
-                    _component_category_matches(component, {"usb_esd", "tvs"})
-                    and _component_has_nets(component, usb_nets | {"GND"})
-                ):
-                    continue
+                if _component_category_matches(component, {"usb_esd", "tvs"})
+                and _component_has_nets(component, usb_nets | {"GND"})
+            ]
+            staged_protection = [
+                component
+                for component in components
+                if _component_category_matches(component, {"usb_esd", "tvs"})
+                and _component_has_nets(component, {"USB_DP_RAW", "USB_DM_RAW", *usb_esd_stage_nets, "GND"})
+            ]
+            usb_staged_protection_present = bool(staged_protection)
+            staged_series_paths = bool(staged_protection)
+            if staged_protection:
+                for esd_net, mcu_net in (("USB_DP_ESD", "USB_DP"), ("USB_DM_ESD", "USB_DM")):
+                    series_candidates = _two_pin_components_on_nets(components, {esd_net, mcu_net})
+                    valid_series = [
+                        component
+                        for component in series_candidates
+                        if _nominal_matches(_component_resistance_ohms(component), 27.0)
+                    ]
+                    usb_series_resistors_checked += len(valid_series)
+                    if not series_candidates:
+                        staged_series_paths = False
+                        failures.append(_failure(
+                            FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                            "usb_series_resistor_missing",
+                            f"USB path {esd_net} to {mcu_net} lacks its required series resistor",
+                            "electronics.components",
+                            esd_net=esd_net,
+                            mcu_net=mcu_net,
+                            expected_ohms=27.0,
+                        ))
+                    elif len(valid_series) != 1:
+                        staged_series_paths = False
+                        failures.append(_failure(
+                            FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                            "usb_series_resistor_value_invalid",
+                            f"USB path {esd_net} to {mcu_net} requires exactly one 27 ohm series resistor",
+                            "electronics.components",
+                            esd_net=esd_net,
+                            mcu_net=mcu_net,
+                            candidate_refs=sorted(str(component.get("ref")) for component in series_candidates),
+                            candidate_ohms=[_component_resistance_ohms(component) for component in series_candidates],
+                            expected_ohms=27.0,
+                        ))
+            usb_bridge_present = bool(direct_protection or (staged_protection and staged_series_paths))
+            for component in [*direct_protection, *staged_protection]:
                 usb_bridge_pin_contracts_checked += 1
                 failures.extend(_usb_esd_bridge_pin_net_failures(component))
             if present_usb_nets == usb_nets and not usb_bridge_present:
@@ -1422,8 +1557,302 @@ class Validator:
             "usb_nets_checked": len(present_usb_nets),
             "usb_bridge_present": usb_bridge_present,
             "usb_bridge_pin_contracts_checked": usb_bridge_pin_contracts_checked,
+            "usb_staged_protection_present": usb_staged_protection_present,
+            "usb_series_resistors_checked": usb_series_resistors_checked,
             "usb_c_connectors_checked": len(usb_c_connectors),
             "usb_c_cc_nets_checked": len(usb_c_cc_nets_checked),
+        }
+        return report
+
+    @staticmethod
+    def rp2040_reference_circuit_applicable(spec: dict[str, Any], graph: dict[str, Any]) -> bool:
+        """Return whether the project declares an RP2040 board architecture.
+
+        This deliberately keys off project intent, not merely an arbitrary RP2040
+        component in a graph.  The reference-circuit gate must not silently become
+        a requirement for unrelated projects that happen to mention that MPN.
+        """
+
+        template = str(spec.get("project", {}).get("template") or "").strip().lower()
+        family = str(spec.get("compute", {}).get("mcu", {}).get("family") or "").strip().upper()
+        architecture = str(graph.get("design_basis", {}).get("architecture") or "").strip().lower()
+        return template in {"rp2040_usb_device", "usb_hid_controller"} or family == "RP2040" or architecture.startswith("rp2040")
+
+    def check_rp2040_reference_circuit(self, graph: dict[str, Any]) -> GateReport:
+        """Validate the safety-critical RP2040 USB/QSPI reference circuit.
+
+        The contract is intentionally independent of the parts catalog and graph
+        generator.  A catalog pin-map regression therefore cannot make both the
+        generated graph and this validation oracle agree on the same unsafe error.
+        """
+
+        failures: list[Failure] = []
+        components = list(graph.get("components", []))
+
+        mcu_candidates = [
+            component
+            for component in components
+            if str(component.get("category") or "").lower() == "mcu" and str(component.get("mpn") or "").upper() == "RP2040"
+        ]
+        if len(mcu_candidates) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_mcu_contract_missing",
+                "RP2040 reference circuit requires exactly one curated RP2040 MCU",
+                "electronics.components",
+                candidate_refs=sorted(str(component.get("ref")) for component in mcu_candidates),
+            ))
+            return self._rp2040_reference_report(failures, mcu_ref=None)
+
+        mcu = mcu_candidates[0]
+        mcu_ref = str(mcu.get("ref"))
+        mcu_pins, duplicate_mcu_pins = _pins_by_number(mcu)
+        expected_pin_numbers = {str(number) for number in range(1, 58)}
+        missing_pin_numbers = sorted(expected_pin_numbers - set(mcu_pins), key=_pin_sort_key)
+        unexpected_pin_numbers = sorted(set(mcu_pins) - expected_pin_numbers, key=_pin_sort_key)
+        if missing_pin_numbers or unexpected_pin_numbers or duplicate_mcu_pins:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_mcu_pin_set_invalid",
+                f"{mcu_ref} must expose the complete RP2040 1-57 package pin map",
+                "electronics.components",
+                ref=mcu_ref,
+                missing_pins=missing_pin_numbers,
+                unexpected_pins=unexpected_pin_numbers,
+                duplicate_pins=duplicate_mcu_pins,
+            ))
+
+        # Literal manufacturer pin locations.  Do not derive these from the part
+        # catalog: the validator is the independent oracle for catalog mutations.
+        expected_mcu_nets = {
+            "1": "V3V3", "10": "V3V3", "19": "GND", "20": "XIN", "21": "XOUT", "22": "V3V3",
+            "23": "V1V1", "24": "SWCLK", "25": "SWDIO", "26": "MCU_RUN", "33": "V3V3", "42": "V3V3",
+            "43": "V3V3", "44": "V3V3", "45": "V1V1", "46": "USB_DM", "47": "USB_DP", "48": "V3V3",
+            "49": "V3V3", "50": "V1V1", "51": "QSPI_D3", "52": "QSPI_CLK", "53": "QSPI_MOSI",
+            "54": "QSPI_D2", "55": "QSPI_MISO", "56": "QSPI_CS", "57": "GND",
+        }
+        mcu_net_mismatches = _pin_net_mismatches(mcu_pins, expected_mcu_nets)
+        if mcu_net_mismatches:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_mcu_pinout_invalid",
+                f"{mcu_ref} has unsafe RP2040 power, USB, clock, debug, or QSPI pin assignments",
+                "electronics.components",
+                ref=mcu_ref,
+                mismatches=mcu_net_mismatches,
+            ))
+
+        expected_decoupling = {
+            "1": ("V3V3", 100e-9),
+            "10": ("V3V3", 100e-9),
+            "22": ("V3V3", 100e-9),
+            "23": ("V1V1", 100e-9),
+            "33": ("V3V3", 100e-9),
+            "42": ("V3V3", 100e-9),
+            "43": ("V3V3", 100e-9),
+            "44": ("V3V3", 1e-6),
+            "45": ("V1V1", 1e-6),
+            "48": ("V3V3", 100e-9),
+            "49": ("V3V3", 100e-9),
+            "50": ("V1V1", 100e-9),
+        }
+        decoupling_issues = _decoupling_contract_issues(components, mcu_ref, expected_decoupling)
+        if decoupling_issues:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_decoupling_contract_invalid",
+                f"{mcu_ref} lacks required per-pin RP2040 bypass or regulator capacitors",
+                "electronics.components",
+                ref=mcu_ref,
+                issues=decoupling_issues,
+            ))
+
+        esd_candidates = [component for component in components if str(component.get("mpn") or "").upper() == "USBLC6-2SC6"]
+        expected_esd_nets = {
+            "1": "USB_DP_RAW",
+            "2": "GND",
+            "3": "USB_DM_RAW",
+            "4": "USB_DM_ESD",
+            "5": "USB_VBUS",
+            "6": "USB_DP_ESD",
+        }
+        if len(esd_candidates) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_usb_esd_contract_invalid",
+                "RP2040 USB input requires exactly one USBLC6-2SC6 protection device",
+                "electronics.components",
+                candidate_refs=sorted(str(component.get("ref")) for component in esd_candidates),
+            ))
+        else:
+            esd = esd_candidates[0]
+            esd_pins, esd_duplicates = _pins_by_number(esd)
+            esd_mismatches = _pin_net_mismatches(esd_pins, expected_esd_nets)
+            if set(esd_pins) != set(expected_esd_nets) or esd_duplicates or esd_mismatches:
+                failures.append(_failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "rp2040_usb_esd_contract_invalid",
+                    f"{esd.get('ref', '?')} does not match the USBLC6-2SC6 six-pin flow-through pinout",
+                    "electronics.components",
+                    ref=esd.get("ref"),
+                    duplicate_pins=esd_duplicates,
+                    mismatches=esd_mismatches,
+                ))
+
+        usb_series_issues: list[dict[str, Any]] = []
+        for esd_net, mcu_net in (("USB_DP_ESD", "USB_DP"), ("USB_DM_ESD", "USB_DM")):
+            candidates = _two_pin_components_on_nets(components, {esd_net, mcu_net})
+            valid = [component for component in candidates if _nominal_matches(_component_resistance_ohms(component), 27.0)]
+            if len(valid) != 1:
+                usb_series_issues.append({
+                    "nets": [esd_net, mcu_net],
+                    "candidate_refs": sorted(str(component.get("ref")) for component in candidates),
+                    "candidate_ohms": [_component_resistance_ohms(component) for component in candidates],
+                })
+        if usb_series_issues:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_usb_series_resistor_invalid",
+                "RP2040 USB D+ and D- each require one 27 ohm series resistor after ESD protection",
+                "electronics.components",
+                issues=usb_series_issues,
+            ))
+
+        crystal_candidates = [component for component in components if str(component.get("mpn") or "").upper() == "ABM8-272-T3"]
+        if len(crystal_candidates) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_crystal_contract_invalid",
+                "RP2040 reference circuit requires exactly one ABM8-272-T3 crystal",
+                "electronics.components",
+                candidate_refs=sorted(str(component.get("ref")) for component in crystal_candidates),
+            ))
+        else:
+            crystal = crystal_candidates[0]
+            crystal_pins, crystal_duplicates = _pins_by_number(crystal)
+            expected_crystal_nets = {"1": "XIN", "2": "GND", "3": "XTAL_RETURN", "4": "GND"}
+            crystal_mismatches = _pin_net_mismatches(crystal_pins, expected_crystal_nets)
+            if set(crystal_pins) != set(expected_crystal_nets) or crystal_duplicates or crystal_mismatches:
+                failures.append(_failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "rp2040_crystal_contract_invalid",
+                    f"{crystal.get('ref', '?')} must use the grounded four-pad ABM8 oscillator pinout",
+                    "electronics.components",
+                    ref=crystal.get("ref"),
+                    duplicate_pins=crystal_duplicates,
+                    mismatches=crystal_mismatches,
+                ))
+
+        feedback_candidates = _two_pin_components_on_nets(components, {"XOUT", "XTAL_RETURN"})
+        valid_feedback = [component for component in feedback_candidates if _nominal_matches(_component_resistance_ohms(component), 1000.0)]
+        if len(valid_feedback) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_crystal_feedback_resistor_invalid",
+                "RP2040 oscillator requires one 1 kohm XOUT-to-crystal feedback resistor",
+                "electronics.components",
+                candidate_refs=sorted(str(component.get("ref")) for component in feedback_candidates),
+                candidate_ohms=[_component_resistance_ohms(component) for component in feedback_candidates],
+            ))
+
+        crystal_load_issues: list[dict[str, Any]] = []
+        for signal_net in ("XIN", "XTAL_RETURN"):
+            candidates = _two_pin_components_on_nets(components, {signal_net, "GND"})
+            valid = [component for component in candidates if _nominal_matches(_component_capacitance_f(component), 15e-12)]
+            if len(valid) != 1:
+                crystal_load_issues.append({
+                    "nets": [signal_net, "GND"],
+                    "candidate_refs": sorted(str(component.get("ref")) for component in candidates),
+                    "candidate_capacitance_f": [_component_capacitance_f(component) for component in candidates],
+                })
+        if crystal_load_issues:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_crystal_load_capacitor_invalid",
+                "RP2040 oscillator requires one 15 pF grounded load capacitor on each crystal node",
+                "electronics.components",
+                issues=crystal_load_issues,
+            ))
+
+        flash_candidates = [component for component in components if str(component.get("mpn") or "").upper() == "W25Q16JVSSIQ"]
+        expected_flash_nets = {
+            "1": "QSPI_CS",
+            "2": "QSPI_MISO",
+            "3": "QSPI_D2",
+            "4": "GND",
+            "5": "QSPI_MOSI",
+            "6": "QSPI_CLK",
+            "7": "QSPI_D3",
+            "8": "V3V3",
+        }
+        flash_ref: str | None = None
+        if len(flash_candidates) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_flash_contract_invalid",
+                "RP2040 boot circuit requires exactly one W25Q16JVSSIQ flash",
+                "electronics.components",
+                candidate_refs=sorted(str(component.get("ref")) for component in flash_candidates),
+            ))
+        else:
+            flash = flash_candidates[0]
+            flash_ref = str(flash.get("ref"))
+            flash_pins, flash_duplicates = _pins_by_number(flash)
+            flash_mismatches = _pin_net_mismatches(flash_pins, expected_flash_nets)
+            if set(flash_pins) != set(expected_flash_nets) or flash_duplicates or flash_mismatches:
+                failures.append(_failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "rp2040_flash_contract_invalid",
+                    f"{flash_ref} has an unsafe W25Q16JVSSIQ QSPI pin assignment",
+                    "electronics.components",
+                    ref=flash_ref,
+                    duplicate_pins=flash_duplicates,
+                    mismatches=flash_mismatches,
+                ))
+
+            flash_decoupling_issues = _decoupling_contract_issues(components, flash_ref, {"8": ("V3V3", 100e-9)})
+            if flash_decoupling_issues:
+                failures.append(_failure(
+                    FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                    "rp2040_flash_decoupling_invalid",
+                    f"{flash_ref}.8 requires a local 100 nF bypass capacitor",
+                    "electronics.components",
+                    ref=flash_ref,
+                    issues=flash_decoupling_issues,
+                ))
+
+        flash_cs_pullup_candidates = _two_pin_components_on_nets(components, {"QSPI_CS", "V3V3"})
+        valid_flash_cs_pullups = [
+            component
+            for component in flash_cs_pullup_candidates
+            if _nominal_matches(_component_resistance_ohms(component), 10_000.0)
+        ]
+        if len(valid_flash_cs_pullups) != 1:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "rp2040_flash_cs_pullup_invalid",
+                "RP2040 boot flash chip-select requires one 10 kohm pull-up to V3V3",
+                "electronics.components",
+                candidate_refs=sorted(str(component.get("ref")) for component in flash_cs_pullup_candidates),
+                candidate_ohms=[_component_resistance_ohms(component) for component in flash_cs_pullup_candidates],
+            ))
+
+        return self._rp2040_reference_report(failures, mcu_ref=mcu_ref, flash_ref=flash_ref)
+
+    def _rp2040_reference_report(
+        self,
+        failures: list[Failure],
+        *,
+        mcu_ref: str | None,
+        flash_ref: str | None = None,
+    ) -> GateReport:
+        report = self._report("rp2040_reference_circuit", failures)
+        report.metrics = {
+            **report.metrics,
+            "mcu_ref": mcu_ref,
+            "flash_ref": flash_ref,
+            "contract": "rp2040_usb_qspi_reference_v1",
+            "oracle": "independent_literal_manufacturer_pin_and_reference_circuit_contract",
         }
         return report
 
@@ -1841,7 +2270,14 @@ class Validator:
                 failures.append(Failure(FailureCategory.RELEASE_ERROR, "unresolved_critical_assumption", f"Critical assumption requires review: {name}", path=f"assumptions.{name}", requires_user_decision=True))
         for artifact in required_artifacts:
             if not artifact.is_file():
-                failures.append(_failure(FailureCategory.RELEASE_ERROR, "missing_export", f"Required release artifact is missing: {artifact.name}", str(artifact)))
+                failures.append(
+                    _failure(
+                        FailureCategory.RELEASE_ERROR,
+                        "missing_export",
+                        f"Required release artifact is missing: {artifact.name}",
+                        artifact.as_posix(),
+                    )
+                )
         report = Validator._report("release", failures)
         if blocked:
             report.status = Status.BLOCKED
@@ -1897,6 +2333,23 @@ def _component_pin_role_contract_failures(component: dict[str, Any]) -> list[Fai
             ))
             continue
         role_matches = [pin for pin in matching_pins if not expected_roles or pin.get("role") in expected_roles]
+        role_mismatches = [pin for pin in matching_pins if expected_roles and pin.get("role") not in expected_roles]
+        if expected_names and role_mismatches:
+            failures.append(_failure(
+                FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
+                "component_pin_role_mismatch",
+                f"{ref} has a required {category} pin by name, but its electrical role is wrong",
+                "electronics.components",
+                ref=ref,
+                component_category=category,
+                expected_pin_names=sorted(expected_names),
+                expected_roles=sorted(expected_roles),
+                observed=[
+                    {"number": pin.get("number"), "name": pin.get("name"), "role": pin.get("role")}
+                    for pin in role_mismatches
+                ],
+            ))
+            continue
         if not role_matches:
             failures.append(_failure(
                 FailureCategory.ELECTRICAL_SEMANTIC_ERROR,
@@ -2028,7 +2481,7 @@ def _rail_current_peaks(spec: dict[str, Any]) -> dict[str, float]:
     values: dict[str, float] = {}
     battery = spec.get("system", {}).get("supply", {}).get("battery", {})
     if isinstance(battery.get("pack_current_peak_a"), (int, float)):
-        for name in ("VBAT", "VBAT_RAW", "VBAT_FUSED", "VSYS", "USB_VBUS"):
+        for name in ("VBAT", "VBAT_RAW", "VBAT_FUSED", "VSYS"):
             values[name] = float(battery["pack_current_peak_a"])
     for rail in spec.get("system", {}).get("supply", {}).get("rails", []):
         name = rail.get("name")
@@ -2050,6 +2503,112 @@ def _component_nets(component: dict[str, Any]) -> set[str]:
     return {pin.get("net") for pin in component.get("pins", []) if pin.get("net")}
 
 
+def _pins_by_number(component: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], list[str]]:
+    pins: dict[str, dict[str, Any]] = {}
+    duplicates: set[str] = set()
+    for pin in component.get("pins", []):
+        number = str(pin.get("number"))
+        if number in pins:
+            duplicates.add(number)
+        else:
+            pins[number] = pin
+    return pins, sorted(duplicates, key=_pin_sort_key)
+
+
+def _pin_net_mismatches(
+    pins_by_number: dict[str, dict[str, Any]],
+    expected_nets: dict[str, str],
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "pin": number,
+            "expected_net": expected_net,
+            "observed_net": pins_by_number.get(number, {}).get("net"),
+        }
+        for number, expected_net in sorted(expected_nets.items(), key=lambda item: _pin_sort_key(item[0]))
+        if pins_by_number.get(number, {}).get("net") != expected_net
+    ]
+
+
+def _two_pin_components_on_nets(
+    components: Iterable[dict[str, Any]],
+    required_nets: set[str],
+) -> list[dict[str, Any]]:
+    return [
+        component
+        for component in components
+        if len(component.get("pins", [])) == 2 and _component_nets(component) == required_nets
+    ]
+
+
+def _decoupling_contract_issues(
+    components: Iterable[dict[str, Any]],
+    target_ref: str,
+    expected_by_pin: dict[str, tuple[str, float]],
+) -> list[dict[str, Any]]:
+    components = list(components)
+    issues: list[dict[str, Any]] = []
+    for target_pin, (rail, capacitance_f) in expected_by_pin.items():
+        candidates = [
+            component
+            for component in components
+            if isinstance(component.get("decouples"), dict)
+            and str(component["decouples"].get("ref")) == target_ref
+            and str(component["decouples"].get("pin")) == target_pin
+        ]
+        valid = [
+            component
+            for component in candidates
+            if len(component.get("pins", [])) == 2
+            and _component_nets(component) == {rail, "GND"}
+            and _nominal_matches(_component_capacitance_f(component), capacitance_f)
+        ]
+        if len(valid) != 1:
+            issues.append({
+                "target": f"{target_ref}.{target_pin}",
+                "expected_rail": rail,
+                "expected_capacitance_f": capacitance_f,
+                "candidate_refs": sorted(str(component.get("ref")) for component in candidates),
+                "candidate_nets": [sorted(_component_nets(component)) for component in candidates],
+                "candidate_capacitance_f": [_component_capacitance_f(component) for component in candidates],
+            })
+    return issues
+
+
+def _component_capacitance_f(component: dict[str, Any]) -> float | None:
+    for source in _rating_sources(component):
+        for key, multiplier in (
+            ("capacitance_f", 1.0),
+            ("capacitance_uf", 1e-6),
+            ("capacitance_nf", 1e-9),
+            ("capacitance_pf", 1e-12),
+        ):
+            value = _number(source.get(key))
+            if value is not None:
+                return value * multiplier
+    value = _capacitance_f_from_text(component.get("value"))
+    if value is not None:
+        return value
+    for constraint in component.get("constraints", []):
+        value = _capacitance_f_from_text(constraint)
+        if value is not None:
+            return value
+    return None
+
+
+def _capacitance_f_from_text(value: Any) -> float | None:
+    text = str(value or "").strip().lower().replace("µ", "u").replace("μ", "u")
+    match = re.search(r"(?<![a-z0-9])(?P<number>\d+(?:\.\d+)?)\s*(?P<unit>[pnum]?)f(?![a-z0-9])", text)
+    if not match:
+        return None
+    multiplier = {"": 1.0, "p": 1e-12, "n": 1e-9, "u": 1e-6, "m": 1e-3}[match.group("unit")]
+    return float(match.group("number")) * multiplier
+
+
+def _nominal_matches(observed: float | None, expected: float) -> bool:
+    return observed is not None and math.isclose(observed, expected, rel_tol=0.05, abs_tol=expected * 0.001)
+
+
 def _component_category_matches(component: dict[str, Any], categories: set[str]) -> bool:
     category = str(component.get("category", ""))
     if category in categories:
@@ -2062,11 +2621,13 @@ def _component_category_matches(component: dict[str, Any], categories: set[str])
 
 
 def _usb_esd_bridge_pin_net_failures(component: dict[str, Any]) -> list[Failure]:
+    component_nets = _component_nets(component)
+    staged_outputs = {"USB_DP_ESD", "USB_DM_ESD"} <= component_nets
     expected_by_pin_name = {
         "DP_IN": "USB_DP_RAW",
-        "DP_OUT": "USB_DP",
+        "DP_OUT": "USB_DP_ESD" if staged_outputs else "USB_DP",
         "DM_IN": "USB_DM_RAW",
-        "DM_OUT": "USB_DM",
+        "DM_OUT": "USB_DM_ESD" if staged_outputs else "USB_DM",
         "GND": "GND",
     }
     ref = component.get("ref", "?")

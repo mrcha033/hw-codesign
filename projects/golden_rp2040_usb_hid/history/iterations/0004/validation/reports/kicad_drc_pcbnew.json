@@ -1,0 +1,9 @@
+{
+  "failure_count": 1,
+  "fallback_reason": "kicad-cli-drc-sigabrt",
+  "has_outline": true,
+  "min_track_mm": 0.15,
+  "tool": "pcbnew",
+  "unconnected": 62,
+  "width_violations": []
+}

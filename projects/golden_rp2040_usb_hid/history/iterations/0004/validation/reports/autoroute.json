@@ -1,0 +1,46 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.dsn",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.ses",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/routing.json"
+  ],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "-Djava.awt.headless=true",
+      "-jar",
+      "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "-de",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.dsn",
+      "-do",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.ses",
+      "-mp",
+      "20",
+      "-mt",
+      "4",
+      "-l",
+      "en"
+    ],
+    "log_tail": "2026-07-18 23:36:52.674 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)\n2026-07-18 23:36:52.702 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.\n2026-07-18 23:36:52.892 WARN   Analytics tracking: first delivery failure in this window - /v1/analytics/identify - UnknownHostException: api.freerouting.app. Further failures will be aggregated and reported every 60 minutes. \u2192 Action: DNS resolution failed. Verify that this host has network access and that api.freerouting.app is reachable (try: nslookup api.freerouting.app).\n2026-07-18 23:36:53.837 WARN   Failed to check for new version\n2026-07-18 23:36:53.927 INFO   [25A379\\876B37] Job '25A379\\876B37' started at 2026-07-18T14:36:53.926429Z.\n2026-07-18 23:36:55.841 INFO   [25A379\\876B37] Auto-router pass #1 on board '73717f38813ddf4f7eecf966d4565b67' was completed in 1.82 seconds with the score of 918.02 (17 unrouted), using 0.81 CPU seconds and the job allocated 0.47 GB of memory so far.\n2026-07-18 23:37:01.147 INFO   [25A379\\876B37] Auto-router pass #2 on board '9b5653213f82de57e88b773e4685081d' was completed in 5.26 seconds with the score of 941.41 (12 unrouted), using 3.55 CPU seconds and the job allocated 1.81 GB of memory so far.\n2026-07-18 23:37:04.053 INFO   [25A379\\876B37] Auto-router pass #3 on board 'a7180c2f84fee8024b6ce645fefd3cf1' was completed in 2.85 seconds with the score of 937.98 (13 unrouted), using 4.81 CPU seconds and the job allocated 2.46 GB of memory so far.\n2026-07-18 23:37:16.127 INFO   [25A379\\876B37] Auto-router pass #4 on board '8acb6445fd64d24bfaacf108e06ce62a' was completed in 12.03 seconds with the score of 983.77 (3 unrouted), using 7.54 CPU seconds and the job allocated 3.51 GB of memory so far.\n2026-07-18 23:37:17.269 INFO   [25A379\\876B37] Auto-router pass #5 on board '4e18eecd59cd3b0ab83df5c4bae0ffb3' was completed in 0.88 seconds with the score of 995.40, using 7.73 CPU seconds and the job allocated 3.57 GB of memory so far.\n2026-07-18 23:37:17.316 INFO   [25A379\\876B37] Auto-router pass #6 on board 'a4904de7e99820af6c46b90175066a09' was completed in 0.01 seconds with the score of 995.40, using 7.73 CPU seconds and the job allocated 3.57 GB of memory so far.\n2026-07-18 23:37:17.423 INFO   [25A379\\876B37] Auto-router session completed: started with 59 unrouted nets, completed in 23.43 seconds, final score: 995.40, using 8.14 total CPU seconds, 3.78 GB total allocated, and 401.83 MB peak heap usage.\n\n",
+    "name": "freerouting",
+    "returncode": 0,
+    "timeout_seconds": 600,
+    "tools": {
+      "jar": "/Users/mrcha033/Documents/hw-cli/.toolchains/freerouting/freerouting-2.2.4.jar",
+      "java": "/Users/mrcha033/Documents/hw-cli/.toolchains/java25/Contents/Home/bin/java",
+      "kicad_python": "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9"
+    },
+    "version": "2.2.4"
+  },
+  "failures": [],
+  "gate": "autoroute",
+  "metrics": {
+    "filled_polygon_count": 1,
+    "freerouting_unrouted": 0,
+    "max_passes": 20,
+    "unrouted": 0,
+    "zone_count": 1
+  },
+  "status": "pass"
+}

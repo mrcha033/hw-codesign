@@ -49,6 +49,7 @@ KICAD_STANDARD_3D_MODELS: dict[str, str] = {
     "Capacitor_SMD:C_0603_1608Metric": "Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
     "Capacitor_SMD:C_1206_3216Metric": "Capacitor_SMD.3dshapes/C_1206_3216Metric.step",
     "Connector_USB:USB_C_GCT_USB4105": "Connector_USB.3dshapes/USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step",
+    "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal": "Connector_USB.3dshapes/USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step",
     "RF_Module:ESP32-S3-WROOM-1": "RF_Module.3dshapes/ESP32-S3-WROOM-1.step",
     "Package_TO_SOT_SMD:SOT-23-6": "Package_TO_SOT_SMD.3dshapes/SOT-23-6.step",
     "Package_LGA:LGA-14": "Package_LGA.3dshapes/LGA-14_3x2.5mm_P0.5mm_LayoutBorder3x4y.step",
@@ -76,26 +77,64 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
     target = project / "electronics" / "generated" / "kicad"
     target.mkdir(parents=True, exist_ok=True)
     name = project.name
-    for pattern in (
-        f"{name}*.dsn", f"{name}*.ses", f"{name}*.kicad_pcb",
-        f"{name}*.kicad_prl", f"{name}*.kicad_pro", f"~{name}*.lck",
-    ):
-        for stale in target.glob(pattern):
-            stale.unlink()
+    # Only remove exact artifacts owned by this generator/toolchain.  A broad
+    # ``{name}*`` glob can delete user-owned same-prefix files such as KiCad's
+    # conflict copies (``<name> 2.kicad_pcb``) in an iCloud-synced directory.
+    owned_names = (
+        f"{name}.dsn",
+        f"{name}.ses",
+        f"{name}.kicad_pcb",
+        f"{name}.kicad_prl",
+        f"{name}.kicad_pro",
+        f"{name}.routed.kicad_pcb",
+        f"{name}.routed.kicad_pro",
+        f"{name}.routed.kicad_prl",
+        f"~{name}.lck",
+    )
+    for owned_name in owned_names:
+        (target / owned_name).unlink(missing_ok=True)
+    min_clearance_mm = spec["manufacturing"]["pcb"]["min_clearance_mm"]
+    min_track_width_mm = spec["manufacturing"]["pcb"]["min_track_width_mm"]
     pro = {"board": {"design_settings": {"rules": {
-        "min_clearance": spec["manufacturing"]["pcb"]["min_clearance_mm"],
+        "min_clearance": min_clearance_mm,
         "min_copper_edge_clearance": copper_edge_clearance_mm(spec),
-        "min_track_width": spec["manufacturing"]["pcb"]["min_track_width_mm"],
-    }}}, "meta": {"filename": f"{name}.kicad_pro", "version": 1}}
+        "min_track_width": min_track_width_mm,
+    }}}, "meta": {"filename": f"{name}.kicad_pro", "version": 1}, "net_settings": {
+        "classes": [{
+            "bus_width": 12,
+            "clearance": min_clearance_mm,
+            "diff_pair_gap": 0.25,
+            "diff_pair_via_gap": 0.25,
+            "diff_pair_width": 0.2,
+            "line_style": 0,
+            "microvia_diameter": 0.3,
+            "microvia_drill": 0.1,
+            "name": "Default",
+            "pcb_color": "rgba(0, 0, 0, 0.000)",
+            "priority": 2147483647,
+            "schematic_color": "rgba(0, 0, 0, 0.000)",
+            "track_width": min_track_width_mm,
+            "tuning_profile": "",
+            "via_diameter": 0.6,
+            "via_drill": 0.3,
+            "wire_width": 6,
+        }],
+        "meta": {"version": 5},
+        "net_colors": None,
+        "netclass_assignments": None,
+        "netclass_patterns": [],
+    }}
     write_json(target / f"{name}.kicad_pro", pro)
     schematic = _legacy_schematic(spec, graph)
     atomic_write_text(target / f"{name}.sch", schematic)
     schematic_path = target / f"{name}.kicad_sch"
+    schematic_generation_report = target / "schematic_generation.json"
+    schematic_generation_report.unlink(missing_ok=True)
     try:
         generate_kicad_schematic(name, graph, schematic_path)
     except Exception as exc:
         atomic_write_text(schematic_path, _kicad_schematic_stub(name, graph))
-        write_json(target / "schematic_generation.json", {
+        write_json(schematic_generation_report, {
             "status": "blocked",
             "code": "kicad_symbol_instantiation_failed",
             "message": str(exc),
@@ -104,10 +143,13 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
     board_text, routing_failures = _kicad_board(spec, graph)
     atomic_write_text(target / f"{name}.kicad_pcb", board_text)
     _layers, _copper_layers, plane_layers = _kicad_stackup(spec)
-    plane_escape_required = (
-        len(_front_smd_plane_pad_sites(board_text, set(plane_layers)))
-        if len(_copper_layers) > 2
-        else 0
+    escape_plane_nets = {
+        net_name
+        for net_name, layer in plane_layers.items()
+        if layer != "F.Cu"
+    }
+    plane_escape_required = len(
+        _front_smd_plane_pad_sites(board_text, escape_plane_nets)
     )
     plane_escape_unplaced = sum(
         1 for failure in routing_failures
@@ -119,8 +161,8 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
         "plane_connectivity": "copper_zones",
         "plane_escape": (
             "fcu_segment_to_through_via"
-            if len(_copper_layers) > 2
-            else "front_copper_zone"
+            if escape_plane_nets
+            else "same_layer_zone"
         ),
         "plane_escape_required": plane_escape_required,
         "plane_escape_count": max(0, plane_escape_required - plane_escape_unplaced),
@@ -129,7 +171,13 @@ def generate_kicad(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -
         "board_sha256": hashlib.sha256(board_text.encode("utf-8")).hexdigest(),
         "failures": routing_failures,
     })
-    return [str(path) for path in sorted(target.iterdir())]
+    generated_names = (
+        *owned_names,
+        f"{name}.sch",
+        f"{name}.kicad_sch",
+        "routing.json",
+    )
+    return [str(target / generated_name) for generated_name in generated_names if (target / generated_name).is_file()]
 
 
 def _kicad_schematic_stub(name: str, graph: dict[str, Any]) -> str:
@@ -176,12 +224,14 @@ def _front_smd_plane_pad_sites(
     board_text: str,
     plane_nets: set[str],
 ) -> list[dict[str, Any]]:
-    """Return absolute F.Cu SMD pad sites that need a plane escape.
+    """Return physical F.Cu SMD pad sites that need a plane escape.
 
     A numbered pad that also has a plated through-hole form is already connected
     through the copper stackup, so its companion SMD form does not need a second
     escape. This matters for canonical exposed-pad footprints such as the ESP32
     module, whose ground pad is represented by one SMD form plus thermal vias.
+    Colocated same-net logical pads are one physical copper site and therefore
+    share one escape (USB-C receptacles commonly use this representation).
     """
     root = loads(board_text)
     if not isinstance(root, list) or not _sexp_head(root, "kicad_pcb"):
@@ -238,10 +288,14 @@ def _front_smd_plane_pad_sites(
                 "pad": pad_number,
                 "net": net_name,
                 "pad_at_mm": (
-                    anchor_x + local_x * cosine - local_y * sine,
-                    anchor_y + local_x * sine + local_y * cosine,
+                    # KiCad uses clockwise-positive board rotations.  Mirror
+                    # that convention here so a parsed local pad coordinate
+                    # resolves to the same absolute point as pcbnew/DRC.
+                    anchor_x + local_x * cosine + local_y * sine,
+                    anchor_y - local_x * sine + local_y * cosine,
                 ),
                 "anchor_at_mm": (anchor_x, anchor_y),
+                "logical_pads": [{"ref": ref, "pad": pad_number}],
             })
         sites.extend(
             site
@@ -249,18 +303,218 @@ def _front_smd_plane_pad_sites(
             if (str(site["pad"]), str(site["net"])) not in plated_pad_keys
         )
 
-    unique: dict[tuple[str, str, str, float, float], dict[str, Any]] = {}
-    for site in sites:
+    unique: dict[tuple[str, float, float], dict[str, Any]] = {}
+    for site in sorted(sites, key=lambda item: (str(item["ref"]), str(item["pad"]))):
         pad_x, pad_y = site["pad_at_mm"]
         key = (
-            str(site["ref"]),
-            str(site["pad"]),
             str(site["net"]),
             round(float(pad_x), 6),
             round(float(pad_y), 6),
         )
-        unique[key] = site
-    return [unique[key] for key in sorted(unique)]
+        existing = unique.get(key)
+        if existing is None:
+            unique[key] = site
+        else:
+            existing["logical_pads"].extend(site["logical_pads"])
+    return sorted(unique.values(), key=lambda item: (str(item["ref"]), str(item["pad"])))
+
+
+def _front_pad_obstacles(board_text: str) -> list[dict[str, Any]]:
+    """Return conservative absolute F.Cu pad and drill keepouts.
+
+    Pad copper is represented by its rotation-aware axis-aligned bounds. The
+    approximation is deliberately conservative for non-orthogonal pads: a
+    generated escape may be rejected unnecessarily, but it cannot be accepted
+    merely because a rotated corner was ignored. Native KiCad DRC remains the
+    authoritative geometry oracle.
+    """
+    root = loads(board_text)
+    if not isinstance(root, list) or not _sexp_head(root, "kicad_pcb"):
+        raise ValueError("Expected one kicad_pcb S-expression")
+
+    obstacles: list[dict[str, Any]] = []
+    for footprint in _sexp_direct(root, "footprint"):
+        properties = {
+            _sexp_atom(item[1]): _sexp_atom(item[2])
+            for item in _sexp_direct(footprint, "property")
+            if len(item) >= 3
+        }
+        footprint_at = _sexp_direct(footprint, "at")
+        if not footprint_at or len(footprint_at[0]) < 3:
+            continue
+        ref = properties.get("Reference", "")
+        anchor_x, anchor_y = float(footprint_at[0][1]), float(footprint_at[0][2])
+        footprint_rotation = (
+            float(footprint_at[0][3]) if len(footprint_at[0]) > 3 else 0.0
+        )
+        theta = math.radians(footprint_rotation)
+        cosine, sine = math.cos(theta), math.sin(theta)
+        for pad in _sexp_direct(footprint, "pad"):
+            if len(pad) < 4:
+                continue
+            local_at_forms = _sexp_direct(pad, "at")
+            size_forms = _sexp_direct(pad, "size")
+            if not local_at_forms or len(local_at_forms[0]) < 3:
+                continue
+            local_x, local_y = float(local_at_forms[0][1]), float(local_at_forms[0][2])
+            center = (
+                anchor_x + local_x * cosine + local_y * sine,
+                anchor_y - local_x * sine + local_y * cosine,
+            )
+            layers_forms = _sexp_direct(pad, "layers")
+            layers = {
+                _sexp_atom(layer)
+                for layer in (layers_forms[0][1:] if layers_forms else [])
+            }
+            net_forms = _sexp_direct(pad, "net")
+            net_name = (
+                _sexp_atom(net_forms[0][2])
+                if net_forms and len(net_forms[0]) >= 3
+                else None
+            )
+            pad_kind = _sexp_atom(pad[2])
+            pad_rotation = (
+                float(local_at_forms[0][3])
+                if len(local_at_forms[0]) > 3
+                else footprint_rotation
+            )
+            half_x = half_y = 0.0
+            if (
+                pad_kind != "np_thru_hole"
+                and ("F.Cu" in layers or "*.Cu" in layers)
+                and size_forms
+                and len(size_forms[0]) >= 3
+            ):
+                size_x, size_y = float(size_forms[0][1]), float(size_forms[0][2])
+                pad_theta = math.radians(pad_rotation)
+                pad_cosine, pad_sine = abs(math.cos(pad_theta)), abs(math.sin(pad_theta))
+                half_x = pad_cosine * size_x / 2.0 + pad_sine * size_y / 2.0
+                half_y = pad_sine * size_x / 2.0 + pad_cosine * size_y / 2.0
+            hole_radius = 0.0
+            drill_forms = _sexp_direct(pad, "drill")
+            if drill_forms:
+                drill_values: list[float] = []
+                for value in drill_forms[0][1:]:
+                    try:
+                        drill_values.append(float(_sexp_atom(value)))
+                    except ValueError:
+                        continue
+                if drill_values:
+                    hole_radius = max(drill_values) / 2.0
+            obstacles.append({
+                "ref": ref,
+                "pad": _sexp_atom(pad[1]),
+                "net": net_name,
+                "center_mm": center,
+                "half_size_mm": (half_x, half_y),
+                "hole_radius_mm": hole_radius,
+            })
+    return obstacles
+
+
+def _point_to_segment_distance(
+    point: tuple[float, float],
+    start: tuple[float, float],
+    end: tuple[float, float],
+) -> float:
+    delta_x, delta_y = end[0] - start[0], end[1] - start[1]
+    length_squared = delta_x * delta_x + delta_y * delta_y
+    if length_squared <= 1e-18:
+        return math.dist(point, start)
+    projection = (
+        (point[0] - start[0]) * delta_x + (point[1] - start[1]) * delta_y
+    ) / length_squared
+    projection = min(1.0, max(0.0, projection))
+    closest = (start[0] + projection * delta_x, start[1] + projection * delta_y)
+    return math.dist(point, closest)
+
+
+def _segment_intersects_box(
+    start: tuple[float, float],
+    end: tuple[float, float],
+    *,
+    min_x: float,
+    min_y: float,
+    max_x: float,
+    max_y: float,
+) -> bool:
+    """Liang-Barsky segment/AABB intersection, including boundary contact."""
+    delta_x, delta_y = end[0] - start[0], end[1] - start[1]
+    lower, upper = 0.0, 1.0
+    for coefficient, offset in (
+        (-delta_x, start[0] - min_x),
+        (delta_x, max_x - start[0]),
+        (-delta_y, start[1] - min_y),
+        (delta_y, max_y - start[1]),
+    ):
+        if abs(coefficient) <= 1e-18:
+            if offset < 0.0:
+                return False
+            continue
+        ratio = offset / coefficient
+        if coefficient < 0.0:
+            lower = max(lower, ratio)
+        else:
+            upper = min(upper, ratio)
+        if lower > upper:
+            return False
+    return True
+
+
+def _plane_escape_candidate_is_clear(
+    site: dict[str, Any],
+    candidate: tuple[float, float],
+    *,
+    obstacles: list[dict[str, Any]],
+    track_width_mm: float,
+    clearance_mm: float,
+    hole_clearance_mm: float,
+) -> bool:
+    start = tuple(float(value) for value in site["pad_at_mm"])
+    via_radius = 0.3
+    track_radius = track_width_mm / 2.0
+    for obstacle in obstacles:
+        center = tuple(float(value) for value in obstacle["center_mm"])
+        half_x, half_y = (
+            float(value) for value in obstacle["half_size_mm"]
+        )
+        # Same-net copper contact is electrically valid; different-net and
+        # no-net pads are hard keepouts for both the via and its fanout track.
+        if (half_x > 0.0 or half_y > 0.0) and obstacle.get("net") != site["net"]:
+            via_margin = via_radius + clearance_mm
+            if (
+                center[0] - half_x - via_margin
+                <= candidate[0]
+                <= center[0] + half_x + via_margin
+                and center[1] - half_y - via_margin
+                <= candidate[1]
+                <= center[1] + half_y + via_margin
+            ):
+                return False
+            segment_margin = track_radius + clearance_mm
+            if _segment_intersects_box(
+                start,
+                candidate,
+                min_x=center[0] - half_x - segment_margin,
+                min_y=center[1] - half_y - segment_margin,
+                max_x=center[0] + half_x + segment_margin,
+                max_y=center[1] + half_y + segment_margin,
+            ):
+                return False
+        hole_radius = float(obstacle["hole_radius_mm"])
+        if hole_radius <= 0.0:
+            continue
+        if math.dist(candidate, center) < via_radius + hole_radius + hole_clearance_mm:
+            return False
+        # A plated same-net pad is conductive around its drill.  A track may
+        # cross or terminate on that annulus and remain electrically continuous;
+        # different-net and non-plated holes remain hard track keepouts.  The
+        # candidate via itself always keeps full drill spacing above.
+        if obstacle.get("net") != site["net"] and _point_to_segment_distance(
+            center, start, candidate
+        ) < (track_radius + hole_radius + hole_clearance_mm):
+            return False
+    return True
 
 
 def _plane_escape_endpoint(
@@ -271,29 +525,88 @@ def _plane_escape_endpoint(
     height_mm: float,
     edge_margin_mm: float,
     occupied: list[tuple[float, float]],
+    obstacles: list[dict[str, Any]],
+    track_width_mm: float,
+    clearance_mm: float,
+    hole_clearance_mm: float,
 ) -> tuple[float, float] | None:
     pad_x, pad_y = (float(value) for value in site["pad_at_mm"])
     anchor_x, anchor_y = (float(value) for value in site["anchor_at_mm"])
     delta_x, delta_y = pad_x - anchor_x, pad_y - anchor_y
-    magnitude = math.hypot(delta_x, delta_y)
-    if magnitude < 1e-9:
+    if abs(delta_x) < 1e-9 and abs(delta_y) < 1e-9:
         outward = (1.0, 0.0)
+    elif abs(delta_x) >= abs(delta_y):
+        outward = (1.0 if delta_x >= 0.0 else -1.0, 0.0)
     else:
-        outward = (delta_x / magnitude, delta_y / magnitude)
+        outward = (0.0, 1.0 if delta_y >= 0.0 else -1.0)
+    clockwise = (outward[1], -outward[0])
+    counterclockwise = (-outward[1], outward[0])
+    opposite = (-outward[0], -outward[1])
+
+    def diagonal(
+        first: tuple[float, float],
+        second: tuple[float, float],
+    ) -> tuple[float, float]:
+        return (
+            (first[0] + second[0]) / math.sqrt(2.0),
+            (first[1] + second[1]) / math.sqrt(2.0),
+        )
+
     directions = (
         outward,
-        (-outward[0], -outward[1]),
-        (-outward[1], outward[0]),
-        (outward[1], -outward[0]),
+        diagonal(outward, clockwise),
+        diagonal(outward, counterclockwise),
+        clockwise,
+        counterclockwise,
+        diagonal(opposite, clockwise),
+        diagonal(opposite, counterclockwise),
+        opposite,
     )
+    # Edge connectors can place a plane pad between the outline, locating
+    # holes, and a same-net plated shell stake.  A route aimed through that
+    # stake's annulus is valid, but the eight generic compass rays may never
+    # sample it.  Add deterministic rays through same-net plated pads while
+    # retaining the standalone-via endpoint and all via-to-hole spacing.
+    same_net_holes = sorted(
+        (
+            (
+                math.dist((pad_x, pad_y), tuple(obstacle["center_mm"])),
+                str(obstacle.get("ref") or ""),
+                str(obstacle.get("pad") or ""),
+                tuple(float(value) for value in obstacle["center_mm"]),
+            )
+            for obstacle in obstacles
+            if obstacle.get("net") == site["net"]
+            and float(obstacle["hole_radius_mm"]) > 0.0
+        ),
+        key=lambda item: item[:3],
+    )
+    directed_hole_rays: list[tuple[float, float]] = []
+    for distance_to_hole, _ref, _pad, center in same_net_holes:
+        if distance_to_hole <= 1e-9:
+            continue
+        ray = (
+            (center[0] - pad_x) / distance_to_hole,
+            (center[1] - pad_y) / distance_to_hole,
+        )
+        if any(
+            math.dist(ray, existing) <= 1e-9
+            for existing in (*directions, *directed_hole_rays)
+        ):
+            continue
+        directed_hole_rays.append(ray)
+    directions = (*directions, *directed_hole_rays)
     # A 0.6 mm via needs its 0.3 mm copper radius in addition to the board's
     # copper-to-Edge.Cuts clearance; bounding only the via center would recreate
     # the very edge-clearance violation this placement contract prevents.
-    center_edge_margin = edge_margin_mm + 0.3
-    # Alternate two radial lanes to keep 0.5 mm-pitch pad escapes from placing
-    # adjacent 0.6 mm vias on top of each other.
-    base_distance = 0.8 + 0.8 * (lane % 2)
-    for distance in (base_distance, base_distance + 0.8, base_distance + 1.6):
+    # Zones are inset 1 mm from Edge.Cuts. Keeping the complete via inside that
+    # polygon guarantees the via can actually reach the assigned plane.
+    center_edge_margin = max(edge_margin_mm + 0.3, 1.3)
+    # Prefer short cardinal fanouts, then deterministically expand the search.
+    # The lane offset prevents repeated same-side pads from selecting identical
+    # candidates while still allowing obstacle checks to choose another side.
+    base_distance = 0.8 + 0.4 * (lane % 2)
+    for distance in tuple(base_distance + 0.4 * step for step in range(8)):
         for direction_x, direction_y in directions:
             candidate = (
                 round(pad_x + direction_x * distance, 3),
@@ -305,6 +618,15 @@ def _plane_escape_endpoint(
             ):
                 continue
             if any(math.dist(candidate, other) < 0.8 - 1e-9 for other in occupied):
+                continue
+            if not _plane_escape_candidate_is_clear(
+                site,
+                candidate,
+                obstacles=obstacles,
+                track_width_mm=track_width_mm,
+                clearance_mm=clearance_mm,
+                hole_clearance_mm=hole_clearance_mm,
+            ):
                 continue
             return candidate
     return None
@@ -374,16 +696,26 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
     (fp_rect (start {body_start_x:.3f} {body_start_y:.3f}) (end {body_end_x:.3f} {body_end_y:.3f}) (stroke (width 0.2) (type default)) (fill none) (layer "F.Fab"))
 {_kicad_model_clause(str(item['footprint']))}{chr(10).join(pads)})''')
     # Signal tracks remain deferred to Freerouting. Plane nets are different: on
-    # a multilayer board, every F.Cu SMD plane pad needs an explicit F.Cu fanout
-    # and plated via before it can reach its assigned internal/B.Cu zone.
+    # every F.Cu SMD plane pad needs an explicit F.Cu fanout and plated via
+    # before it can reach its assigned non-front-layer zone.
     segments: list[str] = []
     vias: list[str] = []
-    if len(copper_layers) > 2:
-        footprint_board = f"(kicad_pcb\n{chr(10).join(footprints)}\n)"
-        escape_sites = _front_smd_plane_pad_sites(footprint_board, set(plane_layers))
+    escape_plane_nets = {
+        net_name
+        for net_name, layer in plane_layers.items()
+        if layer != "F.Cu"
+    }
+    if escape_plane_nets:
+        footprint_board = (
+            f"(kicad_pcb\n{chr(10).join(footprints)}\n{_kicad_npth_holes(spec)}\n)"
+        )
+        escape_sites = _front_smd_plane_pad_sites(footprint_board, escape_plane_nets)
+        pad_obstacles = _front_pad_obstacles(footprint_board)
         occupied_vias: list[tuple[float, float]] = []
         lane_counts: dict[tuple[str, str], int] = {}
         track_width = max(0.2, float(spec["manufacturing"]["pcb"]["min_track_width_mm"]))
+        clearance = max(0.15, float(spec["manufacturing"]["pcb"]["min_clearance_mm"]))
+        hole_clearance = max(0.25, clearance)
         edge_margin = max(0.3, copper_edge_clearance_mm(spec))
         for site in escape_sites:
             pad_x, pad_y = (float(value) for value in site["pad_at_mm"])
@@ -403,6 +735,10 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
                 height_mm=float(height),
                 edge_margin_mm=edge_margin,
                 occupied=occupied_vias,
+                obstacles=pad_obstacles,
+                track_width_mm=track_width,
+                clearance_mm=clearance,
+                hole_clearance_mm=hole_clearance,
             )
             if via_at is None:
                 routing_failures.append({
@@ -416,10 +752,15 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
             occupied_vias.append(via_at)
             net_name = str(site["net"])
             net_id = net_ids[net_name]
-            start_x, start_y = round(pad_x, 3), round(pad_y, 3)
+            # Preserve the parsed pad centre at nanometre-scale KiCad
+            # precision.  Rounding this endpoint to 0.001 mm can move pads on
+            # a half-micron grid (for example 14.3625 mm) off the protected
+            # escape segment in Freerouting's topological contact model even
+            # though the copper shapes still overlap in KiCad.
+            start_x, start_y = pad_x, pad_y
             via_x, via_y = via_at
             segments.append(
-                f'  (segment (start {start_x:.3f} {start_y:.3f}) '
+                f'  (segment (start {start_x:.6f} {start_y:.6f}) '
                 f'(end {via_x:.3f} {via_y:.3f}) (width {track_width:.3f}) '
                 f'(layer "F.Cu") (net {net_id}))'
             )
@@ -427,25 +768,26 @@ def _kicad_board(spec: dict[str, Any], graph: dict[str, Any]) -> tuple[str, list
                 f'  (via (at {via_x:.3f} {via_y:.3f}) (size 0.600) (drill 0.300) '
                 f'(layers "F.Cu" "B.Cu") (net {net_id}))'
             )
+    pcb_process = spec["manufacturing"]["pcb"]
+    zone_clearance = float(pcb_process["min_clearance_mm"])
+    zone_min_thickness = float(pcb_process["min_track_width_mm"])
+    thermal_gap = zone_clearance
+    thermal_bridge_width = zone_min_thickness
     zones = []
     emitted_zone_layers: set[tuple[str, str]] = set()
     for net_name, layer in plane_layers.items():
         if net_name not in net_ids:
             continue
         zone_layers = [layer]
-        # On 2-layer boards with the GND plane on B.Cu, mirror it to F.Cu as well.
-        # This ensures F.Cu SMD GND pads connect to the fill without needing explicit vias.
-        if layer == "B.Cu" and len(copper_layers) == 2:
-            zone_layers.append("F.Cu")
         for zl in zone_layers:
             key = (net_name, zl)
             if key in emitted_zone_layers:
                 continue
             emitted_zone_layers.add(key)
             zones.append(f'''  (zone (net {net_ids[net_name]}) (net_name "{net_name}") (layer "{zl}") (hatch edge 0.5)
-    (connect_pads (clearance 0.25))
-    (min_thickness 0.25)
-    (fill yes (thermal_gap 0.3) (thermal_bridge_width 0.3) (island_removal_mode 0))
+    (connect_pads (clearance {zone_clearance:.3f}))
+    (min_thickness {zone_min_thickness:.3f})
+    (fill yes (thermal_gap {thermal_gap:.3f}) (thermal_bridge_width {thermal_bridge_width:.3f}) (island_removal_mode 0))
     (polygon (pts (xy 1 1) (xy {width - 1} 1) (xy {width - 1} {height - 1}) (xy 1 {height - 1}))))''')
     return f'''(kicad_pcb (version 20240108) (generator hw_codesign)
   (general (thickness {env['board_thickness_mm']}))
@@ -470,6 +812,7 @@ def _kicad_npth_holes(spec: dict[str, Any]) -> str:
         ref = f"H{index}"
         lines.append(
             f'  (footprint "MountingHole:MountingHole_{d:.1f}mm_Pad" (layer "F.Cu") (at {hole["x_mm"]} {hole["y_mm"]})'
+            ' (attr exclude_from_bom exclude_from_pos_files)'
             f'\n    (property "Reference" "{ref}" (at 0 -3 0) (layer "F.Fab"))'
             f'\n    (property "Value" "MountingHole" (at 0 3 0) (layer "F.Fab"))'
             f'\n    (pad "" np_thru_hole circle (at 0 0) (size {d:.2f} {d:.2f}) (drill {d:.2f}) (layers "*.Cu" "*.Mask")))'
@@ -495,6 +838,8 @@ def _kicad_stackup(spec: dict[str, Any]) -> tuple[str, tuple[str, ...], dict[str
         '    (37 "F.SilkS" user "f.silkscreen")',
         '    (38 "B.Mask" user)',
         '    (39 "F.Mask" user)',
+        '    (34 "B.Paste" user)',
+        '    (35 "F.Paste" user)',
         '    (44 "Edge.Cuts" user)',
     )
     if requested_layers <= 2:
@@ -616,6 +961,8 @@ def internal_erc(graph: dict[str, Any]) -> GateReport:
         required = {"power_input", "fuse", "reverse_polarity", "tvs", "regulator", "mcu", "imu", "debug"}
     elif architecture == "atsamd21g18a_lsm6dsox_bme280":
         required = {"power_input", "tvs", "regulator_3v3", "mcu", "imu", "env_sensor", "debug_header"}
+    elif architecture == "rp2040_qspi_usb_device":
+        required = {"power_input", "tvs", "regulator_3v3", "mcu", "flash", "crystal_12m", "debug_header"}
     else:
         required = {"mcu", "imu", "regulator", "can", "motor_io", "fuse", "reverse_polarity", "tvs", "efuse", "safety_gate"}
     present = {item["category"] for item in graph["components"]}
@@ -697,12 +1044,6 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
         if net_name not in graph_nets:
             continue
         required_layers = {layer}
-        if len(expected_copper_layers) == 2 and any(
-            pin.get("net") == net_name and not footprint_geometry(component).through_hole
-            for component in graph.get("components", [])
-            for pin in component.get("pins", [])
-        ):
-            required_layers.add("F.Cu")
         for required_layer in sorted(required_layers):
             if required_layer not in zone_layers.get(net_name, set()):
                 missing_plane_zones.append({"net": net_name, "layer": required_layer})
@@ -721,11 +1062,16 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
             details={"plane_connectivity": routing.get("plane_connectivity")},
         ))
     plane_escape_site_count = 0
-    if len(ordered_copper_layers) > 2 and text:
+    escape_plane_layers = {
+        net_name: layer
+        for net_name, layer in plane_layers.items()
+        if layer != "F.Cu"
+    }
+    if escape_plane_layers and text:
         try:
             plane_escape_sites, missing_plane_escapes = _missing_plane_escape_connections(
                 text,
-                plane_layers,
+                escape_plane_layers,
                 ordered_copper_layers,
             )
             plane_escape_site_count = len(plane_escape_sites)
@@ -740,7 +1086,7 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
             failures.append(Failure(
                 FailureCategory.EDA_ERROR,
                 "plane_escape_contract_unreadable",
-                "The multilayer plane escape topology could not be parsed from the KiCad board",
+                "The plane escape topology could not be parsed from the KiCad board",
                 details={"error": str(exc)},
             ))
         declared_escape = routing.get("plane_escape") if routing else None
@@ -748,7 +1094,7 @@ def internal_drc(project: Path, spec: dict[str, Any], graph: dict[str, Any]) -> 
             failures.append(Failure(
                 FailureCategory.EDA_ERROR,
                 "plane_escape_contract_mismatch",
-                "Multilayer routing metadata declares an incompatible plane escape mechanism",
+                "Routing metadata declares an incompatible plane escape mechanism",
                 details={"plane_escape": declared_escape},
             ))
     return GateReport(

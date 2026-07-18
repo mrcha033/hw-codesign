@@ -2,11 +2,23 @@ project:
   name: rp2040_usb_device
   description: Raspberry Pi RP2040 USB device — HID/CDC with external 2MB QSPI flash and USB-C
   version: 0.1.0
+  revision: r1
+  target_use: usb_hid_and_cdc_peripheral
   template: rp2040_usb_device
   created_at: '2026-06-21'
 
 system:
   target_application: USB HID device, USB CDC-ACM adapter, embedded USB peripheral, RP2040 custom board
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.5
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.5}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.3}
+      - {name: V1V1, voltage: 1.1, current_peak_a: 0.15}
 
 compute:
   mcu:
@@ -23,26 +35,44 @@ compute:
 
 actuation:
   motor_channels: 0
+  motor_channel_peak_current_a: 0.0
   gpio_outputs: 26
   pwm_channels: 16
 
 sensing:
+  imu: not_required
+  e_stop: not_required
+  battery_monitor: not_required
+  current_monitor: not_required
+  temperature_monitor: not_required
   adc_channels: 4
   adc_bits: 12
 
 assumptions:
-  - id: ASM-01
-    text: External QSPI flash required — RP2040 has no on-chip flash
-    rationale: RP2040 XIP (execute-in-place) boots from external SPI flash via QSPI; W25Q16JV selected for 2MB capacity
-  - id: ASM-02
-    text: USB-C connector bus-powers the board at 5V; AP2112K LDO provides 3.3V
-    rationale: RP2040 core voltage 1.1V generated internally via VREG; only 3.3V IO rail needs external LDO
-  - id: ASM-03
-    text: 12MHz crystal optional — RP2040 ROSC can run USB PLL; crystal improves frequency accuracy
-    rationale: RP2040 USB PLL can lock to 48MHz from ROSC, but USB spec requires ±2500ppm; crystal locks within ±20ppm
-  - id: ASM-04
-    text: PIO state machines can implement additional protocols (WS2812, UART, SPI, I2S) in firmware
-    rationale: RP2040 has two PIO blocks with 8 state machines; eliminates need for external protocol ICs
+  external_qspi_flash:
+    value: w25q16jv_2mb
+    confidence: high
+    reason: RP2040 boots through execute-in-place from external QSPI flash; the candidate uses a 2 MB W25Q16JV.
+    critical: false
+    requires_user_review: false
+  usb_bus_power:
+    value: usb_c_5v_to_ap2112k_3v3
+    confidence: high
+    reason: USB-C VBUS supplies 5 V and the AP2112K supplies the board 3.3 V rail.
+    critical: false
+    requires_user_review: false
+  crystal_accuracy:
+    value: abm8_272_t3_12mhz_15pf_load
+    confidence: high
+    reason: The candidate uses the Raspberry Pi reference-design ABM8-272-T3 12 MHz crystal with two 15 pF load capacitors and a 1 kOhm damping resistor.
+    critical: false
+    requires_user_review: false
+  optional_pio_interfaces:
+    value: firmware_defined
+    confidence: medium
+    reason: Optional PIO protocols are outside the golden-board bring-up scope and require dedicated firmware tests when enabled.
+    critical: false
+    requires_user_review: false
 
 electronics:
   backend: tscircuit
@@ -52,15 +82,21 @@ electronics:
     input_voltage_min_v: 4.5
     input_voltage_max_v: 5.5
     input_connector: USB-C
-    bus_voltages_v: [5.0, 3.3]
+    bus_voltages_v: [5.0, 3.3, 1.1]
     max_current_ma: 500
   pcb:
     layers: 2
-    width_mm: 51
-    height_mm: 21
+    width_mm: 65
+    height_mm: 30
     min_trace_mm: 0.15
     min_space_mm: 0.15
-    controlled_impedance: false
+    controlled_impedance: true
+    usb_differential_pair:
+      target_differential_impedance_ohms: 90
+      trace_width_mm: 0.8
+      pair_gap_mm: 0.15
+      reference_plane: continuous_ground
+      stackup_basis: 1.0_mm_two_layer_reference_only
 
 mechanical:
   enclosure: none
@@ -72,27 +108,35 @@ mechanical:
   vibration_environment: low
   cooling: passive
   envelope:
-    board_width_mm: 51.0
-    board_height_mm: 21.0
-    board_thickness_mm: 1.6
+    board_width_mm: 65.0
+    board_height_mm: 30.0
+    board_thickness_mm: 1.0
     max_component_height_top_mm: 3.5
     max_component_height_bottom_mm: 1.0
-  enclosure_internal_mm: [51.0, 21.0, 5.0]
+  enclosure_internal_mm: [69.0, 34.0, 8.5]
   wall_thickness_mm: 2.0
   assembly_clearance_mm: 0.5
   insertion_clearance_mm: 1.0
   tolerance_mm: 0.2
-  max_connector_edge_distance_mm: 6.0
+  max_connector_edge_distance_mm: 10.0
+  default_component_height_mm: 2.0
+  component_heights_mm: {J1: 3.3, J2: 5.0, U2: 1.0, U3: 1.0}
+  board_origin_mm: [2.0, 2.0, 2.0]
   mounting_holes:
     - {x_mm: 2.5, y_mm: 2.5, diameter_mm: 2.2}
-    - {x_mm: 48.5, y_mm: 2.5, diameter_mm: 2.2}
-    - {x_mm: 2.5, y_mm: 18.5, diameter_mm: 2.2}
-    - {x_mm: 48.5, y_mm: 18.5, diameter_mm: 2.2}
+    - {x_mm: 62.5, y_mm: 2.5, diameter_mm: 2.2}
+    - {x_mm: 2.5, y_mm: 27.5, diameter_mm: 2.2}
+    - {x_mm: 62.5, y_mm: 27.5, diameter_mm: 2.2}
   fixtures:
     mounting_plate: {enabled: false}
     frame_brackets: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: left, opening_mm: [9.0, 3.3], center_z_mm: 3.2, position_tolerance_mm: 0.5}
 
 firmware:
+  framework: zephyr
+  target: rp2040_usb_device
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
   rtos: bare_metal
   rp2040_sdk: pico-sdk
   toolchain: arm-none-eabi-gcc
@@ -141,8 +185,36 @@ manufacturing:
     layers: 2
     min_clearance_mm: 0.15
     min_track_width_mm: 0.15
+    controlled_impedance: required
+    via_in_pad:
+      used: true
+      qualification_status: unqualified
+      process:
+        selection_status: unselected
+        via_disposition: unselected
+        cap_finish: unselected
+        fabricator_process_id: null
+      locations:
+        - reference: U2
+          pad: '57'
+          via_count: 9
+          purpose: exposed_pad_ground_via_array
+          geometry:
+            pattern: square_grid
+            rows: 3
+            columns: 3
+            pitch_mm: 1.275
+            via_diameter_mm: 0.6
+            drill_diameter_mm: 0.35
+  mechanical:
+    min_wall_thickness_mm: 1.6
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
 
 safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog]
   regulatory: [CE, FCC_B]
   isolation_required: false
   esd_protection: required
@@ -161,11 +233,6 @@ test_plan:
     - swd_debug_attach
 
 requirements:
-  performance:
-    - id: REQ-01
-      text: USB HID report rate ≥ 1000 Hz (1 ms polling)
-    - id: REQ-02
-      text: USB enumeration within 500 ms of power-on
-  reliability:
-    - id: REQ-03
-      text: No USB disconnect events under sustained HID traffic
+  raw_inputs: []
+  active_lowered: []
+  active_unresolved: []

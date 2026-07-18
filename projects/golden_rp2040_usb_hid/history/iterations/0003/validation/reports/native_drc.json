@@ -1,0 +1,122 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_drc.json"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "pcb",
+      "drc",
+      "--format",
+      "json",
+      "--severity-error",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_drc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_pcb"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Found 0 violations\nFound 3 unconnected items\nSaved DRC Report to /Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_drc.json\n"
+  },
+  "failures": [
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 21 [XOUT] of U2 on F.Cu",
+            "pos": {
+              "x": 29.8,
+              "y": 18.4375
+            },
+            "uuid": "6d566ad9-fb1c-4930-a807-d79b23f2fa70"
+          },
+          {
+            "description": "Pad 1 [XOUT] of R3 on F.Cu",
+            "pos": {
+              "x": 35.175,
+              "y": 20.0
+            },
+            "uuid": "3250b324-118d-4cf5-9af2-287b7f7a7655"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 25 [SWDIO] of U2 on F.Cu",
+            "pos": {
+              "x": 31.4,
+              "y": 18.4375
+            },
+            "uuid": "9f8742c3-e587-4c54-99bf-2958600d6593"
+          },
+          {
+            "description": "PTH pad 2 [SWDIO] of J2",
+            "pos": {
+              "x": 57.54,
+              "y": 11.1
+            },
+            "uuid": "ba73da45-ef5a-467f-837c-5a0c3cb3531a"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    },
+    {
+      "category": "EDA_ERROR",
+      "code": "drc_violation",
+      "details": {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Pad 24 [SWCLK] of U2 on F.Cu",
+            "pos": {
+              "x": 31.0,
+              "y": 18.4375
+            },
+            "uuid": "4c91a0a8-6e52-446f-9c2c-786170af2ed0"
+          },
+          {
+            "description": "PTH pad 4 [SWCLK] of J2",
+            "pos": {
+              "x": 57.54,
+              "y": 13.64
+            },
+            "uuid": "4db931d3-489c-4b8d-8130-15ea5c4d6647"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      },
+      "message": "Missing connection between items",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_drc",
+  "metrics": {
+    "violations": 3
+  },
+  "status": "fail"
+}

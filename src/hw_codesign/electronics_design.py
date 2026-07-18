@@ -28,22 +28,45 @@ def usb_c_connector_pins(*, raw_data: bool) -> list[dict[str, Any]]:
     dp_net = "USB_DP_RAW" if raw_data else "USB_DP"
     dm_net = "USB_DM_RAW" if raw_data else "USB_DM"
     return [
-        pin(1, "VBUS", "USB_VBUS", "power_in"),
-        pin(2, "GND", "GND", "ground"),
-        pin(3, "D+", dp_net, "bidirectional"),
-        pin(4, "D-", dm_net, "bidirectional"),
-        pin(5, "CC1", "USB_CC1", "passive"),
-        pin(6, "CC2", "USB_CC2", "passive"),
+        pin("A1", "GND", "GND", "ground"),
+        pin("A4", "VBUS", "USB_VBUS", "power_in"),
+        pin("A5", "CC1", "USB_CC1", "passive"),
+        pin("A6", "D+", dp_net, "bidirectional"),
+        pin("A7", "D-", dm_net, "bidirectional"),
+        pin("A8", "SBU1", None, "no_connect"),
+        pin("A9", "VBUS", "USB_VBUS", "power_in"),
+        pin("A12", "GND", "GND", "ground"),
+        pin("B1", "GND", "GND", "ground"),
+        pin("B4", "VBUS", "USB_VBUS", "power_in"),
+        pin("B5", "CC2", "USB_CC2", "passive"),
+        pin("B6", "D+", dp_net, "bidirectional"),
+        pin("B7", "D-", dm_net, "bidirectional"),
+        pin("B8", "SBU2", None, "no_connect"),
+        pin("B9", "VBUS", "USB_VBUS", "power_in"),
+        pin("B12", "GND", "GND", "ground"),
+        pin("SH", "SHIELD", "GND", "ground"),
     ]
 
 
-def usb_esd_bridge_pins() -> list[dict[str, Any]]:
+def usb_esd_bridge_pins(
+    *,
+    dp_out_net: str = "USB_DP",
+    dm_out_net: str = "USB_DM",
+) -> list[dict[str, Any]]:
+    """Physical USBLC6-2SC6 flow-through pin map from ST DS4260.
+
+    Pins 1/6 are the first protected I/O pair, pins 3/4 are the second,
+    pin 2 is ground, and pin 5 is VBUS.  Keeping the package numbers here is
+    deliberate: swapping the old logical five-pin abstraction onto the real
+    SOT-23-6 footprint would ground a USB data line.
+    """
     return [
         pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
-        pin(2, "DP_OUT", "USB_DP", "bidirectional"),
+        pin(2, "GND", "GND", "ground"),
         pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"),
-        pin(4, "DM_OUT", "USB_DM", "bidirectional"),
-        pin(5, "GND", "GND", "ground"),
+        pin(4, "DM_OUT", dm_out_net, "bidirectional"),
+        pin(5, "VBUS", "USB_VBUS", "power_in"),
+        pin(6, "DP_OUT", dp_out_net, "bidirectional"),
     ]
 
 
@@ -128,7 +151,7 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("J4", "debug", "SWD", "Samtec-FTSH-105-01-L-DV-K", "Cortex_Debug_10Pin", [pin(1, "VREF", "V3V3", "power_out"), pin(2, "SWDIO", "SWDIO", "bidirectional"), pin(3, "GND", "GND", "ground"), pin(4, "SWCLK", "SWCLK", "input"), pin(5, "NRST", "NRST", "bidirectional")], manufacturer="Samtec", substitute_mpn="Harwin-M50-3600542"),
         component("J5", "usb", "USB-C", "USB4105-GF-A", "USB_C_16Pin", usb_c_connector_pins(raw_data=True), manufacturer="GCT", substitute_mpn="USB4085-GF-A"),
         *usb_c_rd_components(5),
-        component("D2", "usb_esd", "USB ESD", "USBLC6-2SC6", "SOT23-6", [pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"), pin(2, "DP_OUT", "USB_DP", "bidirectional"), pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"), pin(4, "DM_OUT", "USB_DM", "bidirectional"), pin(5, "GND", "GND", "ground")], manufacturer="STMicroelectronics", substitute_mpn="TPD2EUSB30DRTR"),
+        component("D2", "usb_esd", "USB ESD", "USBLC6-2SC6", "SOT23-6", usb_esd_bridge_pins(), manufacturer="STMicroelectronics", substitute_mpn="TPD2EUSB30DRTR"),
         component("R4", "discharge", "100K", "RC0603FR-07100KL", "R0603", [pin(1, "VBUS", "USB_VBUS", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Yageo", substitute_mpn="CRCW0603100KFKEA"),
         component("R2", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SCL", "I2C_IMU_SCL", "passive")], manufacturer="Yageo", substitute_mpn="CRCW06034K70FKEA"),
         component("R3", "pullup", "4K7", "RC0603FR-074K7L", "R0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "SDA", "I2C_IMU_SDA", "passive")], manufacturer="Yageo", substitute_mpn="CRCW06034K70FKEA"),
@@ -143,6 +166,8 @@ def build_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
     components.extend((
         component("C9", "bulk_cap", "22uF", "GRM31CR61E226ME15L", "C1206", [pin(1, "VCC", "V5", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", substitute_mpn="CL31A226KAHNNNE"),
         component("C10", "bulk_cap", "10uF 50V", "GRM32ER71H106KA12L", "C1210", [pin(1, "VCC", "VSYS", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", substitute_mpn="C3225X7R1H106K250AB"),
+        component("C11", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VBUS", "USB_VBUS", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", substitute_mpn="CC0603KRX7R9BB104", decoupling_target_ref="D2"),
+        component("C12", "bulk_cap", "10uF", "GRM31CR61A106KA01L", "C1206", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", substitute_mpn="CL31A106KBHNNNE"),
     ))
     net_classes = {"GND": "ground", "VBAT_RAW": "power", "VBAT_FUSED": "power", "VBAT": "power", "VSYS": "power", "V5": "power", "V3V3": "power", "USB_VBUS": "power", "USB_CC1": "usb", "USB_CC2": "usb", "CANH": "can", "CANL": "can"}
     endpoints: dict[str, list[str]] = defaultdict(list)
@@ -170,13 +195,7 @@ def build_sensor_data_logger_graph(spec: dict[str, Any]) -> dict[str, Any]:
             pin(2, "CATHODE", "USB_PROT", "power_out"),
             pin(3, "GND", "GND", "ground"),
         ], manufacturer="Texas Instruments"),
-        component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", [
-            pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
-            pin(2, "DP_OUT", "USB_DP", "bidirectional"),
-            pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"),
-            pin(4, "DM_OUT", "USB_DM", "bidirectional"),
-            pin(5, "GND", "GND", "ground"),
-        ], manufacturer="STMicroelectronics"),
+        component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", usb_esd_bridge_pins(), manufacturer="STMicroelectronics"),
         component("U3", "regulator", "3V3 Buck", "TPS62133RGTR", "VQFN16", [
             pin(1, "VIN", "USB_PROT", "power_in"),
             pin(2, "VOUT", "V3V3", "power_out"),
@@ -342,13 +361,7 @@ def build_ble_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
         component("C2", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata", decoupling_target_ref="U1"),
         component("C3", "bulk_cap", "10uF", "GRM188R60J106ME47D", "C0603", [pin(1, "VCC", "VBAT", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
         component("C4", "bulk_cap", "10uF", "GRM188R60J106ME47D", "C0603", [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")], manufacturer="Murata"),
-        component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", [
-            pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
-            pin(2, "DP_OUT", "USB_DP", "bidirectional"),
-            pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"),
-            pin(4, "DM_OUT", "USB_DM", "bidirectional"),
-            pin(5, "GND", "GND", "ground"),
-        ], manufacturer="STMicroelectronics"),
+        component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", usb_esd_bridge_pins(), manufacturer="STMicroelectronics"),
     ]
     net_classes = {
         "GND": "ground", "USB_VBUS": "power", "USB_FUSED": "power", "USB_PROT": "power",
@@ -388,15 +401,17 @@ def _domain(name: str) -> str | None:
     if name == "GND": return "GND"
     if name.startswith("VBAT") or name == "VSYS": return "VBAT"
     if name in {"V5", "SERVO_V5"}: return "V5"
+    if name == "V1V1": return "V1V1"
     if name == "USB_VBUS": return "USB_5V"
     return "V3V3"
 
 
 _WELL_KNOWN_NET_CLASSES: dict[str, str] = {
     "GND": "ground",
-    "V3V3": "power", "V5": "power", "VSYS": "power",
+    "V1V1": "power", "V3V3": "power", "V5": "power", "VSYS": "power",
     "VBAT": "power", "VBAT_RAW": "power", "VBAT_FUSED": "power", "USB_VBUS": "power",
     "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
+    "USB_DP_ESD": "usb", "USB_DM_ESD": "usb",
     "I2C_SCL": "i2c", "I2C_SDA": "i2c", "I2C_IMU_SCL": "i2c", "I2C_IMU_SDA": "i2c",
     "CANH": "can", "CANL": "can",
     "PHASE_A": "motor", "PHASE_B": "motor", "PHASE_C": "motor",
@@ -437,129 +452,424 @@ def _block_to_component(block: dict[str, Any]) -> dict[str, Any]:
     )
 
 
-def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    mcu_pins = [
-        pin(1,  "VDD",        "V3V3",       "power_in"),
-        pin(2,  "VSS",        "GND",        "ground"),
-        {**pin(3,  "USB_DM",     "USB_DM",     "bidirectional"),  "mcu_pin": "USB_DM"},
-        {**pin(4,  "USB_DP",     "USB_DP",     "bidirectional"),  "mcu_pin": "USB_DP"},
-        {**pin(5,  "XIN",        "XTAL_XIN",   "passive"),         "mcu_pin": "XIN"},
-        {**pin(6,  "QSPI_SCLK", "FLASH_CLK",  "output"),          "mcu_pin": "QSPI_SCLK"},
-        {**pin(7,  "QSPI_CS",   "FLASH_CS",   "output"),          "mcu_pin": "QSPI_CS"},
-        {**pin(8,  "QSPI_SD0",  "FLASH_D0",   "bidirectional"),   "mcu_pin": "QSPI_SD0"},
-        {**pin(9,  "QSPI_SD1",  "FLASH_D1",   "bidirectional"),   "mcu_pin": "QSPI_SD1"},
-        {**pin(10, "QSPI_SD2",  "FLASH_D2",   "bidirectional"),   "mcu_pin": "QSPI_SD2"},
-        {**pin(11, "QSPI_SD3",  "FLASH_D3",   "bidirectional"),   "mcu_pin": "QSPI_SD3"},
-        {**pin(12, "RUN",        "MCU_RUN",    "input"),           "mcu_pin": "RUN"},
-        {**pin(13, "GPIO23",     "BOOTSEL",    "input"),           "mcu_pin": "GPIO23"},
-        {**pin(14, "GPIO25",     "STATUS_LED", "output"),          "mcu_pin": "GPIO25"},
-        {**pin(15, "SWCLK",      "SWCLK",      "input"),           "mcu_pin": "SWCLK"},
-        {**pin(16, "SWDIO",      "SWDIO",      "bidirectional"),   "mcu_pin": "SWDIO"},
-        {**pin(17, "GPIO0",      "HID_GPIO0",  "bidirectional"),   "mcu_pin": "GPIO0"},
-        {**pin(18, "GPIO1",      "HID_GPIO1",  "bidirectional"),   "mcu_pin": "GPIO1"},
-        {**pin(19, "GPIO2",      "HID_GPIO2",  "bidirectional"),   "mcu_pin": "GPIO2"},
-        {**pin(20, "GPIO3",      "HID_GPIO3",  "bidirectional"),   "mcu_pin": "GPIO3"},
-        {**pin(21, "GPIO4",      "HID_GPIO4",  "bidirectional"),   "mcu_pin": "GPIO4"},
-        {**pin(22, "GPIO5",      "HID_GPIO5",  "bidirectional"),   "mcu_pin": "GPIO5"},
+def _rp2040_pin(
+    number: int,
+    name: str,
+    net: str | None,
+    role: str,
+) -> dict[str, Any]:
+    item = pin(number, name, net, role)
+    if net and role != "no_connect":
+        item["mcu_pin"] = name
+    return item
+
+
+def _rp2040_mcu_pins() -> list[dict[str, Any]]:
+    """Literal RP2040 QFN-56 + exposed-pad map from the manufacturer datasheet."""
+
+    connected: dict[int, tuple[str, str, str]] = {
+        1: ("IOVDD", "V3V3", "power_in"),
+        10: ("IOVDD", "V3V3", "power_in"),
+        19: ("TESTEN", "GND", "ground"),
+        20: ("XIN", "XIN", "passive"),
+        21: ("XOUT", "XOUT", "passive"),
+        22: ("IOVDD", "V3V3", "power_in"),
+        23: ("DVDD", "V1V1", "power_in"),
+        24: ("SWCLK", "SWCLK", "input"),
+        25: ("SWDIO", "SWDIO", "bidirectional"),
+        26: ("RUN", "MCU_RUN", "input"),
+        33: ("IOVDD", "V3V3", "power_in"),
+        42: ("IOVDD", "V3V3", "power_in"),
+        43: ("ADC_AVDD", "V3V3", "power_in"),
+        44: ("VREG_VIN", "V3V3", "power_in"),
+        45: ("VREG_VOUT", "V1V1", "power_out"),
+        46: ("USB_DM", "USB_DM", "bidirectional"),
+        47: ("USB_DP", "USB_DP", "bidirectional"),
+        48: ("USB_VDD", "V3V3", "power_in"),
+        49: ("IOVDD", "V3V3", "power_in"),
+        50: ("DVDD", "V1V1", "power_in"),
+        51: ("QSPI_SD3", "QSPI_D3", "bidirectional"),
+        52: ("QSPI_SCLK", "QSPI_CLK", "output"),
+        53: ("QSPI_SD0", "QSPI_MOSI", "bidirectional"),
+        54: ("QSPI_SD2", "QSPI_D2", "bidirectional"),
+        55: ("QSPI_SD1", "QSPI_MISO", "bidirectional"),
+        56: ("QSPI_CSn", "QSPI_CS", "output"),
+        57: ("GND", "GND", "ground"),
+    }
+    gpio_names = {
+        **{number: f"GPIO{number - 2}" for number in range(2, 10)},
+        **{number: f"GPIO{number - 3}" for number in range(11, 19)},
+        **{number: f"GPIO{number - 11}" for number in range(27, 33)},
+        34: "GPIO22",
+        35: "GPIO23",
+        36: "GPIO24",
+        37: "GPIO25",
+        38: "GPIO26_ADC0",
+        39: "GPIO27_ADC1",
+        40: "GPIO28_ADC2",
+        41: "GPIO29_ADC3",
+    }
+    pins: list[dict[str, Any]] = []
+    for number in range(1, 58):
+        if number in connected:
+            name, net, role = connected[number]
+            pins.append(_rp2040_pin(number, name, net, role))
+        else:
+            pins.append(pin(number, gpio_names[number], None, "no_connect"))
+    return pins
+
+
+def _rp2040_decap(
+    ref: str,
+    target_pin: int,
+    net: str,
+    *,
+    value: str,
+    mpn: str,
+    role: str,
+) -> dict[str, Any]:
+    return component(
+        ref,
+        "decoupling",
+        value,
+        mpn,
+        "C0402" if role == "capacitor_100n" else "C0603",
+        [pin(1, "VCC", net, "passive"), pin(2, "GND", "GND", "ground")],
+        manufacturer="Murata",
+        role=role,
+        decouples={"ref": "U2", "pin": str(target_pin)},
+    )
+
+
+def _rp2040_usb_reference_components() -> list[dict[str, Any]]:
+    components: list[dict[str, Any]] = [
+        component(
+            "J1",
+            "power_input",
+            "USB-C 2.0",
+            "USB4105-GF-A",
+            "USB_C_16Pin",
+            usb_c_connector_pins(raw_data=True),
+            manufacturer="GCT",
+            pcb_rotation_deg=270.0,
+        ),
+        component(
+            "D1",
+            "tvs",
+            "USB 2.0 ESD",
+            "USBLC6-2SC6",
+            "SOT23-6",
+            usb_esd_bridge_pins(dp_out_net="USB_DP_ESD", dm_out_net="USB_DM_ESD"),
+            manufacturer="STMicroelectronics",
+        ),
+        component(
+            "R1",
+            "usb_series_resistor",
+            "27R USB D+",
+            "RC0603FR-0727RL",
+            "R0603",
+            [pin(1, "ESD", "USB_DP_ESD", "passive"), pin(2, "MCU", "USB_DP", "passive")],
+            manufacturer="Yageo",
+            role="resistor_27r",
+            placement_target={"ref": "U2", "pin": "47"},
+        ),
+        component(
+            "R2",
+            "usb_series_resistor",
+            "27R USB D-",
+            "RC0603FR-0727RL",
+            "R0603",
+            [pin(1, "ESD", "USB_DM_ESD", "passive"), pin(2, "MCU", "USB_DM", "passive")],
+            manufacturer="Yageo",
+            role="resistor_27r",
+            placement_target={"ref": "U2", "pin": "46"},
+        ),
+        component(
+            "U1",
+            "regulator_3v3",
+            "3V3 LDO",
+            "AP2112K-3.3TRG1",
+            "SOT-23-5",
+            ap2112k_3v3_pins("USB_VBUS"),
+            manufacturer="Diodes Incorporated",
+            role="regulator_3v3",
+        ),
+        component(
+            "U2",
+            "mcu",
+            "RP2040",
+            "RP2040",
+            "QFN-56",
+            _rp2040_mcu_pins(),
+            manufacturer="Raspberry Pi Ltd",
+            role="mcu",
+            power_transfers=[{"input_pin": "44", "output_pin": "45", "kind": "internal_regulator"}],
+        ),
+        component(
+            "U3",
+            "flash",
+            "16Mbit QSPI Flash",
+            "W25Q16JVSSIQ",
+            "SOIC-8-208mil",
+            [
+                pin(1, "~CS", "QSPI_CS", "input"),
+                pin(2, "IO1", "QSPI_MISO", "bidirectional"),
+                pin(3, "IO2/~WP", "QSPI_D2", "bidirectional"),
+                pin(4, "GND", "GND", "ground"),
+                pin(5, "IO0", "QSPI_MOSI", "bidirectional"),
+                pin(6, "CLK", "QSPI_CLK", "input"),
+                pin(7, "IO3/~HOLD", "QSPI_D3", "bidirectional"),
+                pin(8, "VCC", "V3V3", "power_in"),
+            ],
+            manufacturer="Winbond Electronics",
+            role="flash",
+        ),
+        component(
+            "X1",
+            "crystal_12m",
+            "12MHz RP2040 crystal",
+            "ABM8-272-T3",
+            "Crystal_SMD_3225-4Pin",
+            [
+                pin(1, "XIN", "XIN", "passive"),
+                pin(2, "CASE_GND", "GND", "ground"),
+                pin(3, "XTAL_RETURN", "XTAL_RETURN", "passive"),
+                pin(4, "CASE_GND", "GND", "ground"),
+            ],
+            manufacturer="Abracon",
+            role="crystal_12m",
+        ),
+        component(
+            "R3",
+            "xtal_series_resistor",
+            "1K XTAL damping",
+            "RC0603FR-071KL",
+            "R0603",
+            [pin(1, "XOUT", "XOUT", "passive"), pin(2, "XTAL", "XTAL_RETURN", "passive")],
+            manufacturer="Yageo",
+            role="resistor_1k",
+        ),
+        component(
+            "R4",
+            "flash_cs_pullup",
+            "10K QSPI CS pull-up",
+            "RC0603FR-0710KL",
+            "R0603",
+            [pin(1, "VCC", "V3V3", "passive"), pin(2, "CS", "QSPI_CS", "passive")],
+            manufacturer="Yageo",
+            role="resistor_10k",
+        ),
+        *usb_c_rd_components(5),
+        component(
+            "J2",
+            "debug_header",
+            "Cortex 10-pin SWD",
+            "61201021621",
+            "PinHeader-2x5",
+            [
+                pin(1, "VTREF", "V3V3", "power_in"),
+                pin(2, "SWDIO", "SWDIO", "bidirectional"),
+                pin(3, "GND", "GND", "ground"),
+                pin(4, "SWCLK", "SWCLK", "input"),
+                pin(5, "GND", "GND", "ground"),
+                pin(6, "SWO", None, "no_connect"),
+                pin(7, "KEY", None, "no_connect"),
+                pin(8, "NC", None, "no_connect"),
+                pin(9, "GND", "GND", "ground"),
+                pin(10, "RUN", "MCU_RUN", "bidirectional"),
+            ],
+            manufacturer="Würth Elektronik",
+            role="debug_header",
+        ),
     ]
-    components = [
-        component("J1", "power_input", "USB-C", "USB4105-GF-A", "USB_C_16Pin", usb_c_connector_pins(raw_data=True), manufacturer="GCT"),
-        *usb_c_rd_components(9),
-        component("D1", "tvs", "USB ESD", "USBLC6-2SC6", "SOT23-6", [
-            pin(1, "DP_IN", "USB_DP_RAW", "bidirectional"),
-            pin(2, "DP_OUT", "USB_DP", "bidirectional"),
-            pin(3, "DM_IN", "USB_DM_RAW", "bidirectional"),
-            pin(4, "DM_OUT", "USB_DM", "bidirectional"),
-            pin(5, "GND", "GND", "ground"),
-        ], manufacturer="STMicroelectronics"),
-        component("U1", "mcu", "RP2040", "RP2040", "QFN-56", mcu_pins, manufacturer="Raspberry Pi Ltd"),
-        component("U2", "regulator", "3V3 LDO", "AP2112K-3.3TRG1", "SOT-23-5", ap2112k_3v3_pins("USB_VBUS"), manufacturer="Diodes Incorporated"),
-        component("U3", "flash", "16Mbit QSPI Flash", "W25Q16JVSSIQ", "SOIC-8", [
-            pin(1, "CS",   "FLASH_CS",  "input"),
-            pin(2, "DO",   "FLASH_D1",  "output"),
-            pin(3, "WP",   "FLASH_D2",  "input"),
-            pin(4, "GND",  "GND",       "ground"),
-            pin(5, "DI",   "FLASH_D0",  "input"),
-            pin(6, "CLK",  "FLASH_CLK", "input"),
-            pin(7, "HOLD", "FLASH_D3",  "input"),
-            pin(8, "VCC",  "V3V3",      "power_in"),
-        ], manufacturer="Winbond Electronics"),
-        component("Y1", "crystal", "12MHz Crystal", "ABM8-12.000MHZ-B2-T", "HC-49S-SMD", [
-            pin(1, "XIN",  "XTAL_XIN",  "passive"),
-            pin(2, "XOUT", "XTAL_XOUT", "passive"),
-        ], manufacturer="Abracon"),
-        *crystal_load_caps("C6", "C7", "XTAL_XIN", "XTAL_XOUT"),
-        component("J2", "debug", "SWD DEBUG", "Samtec-FTSH-105-01-L-DV-K", "Cortex_Debug_10Pin", [
-            pin(1, "VREF",  "V3V3",  "power_out"),
-            pin(2, "SWDIO", "SWDIO", "bidirectional"),
-            pin(3, "GND",   "GND",   "ground"),
-            pin(4, "SWCLK", "SWCLK", "input"),
-            pin(5, "RUN",   "MCU_RUN", "bidirectional"),
-        ], manufacturer="Samtec"),
-        component("R1", "boot_resistor", "10K BOOTSEL", "RC0603FR-0710KL", "R0603", [
-            pin(1, "VCC", "V3V3",    "passive"),
-            pin(2, "B",   "BOOTSEL", "passive"),
-        ], manufacturer="Yageo"),
-        component("R2", "pullup", "10K RUN", "RC0603FR-0710KL", "R0603", [
-            pin(1, "VCC", "V3V3",   "passive"),
-            pin(2, "B",   "MCU_RUN", "passive"),
-        ], manufacturer="Yageo"),
-        component("R3", "led_resistor", "1K LED", "RC0603FR-071KL", "R0603", [
-            pin(1, "A", "V3V3",      "passive"),
-            pin(2, "K", "STATUS_LED_A", "passive"),
-        ], manufacturer="Yageo"),
-        component("D2", "led", "RED STATUS LED", "LTST-C193KRKT-5A", "LED_0603", [
-            pin(1, "K", "STATUS_LED", "passive"),
-            pin(2, "A", "STATUS_LED_A", "passive"),
-        ], manufacturer="Lite-On"),
-        component("C1", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [
-            pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground"),
-        ], manufacturer="Murata"),
-        component("C2", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [
-            pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground"),
-        ], manufacturer="Murata"),
-        component("C3", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [
-            pin(1, "VCC", "USB_VBUS", "passive"), pin(2, "GND", "GND", "ground"),
-        ], manufacturer="Murata"),
-        component("C4", "decoupling", "100nF", "GRM188R71C104KA01D", "C0603", [
-            pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground"),
-        ], manufacturer="Murata"),
-        component("C5", "bulk_cap", "22uF", "GRM31CR61E226ME15L", "C1206", [
-            pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground"),
-        ], manufacturer="Murata"),
-    ]
+
+    decap_targets = (
+        (1, "V3V3"),
+        (10, "V3V3"),
+        (22, "V3V3"),
+        (23, "V1V1"),
+        (33, "V3V3"),
+        (42, "V3V3"),
+        (43, "V3V3"),
+        (48, "V3V3"),
+        (49, "V3V3"),
+        (50, "V1V1"),
+    )
+    for index, (target_pin, net) in enumerate(decap_targets, 1):
+        components.append(
+            _rp2040_decap(
+                f"C{index}",
+                target_pin,
+                net,
+                value="100nF",
+                mpn="GRM155R71C104KA88D",
+                role="capacitor_100n",
+            )
+        )
+    components.extend(
+        [
+            _rp2040_decap(
+                "C11",
+                44,
+                "V3V3",
+                value="1uF VREG_VIN",
+                mpn="GRM188R61C105KA93D",
+                role="capacitor_1uf",
+            ),
+            _rp2040_decap(
+                "C12",
+                45,
+                "V1V1",
+                value="1uF VREG_VOUT",
+                mpn="GRM188R61C105KA93D",
+                role="capacitor_1uf",
+            ),
+            component(
+                "C13",
+                "decoupling",
+                "100nF FLASH",
+                "GRM155R71C104KA88D",
+                "C0402",
+                [pin(1, "VCC", "V3V3", "passive"), pin(2, "GND", "GND", "ground")],
+                manufacturer="Murata",
+                role="capacitor_100n",
+                decouples={"ref": "U3", "pin": "8"},
+            ),
+            component(
+                "C14",
+                "decoupling",
+                "100nF USB ESD VBUS",
+                "GRM155R71C104KA88D",
+                "C0402",
+                [pin(1, "VBUS", "USB_VBUS", "passive"), pin(2, "GND", "GND", "ground")],
+                manufacturer="Murata",
+                role="capacitor_100n",
+                decouples={"ref": "D1", "pin": "5"},
+            ),
+            component(
+                "C15",
+                "decoupling",
+                "1uF LDO input",
+                "GRM188R61C105KA93D",
+                "C0603",
+                [pin(1, "VIN", "USB_VBUS", "passive"), pin(2, "GND", "GND", "ground")],
+                manufacturer="Murata",
+                role="capacitor_1uf",
+                decouples={"ref": "U1", "pin": "3"},
+            ),
+            component(
+                "C16",
+                "decoupling",
+                "1uF LDO output",
+                "GRM188R61C105KA93D",
+                "C0603",
+                [pin(1, "VOUT", "V3V3", "passive"), pin(2, "GND", "GND", "ground")],
+                manufacturer="Murata",
+                role="capacitor_1uf",
+                decouples={"ref": "U1", "pin": "5"},
+            ),
+            component(
+                "C17",
+                "xtal_cap",
+                "15pF XTAL",
+                "GRM1555C1H150JA01D",
+                "C0402",
+                [pin(1, "XTAL", "XIN", "passive"), pin(2, "GND", "GND", "ground")],
+                manufacturer="Murata",
+                role="xtal_cap_15p",
+            ),
+            component(
+                "C18",
+                "xtal_cap",
+                "15pF XTAL",
+                "GRM1555C1H150JA01D",
+                "C0402",
+                [pin(1, "XTAL", "XTAL_RETURN", "passive"), pin(2, "GND", "GND", "ground")],
+                manufacturer="Murata",
+                role="xtal_cap_15p",
+            ),
+        ]
+    )
+    return components
+
+
+def _build_rp2040_usb_reference_graph(architecture: str) -> dict[str, Any]:
+    components = _rp2040_usb_reference_components()
     net_classes = {
-        "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
-        "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
-        "FLASH_CLK": "signal", "FLASH_CS": "signal",
-        "FLASH_D0": "signal", "FLASH_D1": "signal", "FLASH_D2": "signal", "FLASH_D3": "signal",
+        "GND": "ground",
+        "USB_VBUS": "power",
+        "V3V3": "power",
+        "V1V1": "power",
+        "USB_DP": "usb",
+        "USB_DM": "usb",
+        "USB_DP_ESD": "usb",
+        "USB_DM_ESD": "usb",
+        "USB_DP_RAW": "usb",
+        "USB_DM_RAW": "usb",
+        "QSPI_CLK": "signal",
+        "QSPI_CS": "signal",
+        "QSPI_MOSI": "signal",
+        "QSPI_MISO": "signal",
+        "QSPI_D2": "signal",
+        "QSPI_D3": "signal",
+        "SWDIO": "signal",
+        "SWCLK": "signal",
+        "XIN": "signal",
+        "XOUT": "signal",
+        "XTAL_RETURN": "signal",
     }
     endpoints: dict[str, list[str]] = defaultdict(list)
     for item in components:
         for item_pin in item["pins"]:
             if item_pin.get("net"):
                 endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
-    nets = [
-        {
+    nets: list[dict[str, Any]] = []
+    for name, connected_pins in sorted(endpoints.items()):
+        signal_class = net_classes.get(name, "signal")
+        net: dict[str, Any] = {
             "name": name,
-            "signal_class": net_classes.get(name, "signal"),
+            "signal_class": signal_class,
             "voltage_domain": _domain(name),
-            "connected_pins": sorted(pins),
-            "required_track_width_mm": 0.5 if net_classes.get(name) == "power" else 0.15,
+            "connected_pins": sorted(connected_pins),
+            "required_track_width_mm": (
+                0.8 if signal_class == "usb"
+                else 0.5 if signal_class == "power"
+                else 0.2 if signal_class == "ground"
+                else 0.15
+            ),
         }
-        for name, pins in sorted(endpoints.items())
-    ]
+        if signal_class == "usb":
+            net.update(
+                {
+                    "differential_pair": "USB_D",
+                    "target_differential_impedance_ohms": 90,
+                    "required_pair_gap_mm": 0.15,
+                    "continuous_reference_net": "GND",
+                }
+            )
+        nets.append(net)
     return {
         "components": components,
         "nets": nets,
         "design_basis": {
-            "architecture": "rp2040_usb_hid_qspi_flash",
-            "usb_powered": True,
-            "native_usb_phy": True,
-            "qspi_flash_required": True,
+            "architecture": architecture,
+            "mcu_family": "RP2040",
+            "usb_native": True,
+            "external_flash_required": True,
+            "usb_controlled_impedance_required": True,
+            "usb_target_differential_impedance_ohms": 90,
+            "usb_reference_trace_width_mm": 0.8,
+            "usb_reference_pair_gap_mm": 0.15,
+            "usb_reference_board_thickness_mm": 1.0,
+            "usb_continuous_ground_reference_required": True,
             "board_carries_motor_power": False,
         },
     }
+
+
+def build_usb_hid_controller_graph(spec: dict[str, Any]) -> dict[str, Any]:
+    return _build_rp2040_usb_reference_graph("rp2040_usb_hid_qspi_flash")
+
 
 
 def build_lora_sensor_node_graph(spec: dict[str, Any]) -> dict[str, Any]:
@@ -1216,119 +1526,8 @@ def build_stm32g0_power_monitor_graph(spec: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_rp2040_usb_device_graph(spec: dict[str, Any]) -> dict[str, Any]:
-    usbc_pins = usb_c_connector_pins(raw_data=True)
-    tvs_pins = [
-        pin(1, "DP_IN",  "USB_DP_RAW", "bidirectional"),
-        pin(2, "DP_OUT", "USB_DP",     "bidirectional"),
-        pin(3, "DM_IN",  "USB_DM_RAW", "bidirectional"),
-        pin(4, "DM_OUT", "USB_DM",     "bidirectional"),
-        pin(5, "GND",    "GND",        "ground"),
-    ]
-    ldo_pins = ap2112k_3v3_pins("USB_VBUS")
-    mcu_pins = [
-        pin(1,  "VDD",       "V3V3",      "power_in"),
-        pin(2,  "VSS",       "GND",       "ground"),
-        pin(3,  "USB_DM",    "USB_DM",    "bidirectional"),
-        pin(4,  "USB_DP",    "USB_DP",    "bidirectional"),
-        pin(5,  "XIN",       "XIN",       "passive"),
-        pin(6,  "QSPI_SCLK", "QSPI_CLK",  "output"),
-        pin(7,  "QSPI_CS",   "QSPI_CS",   "output"),
-        pin(8,  "QSPI_SD0",  "QSPI_MOSI", "bidirectional"),
-        pin(9,  "QSPI_SD1",  "QSPI_MISO", "bidirectional"),
-        pin(10, "QSPI_SD2",  "QSPI_D2",   "bidirectional"),
-        pin(11, "QSPI_SD3",  "QSPI_D3",   "bidirectional"),
-        pin(12, "RUN",       "MCU_RUN",   "input"),
-        pin(15, "SWCLK",     "SWCLK",     "input"),
-        pin(16, "SWDIO",     "SWDIO",     "bidirectional"),
-        pin(17, "XOUT",      "XOUT",      "passive"),
-        pin(18, "TESTEN",    "GND",       "ground"),
-        pin(33, "GND",       "GND",       "ground"),
-        pin(34, "GND",       "GND",       "ground"),
-        pin(44, "DVDD",      "V3V3",      "power_in"),
-        pin(45, "VDD",       "V3V3",      "power_in"),
-        pin(46, "VDD",       "V3V3",      "power_in"),
-        pin(47, "VDD",       "V3V3",      "power_in"),
-        pin(48, "VDD",       "V3V3",      "power_in"),
-    ]
-    flash_pins = [
-        pin(1, "~CS",   "QSPI_CS",   "input"),
-        pin(2, "IO1",   "QSPI_MISO", "bidirectional"),
-        pin(3, "~WP",   "QSPI_D2",   "bidirectional"),
-        pin(4, "GND",   "GND",       "ground"),
-        pin(5, "IO0",   "QSPI_MOSI", "bidirectional"),
-        pin(6, "CLK",   "QSPI_CLK",  "input"),
-        pin(7, "~HOLD", "QSPI_D3",   "bidirectional"),
-        pin(8, "VCC",   "V3V3",      "power_in"),
-    ]
-    xtal_pins = [
-        pin(1, "XIN",  "XIN",  "passive"),
-        pin(2, "XOUT", "XOUT", "passive"),
-    ]
-    swd_pins = [
-        pin(1,  "P1",  "V3V3",  "power_in"),
-        pin(2,  "P2",  "SWDIO", "passive"),
-        pin(3,  "P3",  "GND",   "ground"),
-        pin(4,  "P4",  "SWCLK", "passive"),
-        pin(5,  "P5",  "GND",   "ground"),
-        pin(6,  "P6",  "SWO",   "output"),
-        pin(7,  "P7",  None,    "no_connect"),
-        pin(8,  "P8",  None,    "no_connect"),
-        pin(9,  "P9",  "GND",   "ground"),
-        pin(10, "P10", "GND",   "ground"),
-    ]
-    decap_pins = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
-    bulk_pins  = [pin(1, "VCC", "V3V3", "power_in"), pin(2, "GND", "GND", "ground")]
-    input_bulk_pins = [pin(1, "VCC", "USB_VBUS", "power_in"), pin(2, "GND", "GND", "ground")]
+    return _build_rp2040_usb_reference_graph("rp2040_qspi_usb_device")
 
-    components = [
-        component("J1",  "power_input",  "USB-C POWER",  "USB4105-GF-A",        "USB_C_16Pin",       usbc_pins),
-        *usb_c_rd_components(5),
-        component("D1",  "tvs",          "USB ESD",      "USBLC6-2SC6",         "SOT23-6",           tvs_pins),
-        component("U1",  "regulator_3v3","3V3 LDO",      "AP2112K-3.3TRG1",     "SOT23-5",           ldo_pins),
-        component("U2",  "mcu",          "RP2040",        "RP2040",              "QFN-56",            mcu_pins),
-        component("U3",  "flash",        "2MB QSPI",     "W25Q16JVSIQ",         "SOIC-8",            flash_pins),
-        component("X1",  "crystal_12m",  "12MHz XTAL",   "ABM8-12.000MHZ-B2-T", "HC-49S-SMD",        xtal_pins),
-        *crystal_load_caps("C5", "C6", "XIN", "XOUT"),
-        component("J2",  "debug_header", "SWD 10-pin",   "61201021621",          "PinHeader-2x5",     swd_pins),
-        component("C1",  "decoupling",   "100nF",        "GRM155R71C104KA88D",  "0402",              decap_pins),
-        component("C2",  "decoupling",   "100nF",        "GRM155R71C104KA88D",  "0402",              decap_pins),
-        component("C3",  "bulk_cap",     "10uF",         "GRM188R60J106ME47D",  "0603",              bulk_pins),
-        component("C4",  "bulk_cap",     "10uF USB_IN",  "GRM188R60J106ME47D",  "0603",              input_bulk_pins),
-    ]
-    net_classes = {
-        "GND": "ground", "USB_VBUS": "power", "V3V3": "power",
-        "USB_DP": "usb", "USB_DM": "usb", "USB_DP_RAW": "usb", "USB_DM_RAW": "usb",
-        "QSPI_CLK": "signal", "QSPI_MOSI": "signal", "QSPI_MISO": "signal",
-        "QSPI_CS": "signal", "QSPI_D2": "signal", "QSPI_D3": "signal",
-        "SWDIO": "signal", "SWCLK": "signal",
-        "XIN": "signal", "XOUT": "signal",
-    }
-    endpoints: dict[str, list[str]] = defaultdict(list)
-    for item in components:
-        for item_pin in item["pins"]:
-            if item_pin.get("net"):
-                endpoints[item_pin["net"]].append(f"{item['ref']}.{item_pin['number']}")
-    nets = [
-        {
-            "name": name,
-            "signal_class": net_classes.get(name, "signal"),
-            "voltage_domain": _domain(name),
-            "connected_pins": sorted(pins),
-            "required_track_width_mm": 0.5 if net_classes.get(name) == "power" else (0.2 if net_classes.get(name) == "ground" else 0.15),
-        }
-        for name, pins in sorted(endpoints.items())
-    ]
-    return {
-        "components": components,
-        "nets": nets,
-        "design_basis": {
-            "architecture": "rp2040_qspi_usb_device",
-            "mcu_family": "RP2040",
-            "usb_native": True,
-            "external_flash_required": True,
-            "board_carries_motor_power": False,
-        },
-    }
 
 
 def build_samd21_sensor_hub_graph(spec: dict[str, Any]) -> dict[str, Any]:

@@ -1,0 +1,62 @@
+{
+  "artifacts": [],
+  "backend": {
+    "authority": "heuristic",
+    "name": "power-integrity-estimator"
+  },
+  "failures": [],
+  "gate": "power_integrity_estimate",
+  "metrics": {
+    "coverage": {
+      "V1V1": {
+        "bulk": [],
+        "declared_peak_current_a": 0.15,
+        "decoupling": [
+          "C10",
+          "C12",
+          "C4"
+        ],
+        "high_current_connector_loads": [],
+        "loads": [
+          "U2"
+        ]
+      },
+      "V3V3": {
+        "bulk": [],
+        "declared_peak_current_a": 0.3,
+        "decoupling": [
+          "C1",
+          "C11",
+          "C13",
+          "C16",
+          "C2",
+          "C3",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9"
+        ],
+        "high_current_connector_loads": [],
+        "loads": [
+          "J2",
+          "U2",
+          "U3"
+        ]
+      }
+    },
+    "errors": 0,
+    "oracle_boundary": "Heuristic decoupling and bulk-cap coverage only; transient, impedance, and stability still require simulation or bench evidence.",
+    "rails_checked": 2,
+    "regulator_current_limits": {
+      "U1": {
+        "declared_peak_current_a": 0.3,
+        "mpn": "AP2112K-3.3TRG1",
+        "output_current_limit_a": 0.6,
+        "rail": "V3V3"
+      }
+    },
+    "warnings": 0
+  },
+  "status": "pass"
+}

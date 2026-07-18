@@ -1,8 +1,16 @@
 """Local web viewer for the review bundle (stdlib only, no npm)."""
 from __future__ import annotations
 
+import hashlib
+import hmac
 import http.server
 import json
+import os
+import re
+import secrets
+import socket
+import stat
+import tempfile
 import threading
 import urllib.parse
 import webbrowser
@@ -11,6 +19,47 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .service import HardwareService
+
+
+_REQUEST_TIMEOUT_SECONDS = 10.0
+_MAX_COMMENT_BYTES = 64 * 1024
+_MAX_COMMENT_TEXT_CHARS = 16 * 1024
+_MAX_COMMENT_FIELD_CHARS = 256
+
+
+class _HardenedHTTPServer(http.server.ThreadingHTTPServer):
+    """Threaded local server with bounded idle/read time per connection."""
+
+    daemon_threads = True
+    block_on_close = False
+
+    def get_request(self) -> tuple[socket.socket, object]:
+        request, client_address = super().get_request()
+        request.settimeout(_REQUEST_TIMEOUT_SECONDS)
+        return request, client_address
+
+
+def _send_response_headers(
+    handler: http.server.BaseHTTPRequestHandler,
+    code: int,
+    ctype: str,
+    length: int,
+    headers: dict[str, str] | None = None,
+) -> None:
+    handler.send_response(code)
+    handler.send_header("Content-Type", ctype)
+    handler.send_header("Content-Length", str(length))
+    handler.send_header("X-Content-Type-Options", "nosniff")
+    handler.send_header("Referrer-Policy", "no-referrer")
+    handler.send_header("X-Frame-Options", "DENY")
+    handler.send_header(
+        "Content-Security-Policy",
+        "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; "
+        "connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+    )
+    for key, value in (headers or {}).items():
+        handler.send_header(key, value)
+    handler.end_headers()
 
 
 def _merge_bundle(bundle_path: Path, comments_path: Path) -> dict:
@@ -55,6 +104,7 @@ pre{margin:0;padding:.5rem .75rem;font-size:.75rem;white-space:pre-wrap;color:#9
 <h1>hw-codesign Review Viewer</h1>
 <div id="status">Loading bundle from /api/bundle …</div>
 <div id="app"></div>
+<!--BUNDLE_DATA_INJECTION-->
 <script>
 const STATUS_COLOR={pass:"#22c55e",fail:"#ef4444",blocked:"#f97316",candidate:"#a855f7",released:"#3b82f6"};
 
@@ -85,23 +135,23 @@ function renderGates(gr){
 function renderRequirements(req){
   if(!req||!req.active_unresolved_count) return '';
   const rows=(req.active_unresolved||[]).map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.source)}</td><td>${esc(r.category)}</td><td>${r.release_blocking?'&#9888; release-blocking':''}</td></tr>`).join('');
-  return `<section><h2>Unresolved Requirements (${req.active_unresolved_count})</h2><table><thead><tr><th>ID</th><th>Source</th><th>Category</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+  return `<section><h2>Unresolved Requirements (${esc(req.active_unresolved_count)})</h2><table><thead><tr><th>ID</th><th>Source</th><th>Category</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table></section>`;
 }
 
 function renderAssumptions(asm){
   if(!asm||!asm.unresolved_critical) return '';
   const items=(asm.unresolved_critical_names||[]).map(n=>`<div class="unresolved">&#9888; Critical assumption unresolved: <strong>${esc(n)}</strong></div>`).join('');
-  return `<section><h2>Critical Assumptions (${asm.unresolved_critical} unresolved)</h2>${items}</section>`;
+  return `<section><h2>Critical Assumptions (${esc(asm.unresolved_critical)} unresolved)</h2>${items}</section>`;
 }
 
 function renderPlacement(pl){
   if(!pl) return '';
   const unenforced=(pl.unenforced_constraint_kinds||[]).map(esc).join(', ')||'none';
-  const sources=Object.entries(pl.source_counts||{}).sort().map(([k,v])=>`${esc(k)}: ${v}`).join(', ');
+  const sources=Object.entries(pl.source_counts||{}).sort().map(([k,v])=>`${esc(k)}: ${esc(v)}`).join(', ');
   return `<section><h2>Placement Proposal</h2><table><tbody>
     <tr><th>Board</th><td>${esc(String(pl.board_width_mm))} &times; ${esc(String(pl.board_height_mm))} mm</td></tr>
-    <tr><th>Placements</th><td>${pl.placement_count}</td></tr>
-    <tr><th>Constraints</th><td>${pl.constraint_count}</td></tr>
+    <tr><th>Placements</th><td>${esc(pl.placement_count)}</td></tr>
+    <tr><th>Constraints</th><td>${esc(pl.constraint_count)}</td></tr>
     <tr><th>Unenforced</th><td class="warn">${unenforced}</td></tr>
     <tr><th>Sources</th><td>${sources}</td></tr>
   </tbody></table></section>`;
@@ -124,10 +174,10 @@ function render(b){
   let html=`<h1>Review: ${esc(p.name)}</h1>`;
   html+=`<div class="meta">Rev ${esc(p.revision)} &bull; ${esc(p.backend)} &bull; ${esc(p.target_use)} &bull; ${esc(b.generated_at)} &bull; ${esc((b.bundle_hash||'').slice(0,12))}</div>`;
   html+=`<div class="summary">
-    <span class="chip ok">${sm.pass||0} pass</span>
-    <span class="chip warn">${sm.blocked||0} blocked</span>
-    <span class="chip" style="color:#ef4444">${sm.fail||0} fail</span>
-    <span class="chip">${sm.total||0} total</span>
+    <span class="chip ok">${esc(sm.pass||0)} pass</span>
+    <span class="chip warn">${esc(sm.blocked||0)} blocked</span>
+    <span class="chip" style="color:#ef4444">${esc(sm.fail||0)} fail</span>
+    <span class="chip">${esc(sm.total||0)} total</span>
   </div>`;
   html+=renderAssumptions(b.assumptions);
   html+=renderRequirements(b.requirements);
@@ -170,6 +220,7 @@ button{background:#3b82f6;color:#fff;border:none;padding:.5rem 1rem;border-radiu
 <body>
 <h2>Add Comment / Decision</h2>
 <form method="post" action="/api/comment">
+<input type="hidden" name="csrf_token" value="@@CSRF_TOKEN@@">
 <label>Target type
   <select name="target_type">
     <option value="general">General</option>
@@ -192,6 +243,9 @@ button{background:#3b82f6;color:#fff;border:none;padding:.5rem 1rem;border-radiu
 class _Handler(http.server.BaseHTTPRequestHandler):
     bundle_path: Path
     comments_path: Path
+    csrf_token: str
+    comment_lock: threading.Lock
+    port: int
 
     def log_message(self, fmt: str, *args: object) -> None:  # noqa: D102
         pass  # suppress access log
@@ -203,7 +257,8 @@ class _Handler(http.server.BaseHTTPRequestHandler):
             data = json.dumps(merged, sort_keys=True, indent=2).encode()
             self._respond(200, "application/json", data)
         elif parsed.path == "/comment":
-            self._respond(200, "text/html", _COMMENTS_HTML.encode())
+            html = _COMMENTS_HTML.replace("@@CSRF_TOKEN@@", self.csrf_token)
+            self._respond(200, "text/html", html.encode())
         else:
             self._respond(200, "text/html", _VIEWER_HTML.encode())
 
@@ -211,14 +266,63 @@ class _Handler(http.server.BaseHTTPRequestHandler):
         if urllib.parse.urlparse(self.path).path != "/api/comment":
             self._respond(404, "text/plain", b"not found")
             return
-        length = int(self.headers.get("Content-Length", 0))
-        body = urllib.parse.parse_qs(self.rfile.read(length).decode())
+        transfer_encoding = self.headers.get("Transfer-Encoding")
+        content_lengths = self.headers.get_all("Content-Length", failobj=[])
+        if transfer_encoding or len(content_lengths) != 1:
+            self._respond(411 if not transfer_encoding and not content_lengths else 400, "text/plain", b"one Content-Length header required")
+            return
+        try:
+            length = int(content_lengths[0])
+        except (TypeError, ValueError):
+            self._respond(400, "text/plain", b"invalid Content-Length")
+            return
+        if length <= 0:
+            self._respond(400, "text/plain", b"empty comment")
+            return
+        if length > _MAX_COMMENT_BYTES:
+            self._respond(413, "text/plain", b"comment form too large")
+            return
+        media_type = self.headers.get("Content-Type", "").partition(";")[0].strip().lower()
+        if media_type != "application/x-www-form-urlencoded":
+            self._respond(415, "text/plain", b"Content-Type must be application/x-www-form-urlencoded")
+            return
+        try:
+            raw_body = self.rfile.read(length)
+        except (TimeoutError, OSError):
+            self._respond(408, "text/plain", b"comment body timed out")
+            return
+        if len(raw_body) != length:
+            self._respond(400, "text/plain", b"incomplete comment body")
+            return
+        try:
+            body = urllib.parse.parse_qs(
+                raw_body.decode("utf-8", errors="strict"),
+                keep_blank_values=True,
+                max_num_fields=16,
+            )
+        except (UnicodeDecodeError, ValueError):
+            self._respond(400, "text/plain", b"invalid comment form")
+            return
+        supplied_token = (body.get("csrf_token") or [""])[0]
+        if not isinstance(supplied_token, str) or not hmac.compare_digest(supplied_token, self.csrf_token):
+            self._respond(403, "text/plain", b"invalid CSRF token")
+            return
         text = (body.get("text") or [""])[0].strip()
         target_type = (body.get("target_type") or ["general"])[0].strip() or "general"
         target_id = (body.get("target_id") or [""])[0].strip() or None
         author = (body.get("author") or [""])[0].strip() or None
         if not text:
             self._respond(400, "text/plain", b"text required")
+            return
+        if target_type not in {"general", "gate_failure", "requirement", "component"}:
+            self._respond(400, "text/plain", b"invalid target type")
+            return
+        if (
+            len(text) > _MAX_COMMENT_TEXT_CHARS
+            or (target_id is not None and len(target_id) > _MAX_COMMENT_FIELD_CHARS)
+            or (author is not None and len(author) > _MAX_COMMENT_FIELD_CHARS)
+        ):
+            self._respond(413, "text/plain", b"comment field too large")
             return
         import uuid
         from datetime import UTC, datetime
@@ -233,18 +337,14 @@ class _Handler(http.server.BaseHTTPRequestHandler):
             "text": text,
             "bundle_hash": bundle_hash,
         }, sort_keys=True)
-        with self.comments_path.open("a", encoding="utf-8") as fh:
-            fh.write(entry + "\n")
+        with self.comment_lock:
+            with self.comments_path.open("a", encoding="utf-8") as fh:
+                fh.write(entry + "\n")
         # bundle.json is intentionally NOT rewritten; _merge_bundle() merges at read time.
         self._respond(303, "text/plain", b"", headers={"Location": "/"})
 
     def _respond(self, code: int, ctype: str, body: bytes, headers: dict[str, str] | None = None) -> None:
-        self.send_response(code)
-        self.send_header("Content-Type", ctype)
-        self.send_header("Content-Length", str(len(body)))
-        for k, v in (headers or {}).items():
-            self.send_header(k, v)
-        self.end_headers()
+        _send_response_headers(self, code, ctype, len(body), headers)
         if body:
             self.wfile.write(body)
 
@@ -260,8 +360,11 @@ def serve_review(service: "HardwareService", project: str, port: int = 7474, ope
 
     Handler.bundle_path = bundle_path
     Handler.comments_path = comments_path
+    Handler.csrf_token = secrets.token_urlsafe(32)
+    Handler.comment_lock = threading.Lock()
+    Handler.port = port
 
-    server = http.server.HTTPServer(("127.0.0.1", port), Handler)
+    server = _HardenedHTTPServer(("127.0.0.1", port), Handler)
     url = f"http://127.0.0.1:{port}/"
     print(f"Review viewer: {url}")
     print(f"Bundle: {bundle_path}")
@@ -287,7 +390,7 @@ def build_standalone_html(bundle: dict, comments: list | None = None) -> str:
     # Replace </ with <\/ to prevent the JSON from breaking the <script> tag.
     data_json = json.dumps(merged, separators=(",", ":")).replace("</", "<\\/")
     injection = f"<script>window.__BUNDLE_DATA={data_json};</script>"
-    return _VIEWER_HTML.replace("</body>", injection + "\n</body>")
+    return _VIEWER_HTML.replace("<!--BUNDLE_DATA_INJECTION-->", injection)
 
 
 # ---------------------------------------------------------------------------
@@ -321,12 +424,13 @@ a{color:#60a5fa;text-decoration:none;}a:hover{text-decoration:underline;}
 </table>
 <script>
 const SC={pass:"#22c55e",fail:"#ef4444",blocked:"#f97316"};
-function chip(s,n){return n?`<span class="chip" style="color:${SC[s]||'#94a3b8'}">${n} ${s}</span>`:''}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function chip(s,n){return n?`<span class="chip" style="color:${SC[s]||'#94a3b8'}">${esc(n)} ${esc(s)}</span>`:''}
 function row(p){
   const chips=chip('pass',p.pass)+chip('fail',p.fail)+chip('blocked',p.blocked);
   const when=p.generated_at?(new Date(p.generated_at)).toLocaleString():'—';
   const link=p.has_bundle?`<a href="/project/${encodeURIComponent(p.name)}">View</a>`:'<span class="muted">no bundle</span>';
-  return `<tr><td><strong>${p.name}</strong></td><td>${chips||'<span class="muted">—</span>'}</td><td class="muted">${when}</td><td>${link}</td></tr>`;
+  return `<tr><td><strong>${esc(p.name)}</strong></td><td>${chips||'<span class="muted">—</span>'}</td><td class="muted">${esc(when)}</td><td>${link}</td></tr>`;
 }
 async function load(){
   try{
@@ -373,9 +477,10 @@ code{background:#1e293b;padding:.1rem .35rem;border-radius:.25rem;font-size:.8re
 <tbody id="tbody"></tbody>
 </table>
 <script>
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function row(b){
   const when=(new Date(b.received_at)).toLocaleString();
-  return `<tr><td><strong>${b.project_name||'unknown'}</strong></td><td class="muted">${(b.bundle_hash||'').slice(0,12)}</td><td class="muted">${when}</td><td><a href="/bundle/${encodeURIComponent(b.bundle_hash)}">View</a></td></tr>`;
+  return `<tr><td><strong>${esc(b.project_name||'unknown')}</strong></td><td class="muted">${esc((b.bundle_hash||'').slice(0,12))}</td><td class="muted">${esc(when)}</td><td><a href="/bundle/${encodeURIComponent(b.bundle_hash)}">View</a></td></tr>`;
 }
 async function load(){
   try{
@@ -438,10 +543,7 @@ class _DashboardHandler(http.server.BaseHTTPRequestHandler):
             self._respond(404, "text/plain", b"not found")
 
     def _respond(self, code: int, ctype: str, body: bytes) -> None:
-        self.send_response(code)
-        self.send_header("Content-Type", ctype)
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
+        _send_response_headers(self, code, ctype, len(body))
         if body:
             self.wfile.write(body)
 
@@ -452,7 +554,7 @@ def serve_dashboard(service: "HardwareService", port: int = 7475, open_browser: 
 
     Handler.service = service
 
-    server = http.server.HTTPServer(("127.0.0.1", port), Handler)
+    server = _HardenedHTTPServer(("127.0.0.1", port), Handler)
     url = f"http://127.0.0.1:{port}/"
     print(f"Dashboard: {url}")
     print("Press Ctrl-C to stop.")
@@ -470,6 +572,136 @@ def serve_dashboard(service: "HardwareService", port: int = 7475, open_browser: 
 # Bundle receiver server (accepts uploaded bundles via HTTP POST)
 # ---------------------------------------------------------------------------
 
+_BUNDLE_HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
+_MAX_BUNDLE_BYTES = 50 * 1024 * 1024
+_MAX_META_BYTES = 256 * 1024
+_MAX_SUMMARY_BYTES = 64 * 1024
+_MAX_PROJECT_NAME_CHARS = 256
+
+
+def _is_bundle_hash(value: object) -> bool:
+    return isinstance(value, str) and _BUNDLE_HASH_RE.fullmatch(value) is not None
+
+
+def _receiver_path_parts(target: str) -> tuple[str, ...]:
+    """Decode a request path without accepting ambiguous or encoded separators."""
+    try:
+        raw_path = urllib.parse.urlsplit(target).path
+    except ValueError as exc:
+        raise ValueError("malformed request path") from exc
+    if raw_path == "/":
+        return ()
+    if not raw_path.startswith("/") or raw_path.endswith("/"):
+        raise ValueError("malformed request path")
+
+    raw_parts = raw_path[1:].split("/")
+    if any(not part for part in raw_parts):
+        raise ValueError("malformed request path")
+
+    parts: list[str] = []
+    for raw_part in raw_parts:
+        if re.search(r"%(?![0-9A-Fa-f]{2})", raw_part):
+            raise ValueError("malformed percent escape")
+        try:
+            part = urllib.parse.unquote(raw_part, encoding="utf-8", errors="strict")
+        except UnicodeDecodeError as exc:
+            raise ValueError("request path is not valid UTF-8") from exc
+        if (
+            part in {".", ".."}
+            or "/" in part
+            or "\\" in part
+            or any(ord(char) < 0x20 or ord(char) == 0x7F for char in part)
+        ):
+            raise ValueError("malformed request path segment")
+        parts.append(part)
+    return tuple(parts)
+
+
+def _inbox_root(inbox_dir: Path) -> Path:
+    root = Path(inbox_dir).resolve(strict=True)
+    if not root.is_dir():
+        raise ValueError("receiver inbox is not a directory")
+    return root
+
+
+def _safe_inbox_member(inbox_dir: Path, filename: str) -> Path:
+    """Resolve one direct inbox member and reject symlink/path escapes."""
+    if not filename or Path(filename).name != filename or "/" in filename or "\\" in filename:
+        raise ValueError("invalid inbox filename")
+    root = _inbox_root(inbox_dir)
+    target = root / filename
+    if target.is_symlink():
+        raise ValueError("inbox member cannot be a symlink")
+    return target
+
+
+def _read_inbox_member(inbox_dir: Path, filename: str, *, max_bytes: int) -> bytes:
+    root = _inbox_root(inbox_dir)
+    _safe_inbox_member(root, filename)
+    fd: int | None = None
+    if os.open in os.supports_dir_fd and hasattr(os, "O_NOFOLLOW"):
+        root_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+        root_fd = os.open(root, root_flags)
+        try:
+            fd = os.open(filename, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=root_fd)
+        finally:
+            os.close(root_fd)
+    else:
+        path = _safe_inbox_member(root, filename)
+        fd = os.open(path, os.O_RDONLY | getattr(os, "O_BINARY", 0))
+        if path.is_symlink():
+            os.close(fd)
+            raise ValueError("inbox member cannot be a symlink")
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise ValueError("inbox member is not a regular file")
+        with os.fdopen(fd, "rb") as fh:
+            fd = None
+            data = fh.read(max_bytes + 1)
+    finally:
+        if fd is not None:
+            os.close(fd)
+    if len(data) > max_bytes:
+        raise ValueError("stored receiver file exceeds size limit")
+    return data
+
+
+def _atomic_write_inbox_member(inbox_dir: Path, filename: str, data: bytes) -> None:
+    root = _inbox_root(inbox_dir)
+    # Validate the currently resolved destination as well as the lexical filename.
+    # os.replace then replaces a racing symlink rather than following it.
+    _safe_inbox_member(root, filename)
+    target = root / filename
+    fd, temporary_name = tempfile.mkstemp(prefix=".review-upload-", suffix=".tmp", dir=root)
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        os.replace(temporary_name, target)
+    finally:
+        Path(temporary_name).unlink(missing_ok=True)
+
+
+def _strict_json_loads(data: bytes) -> object:
+    def reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    def reject_constant(value: str) -> None:
+        raise ValueError(f"non-finite JSON number: {value}")
+
+    return json.loads(data, object_pairs_hook=reject_duplicate_keys, parse_constant=reject_constant)
+
+
+def _canonical_bundle_hash(bundle: dict[str, object]) -> str:
+    canonical = {key: value for key, value in bundle.items() if key not in {"bundle_hash", "generated_at"}}
+    canonical_bytes = json.dumps(canonical, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    return hashlib.sha256(canonical_bytes).hexdigest()
+
+
 class _ReceiverHandler(http.server.BaseHTTPRequestHandler):
     inbox_dir: Path
     port: int
@@ -478,80 +710,174 @@ class _ReceiverHandler(http.server.BaseHTTPRequestHandler):
         pass
 
     def do_GET(self) -> None:  # noqa: N802
-        parts = [p for p in urllib.parse.urlparse(self.path).path.split("/") if p]
+        try:
+            parts = _receiver_path_parts(self.path)
+        except ValueError:
+            self._respond(400, "text/plain", b"malformed request path")
+            return
 
         if not parts:
             html = _RECEIVER_HTML.replace("{PORT}", str(self.port))
             self._respond(200, "text/html", html.encode())
-        elif parts == ["api", "bundles"]:
-            bundles = []
-            for path in sorted(self.inbox_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        elif parts == ("api", "bundles"):
+            records: list[tuple[float, dict[str, object]]] = []
+            for candidate in self.inbox_dir.glob("*.json"):
+                if candidate.name.endswith(".meta.json"):
+                    continue
+                bundle_hash = candidate.name.removesuffix(".json")
+                if not _is_bundle_hash(bundle_hash):
+                    continue
                 try:
-                    meta_path = path.with_suffix(".meta.json")
-                    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.is_file() else {}
-                    bundles.append(meta)
+                    bundle_path = _safe_inbox_member(self.inbox_dir, candidate.name)
+                    meta_data = _read_inbox_member(
+                        self.inbox_dir,
+                        f"{bundle_hash}.meta.json",
+                        max_bytes=_MAX_META_BYTES,
+                    )
+                    meta = _strict_json_loads(meta_data)
+                    if not isinstance(meta, dict) or meta.get("bundle_hash") != bundle_hash:
+                        continue
+                    records.append((bundle_path.stat().st_mtime, meta))
                 except Exception:
                     pass
+            bundles = [meta for _, meta in sorted(records, key=lambda record: record[0], reverse=True)]
             self._respond(200, "application/json", json.dumps({"bundles": bundles}, sort_keys=True, indent=2).encode())
-        elif len(parts) == 3 and parts[:2] == ["api", "bundle"]:
-            bundle_hash = urllib.parse.unquote(parts[2])
-            bundle_path = self.inbox_dir / f"{bundle_hash}.json"
-            if bundle_path.is_file():
-                self._respond(200, "application/json", bundle_path.read_bytes())
-            else:
+        elif len(parts) == 3 and parts[:2] == ("api", "bundle"):
+            bundle_hash = parts[2]
+            if not _is_bundle_hash(bundle_hash):
+                self._respond(400, "text/plain", b"invalid bundle hash")
+                return
+            try:
+                data = _read_inbox_member(self.inbox_dir, f"{bundle_hash}.json", max_bytes=_MAX_BUNDLE_BYTES)
+            except (FileNotFoundError, IsADirectoryError):
                 self._respond(404, "text/plain", b"bundle not found")
+            except ValueError:
+                self._respond(400, "text/plain", b"invalid bundle path")
+            except OSError:
+                self._respond(500, "text/plain", b"unable to read bundle")
+            else:
+                self._respond(200, "application/json", data)
         elif len(parts) == 2 and parts[0] == "bundle":
-            bundle_hash = urllib.parse.unquote(parts[1])
-            bundle_path = self.inbox_dir / f"{bundle_hash}.json"
-            if bundle_path.is_file():
-                try:
-                    bundle = json.loads(bundle_path.read_bytes())
-                    html = build_standalone_html(bundle)
-                    self._respond(200, "text/html", html.encode())
-                except Exception as exc:
-                    self._respond(500, "text/plain", str(exc).encode())
-            else:
+            bundle_hash = parts[1]
+            if not _is_bundle_hash(bundle_hash):
+                self._respond(400, "text/plain", b"invalid bundle hash")
+                return
+            try:
+                bundle_data = _read_inbox_member(self.inbox_dir, f"{bundle_hash}.json", max_bytes=_MAX_BUNDLE_BYTES)
+                bundle = _strict_json_loads(bundle_data)
+                if not isinstance(bundle, dict):
+                    raise ValueError("stored bundle is not a JSON object")
+                html = build_standalone_html(bundle)
+            except (FileNotFoundError, IsADirectoryError):
                 self._respond(404, "text/plain", b"bundle not found")
+            except ValueError:
+                self._respond(400, "text/plain", b"invalid bundle path or content")
+            except OSError:
+                self._respond(500, "text/plain", b"unable to read bundle")
+            else:
+                self._respond(200, "text/html", html.encode())
         else:
             self._respond(404, "text/plain", b"not found")
 
     def do_POST(self) -> None:  # noqa: N802
-        if [p for p in urllib.parse.urlparse(self.path).path.split("/") if p] != ["api", "upload"]:
+        try:
+            parts = _receiver_path_parts(self.path)
+        except ValueError:
+            self._respond(400, "text/plain", b"malformed request path")
+            return
+        if parts != ("api", "upload"):
             self._respond(404, "text/plain", b"not found")
             return
-        length = int(self.headers.get("Content-Length", 0))
-        if length > 50 * 1024 * 1024:
+
+        transfer_encoding = self.headers.get("Transfer-Encoding")
+        content_lengths = self.headers.get_all("Content-Length", failobj=[])
+        if transfer_encoding or len(content_lengths) != 1:
+            self._respond(411 if not transfer_encoding and not content_lengths else 400, "text/plain", b"one Content-Length header required")
+            return
+        try:
+            length = int(content_lengths[0])
+        except (TypeError, ValueError):
+            self._respond(400, "text/plain", b"invalid Content-Length")
+            return
+        if length <= 0:
+            self._respond(400, "text/plain", b"empty bundle")
+            return
+        if length > _MAX_BUNDLE_BYTES:
             self._respond(413, "text/plain", b"bundle too large (>50 MB)")
             return
-        body = self.rfile.read(length)
+
+        media_type = self.headers.get("Content-Type", "").partition(";")[0].strip().lower()
+        if media_type != "application/json" and not (media_type.startswith("application/") and media_type.endswith("+json")):
+            self._respond(415, "text/plain", b"Content-Type must be application/json")
+            return
+
         try:
-            bundle = json.loads(body)
+            body = self.rfile.read(length)
+        except (TimeoutError, OSError):
+            self._respond(408, "text/plain", b"bundle body timed out")
+            return
+        if len(body) != length:
+            self._respond(400, "text/plain", b"incomplete request body")
+            return
+        try:
+            bundle = _strict_json_loads(body)
+            if not isinstance(bundle, dict):
+                raise ValueError("bundle must be a JSON object")
             bundle_hash = bundle.get("bundle_hash", "")
-            if not bundle_hash:
-                self._respond(400, "text/plain", b"bundle missing bundle_hash")
+            if not _is_bundle_hash(bundle_hash):
+                raise ValueError("bundle_hash must be a lowercase SHA-256 digest")
+            expected_hash = _canonical_bundle_hash(bundle)
+            if not hmac.compare_digest(bundle_hash, expected_hash):
+                self._respond(422, "text/plain", b"bundle_hash does not match bundle content")
                 return
-        except Exception:
+
+            header_hash = self.headers.get("X-Bundle-Hash")
+            if header_hash is not None and (
+                not _is_bundle_hash(header_hash) or not hmac.compare_digest(header_hash, bundle_hash)
+            ):
+                self._respond(400, "text/plain", b"X-Bundle-Hash does not match bundle_hash")
+                return
+
+            project = bundle.get("project", {})
+            summary = bundle.get("summary", {})
+            if not isinstance(project, dict) or not isinstance(summary, dict):
+                raise ValueError("project and summary must be JSON objects")
+            project_name = project.get("name", "unknown")
+            if (
+                not isinstance(project_name, str)
+                or len(project_name) > _MAX_PROJECT_NAME_CHARS
+                or any(ord(char) < 0x20 or ord(char) == 0x7F for char in project_name)
+            ):
+                raise ValueError("invalid project name")
+            summary_bytes = json.dumps(summary, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+            if len(summary_bytes) > _MAX_SUMMARY_BYTES:
+                raise ValueError("summary exceeds size limit")
+        except (UnicodeDecodeError, json.JSONDecodeError, ValueError, TypeError):
             self._respond(400, "text/plain", b"invalid JSON")
             return
 
         from datetime import UTC, datetime
-        bundle_path = self.inbox_dir / f"{bundle_hash}.json"
-        bundle_path.write_bytes(body)
         meta = {
             "bundle_hash": bundle_hash,
-            "project_name": bundle.get("project", {}).get("name", "unknown"),
+            "project_name": project_name,
             "received_at": datetime.now(UTC).isoformat(),
-            "summary": bundle.get("summary", {}),
+            "summary": summary,
         }
-        (self.inbox_dir / f"{bundle_hash}.meta.json").write_text(json.dumps(meta, sort_keys=True), encoding="utf-8")
+        meta_bytes = json.dumps(meta, sort_keys=True, separators=(",", ":")).encode()
+        try:
+            _atomic_write_inbox_member(self.inbox_dir, f"{bundle_hash}.json", body)
+            _atomic_write_inbox_member(self.inbox_dir, f"{bundle_hash}.meta.json", meta_bytes)
+        except ValueError:
+            self._respond(400, "text/plain", b"invalid bundle destination")
+            return
+        except OSError:
+            self._respond(500, "text/plain", b"unable to store bundle")
+            return
         print(f"Received bundle {bundle_hash[:12]} for project {meta['project_name']!r}")
         self._respond(200, "application/json", json.dumps({"status": "received", "bundle_hash": bundle_hash}).encode())
 
     def _respond(self, code: int, ctype: str, body: bytes) -> None:
-        self.send_response(code)
-        self.send_header("Content-Type", ctype)
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
+        _send_response_headers(self, code, ctype, len(body))
         if body:
             self.wfile.write(body)
 
@@ -559,16 +885,17 @@ class _ReceiverHandler(http.server.BaseHTTPRequestHandler):
 def serve_receiver(inbox_dir: Path, port: int = 7476, open_browser: bool = True) -> None:
     inbox_dir = Path(inbox_dir)
     inbox_dir.mkdir(parents=True, exist_ok=True)
-
+    inbox_dir = inbox_dir.resolve(strict=True)
     class Handler(_ReceiverHandler):
         pass
 
     Handler.inbox_dir = inbox_dir
     Handler.port = port
 
-    server = http.server.HTTPServer(("0.0.0.0", port), Handler)
+    server = _HardenedHTTPServer(("127.0.0.1", port), Handler)
     url = f"http://127.0.0.1:{port}/"
     print(f"Receiver: {url}")
+    print(f"Listening: 127.0.0.1:{port} (loopback only)")
     print(f"Inbox: {inbox_dir}")
     print(f"Upload: hw upload-review <project> --destination http://<host>:{port}/api/upload")
     print("Press Ctrl-C to stop.")

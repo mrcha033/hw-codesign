@@ -54,6 +54,7 @@ class Workspace:
         template_path = files("hw_codesign.templates").joinpath(f"{template}.yaml")
         spec = read_yaml(Path(str(template_path)))
         spec["project"]["name"] = name
+        spec["project"]["created_at"] = datetime.now(UTC).date().isoformat()
         self._create_tree(path)
         write_yaml(path / "project.yaml", spec["project"])
         for section in SPEC_FILES:

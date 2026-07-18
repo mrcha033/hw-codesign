@@ -19,4 +19,4 @@ check-sample:
 	hw --root . design-until-release quadruped_robot_controller --external
 
 docker-build:
-	docker build -f docker/Dockerfile -t hw-codesign-platform:$(shell grep '^version' pyproject.toml | head -1 | cut -d'"' -f2) .
+	docker build -f docker/Dockerfile -t hw-codesign:$(shell grep '^version' pyproject.toml | head -1 | cut -d'"' -f2) .

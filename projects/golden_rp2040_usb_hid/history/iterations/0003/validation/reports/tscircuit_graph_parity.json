@@ -1,0 +1,27 @@
+{
+  "artifacts": [],
+  "backend": {
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/golden_rp2040_usb_hid/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "name": "tscircuit",
+    "offline": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": " underspecified (no pinAttributes set)\nAll pins on X1 are underspecified (no pinAttributes set)\nAll pins on R3 are underspecified (no pinAttributes set)\nAll pins on R4 are underspecified (no pinAttributes set)\nAll pins on R5 are underspecified (no pinAttributes set)\nAll pins on R6 are underspecified (no pinAttributes set)\nAll pins on J2 are underspecified (no pinAttributes set)\nAll pins on C1 are underspecified (no pinAttributes set)\nAll pins on C2 are underspecified (no pinAttributes set)\nAll pins on C3 are underspecified (no pinAttributes set)\nAll pins on C4 are underspecified (no pinAttributes set)\nAll pins on C5 are underspecified (no pinAttributes set)\nAll pins on C6 are underspecified (no pinAttributes set)\nAll pins on C7 are underspecified (no pinAttributes set)\nAll pins on C8 are underspecified (no pinAttributes set)\nAll pins on C9 are underspecified (no pinAttributes set)\nAll pins on C10 are underspecified (no pinAttributes set)\nAll pins on C11 are underspecified (no pinAttributes set)\nAll pins on C12 are underspecified (no pinAttributes set)\nAll pins on C13 are underspecified (no pinAttributes set)\nAll pins on C14 are underspecified (no pinAttributes set)\nAll pins on C15 are underspecified (no pinAttributes set)\nAll pins on C16 are underspecified (no pinAttributes set)\nAll pins on C17 are underspecified (no pinAttributes set)\nAll pins on C18 are underspecified (no pinAttributes set)\nJ1 has no pin with requires_power=true\nD1 has no pin with requires_power=true\nR1 has no pin with requires_power=true\nR2 has no pin with requires_power=true\nU1 has no pin with requires_power=true\nU2 has no pin with requires_power=true\nU3 has no pin with requires_power=true\nX1 has no pin with requires_power=true\nR3 has no pin with requires_power=true\nR4 has no pin with requires_power=true\nR5 has no pin with requires_power=true\nR6 has no pin with requires_power=true\nJ2 has no pin with requires_power=true\nC1 has no pin with requires_power=true\nC2 has no pin with requires_power=true\nC3 has no pin with requires_power=true\nC4 has no pin with requires_power=true\nC5 has no pin with requires_power=true\nC6 has no pin with requires_power=true\nC7 has no pin with requires_power=true\nC8 has no pin with requires_power=true\nC9 has no pin with requires_power=true\nC10 has no pin with requires_power=true\nC11 has no pin with requires_power=true\nC12 has no pin with requires_power=true\nC13 has no pin with requires_power=true\nC14 has no pin with requires_power=true\nC15 has no pin with requires_power=true\nC16 has no pin with requires_power=true\nC17 has no pin with requires_power=true\nC18 has no pin with requires_power=true\nJ1 has no pin with requires_ground=true\nD1 has no pin with requires_ground=true\nR1 has no pin with requires_ground=true\nR2 has no pin with requires_ground=true\nU1 has no pin with requires_ground=true\nU2 has no pin with requires_ground=true\nU3 has no pin with requires_ground=true\nX1 has no pin with requires_ground=true\nR3 has no pin with requires_ground=true\nR4 has no pin with requires_ground=true\nR5 has no pin with requires_ground=true\nR6 has no pin with requires_ground=true\nJ2 has no pin with requires_ground=true\nC1 has no pin with requires_ground=true\nC2 has no pin with requires_ground=true\nC3 has no pin with requires_ground=true\nC4 has no pin with requires_ground=true\nC5 has no pin with requires_ground=true\nC6 has no pin with requires_ground=true\nC7 has no pin with requires_ground=true\nC8 has no pin with requires_ground=true\nC9 has no pin with requires_ground=true\nC10 has no pin with requires_ground=true\nC11 has no pin with requires_ground=true\nC12 has no pin with requires_ground=true\nC13 has no pin with requires_ground=true\nC14 has no pin with requires_ground=true\nC15 has no pin with requires_ground=true\nC16 has no pin with requires_ground=true\nC17 has no pin with requires_ground=true\nC18 has no pin with requires_ground=true\n\nBuild complete\n  Circuits  1 passed\n  Output    dist\n\n\u2713 Done\nBuild exiting with code 0: build finished successfully\n",
+    "timeout_seconds": 600,
+    "version": "0.1.1491"
+  },
+  "failures": [],
+  "gate": "tscircuit_graph_parity",
+  "metrics": {
+    "compiled_nets": 24,
+    "expected_nets": 24
+  },
+  "status": "pass"
+}

@@ -132,7 +132,43 @@ def test_export_review_records_gate_artifact_integrity(service, project):
     assert records[existing_path]["exists"] is True
     assert records[existing_path]["bytes"] == len("review evidence\n")
     assert re.fullmatch(r"[0-9a-f]{64}", records[existing_path]["sha256"])
-    assert records[missing_path] == {"path": missing_path, "source": "gate:artifact_probe", "exists": False}
+    assert records[missing_path] == {
+        "path": missing_path,
+        "source": "gate:artifact_probe",
+        "sources": ["gate:artifact_probe"],
+        "exists": False,
+    }
+
+
+def test_export_review_deduplicates_artifact_paths_and_preserves_sources(service, project):
+    service.generate_all(project)
+    project_path = service.workspace.require_project(project)
+    reports = project_path / "validation" / "reports"
+    shared = reports / "shared-evidence.txt"
+    shared.write_text("one evidence file\n", encoding="utf-8")
+    for gate in ("alpha_probe", "beta_probe"):
+        (reports / f"{gate}.json").write_text(
+            json.dumps(
+                {
+                    "gate": gate,
+                    "status": "pass",
+                    "failures": [],
+                    "metrics": {},
+                    "artifacts": [str(shared), str(shared)],
+                    "backend": {},
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    result = service.export_review(project)
+    bundle = json.loads(Path(result["file"]).read_text(encoding="utf-8"))
+    portable_path = f"projects/{project}/validation/reports/shared-evidence.txt"
+    records = [item for item in bundle["artifacts"] if item["path"] == portable_path]
+
+    assert len(records) == 1
+    assert records[0]["source"] == "gate:alpha_probe"
+    assert records[0]["sources"] == ["gate:alpha_probe", "gate:beta_probe"]
 
 
 def test_export_review_bundle_hash_excludes_generated_at(service, project):

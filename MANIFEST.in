@@ -1,0 +1,8 @@
+# Never ship local conflict copies that may exist in a developer checkout.
+include src/hw_codesign/review_3d_viewer.js
+include src/hw_codesign/review_3d_viewer.bundle.js
+include src/hw_codesign/review_3d_viewer.bundle.json
+recursive-include src/hw_codesign/third_party/three *
+exclude src/hw_codesign/board_layout?2.py
+exclude src/hw_codesign/generators?2.py
+global-exclude .DS_Store

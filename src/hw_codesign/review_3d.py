@@ -5,6 +5,11 @@ import os
 import re
 import shutil
 import subprocess
+import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
+from importlib.resources import as_file, files
+from importlib.resources.abc import Traversable
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +22,7 @@ _REFERENCE_RE = re.compile(r'\(property\s+"Reference"\s+"(?P<reference>[^"]+)"')
 _MODEL_RE = re.compile(r'\(model\s+"(?P<model>[^"]+)"')
 _PRIMARY_FOOTPRINTS = frozenset({
     "Connector_USB:USB_C_GCT_USB4105",
+    "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal",
     "RF_Module:ESP32-S3-WROOM-1",
 })
 _ASSET_DIR = Path("assets") / "three_d"
@@ -140,27 +146,74 @@ def _resolve_model(raw_model: str, model_root: Path | None) -> Path | None:
 
 
 def _bundle_viewer(output: Path) -> bool:
+    prebuilt = _viewer_bundle_resource()
+    if prebuilt is not None:
+        try:
+            payload = prebuilt.read_bytes()
+            if not payload:
+                return False
+            output.write_bytes(payload)
+        except OSError:
+            return False
+        return output.is_file() and output.stat().st_size == len(payload)
+
+    # Developer fallback for source checkouts whose generated asset was removed.
     root = Path(__file__).resolve().parents[2]
-    entry = root / "src" / "hw_codesign" / "review_3d_viewer.js"
     bundled = root / "node_modules" / ".bin" / "esbuild"
     executable = shutil.which("esbuild") or (str(bundled) if bundled.is_file() else None)
-    if executable is None or not entry.is_file():
+    if executable is None:
         return False
-    try:
-        result = subprocess.run(
-            [
-                executable, str(entry), "--bundle", "--format=iife", "--global-name=HWReview3D",
-                "--target=es2020", "--minify", f"--outfile={output}",
-            ],
-            cwd=root,
-            capture_output=True,
-            text=True,
-            timeout=90,
-            check=False,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return False
+    with _viewer_entry_path() as entry:
+        if entry is None:
+            return False
+        try:
+            result = subprocess.run(
+                [
+                    executable, str(entry), "--bundle", "--format=iife", "--global-name=HWReview3D",
+                    "--target=es2020", "--minify", f"--outfile={output}",
+                ],
+                cwd=entry.parent,
+                capture_output=True,
+                text=True,
+                timeout=90,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return False
     return result.returncode == 0 and output.is_file()
+
+
+def _viewer_resource() -> Path | Traversable | None:
+    """Return the developer viewer entry, including PyInstaller onefile data."""
+    return _package_resource("review_3d_viewer.js")
+
+
+def _viewer_bundle_resource() -> Path | Traversable | None:
+    """Return the self-contained viewer used by installed and frozen builds."""
+    return _package_resource("review_3d_viewer.bundle.js")
+
+
+def _package_resource(name: str) -> Path | Traversable | None:
+    if hasattr(sys, "_MEIPASS"):
+        frozen_entry = Path(sys._MEIPASS) / "hw_codesign" / name
+        if frozen_entry.is_file():
+            return frozen_entry
+    try:
+        resource = files("hw_codesign").joinpath(name)
+    except (ModuleNotFoundError, TypeError):
+        return None
+    return resource if resource.is_file() else None
+
+
+@contextmanager
+def _viewer_entry_path() -> Iterator[Path | None]:
+    """Materialize the package resource when imported from a zipped package."""
+    resource = _viewer_resource()
+    if resource is None:
+        yield None
+        return
+    with as_file(resource) as entry:
+        yield entry
 
 
 def _unavailable(reason: str, models: list[dict[str, Any]] | None = None) -> dict[str, Any]:

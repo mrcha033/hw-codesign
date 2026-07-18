@@ -1,7 +1,7 @@
 {
-  "name": "hw-cli",
+  "name": "hw-codesign",
   "interface": {
-    "displayName": "Hw Cli"
+    "displayName": "hw-codesign"
   },
   "plugins": [
     {

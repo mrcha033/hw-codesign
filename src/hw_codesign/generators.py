@@ -359,6 +359,93 @@ def _pin_assignments(channels: int) -> list[dict[str, Any]]:
     return assignments
 
 
+_RP2040_BOARD_DTS = """/dts-v1/;
+#include <raspberrypi/rpi_pico/rp2040.dtsi>
+#include <mem.h>
+
+/ {
+\tmodel = "HW Co-design RP2040 USB Device";
+\tcompatible = "hw,rp2040-usb-device";
+
+\tchosen {
+\t\tzephyr,sram = &sram0;
+\t\tzephyr,flash = &flash0;
+\t\tzephyr,flash-controller = &ssi;
+\t\tzephyr,code-partition = &code_partition;
+\t};
+};
+
+&flash0 {
+\treg = <0x10000000 DT_SIZE_M(2)>;
+
+\tpartitions {
+\t\tcompatible = "fixed-partitions";
+\t\t#address-cells = <1>;
+\t\t#size-cells = <1>;
+
+\t\tsecond_stage_bootloader: partition@0 {
+\t\t\tlabel = "second-stage-bootloader";
+\t\t\treg = <0x00000000 0x100>;
+\t\t\tread-only;
+\t\t};
+
+\t\tcode_partition: partition@100 {
+\t\t\tlabel = "code-partition";
+\t\t\treg = <0x100 (DT_SIZE_M(2) - 0x100)>;
+\t\t\tread-only;
+\t\t};
+\t};
+};
+
+&gpio0 {
+\tstatus = "okay";
+};
+
+&timer {
+\tstatus = "okay";
+};
+
+&wdt0 {
+\tstatus = "okay";
+};
+
+zephyr_udc0: &usbd {
+\tstatus = "okay";
+};
+
+&vreg {
+\tregulator-always-on;
+};
+
+&xosc {
+\tstartup-delay-multiplier = <64>;
+};
+"""
+
+_RP2040_BOARD_YML = """board:
+  name: rp2040_usb_device
+  full_name: HW Co-design RP2040 USB Device
+  vendor: hw
+  socs:
+    - name: rp2040
+"""
+
+_RP2040_BOARD_METADATA = """identifier: rp2040_usb_device
+name: HW Co-design RP2040 USB Device
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+ram: 264
+flash: 2048
+supported:
+  - gpio
+  - spi
+  - usbd
+"""
+
+
 def firmware_profile(spec: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
     architecture = graph.get("design_basis", {}).get("architecture")
     if architecture == "nrf52840_ble_sensor":
@@ -401,12 +488,17 @@ def firmware_profile(spec: dict[str, Any], graph: dict[str, Any]) -> dict[str, A
             "reference_project": "rp2040_usb_device_bsp",
             "board_name": "rp2040_usb_device",
             "board_arch": "arm",
-            "dts_include": "#include <raspberrypi/rp2040.dtsi>",
+            "dts_include": "#include <raspberrypi/rpi_pico/rp2040.dtsi>",
             "model": "HW Co-design RP2040 USB Device",
             "compatible": "hw,rp2040-usb-device",
             "console_node": "&uart0",
-            "defconfig": "CONFIG_SOC_SERIES_RP2XXX=y\nCONFIG_SOC_RP2040=y\nCONFIG_BOARD_RP2040_USB_DEVICE=y\n",
+            "board_dts": _RP2040_BOARD_DTS,
+            "board_yml": _RP2040_BOARD_YML,
+            "board_metadata": _RP2040_BOARD_METADATA,
+            "defconfig": "CONFIG_RESET=y\nCONFIG_CLOCK_CONTROL=y\nCONFIG_USE_DT_CODE_PARTITION=y\nCONFIG_BUILD_OUTPUT_UF2=y\nCONFIG_BUILD_OUTPUT_HEX=y\n",
             "kconfig_board": 'config BOARD_RP2040_USB_DEVICE\n  bool "RP2040 USB Device"\n',
+            # Zephyr's RP2 flash selector retains the W25Q080 name but its HAL supports W25Q16JV devices.
+            "kconfig_soc": "config BOARD_RP2040_USB_DEVICE\n\tselect SOC_RP2040\n\tselect RP2_FLASH_W25Q080\n",
             "kconfig_default": 'if BOARD_RP2040_USB_DEVICE\nconfig BOARD\n  default "rp2040_usb_device"\nendif\n',
             "prj_conf": "CONFIG_GPIO=y\nCONFIG_SPI=y\nCONFIG_USB_DEVICE_STACK=y\nCONFIG_USB_CDC_ACM=y\n",
             "tests": {
@@ -449,7 +541,8 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     if mcu:
         for item in mcu.get("pins", []):
             net = item.get("net")
-            if net and net not in {"V3V3", "GND", "SWDIO", "SWCLK", "NRST"}:
+            firmware_signal = item.get("role") not in {"power_in", "power_out", "ground", "no_connect"}
+            if net and firmware_signal and net not in {"SWDIO", "SWCLK", "NRST"}:
                 assignments.append({"signal": net, "mcu_pin": item.get("mcu_pin", item["name"]), "net_name": net, "graph_pin": f"{mcu['ref']}.{item['number']}"})
     write_json(generated / "pinmap.json", assignments)
     pinmap = "#pragma once\n\n" + "\n".join(f'#define PIN_{item["signal"]} "{item["mcu_pin"]}"' for item in assignments) + "\n"
@@ -485,8 +578,20 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
                 if flag not in module_kconfig:
                     module_kconfig.append(flag)
         modules_cmake = modules_dir / "CMakeLists.txt"
-        sources_block = "\n".join(f"  ../../../{src}" for src in cmake_sources)
-        atomic_write_text(modules_cmake, f"# Generated firmware modules\ntarget_sources(app PRIVATE\n{sources_block}\n)\n")
+        sources_block = "\n".join(
+            f"  ${{CMAKE_CURRENT_LIST_DIR}}/{Path(src).name}" for src in cmake_sources
+        )
+        atomic_write_text(
+            modules_cmake,
+            "# Generated firmware modules\n"
+            "target_sources(app PRIVATE\n"
+            f"{sources_block}\n"
+            ")\n"
+            "target_include_directories(app PRIVATE\n"
+            "  ${CMAKE_CURRENT_LIST_DIR}\n"
+            "  ${CMAKE_CURRENT_LIST_DIR}/../generated\n"
+            ")\n",
+        )
         module_files.append(str(modules_cmake))
         for stale_c in modules_dir.glob("*.c"):
             if stale_c.stem not in live_ids:
@@ -514,10 +619,26 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
         atomic_write_text(tests / name, content)
     board_dir = project / "firmware" / "zephyr" / "boards" / profile["board_arch"] / profile["board_name"]
     board_name = profile["board_name"]
-    atomic_write_text(board_dir / f"{board_name}.dts", f'/dts-v1/;\n{profile["dts_include"]}\n/ {{ model = "{profile["model"]}"; compatible = "{profile["compatible"]}"; chosen {{ zephyr,console = {console_node}; }}; }};\n')
+    board_dts = profile.get(
+        "board_dts",
+        f'/dts-v1/;\n{profile["dts_include"]}\n/ {{ model = "{profile["model"]}"; compatible = "{profile["compatible"]}"; '
+        f"chosen {{ zephyr,console = {console_node}; }}; }};\n",
+    )
+    atomic_write_text(board_dir / f"{board_name}.dts", board_dts)
     atomic_write_text(board_dir / f"{board_name}_defconfig", profile["defconfig"])
     atomic_write_text(board_dir / "Kconfig.board", profile["kconfig_board"])
     atomic_write_text(board_dir / "Kconfig.defconfig", profile["kconfig_default"])
+    board_support_files = [board_dir / f"{board_name}.dts"]
+    optional_board_files = {
+        "board_yml": board_dir / "board.yml",
+        "board_metadata": board_dir / f"{board_name}.yaml",
+        "kconfig_soc": board_dir / f"Kconfig.{board_name}",
+    }
+    for profile_key, output_path in optional_board_files.items():
+        content = profile.get(profile_key)
+        if content is not None:
+            atomic_write_text(output_path, content)
+            board_support_files.append(output_path)
     reference = project / "firmware" / "reference"
     motor_pwm_count = len([item for item in assignments if item["signal"].endswith("_PWM")])
     pin_self_test = " && ".join(f'PIN_{item["signal"]}[0] != 0' for item in assignments) or "1"
@@ -528,7 +649,12 @@ def generate_firmware(project: Path, spec: dict[str, Any], graph: dict[str, Any]
     atomic_write_text(reference / "src" / "board.c", f'#include "board.h"\n#include "pinmap.h"\nsize_t board_motor_channel_count(void) {{ return {motor_pwm_count}; }}\nint board_estop_is_fail_safe(void) {{ return {1 if estop_required else 0}; }}\nint board_pinmap_self_test(void) {{ return {pin_self_test}; }}\n')
     atomic_write_text(reference / "tests" / "bringup_tests.c", f'#include "board.h"\n#include <assert.h>\n#include <stdio.h>\nint main(void) {{ assert(board_motor_channel_count() == {motor_pwm_count});{estop_assert} assert(board_pinmap_self_test()); puts("bringup tests passed"); return 0; }}\n')
     bsp_files = [str(path) for path in sorted(generated.iterdir()) if path.name != "provenance.json"]
-    return bsp_files + module_files + [str(app / "src" / "main.c"), *[str(tests / name) for name in sorted(profile["tests"])], str(board_dir / f"{board_name}.dts"), str(reference / "CMakeLists.txt")]
+    return bsp_files + module_files + [
+        str(app / "src" / "main.c"),
+        *[str(tests / name) for name in sorted(profile["tests"])],
+        *[str(path) for path in board_support_files],
+        str(reference / "CMakeLists.txt"),
+    ]
 
 
 def generate_bom(project: Path) -> str:

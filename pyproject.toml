@@ -1,13 +1,25 @@
 [build-system]
-requires = ["setuptools>=75", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hw-codesign-platform"
+name = "hw-codesign"
 version = "0.1.0"
-description = "Agentic hardware design system with evidence-backed release gates"
-readme = "README.md"
+description = "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report."
+readme = "PYPI_README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.11"
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+]
 dependencies = [
   "PyYAML>=6.0.2",
   "jsonschema>=4.23",
@@ -15,10 +27,37 @@ dependencies = [
   "sexpdata==1.0.2",
 ]
 
+[project.urls]
+Homepage = "https://github.com/mrcha033/hw-cli"
+Documentation = "https://github.com/mrcha033/hw-cli/tree/master/docs"
+Repository = "https://github.com/mrcha033/hw-cli"
+Issues = "https://github.com/mrcha033/hw-cli/issues"
+
 [project.optional-dependencies]
 mcp = ["mcp>=1.0"]
 cad = ["cadquery-ocp==7.9.3.1.1"]
 dev = ["pytest>=8.3", "pytest-cov>=6.0", "ruff>=0.9"]
+zephyr = [
+  "anytree",
+  "canopen",
+  "intelhex",
+  "packaging",
+  "patool>=2.0.0",
+  "progress",
+  "psutil>=5.6.6",
+  "pyelftools>=0.29",
+  "pykwalify",
+  "pylink-square",
+  "pyserial",
+  "requests>=2.32.0",
+  "reuse",
+  "semver",
+  "tqdm>=4.67.1",
+  "west>=0.14.0",
+]
+
+[dependency-groups]
+release = ["pyinstaller==6.21.0"]
 
 [project.scripts]
 hw = "hw_codesign.cli:main"
@@ -32,7 +71,14 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-hw_codesign = ["templates/*.yaml", "footprints/*"]
+hw_codesign = [
+  "templates/*.yaml",
+  "footprints/*",
+  "review_3d_viewer.js",
+  "review_3d_viewer.bundle.js",
+  "review_3d_viewer.bundle.json",
+  "third_party/three/*",
+]
 
 [tool.setuptools.data-files]
 "share/hw-codesign/schemas" = ["schemas/*.json"]

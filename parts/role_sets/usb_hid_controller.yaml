@@ -7,15 +7,19 @@ roles:
   regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
   mcu: {component_id: rp2040, resolution: curated}
   flash: {component_id: w25q16jv, resolution: curated}
-  crystal: {component_id: abm8_12m, resolution: curated}
-  xtal_cap: {component_id: grm216_22p, resolution: curated}
-  debug: {component_id: samtec_ftsh_105, resolution: curated}
+  crystal_12m: {component_id: abm8_272_t3, resolution: curated}
+  xtal_cap_15p: {component_id: grm1555_15p, resolution: curated}
+  debug_header: {component_id: conn_2x05_2p54, resolution: curated}
   led_resistor: {component_id: rc0603_1k, resolution: curated}
   led: {component_id: led_red_0603, resolution: curated}
   boot_resistor: {component_id: rc0603_10k, resolution: curated}
   pullup: {component_id: rc0603_10k, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
-  capacitor_100n: {component_id: grm188_100n, resolution: curated}
+  capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_1uf: {component_id: grm188_1uf, resolution: curated}
+  resistor_27r: {component_id: rc0603_27r, resolution: curated}
+  resistor_1k: {component_id: rc0603_1k, resolution: curated}
+  resistor_10k: {component_id: rc0603_10k, resolution: curated}
   capacitor_22u: {component_id: grm31_22u, resolution: curated}
   capacitor_10u_50v: {component_id: grm32_10u_50v, resolution: curated}
 alternatives:

@@ -13,26 +13,43 @@ roles:
   regulator_3v3: {component_id: ap2112k_33trg1, resolution: curated}
   mcu: {component_id: rp2040, resolution: curated}
   flash: {component_id: w25q16jv, resolution: curated}
-  crystal_12m: {component_id: abm8_12m, resolution: curated}
-  xtal_cap: {component_id: grm216_22p, resolution: curated}
+  crystal_12m: {component_id: abm8_272_t3, resolution: curated}
+  xtal_cap_15p: {component_id: grm1555_15p, resolution: curated}
   capacitor_100n: {component_id: grm155_100n, resolution: curated}
+  capacitor_1uf: {component_id: grm188_1uf, resolution: curated}
   capacitor_10u_50v: {component_id: grm188_10u, resolution: curated}
+  resistor_27r: {component_id: rc0603_27r, resolution: curated}
+  resistor_1k: {component_id: rc0603_1k, resolution: curated}
+  resistor_10k: {component_id: rc0603_10k, resolution: curated}
   resistor_4k7: {component_id: rc0603_4k7, resolution: curated}
   debug_header: {component_id: conn_2x05_2p54, resolution: curated}
 
 alternatives:
   flash:
     - component_id: w25q32jv
-      resolution: registry_candidate
-      rationale: 4MB variant — same pinout and electrical interface as W25Q16JV; doubles storage capacity for larger firmware images at minimal cost delta
-      required_reviews: [flash_capacity_review, xip_timing_validation]
-      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: same}
-  mcu:
-    - component_id: rp2040
       resolution: curated
-      rationale: No pin-compatible alternatives exist; RP2040 is the only option for this template family
-      required_reviews: [sourcing_lead_time]
-      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: same}
+      rationale: Winbond W25Q32JVSSIQ is a mass-production W25Q-JV device in the same 208-mil SOP-8 package and 2.7-3.6 V SPI/Dual/Quad family; its doubled capacity still requires RP2040 boot and XIP review.
+      required_reviews: [flash_capacity_review, jedec_id_boot_test, xip_timing_validation]
+      compatibility: {pin_numbers: exact, footprint: exact, electrical_value: changed}
 
 single_source_justifications:
-  rp2040: {reason: RP2040 is a unique Raspberry Pi silicon with no pin-compatible alternatives; substitution requires complete board redesign, mitigation: Maintain 6-month safety stock; qualify RP2350 as next-generation upgrade path, required_reviews: [supply_chain_review, rp2350_migration_assessment]}
+  power_input:
+    reason: USB-C connector substitution changes shell footprint, retention stakes, high-speed launch geometry, and the mechanical cutout.
+    mitigation: Qualify a second exact-footprint connector or respin the connector and enclosure interface before substitution.
+    required_reviews: [usb_mechanical_fit, connector_footprint, usb_signal_integrity]
+  tvs:
+    reason: USB ESD-array substitution changes pinout, package, line capacitance, clamping behavior, and high-speed routing geometry.
+    mitigation: Qualify an exact-pin SOT-23-6 USB 2.0 protection device with capacitance, clamp, footprint, and signal-integrity evidence before substitution.
+    required_reviews: [usb_signal_integrity, esd_clamp_review, footprint_contract]
+  regulator_3v3:
+    reason: LDO substitution changes pinout, dropout, output-capacitor stability, quiescent current, current limit, and thermal margin.
+    mitigation: Qualify an exact-pin SOT-23-5 3.3 V LDO against the 5 V USB input and 300 mA rail contract before substitution.
+    required_reviews: [pinout_contract, load_regulation, stability_review, thermal_review]
+  mcu:
+    reason: RP2040 is QFN-56 silicon and RP2350-family successors use QFN-60 or QFN-80 packages with different power circuitry, so they are not drop-in replacements.
+    mitigation: Treat RP2350 as a separate board-family migration and maintain an approved RP2040 procurement plan for this revision.
+    required_reviews: [supply_chain_review, rp2350_board_migration, firmware_migration]
+  flash:
+    reason: QSPI flash substitution changes density, JEDEC identity, status-register behavior, timing, and RP2040 XIP boot behavior.
+    mitigation: Use only curated pin-compatible W25Q-JV alternatives and rerun boot, JEDEC-ID, capacity, and XIP timing reviews.
+    required_reviews: [flash_capacity_review, jedec_id_boot_test, xip_timing_validation]

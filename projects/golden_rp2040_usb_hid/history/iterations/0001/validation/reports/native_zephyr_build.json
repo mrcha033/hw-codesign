@@ -1,0 +1,54 @@
+{
+  "artifacts": [],
+  "backend": {
+    "arm_newlib_probe": {
+      "available": false,
+      "compiler": "/opt/homebrew/bin/arm-none-eabi-gcc",
+      "error": null,
+      "explicit_root": false,
+      "files": {
+        "libc.a": "libc.a",
+        "libnosys.a": "libnosys.a",
+        "nosys.specs": "nosys.specs"
+      },
+      "missing": [
+        "nosys.specs",
+        "libc.a",
+        "libnosys.a"
+      ],
+      "source": "PATH",
+      "toolchain_root": "/opt/homebrew"
+    }
+  },
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "arm_newlib_unavailable",
+      "details": {
+        "available": false,
+        "compiler": "/opt/homebrew/bin/arm-none-eabi-gcc",
+        "error": null,
+        "explicit_root": false,
+        "files": {
+          "libc.a": "libc.a",
+          "libnosys.a": "libnosys.a",
+          "nosys.specs": "nosys.specs"
+        },
+        "missing": [
+          "nosys.specs",
+          "libc.a",
+          "libnosys.a"
+        ],
+        "source": "PATH",
+        "toolchain_root": "/opt/homebrew"
+      },
+      "message": "The selected ARM GCC cannot resolve the newlib runtime required by Zephyr",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_zephyr_build",
+  "metrics": {},
+  "status": "blocked"
+}

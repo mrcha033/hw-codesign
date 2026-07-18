@@ -1,0 +1,48 @@
+{
+  "artifacts": [],
+  "backend": {
+    "available": true,
+    "command": [
+      "kicad-cli",
+      "sch",
+      "erc",
+      "--format",
+      "json",
+      "--output",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_erc.json",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_sch"
+    ],
+    "returncode": -6,
+    "stderr": "",
+    "stdout": ""
+  },
+  "failures": [
+    {
+      "category": "TOOL_ERROR",
+      "code": "tool_failed",
+      "details": {
+        "available": true,
+        "command": [
+          "kicad-cli",
+          "sch",
+          "erc",
+          "--format",
+          "json",
+          "--output",
+          "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/validation/reports/kicad_erc.json",
+          "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/electronics/generated/kicad/golden_rp2040_usb_hid.kicad_sch"
+        ],
+        "returncode": -6,
+        "stderr": "",
+        "stdout": ""
+      },
+      "message": "kicad-cli exited with status -6",
+      "path": null,
+      "requires_user_decision": false,
+      "severity": "error"
+    }
+  ],
+  "gate": "native_erc",
+  "metrics": {},
+  "status": "fail"
+}

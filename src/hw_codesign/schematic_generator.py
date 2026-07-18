@@ -53,9 +53,18 @@ def generate_kicad_schematic(name: str, graph: dict[str, Any], output: Path) -> 
             if local is None:
                 raise ValueError(f"Missing generated schematic pin {item['ref']}.{pin['number']} (seq {seq_idx})")
             point = (symbol.position.x + local.x, symbol.position.y - local.y)
+            net = pin.get("net")
+            if not net:
+                if pin.get("role") != "no_connect":
+                    raise ValueError(
+                        f"Unconnected schematic pin {item['ref']}.{pin['number']} "
+                        "must declare role=no_connect"
+                    )
+                schematic.no_connects.add(position=point)
+                continue
             label_point = (point[0] - 5.08, point[1])
             schematic.add_wire(start=point, end=label_point)
-            schematic.add_label(pin["net"], position=label_point)
+            schematic.add_label(net, position=label_point)
 
     schematic.add_text(
         f"{name}: generated typed electrical graph ({len(components)} components, {len(graph['nets'])} nets)",

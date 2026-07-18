@@ -1,0 +1,15 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "rp2040_reference_circuit",
+  "metrics": {
+    "contract": "rp2040_usb_qspi_reference_v1",
+    "errors": 0,
+    "flash_ref": "U3",
+    "mcu_ref": "U2",
+    "oracle": "independent_literal_manufacturer_pin_and_reference_circuit_contract",
+    "warnings": 0
+  },
+  "status": "pass"
+}

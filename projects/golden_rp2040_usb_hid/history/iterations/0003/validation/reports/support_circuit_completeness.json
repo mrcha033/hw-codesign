@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "support-circuit-contract"
+  },
+  "failures": [],
+  "gate": "support_circuit_completeness",
+  "metrics": {
+    "components": 31,
+    "critical_roles": 5,
+    "net_contract_checks": 0,
+    "resolved_critical_roles": 5,
+    "role_set": "rp2040_usb_device",
+    "status_leds_checked": 0
+  },
+  "status": "pass"
+}

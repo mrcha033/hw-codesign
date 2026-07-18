@@ -2,6 +2,8 @@ name: Release
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/hw-codesign
 
 on:
   push:
@@ -11,18 +13,30 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     name: Build and verify release
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "22"
           cache: npm
           package-manager-cache: true
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           python-version: "3.11"
           enable-cache: true
@@ -39,27 +53,84 @@ jobs:
           sudo apt-get install --yes --no-install-recommends kicad-symbols
       - run: npm ci --ignore-scripts
       - run: uv run pytest
-      - run: uv build
-      - run: uvx twine check dist/*
+      - name: Build Python distributions
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          release_dist="$RUNNER_TEMP/python-dist"
+          test ! -e "$release_dist"
+          uv build --out-dir "$release_dist"
+          test -f "$release_dist/hw_codesign-${version}-py3-none-any.whl"
+          test -f "$release_dist/hw_codesign-${version}.tar.gz"
+          unzip -Z1 "$release_dist/hw_codesign-${version}-py3-none-any.whl" | grep -E '/licenses?/LICENSE$'
+          unzip -Z1 "$release_dist/hw_codesign-${version}-py3-none-any.whl" | grep -E '/licenses?/NOTICE$'
+          unzip -Z1 "$release_dist/hw_codesign-${version}-py3-none-any.whl" | grep -Fx hw_codesign/review_3d_viewer.bundle.js
+          unzip -Z1 "$release_dist/hw_codesign-${version}-py3-none-any.whl" | grep -Fx hw_codesign/review_3d_viewer.bundle.json
+          unzip -Z1 "$release_dist/hw_codesign-${version}-py3-none-any.whl" | grep -Fx hw_codesign/third_party/three/LICENSE
+          unzip -Z1 "$release_dist/hw_codesign-${version}-py3-none-any.whl" | grep -Fx hw_codesign/third_party/three/ATTRIBUTION.md
+          tar tzf "$release_dist/hw_codesign-${version}.tar.gz" | grep -Fx "hw_codesign-${version}/LICENSE"
+          tar tzf "$release_dist/hw_codesign-${version}.tar.gz" | grep -Fx "hw_codesign-${version}/NOTICE"
+          tar tzf "$release_dist/hw_codesign-${version}.tar.gz" | grep -Fx "hw_codesign-${version}/src/hw_codesign/review_3d_viewer.bundle.js"
+          tar tzf "$release_dist/hw_codesign-${version}.tar.gz" | grep -Fx "hw_codesign-${version}/src/hw_codesign/review_3d_viewer.bundle.json"
+          tar tzf "$release_dist/hw_codesign-${version}.tar.gz" | grep -Fx "hw_codesign-${version}/src/hw_codesign/third_party/three/LICENSE"
+          tar tzf "$release_dist/hw_codesign-${version}.tar.gz" | grep -Fx "hw_codesign-${version}/src/hw_codesign/third_party/three/ATTRIBUTION.md"
+          shopt -s nullglob
+          artifacts=("$release_dist"/*)
+          test "${#artifacts[@]}" -eq 2
+          echo "RELEASE_DIST=$release_dist" >> "$GITHUB_ENV"
+      - run: uvx --from twine==6.2.0 twine check "$RELEASE_DIST"/*
       - name: Test installed wheel
         shell: bash
         run: |
           set -euo pipefail
+          export EXPECTED_VERSION="${GITHUB_REF_NAME#v}"
           smoke_dir="$(mktemp -d)"
           uv venv "$smoke_dir/.venv" --python 3.11
-          wheel="$(find "$GITHUB_WORKSPACE/dist" -name '*.whl' -print -quit)"
+          wheel="$(find "$RELEASE_DIST" -name '*.whl' -print -quit)"
           uv pip install --python "$smoke_dir/.venv/bin/python" "${wheel}[mcp]"
           cd "$smoke_dir"
           .venv/bin/hw create-project smoke_project
           .venv/bin/hw validate-spec smoke_project
-      - name: Generate canonical review artifacts
+          .venv/bin/python -c 'import os; from importlib.metadata import version; assert version("hw-codesign") == os.environ["EXPECTED_VERSION"]'
+          MCP_BIN="$smoke_dir/.venv/bin/hw-mcp" .venv/bin/python - <<'PY'
+          import json
+          import os
+          import subprocess
+
+          request = {
+              "jsonrpc": "2.0",
+              "id": 1,
+              "method": "initialize",
+              "params": {
+                  "protocolVersion": "2025-06-18",
+                  "capabilities": {},
+                  "clientInfo": {"name": "release-smoke", "version": os.environ["EXPECTED_VERSION"]},
+              },
+          }
+          process = subprocess.Popen(
+              [os.environ["MCP_BIN"]],
+              stdin=subprocess.PIPE,
+              stdout=subprocess.PIPE,
+              stderr=subprocess.PIPE,
+          )
+          stdout, stderr = process.communicate((json.dumps(request) + "\n").encode(), timeout=30)
+          assert process.returncode == 0, f"hw-mcp failed: stdout={stdout!r} stderr={stderr!r}"
+          messages = stdout.decode().splitlines()
+          assert len(messages) == 1, f"unexpected MCP stdout: {stdout!r}"
+          response = json.loads(messages[0])
+          assert response["id"] == 1 and "error" not in response, response
+          assert response["result"]["serverInfo"]["name"] == "hw-codesign", response
+          assert response["result"]["serverInfo"]["version"] == os.environ["EXPECTED_VERSION"], response
+          PY
+      - name: Verify and stage audited full-toolchain review artifacts
         shell: bash
         run: |
           set -euo pipefail
-          uv run hw --root . check quadruped_robot_controller --no-external
-          uv run hw --root . export-review quadruped_robot_controller
+          uv run python scripts/refresh_demo.py --verify-release-evidence
           mkdir -p release-assets
-          cp projects/quadruped_robot_controller/exports/working/review/bundle.json release-assets/bundle.json
+          cp docs/demo/bundle.json release-assets/bundle.json
+          cp docs/demo/index.html release-assets/review_standalone.html
           cp schemas/review_bundle.schema.json release-assets/review_bundle.schema.json
           uv run python - <<'PY'
           import json
@@ -69,17 +140,27 @@ jobs:
           schema = json.loads(Path("release-assets/review_bundle.schema.json").read_text())
           bundle = json.loads(Path("release-assets/bundle.json").read_text())
           Draft202012Validator(schema).validate(bundle)
+          standalone = Path("release-assets/review_standalone.html").read_text()
+          assert bundle["bundle_hash"] in standalone
           PY
-      - uses: actions/upload-artifact@v4
+      - name: Attest Python distributions and canonical review artifacts
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
+        with:
+          subject-path: |
+            ${{ env.RELEASE_DIST }}/*
+            release-assets/*
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-distributions
-          path: dist/
+          path: ${{ env.RELEASE_DIST }}/
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
+          retention-days: 14
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-assets
           path: release-assets/
           if-no-files-found: error
+          retention-days: 14
 
   build-binaries:
     name: Build standalone binary (${{ matrix.os }})
@@ -87,103 +168,187 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             artifact_suffix: linux-x86_64
             bin_suffix: ""
             archive_ext: tar.gz
-          - os: macos-latest
+            runner_arch: X64
+          - os: macos-15
             artifact_suffix: macos-arm64
             bin_suffix: ""
             archive_ext: tar.gz
-          - os: windows-latest
+            runner_arch: ARM64
+          - os: windows-2022
             artifact_suffix: windows-x86_64
             bin_suffix: .exe
             archive_ext: zip
+            runner_arch: X64
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           python-version: "3.11"
           enable-cache: true
+      - name: Verify runner architecture
+        shell: bash
+        run: test "$RUNNER_ARCH" = "${{ matrix.runner_arch }}"
       - name: Install project and PyInstaller
         shell: bash
-        run: |
-          uv sync --locked --extra mcp
-          uv pip install pyinstaller
+        run: uv sync --locked --extra mcp --group release
       - name: Build binaries
         shell: bash
-        run: uv run pyinstaller packaging/hw.spec --distpath packaging/dist --workpath packaging/build --noconfirm
+        run: uv run --no-sync pyinstaller packaging/hw.spec --distpath packaging/dist --workpath packaging/build --noconfirm
       - name: Smoke-test hw binary
         shell: bash
         run: |
           set -euo pipefail
+          export EXPECTED_VERSION="${GITHUB_REF_NAME#v}"
           smoke="$(mktemp -d)"
           ./packaging/dist/hw${{ matrix.bin_suffix }} --root "$smoke" create-project smoke_project
           ./packaging/dist/hw${{ matrix.bin_suffix }} --root "$smoke" validate-spec smoke_project
+          uv run --no-sync python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          request = {
+              "jsonrpc": "2.0",
+              "id": 1,
+              "method": "initialize",
+              "params": {
+                  "protocolVersion": "2025-06-18",
+                  "capabilities": {},
+                  "clientInfo": {"name": "release-smoke", "version": os.environ["EXPECTED_VERSION"]},
+              },
+          }
+          process = subprocess.Popen(
+              [str(Path("packaging/dist/hw-mcp${{ matrix.bin_suffix }}").resolve())],
+              stdin=subprocess.PIPE,
+              stdout=subprocess.PIPE,
+              stderr=subprocess.PIPE,
+          )
+          stdout, stderr = process.communicate((json.dumps(request) + "\n").encode(), timeout=60)
+          assert process.returncode == 0, f"hw-mcp failed: stdout={stdout!r} stderr={stderr!r}"
+          messages = stdout.decode().splitlines()
+          assert len(messages) == 1, f"unexpected MCP stdout: {stdout!r}"
+          response = json.loads(messages[0])
+          assert response["id"] == 1 and "error" not in response, response
+          assert response["result"]["serverInfo"]["name"] == "hw-codesign", response
+          assert response["result"]["serverInfo"]["version"] == os.environ["EXPECTED_VERSION"], response
+          PY
       - name: Package binaries
         shell: bash
         run: |
           set -euo pipefail
           version="${GITHUB_REF_NAME#v}"
           archive="hw-${version}-${{ matrix.artifact_suffix }}.${{ matrix.archive_ext }}"
+          cp LICENSE packaging/dist/LICENSE
+          cp NOTICE packaging/dist/NOTICE
+          mkdir -p packaging/dist/third_party/kicad-footprints
+          cp src/hw_codesign/footprints/LICENSE.md packaging/dist/third_party/kicad-footprints/LICENSE.md
+          cp src/hw_codesign/footprints/ATTRIBUTION.md packaging/dist/third_party/kicad-footprints/ATTRIBUTION.md
+          mkdir -p packaging/dist/third_party/three
+          cp src/hw_codesign/third_party/three/LICENSE packaging/dist/third_party/three/LICENSE
+          cp src/hw_codesign/third_party/three/ATTRIBUTION.md packaging/dist/third_party/three/ATTRIBUTION.md
           if [[ "${{ matrix.archive_ext }}" == "zip" ]]; then
             cd packaging/dist
-            7z a "../../${archive}" hw.exe hw-mcp.exe
+            7z a "../../${archive}" hw.exe hw-mcp.exe LICENSE NOTICE \
+              third_party/kicad-footprints/LICENSE.md \
+              third_party/kicad-footprints/ATTRIBUTION.md \
+              third_party/three/LICENSE \
+              third_party/three/ATTRIBUTION.md
             cd ../..
           else
-            tar czf "${archive}" -C packaging/dist hw hw-mcp
+            tar czf "${archive}" -C packaging/dist \
+              hw hw-mcp LICENSE NOTICE \
+              third_party/kicad-footprints/LICENSE.md \
+              third_party/kicad-footprints/ATTRIBUTION.md \
+              third_party/three/LICENSE \
+              third_party/three/ATTRIBUTION.md
           fi
           echo "ARCHIVE=${archive}" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@v4
+      - name: Attest standalone archive
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
+        with:
+          subject-path: ${{ env.ARCHIVE }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: binary-${{ matrix.artifact_suffix }}
           path: ${{ env.ARCHIVE }}
           if-no-files-found: error
+          retention-days: 14
 
   publish-pypi:
     name: Publish to PyPI
-    needs: build
+    needs: [build, build-binaries, publish-container]
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/hw-codesign-platform
+      url: https://pypi.org/p/hw-codesign
     permissions:
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: python-distributions
           path: dist
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
+        with:
+          packages-dir: dist/
+          verify-metadata: true
+          attestations: true
 
   publish-container:
     name: Publish linux/amd64 image
-    needs: build
+    needs: [build, build-binaries]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       attestations: write
       id-token: write
+      artifact-metadata: write
     steps:
-      - uses: actions/checkout@v5
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
-          registry: ghcr.io
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - name: Build container for pre-publish smoke test
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          load: true
+          tags: hw-codesign:release-smoke
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke-test container before publication
+        run: docker run --rm hw-codesign:release-smoke --help
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value=latest
       - id: push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           file: docker/Dockerfile
@@ -195,11 +360,25 @@ jobs:
           sbom: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - uses: actions/attest@v4
+      - name: Smoke-test an anonymous pull of the published image by digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          published_image="${REGISTRY}/${IMAGE_NAME}@${{ steps.push.outputs.digest }}"
+          docker logout "$REGISTRY"
+          docker image rm --force hw-codesign:release-smoke
+          docker image rm --force "$published_image" 2>/dev/null || true
+          anonymous_config="$RUNNER_TEMP/docker-anonymous"
+          mkdir -p "$anonymous_config"
+          printf '{"auths":{}}\n' > "$anonymous_config/config.json"
+          DOCKER_CONFIG="$anonymous_config" docker pull "$published_image"
+          DOCKER_CONFIG="$anonymous_config" docker run --rm --pull=never "$published_image" --help
+      - uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
         with:
-          subject-name: ghcr.io/${{ github.repository }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+          create-storage-record: false
 
   github-release:
     name: Create GitHub release
@@ -208,23 +387,63 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: release-assets
           path: release-assets
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: python-distributions
+          path: release-assets
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: binary-linux-x86_64
           path: release-assets
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: binary-macos-arm64
           path: release-assets
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: binary-windows-x86_64
           path: release-assets
+      - name: Verify release assets and generate checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          test -f "release-assets/hw_codesign-${version}-py3-none-any.whl"
+          test -f "release-assets/hw_codesign-${version}.tar.gz"
+          test -f "release-assets/hw-${version}-linux-x86_64.tar.gz"
+          test -f "release-assets/hw-${version}-macos-arm64.tar.gz"
+          test -f "release-assets/hw-${version}-windows-x86_64.zip"
+          test -f release-assets/bundle.json
+          test -f release-assets/review_standalone.html
+          test -f release-assets/review_bundle.schema.json
+          tar tzf "release-assets/hw-${version}-linux-x86_64.tar.gz" | grep -Fx LICENSE
+          tar tzf "release-assets/hw-${version}-linux-x86_64.tar.gz" | grep -Fx NOTICE
+          tar tzf "release-assets/hw-${version}-linux-x86_64.tar.gz" | grep -Fx third_party/kicad-footprints/LICENSE.md
+          tar tzf "release-assets/hw-${version}-linux-x86_64.tar.gz" | grep -Fx third_party/kicad-footprints/ATTRIBUTION.md
+          tar tzf "release-assets/hw-${version}-linux-x86_64.tar.gz" | grep -Fx third_party/three/LICENSE
+          tar tzf "release-assets/hw-${version}-linux-x86_64.tar.gz" | grep -Fx third_party/three/ATTRIBUTION.md
+          tar tzf "release-assets/hw-${version}-macos-arm64.tar.gz" | grep -Fx LICENSE
+          tar tzf "release-assets/hw-${version}-macos-arm64.tar.gz" | grep -Fx NOTICE
+          tar tzf "release-assets/hw-${version}-macos-arm64.tar.gz" | grep -Fx third_party/kicad-footprints/LICENSE.md
+          tar tzf "release-assets/hw-${version}-macos-arm64.tar.gz" | grep -Fx third_party/kicad-footprints/ATTRIBUTION.md
+          tar tzf "release-assets/hw-${version}-macos-arm64.tar.gz" | grep -Fx third_party/three/LICENSE
+          tar tzf "release-assets/hw-${version}-macos-arm64.tar.gz" | grep -Fx third_party/three/ATTRIBUTION.md
+          unzip -Z1 "release-assets/hw-${version}-windows-x86_64.zip" | grep -Fx LICENSE
+          unzip -Z1 "release-assets/hw-${version}-windows-x86_64.zip" | grep -Fx NOTICE
+          unzip -Z1 "release-assets/hw-${version}-windows-x86_64.zip" | grep -Fx third_party/kicad-footprints/LICENSE.md
+          unzip -Z1 "release-assets/hw-${version}-windows-x86_64.zip" | grep -Fx third_party/kicad-footprints/ATTRIBUTION.md
+          unzip -Z1 "release-assets/hw-${version}-windows-x86_64.zip" | grep -Fx third_party/three/LICENSE
+          unzip -Z1 "release-assets/hw-${version}-windows-x86_64.zip" | grep -Fx third_party/three/ATTRIBUTION.md
+          cd release-assets
+          rm -f SHA256SUMS
+          mapfile -d '' files < <(find . -maxdepth 1 -type f ! -name SHA256SUMS -print0 | LC_ALL=C sort -z)
+          test "${#files[@]}" -gt 0
+          sha256sum "${files[@]}" > SHA256SUMS
       - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" release-assets/* --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
+        run: gh release create "$GITHUB_REF_NAME" release-assets/* --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes --latest --title "$GITHUB_REF_NAME"

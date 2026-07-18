@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#0b0f14"/>
+  <text x="64" y="72" fill="#35e08b" font-family="DejaVu Sans Mono, monospace" font-size="28" font-weight="700">hw-codesign</text>
+  <text x="1136" y="72" text-anchor="end" fill="#ffcf70" font-family="DejaVu Sans Mono, monospace" font-size="18">FABRICATION BLOCKER REPORT</text>
+  <text x="64" y="136" fill="#dce7f3" font-family="DejaVu Sans, sans-serif" font-size="34" font-weight="700">It stops before pretending the board is ready.</text>
+  <g font-family="DejaVu Sans, sans-serif">
+    <rect x="64" y="178" width="520" height="136" rx="16" fill="#13231d" stroke="#2b7655"/>
+    <text x="92" y="220" fill="#8ff0bd" font-size="20" font-weight="700">CAD + FIRMWARE STATUS</text>
+    <text x="92" y="258" fill="#dce7f3" font-size="19">Route 0 raw / 0 post-fill · ERC 0 · DRC 0</text>
+    <text x="92" y="286" fill="#8b98a8" font-size="17">Zephyr build is blocked: ARM newlib unavailable.</text>
+    <rect x="616" y="178" width="520" height="136" rx="16" fill="#151a22" stroke="#4a3c27"/>
+    <text x="644" y="220" fill="#ffcf70" font-size="20" font-weight="700">SOURCING EVIDENCE</text>
+    <text x="644" y="258" fill="#dce7f3" font-size="19">Current availability and resilient alternates</text>
+    <text x="644" y="286" fill="#8b98a8" font-size="17">remain failed or blocked for the selected BOM.</text>
+    <rect x="64" y="338" width="520" height="136" rx="16" fill="#151a22" stroke="#4a3c27"/>
+    <text x="92" y="380" fill="#ffcf70" font-size="20" font-weight="700">FABRICATION PROCESS OPEN</text>
+    <text x="92" y="418" fill="#dce7f3" font-size="19">U2.57 uses via-in-pad; fill/cap/tent</text>
+    <text x="92" y="446" fill="#8b98a8" font-size="17">requirements and fabricator capability are unqualified.</text>
+    <rect x="616" y="338" width="520" height="136" rx="16" fill="#151a22" stroke="#4a3c27"/>
+    <text x="644" y="380" fill="#ffcf70" font-size="20" font-weight="700">PHYSICAL QUALIFICATION</text>
+    <text x="644" y="418" fill="#dce7f3" font-size="19">Not fabricated: assembly, bring-up, thermal,</text>
+    <text x="644" y="446" fill="#8b98a8" font-size="17">SI/PI, EMI, retention and ESD evidence are absent.</text>
+  </g>
+  <rect x="64" y="518" width="1072" height="70" rx="16" fill="#2b1919" stroke="#ff7a7a"/>
+  <text x="600" y="562" text-anchor="middle" fill="#ffaaaa" font-family="DejaVu Sans Mono, monospace" font-size="20" font-weight="700">44 PASS · 1 FAIL · 3 BLOCKED · CANDIDATE ≠ FABRICATION-QUALIFIED</text>
+  <text x="64" y="625" fill="#768394" font-family="DejaVu Sans, sans-serif" font-size="18">Bundle 7d6731501a24 · open the read-only review for gate-level evidence and artifact hashes.</text>
+</svg>

@@ -1,0 +1,25 @@
+{
+  "board_sha256": "1e0e6b068891733c1b2c50db3317b85cd38793ba0fe363dfa666d7c6eceef2b2",
+  "design_rules": {
+    "min_clearance_mm": 0.15,
+    "min_track_width_mm": 0.15
+  },
+  "failures": [],
+  "filled_polygon_count": 1,
+  "freerouting_unrouted": 0,
+  "freerouting_version": "2.2.4",
+  "max_passes": 20,
+  "mode": "zone_connected_planes_freerouting",
+  "plane_connectivity": "copper_zones",
+  "post_import_unconnected": 0,
+  "project_sidecar_promoted": true,
+  "signal_routing": "complete",
+  "status": "pass",
+  "unrouted": 0,
+  "violations": 0,
+  "zone_count": 1,
+  "zone_fill": "persisted",
+  "zone_nets": [
+    "GND"
+  ]
+}

@@ -1,0 +1,13 @@
+identifier: rp2040_usb_device
+name: HW Co-design RP2040 USB Device
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+ram: 264
+flash: 2048
+supported:
+  - gpio
+  - spi
+  - usbd

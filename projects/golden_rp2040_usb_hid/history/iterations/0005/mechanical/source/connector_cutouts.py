@@ -1,0 +1,1 @@
+CONNECTOR_CUTOUTS = [{'ref': 'J1', 'side': 'left', 'opening_mm': [9.0, 3.3], 'center_z_mm': 3.2, 'position_tolerance_mm': 0.5, 'component_present': True, 'electrical_category': 'power_input', 'pcb_position_mm': [3.1, 15.0], 'enclosure_position_mm': [5.1, 17.0]}]

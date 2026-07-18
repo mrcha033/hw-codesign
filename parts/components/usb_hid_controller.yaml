@@ -2,140 +2,169 @@ components:
   - id: rp2040
     mpn: RP2040
     manufacturer: Raspberry Pi Ltd
-    package: QFN-56
+    package: QFN-56-1EP
     symbol:
       library_id: MCU_RaspberryPi:RP2040
       verified: true
-      expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56']
+      expected_pins: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57']
     footprint:
       library_id: Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm
       verified: true
       expected_pads: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57']
-      backend_footprints:
-        tscircuit: rp2040_qfn56
     pins:
-      - {number: '1', name: VDD, electrical_type: power_in, voltage_domain: V3V3}
-      - {number: '2', name: VSS, electrical_type: ground, voltage_domain: GND}
-      - {number: '3', name: USB_DM, electrical_type: bidirectional}
-      - {number: '4', name: USB_DP, electrical_type: bidirectional}
-      - {number: '5', name: XIN, electrical_type: passive}
-      - {number: '6', name: QSPI_SCLK, electrical_type: output}
-      - {number: '7', name: QSPI_CS, electrical_type: output}
-      - {number: '8', name: QSPI_SD0, electrical_type: bidirectional}
-      - {number: '9', name: QSPI_SD1, electrical_type: bidirectional}
-      - {number: '10', name: QSPI_SD2, electrical_type: bidirectional}
-      - {number: '11', name: QSPI_SD3, electrical_type: bidirectional}
-      - {number: '12', name: RUN, electrical_type: input}
-      - {number: '13', name: GPIO23, electrical_type: bidirectional}
-      - {number: '14', name: GPIO25, electrical_type: bidirectional}
-      - {number: '15', name: SWCLK, electrical_type: input}
-      - {number: '16', name: SWDIO, electrical_type: bidirectional}
-      - {number: '17', name: GPIO0, electrical_type: bidirectional}
-      - {number: '18', name: GPIO1, electrical_type: bidirectional}
-      - {number: '19', name: GPIO2, electrical_type: bidirectional}
-      - {number: '20', name: GPIO3, electrical_type: bidirectional}
-      - {number: '21', name: GPIO4, electrical_type: bidirectional}
-      - {number: '22', name: GPIO5, electrical_type: bidirectional}
+      - {number: '1', name: IOVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '2', name: GPIO0, electrical_type: bidirectional}
+      - {number: '3', name: GPIO1, electrical_type: bidirectional}
+      - {number: '4', name: GPIO2, electrical_type: bidirectional}
+      - {number: '5', name: GPIO3, electrical_type: bidirectional}
+      - {number: '6', name: GPIO4, electrical_type: bidirectional}
+      - {number: '7', name: GPIO5, electrical_type: bidirectional}
+      - {number: '8', name: GPIO6, electrical_type: bidirectional}
+      - {number: '9', name: GPIO7, electrical_type: bidirectional}
+      - {number: '10', name: IOVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '11', name: GPIO8, electrical_type: bidirectional}
+      - {number: '12', name: GPIO9, electrical_type: bidirectional}
+      - {number: '13', name: GPIO10, electrical_type: bidirectional}
+      - {number: '14', name: GPIO11, electrical_type: bidirectional}
+      - {number: '15', name: GPIO12, electrical_type: bidirectional}
+      - {number: '16', name: GPIO13, electrical_type: bidirectional}
+      - {number: '17', name: GPIO14, electrical_type: bidirectional}
+      - {number: '18', name: GPIO15, electrical_type: bidirectional}
+      - {number: '19', name: TESTEN, electrical_type: ground, voltage_domain: GND}
+      - {number: '20', name: XIN, electrical_type: passive}
+      - {number: '21', name: XOUT, electrical_type: passive}
+      - {number: '22', name: IOVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '23', name: DVDD, electrical_type: power_in, voltage_domain: V1V1}
+      - {number: '24', name: SWCLK, electrical_type: input}
+      - {number: '25', name: SWDIO, electrical_type: bidirectional}
+      - {number: '26', name: RUN, electrical_type: input}
+      - {number: '27', name: GPIO16, electrical_type: bidirectional}
+      - {number: '28', name: GPIO17, electrical_type: bidirectional}
+      - {number: '29', name: GPIO18, electrical_type: bidirectional}
+      - {number: '30', name: GPIO19, electrical_type: bidirectional}
+      - {number: '31', name: GPIO20, electrical_type: bidirectional}
+      - {number: '32', name: GPIO21, electrical_type: bidirectional}
+      - {number: '33', name: IOVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '34', name: GPIO22, electrical_type: bidirectional}
+      - {number: '35', name: GPIO23, electrical_type: bidirectional}
+      - {number: '36', name: GPIO24, electrical_type: bidirectional}
+      - {number: '37', name: GPIO25, electrical_type: bidirectional}
+      - {number: '38', name: GPIO26_ADC0, electrical_type: bidirectional}
+      - {number: '39', name: GPIO27_ADC1, electrical_type: bidirectional}
+      - {number: '40', name: GPIO28_ADC2, electrical_type: bidirectional}
+      - {number: '41', name: GPIO29_ADC3, electrical_type: bidirectional}
+      - {number: '42', name: IOVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '43', name: ADC_AVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '44', name: VREG_VIN, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '45', name: VREG_VOUT, electrical_type: power_out, voltage_domain: V1V1}
+      - {number: '46', name: USB_DM, electrical_type: bidirectional}
+      - {number: '47', name: USB_DP, electrical_type: bidirectional}
+      - {number: '48', name: USB_VDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '49', name: IOVDD, electrical_type: power_in, voltage_domain: V3V3}
+      - {number: '50', name: DVDD, electrical_type: power_in, voltage_domain: V1V1}
+      - {number: '51', name: QSPI_SD3, electrical_type: bidirectional}
+      - {number: '52', name: QSPI_SCLK, electrical_type: output}
+      - {number: '53', name: QSPI_SD0, electrical_type: bidirectional}
+      - {number: '54', name: QSPI_SD2, electrical_type: bidirectional}
+      - {number: '55', name: QSPI_SD1, electrical_type: bidirectional}
+      - {number: '56', name: QSPI_CSn, electrical_type: output}
+      - {number: '57', name: GND, electrical_type: ground, voltage_domain: GND}
     lifecycle: active
     sourcing:
       status: resolved
       supplier_skus: [RP2040]
-    # 12mhz_crystal_required_for_usb: the RP2040 bootrom USB boot path derives the
-    # USB clock from a 12 MHz crystal reference, so any other crystal frequency
-    # breaks USB enumeration. Grounded by the RP2040 datasheet (Clocks section) and
-    # the "Hardware design with RP2040" guide; authoritative pointer:
-    # datasheet_rp2040 in parts/evidence/datasheets.yaml.
-    constraints: [dual_core_cortex_m0plus, native_usb_fs, pio_programmable_io, qspi_xip_flash_required, 12mhz_crystal_required_for_usb]
+    constraints: [dual_core_cortex_m0plus, native_usb_fs, pio_programmable_io, qspi_xip_flash_required, 12mhz_crystal_required_for_usb, exact_qfn57_pin_contract, mandatory_core_rail_decoupling]
     resolution_provenance:
       source: manufacturer_datasheet
-      reviewed_at: '2026-06-21'
+      reviewed_at: '2026-07-18'
     review_status: approved
 
   - id: w25q16jv
     mpn: W25Q16JVSSIQ
     manufacturer: Winbond Electronics
-    package: SOIC-8
+    package: SOP-8-208mil
     symbol:
       library_id: Memory_Flash:W25Q16JV
       verified: true
       expected_pins: ['1','2','3','4','5','6','7','8']
     footprint:
-      library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm
+      library_id: Package_SO:SOIC-8_5.3x5.3mm_P1.27mm
       verified: true
       expected_pads: ['1','2','3','4','5','6','7','8']
-      backend_footprints:
-        tscircuit: w25q16jv_soic8
     pins:
       - {number: '1', name: CS, electrical_type: input}
-      - {number: '2', name: DO, electrical_type: output}
-      - {number: '3', name: WP, electrical_type: input}
+      - {number: '2', name: IO1, electrical_type: bidirectional}
+      - {number: '3', name: IO2_WP, electrical_type: bidirectional}
       - {number: '4', name: GND, electrical_type: ground, voltage_domain: GND}
-      - {number: '5', name: DI, electrical_type: input}
+      - {number: '5', name: IO0, electrical_type: bidirectional}
       - {number: '6', name: CLK, electrical_type: input}
-      - {number: '7', name: HOLD, electrical_type: input}
+      - {number: '7', name: IO3_HOLD, electrical_type: bidirectional}
       - {number: '8', name: VCC, electrical_type: power_in, voltage_domain: V3V3}
     lifecycle: active
     sourcing:
       status: resolved
       supplier_skus: [W25Q16JVSSIQ]
-    constraints: [qspi_compatible, xip_capable, rp2040_compatible_command_set]
+    constraints: [qspi_compatible, xip_capable, rp2040_compatible_command_set, sop8_208mil]
     resolution_provenance:
       source: manufacturer_datasheet
-      reviewed_at: '2026-06-21'
+      reviewed_at: '2026-07-18'
     review_status: approved
 
-  - id: abm8_12m
-    mpn: ABM8-12.000MHZ-B2-T
+  - id: abm8_272_t3
+    mpn: ABM8-272-T3
     manufacturer: Abracon
-    package: HC-49S-SMD
+    package: 3225-4-SMD
     symbol:
-      library_id: Device:Crystal
+      library_id: Device:Crystal_GND24
       verified: true
-      expected_pins: ['1','2']
+      expected_pins: ['1','2','3','4']
     footprint:
-      library_id: Crystal:Crystal_SMD_HC-49S
+      library_id: Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm
       verified: true
-      expected_pads: ['1','2']
+      expected_pads: ['1','2','3','4']
     pins:
       - {number: '1', name: XIN, electrical_type: passive}
-      - {number: '2', name: XOUT, electrical_type: passive}
+      - {number: '2', name: CASE_GND, electrical_type: ground, voltage_domain: GND}
+      - {number: '3', name: XTAL_RETURN, electrical_type: passive}
+      - {number: '4', name: CASE_GND, electrical_type: ground, voltage_domain: GND}
     lifecycle: active
     sourcing:
       status: resolved
-      supplier_skus: [ABM8-12.000MHZ-B2-T]
-    constraints: [12mhz_xosc, usb_timing_qualified, 10ppm_stability]
+      supplier_skus: [ABM8-272-T3]
+    constraints: [12mhz_xosc, rp2040_vendor_recommended, 10pf_load, four_pad_3225]
     resolution_provenance:
       source: manufacturer_datasheet
-      reviewed_at: '2026-06-21'
+      reviewed_at: '2026-07-18'
     review_status: approved
+
 
   - id: w25q32jv
     mpn: W25Q32JVSSIQ
     manufacturer: Winbond Electronics
-    package: SOIC-8
+    package: SOP-8-208mil
     symbol:
       library_id: Memory_Flash:W25Q32JV
       verified: true
       expected_pins: ['1','2','3','4','5','6','7','8']
     footprint:
-      library_id: Package_SO:SOIC-8_3.9x4.9mm_P1.27mm
+      library_id: Package_SO:SOIC-8_5.3x5.3mm_P1.27mm
       verified: true
       expected_pads: ['1','2','3','4','5','6','7','8']
     pins:
       - {number: '1', name: CS, electrical_type: input}
-      - {number: '2', name: DO, electrical_type: output}
-      - {number: '3', name: WP, electrical_type: input}
+      - {number: '2', name: IO1, electrical_type: bidirectional}
+      - {number: '3', name: IO2_WP, electrical_type: bidirectional}
       - {number: '4', name: GND, electrical_type: ground, voltage_domain: GND}
-      - {number: '5', name: DI, electrical_type: input}
+      - {number: '5', name: IO0, electrical_type: bidirectional}
       - {number: '6', name: CLK, electrical_type: input}
-      - {number: '7', name: HOLD, electrical_type: input}
+      - {number: '7', name: IO3_HOLD, electrical_type: bidirectional}
       - {number: '8', name: VCC, electrical_type: power_in, voltage_domain: V3V3}
     lifecycle: active
     sourcing:
       status: resolved
       supplier_skus: [W25Q32JVSSIQ]
-    constraints: [qspi_compatible, xip_capable, rp2040_compatible_command_set]
+    constraints: [qspi_compatible, xip_capable, rp2040_compatible_command_set, sop8_208mil]
     resolution_provenance:
       source: manufacturer_datasheet
-      reviewed_at: '2026-06-21'
+      reviewed_at: '2026-07-18'
     review_status: approved

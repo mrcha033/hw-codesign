@@ -1,0 +1,12 @@
+safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections:
+  - usb_esd
+  - watchdog
+  regulatory:
+  - CE
+  - FCC_B
+  isolation_required: false
+  esd_protection: required

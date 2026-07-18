@@ -197,10 +197,10 @@ def test_sensor_data_logger_mechanical_contract_uses_sensor_placement(service):
     j1_cutout = next(item for item in contract["connector_cutouts"] if item["ref"] == "J1")
     board = contract["board"]
 
-    assert by_ref["J1"]["pcb_position_mm"] == [18.0, 4.176]
+    assert by_ref["J1"]["pcb_position_mm"] == [18.0, 4.756]
     assert j1_cutout["pcb_position_mm"] == by_ref["J1"]["pcb_position_mm"]
     assert j1_cutout["electrical_category"] == "power_input"
-    assert j1_cutout["enclosure_position_mm"] == [21.0, 7.176]
+    assert j1_cutout["enclosure_position_mm"] == [21.0, 7.756]
     assert all(0.0 <= item["x_mm"] <= board["width_mm"] and 0.0 <= item["y_mm"] <= board["height_mm"] for item in board["component_height_map"])
 
 

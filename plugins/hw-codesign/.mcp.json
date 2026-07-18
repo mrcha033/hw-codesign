@@ -1,12 +1,8 @@
 {
   "mcpServers": {
     "hw-codesign": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "${HW_CODESIGN_FROM:-hw-codesign-platform[mcp] @ git+https://github.com/mrcha033/hw-cli}",
-        "hw-mcp"
-      ]
+      "command": "hw-mcp",
+      "args": []
     }
   }
 }

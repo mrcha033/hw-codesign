@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/fabrication/gerbers.zip",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/fabrication/drill.zip",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/fabrication/pick_and_place.csv",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/fabrication/bom.csv",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/fabrication/readiness_manifest.json",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/mechanical/board.step",
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/exports/candidates/backend-validation/tscircuit/fabrication/fabrication_manifest.json"
+  ],
+  "backend": {
+    "content_addressed_manifest": true,
+    "deterministic_archive": true,
+    "electronics_backend": "tscircuit",
+    "export_bridge": "compiled_graph_to_kicad",
+    "name": "kicad-cli",
+    "volatile_metadata_normalized": true
+  },
+  "failures": [],
+  "gate": "tscircuit_manufacturing_export",
+  "metrics": {
+    "bom": true,
+    "drill_files": 1,
+    "export_layers": [
+      "F.Cu",
+      "B.Cu",
+      "F.Mask",
+      "B.Mask",
+      "F.Paste",
+      "B.Paste",
+      "F.Silkscreen",
+      "B.Silkscreen",
+      "Edge.Cuts"
+    ],
+    "fabrication_candidate_id": "sha256:28c098385b34d71a172675033e0a655548da362b61ddc6fdb8ec68fba1bc2e7b",
+    "gerber_files": 8,
+    "manifest_verified": true,
+    "position_file": true,
+    "routing_binding": "unverified",
+    "source_board_sha256": "8372eb2304cc3bd0ae61254d1db7c2a64da5517ef3ff223812c19a5560a79d17"
+  },
+  "status": "pass"
+}

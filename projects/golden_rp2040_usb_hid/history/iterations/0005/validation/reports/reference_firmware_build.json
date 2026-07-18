@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/reference/build/bringup_tests"
+  ],
+  "backend": {
+    "available": true,
+    "command": [
+      "/opt/homebrew/bin/cmake",
+      "--build",
+      "/Users/mrcha033/Documents/hw-cli/projects/golden_rp2040_usb_hid/firmware/reference/build"
+    ],
+    "name": "reference-host-bsp",
+    "returncode": 0,
+    "timeout_seconds": 120
+  },
+  "failures": [],
+  "gate": "reference_firmware_build",
+  "metrics": {},
+  "status": "pass"
+}

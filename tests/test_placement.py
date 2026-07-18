@@ -114,13 +114,17 @@ def test_proposal_carries_provenance_and_constraints(spec: dict, graph: dict):
 
     # Constraints we cannot ground in real data are represented but unenforced,
     # not faked. Decoupling is now grounded by rail/load inference for this
-    # graph, while thermal spacing remains advisory.
+    # graph, while thermal spacing remains advisory. Explicit component target
+    # metadata takes precedence when the topology provides it.
     unenforced = {c.kind for c in proposal.constraints if not c.enforced}
     assert unenforced == {"thermal_spacing"}
     decouplings = [c for c in proposal.constraints if c.kind == "decoupling_proximity"]
     assert decouplings
     assert all(c.enforced for c in decouplings)
-    assert {c.params["target_source"] for c in decouplings} == {"inferred_power_rail_consumer"}
+    assert {c.params["target_source"] for c in decouplings} == {
+        "explicit_decoupling_target_ref",
+        "inferred_power_rail_consumer",
+    }
 
     # Connector-edge distance is reused from the connector contract, not invented.
     connector = next(c for c in proposal.constraints if c.kind == "connector_edge")
@@ -234,6 +238,28 @@ def test_usb_hid_controller_seed_keeps_crystal_near_mcu(usb_hid_spec: dict, usb_
     assert report.metrics["oscillator_crystals"] == 1
 
 
+def test_rp2040_vreg_caps_clear_verified_0603_courtyards():
+    template = Path(__file__).parents[1] / "src" / "hw_codesign" / "templates" / "rp2040_usb_device.yaml"
+    spec = yaml.safe_load(template.read_text(encoding="utf-8"))
+    graph = build_graph(spec)
+    positions = component_positions(graph)
+    geometry = canonical_footprint_geometry("Capacitor_SMD:C_0603_1608Metric")
+
+    assert geometry is not None
+    assert positions["C11"][1] == positions["C12"][1]
+    assert all(
+        float(component.get("pcb_rotation_deg", 0.0)) == 0.0
+        for component in graph["components"]
+        if component["ref"] in {"C11", "C12"}
+    )
+
+    origin_spacing = abs(positions["C11"][0] - positions["C12"][0])
+    copper_width = geometry.copper_extent[2] - geometry.copper_extent[0]
+    courtyard_width = geometry.courtyard_extent[2] - geometry.courtyard_extent[0]
+    assert origin_spacing - copper_width >= spec["manufacturing"]["pcb"]["min_clearance_mm"]
+    assert origin_spacing - courtyard_width >= 0.01 - 1e-9
+
+
 def test_avr_hid_seed_keeps_crystal_near_mcu(avr_hid_spec: dict, avr_hid_graph: dict):
     seed = component_positions(avr_hid_graph)
     mcu = next(component for component in avr_hid_graph["components"] if component["category"] == "mcu")
@@ -253,7 +279,12 @@ def test_proposal_preserves_seed_coordinates_without_active_costs(spec: dict, gr
     quiet_spec["actuation"]["max_simultaneous_peak_channels"] = 0
 
     proposal = propose_placement(quiet_spec, graph)
-    seed = component_positions(graph)
+    envelope = quiet_spec["mechanical"]["envelope"]
+    seed = component_positions(
+        graph,
+        board_width_mm=envelope["board_width_mm"],
+        board_height_mm=envelope["board_height_mm"],
+    )
     active_refs = {c.target_ref for c in proposal.constraints if c.enforced and c.kind == "decoupling_proximity"}
     for ref, (x, y) in seed.items():
         if ref in active_refs:
@@ -374,7 +405,9 @@ def test_package_geometry_uses_verified_rf_dimensions():
 
     assert nrf.body == (-3.5, -3.5, 3.5, 3.5)
     assert esp.body == (-9.0, -12.75, 9.0, 12.75)
-    assert nrf.source == "verified_footprint"
+    assert nrf.source == "verified_body_synthetic_pads"
+    assert nrf.extent[0] < nrf.body[0]
+    assert nrf.extent[2] > nrf.body[2]
     assert esp.source == "canonical_kicad_snapshot"
 
     canonical = canonical_footprint_geometry("RF_Module:ESP32-S3-WROOM-1")

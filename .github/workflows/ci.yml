@@ -55,6 +55,7 @@ jobs:
   test-windows:
     name: Windows Python 3.11
     runs-on: windows-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -69,8 +70,68 @@ jobs:
       - name: Enforce MCP stdout protocol hygiene
         run: uv run pytest -q tests/test_mcp_stdio.py
       - run: uv run pytest
+
+  native-zephyr-rp2040:
+    name: Native Zephyr RP2040
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v8.2.0
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - name: Install native Arm build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            cmake device-tree-compiler gcc-arm-none-eabi git gperf \
+            libnewlib-arm-none-eabi ninja-build
+          specs="$(arm-none-eabi-gcc -print-file-name=nosys.specs)"
+          test "$specs" != nosys.specs
+          test -f "$specs"
+      - run: uv sync --locked --extra dev
+      - name: Provision pinned Zephyr 4.2 modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          zephyr="$GITHUB_WORKSPACE/.toolchains/zephyr"
+          git clone --depth 1 --branch v4.2.0 \
+            https://github.com/zephyrproject-rtos/zephyr.git "$zephyr"
+
+          clone_at() {
+            local url="$1" path="$2" revision="$3"
+            git init "$path"
+            git -C "$path" remote add origin "$url"
+            git -C "$path" fetch --depth 1 origin "$revision"
+            git -C "$path" checkout --detach FETCH_HEAD
+          }
+
+          mkdir -p "$zephyr/modules/hal"
+          clone_at https://github.com/zephyrproject-rtos/hal_stm32.git \
+            "$zephyr/modules/hal/stm32" 1e753266ddfb4b07a8a0b1ec566e9637ea45d5ef
+          clone_at https://github.com/zephyrproject-rtos/CMSIS_6.git \
+            "$zephyr/modules/hal/cmsis_6" 06d952b6713a2ca41c9224a62075e4059402a151
+          clone_at https://github.com/zephyrproject-rtos/hal_rpi_pico.git \
+            "$zephyr/modules/hal/rpi_pico" 7b57b24588797e6e7bf18b6bda168e6b96374264
+          uv pip install -r "$zephyr/scripts/requirements-base.txt"
+      - name: Build the golden RP2040 Zephyr target
         env:
-          PYTESTPATH: tests
+          HW_TOOLCHAIN_ROOT: ${{ github.workspace }}
+        run: |
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from hw_codesign.backends.zephyr import ZephyrBackend
+          from hw_codesign.models import Status
+
+          project = Path("projects/golden_rp2040_usb_hid").resolve()
+          report = ZephyrBackend().build(project, "rp2040_usb_device")
+          print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+          if report.status is not Status.PASS:
+              raise SystemExit("native RP2040 Zephyr build did not pass")
+          PY
 
   package-smoke:
     name: Wheel smoke test
@@ -81,16 +142,71 @@ jobs:
         with:
           python-version: "3.11"
           enable-cache: true
-      - run: uv build
+      - name: Build Python distributions
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_version="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
+          package_dir="$RUNNER_TEMP/python-dist"
+          test ! -e "$package_dir"
+          uv build --out-dir "$package_dir"
+          test -f "$package_dir/hw_codesign-${package_version}-py3-none-any.whl"
+          test -f "$package_dir/hw_codesign-${package_version}.tar.gz"
+          unzip -Z1 "$package_dir/hw_codesign-${package_version}-py3-none-any.whl" | grep -E '/licenses?/LICENSE$'
+          unzip -Z1 "$package_dir/hw_codesign-${package_version}-py3-none-any.whl" | grep -E '/licenses?/NOTICE$'
+          unzip -Z1 "$package_dir/hw_codesign-${package_version}-py3-none-any.whl" | grep -Fx hw_codesign/review_3d_viewer.bundle.js
+          unzip -Z1 "$package_dir/hw_codesign-${package_version}-py3-none-any.whl" | grep -Fx hw_codesign/review_3d_viewer.bundle.json
+          unzip -Z1 "$package_dir/hw_codesign-${package_version}-py3-none-any.whl" | grep -Fx hw_codesign/third_party/three/LICENSE
+          unzip -Z1 "$package_dir/hw_codesign-${package_version}-py3-none-any.whl" | grep -Fx hw_codesign/third_party/three/ATTRIBUTION.md
+          tar tzf "$package_dir/hw_codesign-${package_version}.tar.gz" | grep -Fx "hw_codesign-${package_version}/LICENSE"
+          tar tzf "$package_dir/hw_codesign-${package_version}.tar.gz" | grep -Fx "hw_codesign-${package_version}/NOTICE"
+          tar tzf "$package_dir/hw_codesign-${package_version}.tar.gz" | grep -Fx "hw_codesign-${package_version}/src/hw_codesign/review_3d_viewer.bundle.js"
+          tar tzf "$package_dir/hw_codesign-${package_version}.tar.gz" | grep -Fx "hw_codesign-${package_version}/src/hw_codesign/review_3d_viewer.bundle.json"
+          tar tzf "$package_dir/hw_codesign-${package_version}.tar.gz" | grep -Fx "hw_codesign-${package_version}/src/hw_codesign/third_party/three/LICENSE"
+          tar tzf "$package_dir/hw_codesign-${package_version}.tar.gz" | grep -Fx "hw_codesign-${package_version}/src/hw_codesign/third_party/three/ATTRIBUTION.md"
+          echo "PACKAGE_DIR=$package_dir" >> "$GITHUB_ENV"
+          echo "PACKAGE_VERSION=$package_version" >> "$GITHUB_ENV"
+      - name: Verify checked-in release evidence
+        run: python scripts/refresh_demo.py --verify-release-evidence
       - name: Test installed wheel outside the checkout
         shell: bash
         run: |
           set -euo pipefail
           smoke_dir="$(mktemp -d)"
           uv venv "$smoke_dir/.venv" --python 3.11
-          wheel="$(find "$GITHUB_WORKSPACE/dist" -name '*.whl' -print -quit)"
+          wheel="$(find "$PACKAGE_DIR" -name '*.whl' -print -quit)"
           uv pip install --python "$smoke_dir/.venv/bin/python" "${wheel}[mcp]"
           cd "$smoke_dir"
           .venv/bin/hw create-project smoke_project
           .venv/bin/hw validate-spec smoke_project
-          timeout 5s .venv/bin/hw-mcp || test "$?" -eq 124
+          .venv/bin/python -c 'import os; from importlib.metadata import version; assert version("hw-codesign") == os.environ["PACKAGE_VERSION"]'
+          MCP_BIN="$smoke_dir/.venv/bin/hw-mcp" .venv/bin/python - <<'PY'
+          import json
+          import os
+          import subprocess
+
+          request = {
+              "jsonrpc": "2.0",
+              "id": 1,
+              "method": "initialize",
+              "params": {
+                  "protocolVersion": "2025-06-18",
+                  "capabilities": {},
+                  "clientInfo": {"name": "release-smoke", "version": os.environ["PACKAGE_VERSION"]},
+              },
+          }
+          process = subprocess.Popen(
+              [os.environ["MCP_BIN"]],
+              stdin=subprocess.PIPE,
+              stdout=subprocess.PIPE,
+              stderr=subprocess.PIPE,
+          )
+          stdout, stderr = process.communicate((json.dumps(request) + "\n").encode(), timeout=30)
+          assert process.returncode == 0, f"hw-mcp failed: stdout={stdout!r} stderr={stderr!r}"
+          messages = stdout.decode().splitlines()
+          assert len(messages) == 1, f"unexpected MCP stdout: {stdout!r}"
+          response = json.loads(messages[0])
+          assert response["id"] == 1 and "error" not in response, response
+          assert response["result"]["serverInfo"]["name"] == "hw-codesign", response
+          assert response["result"]["serverInfo"]["version"] == os.environ["PACKAGE_VERSION"], response
+          PY

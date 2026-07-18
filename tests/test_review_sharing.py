@@ -1,12 +1,26 @@
 from __future__ import annotations
 
+import hashlib
 import http.server
 import json
 import socket
 import threading
+import urllib.error
+import urllib.request
 from pathlib import Path
 
-from hw_codesign.review_viewer import _merge_bundle, build_standalone_html
+import pytest
+
+from hw_codesign import review_viewer
+from hw_codesign.review_viewer import (
+    _DASHBOARD_HTML,
+    _RECEIVER_HTML,
+    _VIEWER_HTML,
+    _Handler,
+    _merge_bundle,
+    _ReceiverHandler,
+    build_standalone_html,
+)
 
 # ---------------------------------------------------------------------------
 # Standalone HTML export
@@ -32,6 +46,7 @@ def test_build_standalone_html_embeds_data():
     assert "<!DOCTYPE html>" in html
     assert "window.__BUNDLE_DATA=" in html
     assert "abc123def456" in html
+    assert html.index("window.__BUNDLE_DATA=") < html.index("const STATUS_COLOR")
 
 
 def test_build_standalone_html_includes_comments():
@@ -260,3 +275,324 @@ def test_upload_review_blocked_without_destination(service, project):
     result = service.upload_review(project)
     assert result["status"] == "blocked"
     assert result["code"] == "destination_required"
+
+
+# ---------------------------------------------------------------------------
+# Review receiver security
+# ---------------------------------------------------------------------------
+
+def _receiver_bundle() -> dict:
+    canonical = {
+        "bundle_version": "1.0",
+        "project": {"name": "receiver_test", "revision": "r1"},
+        "summary": {"total": 1, "pass": 1, "fail": 0, "blocked": 0},
+        "gate_reports": [],
+    }
+    digest = hashlib.sha256(json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return {
+        **canonical,
+        "bundle_hash": digest,
+        "generated_at": "2026-07-18T00:00:00+00:00",
+    }
+
+
+def _start_receiver_server(inbox_dir: Path) -> http.server.HTTPServer:
+    inbox_dir.mkdir(parents=True, exist_ok=True)
+
+    class Handler(_ReceiverHandler):
+        pass
+
+    Handler.inbox_dir = inbox_dir.resolve()
+    Handler.port = 0
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+    Handler.port = server.server_port
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server
+
+
+def _receiver_request(
+    server: http.server.HTTPServer,
+    path: str,
+    *,
+    method: str = "GET",
+    body: bytes | None = None,
+    headers: dict[str, str] | None = None,
+) -> tuple[int, bytes]:
+    request = urllib.request.Request(
+        f"http://127.0.0.1:{server.server_port}{path}",
+        data=body,
+        method=method,
+        headers=headers or {},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=3) as response:
+            return response.status, response.read()
+    except urllib.error.HTTPError as exc:
+        return exc.code, exc.read()
+
+
+def _raw_receiver_request(server: http.server.HTTPServer, request: bytes) -> bytes:
+    with socket.create_connection(("127.0.0.1", server.server_port), timeout=3) as connection:
+        connection.sendall(request)
+        connection.shutdown(socket.SHUT_WR)
+        chunks = []
+        while chunk := connection.recv(65536):
+            chunks.append(chunk)
+    return b"".join(chunks)
+
+
+def test_receiver_accepts_valid_bundle_and_serves_only_one_record(tmp_path):
+    inbox = tmp_path / "inbox"
+    server = _start_receiver_server(inbox)
+    bundle = _receiver_bundle()
+    bundle_hash = bundle["bundle_hash"]
+    body = json.dumps(bundle).encode()
+    try:
+        status, response = _receiver_request(
+            server,
+            "/api/upload",
+            method="POST",
+            body=body,
+            headers={"Content-Type": "application/json", "X-Bundle-Hash": bundle_hash},
+        )
+        assert status == 200
+        assert json.loads(response)["bundle_hash"] == bundle_hash
+        assert (inbox / f"{bundle_hash}.json").read_bytes() == body
+        assert (inbox / f"{bundle_hash}.meta.json").is_file()
+
+        status, response = _receiver_request(server, f"/api/bundle/{bundle_hash}")
+        assert status == 200
+        assert json.loads(response)["project"]["name"] == "receiver_test"
+
+        status, response = _receiver_request(server, "/api/bundles")
+        assert status == 200
+        records = json.loads(response)["bundles"]
+        assert len(records) == 1
+        assert records[0]["bundle_hash"] == bundle_hash
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+@pytest.mark.parametrize("bundle_hash", ["../escape", "a" * 63, "A" * 64, "g" * 64])
+def test_receiver_rejects_malformed_bundle_hash_without_writing_outside(tmp_path, bundle_hash):
+    inbox = tmp_path / "inbox"
+    server = _start_receiver_server(inbox)
+    bundle = _receiver_bundle()
+    bundle["bundle_hash"] = bundle_hash
+    try:
+        status, _ = _receiver_request(
+            server,
+            "/api/upload",
+            method="POST",
+            body=json.dumps(bundle).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        assert status == 400
+        assert not (tmp_path / "escape.json").exists()
+        assert not (tmp_path / "escape.meta.json").exists()
+        assert list(inbox.iterdir()) == []
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+@pytest.mark.parametrize("path", ["/api/bundle/%2e%2e%2fescape", "/bundle/%2e%2e%2fescape"])
+def test_receiver_encoded_traversal_cannot_read_outside_inbox(tmp_path, path):
+    inbox = tmp_path / "inbox"
+    outside = tmp_path / "escape.json"
+    outside.write_text('{"secret":"must-not-leak"}', encoding="utf-8")
+    server = _start_receiver_server(inbox)
+    try:
+        status, response = _receiver_request(server, path)
+        assert status == 400
+        assert b"must-not-leak" not in response
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_receiver_rejects_symlink_escape_for_reads_and_writes(tmp_path):
+    inbox = tmp_path / "inbox"
+    inbox.mkdir()
+    outside = tmp_path / "outside.json"
+    outside.write_text("do not overwrite", encoding="utf-8")
+    bundle = _receiver_bundle()
+    bundle_hash = bundle["bundle_hash"]
+    (inbox / f"{bundle_hash}.json").symlink_to(outside)
+    server = _start_receiver_server(inbox)
+    try:
+        status, response = _receiver_request(server, f"/api/bundle/{bundle_hash}")
+        assert status == 400
+        assert b"do not overwrite" not in response
+
+        status, _ = _receiver_request(
+            server,
+            "/api/upload",
+            method="POST",
+            body=json.dumps(bundle).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        assert status == 400
+        assert outside.read_text(encoding="utf-8") == "do not overwrite"
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_receiver_rejects_wrong_digest_content_type_and_oversized_body(tmp_path):
+    server = _start_receiver_server(tmp_path / "inbox")
+    bundle = _receiver_bundle()
+    try:
+        mismatched = {**bundle, "project": {"name": "tampered"}}
+        status, _ = _receiver_request(
+            server,
+            "/api/upload",
+            method="POST",
+            body=json.dumps(mismatched).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        assert status == 422
+
+        status, _ = _receiver_request(
+            server,
+            "/api/upload",
+            method="POST",
+            body=json.dumps(bundle).encode(),
+            headers={"Content-Type": "text/plain"},
+        )
+        assert status == 415
+
+        response = _raw_receiver_request(
+            server,
+            b"POST /api/upload HTTP/1.1\r\n"
+            b"Host: 127.0.0.1\r\n"
+            b"Content-Type: application/json\r\n"
+            b"Content-Length: 52428801\r\n"
+            b"Connection: close\r\n\r\n",
+        )
+        assert response.startswith(b"HTTP/1.0 413")
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_receiver_handles_malformed_content_length(tmp_path):
+    server = _start_receiver_server(tmp_path / "inbox")
+    try:
+        response = _raw_receiver_request(
+            server,
+            b"POST /api/upload HTTP/1.1\r\n"
+            b"Host: 127.0.0.1\r\n"
+            b"Content-Type: application/json\r\n"
+            b"Content-Length: nope\r\n"
+            b"Connection: close\r\n\r\n",
+        )
+        assert response.startswith(b"HTTP/1.0 400")
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_receiver_is_loopback_only(tmp_path, monkeypatch):
+    addresses = []
+
+    class FakeServer:
+        def __init__(self, address, _handler):
+            addresses.append(address)
+
+        def serve_forever(self):
+            raise KeyboardInterrupt
+
+        def server_close(self):
+            pass
+
+    monkeypatch.setattr(review_viewer, "_HardenedHTTPServer", FakeServer)
+    review_viewer.serve_receiver(tmp_path / "default", port=7476, open_browser=False)
+    review_viewer.serve_receiver(tmp_path / "second", port=7477, open_browser=False)
+
+    assert addresses == [("127.0.0.1", 7476), ("127.0.0.1", 7477)]
+
+
+def test_receiver_cli_defaults_to_loopback():
+    from hw_codesign.cli import build_parser
+
+    args = build_parser().parse_args(["serve-receiver", "--no-open"])
+
+    assert not hasattr(args, "host")
+
+
+def test_viewer_templates_escape_untrusted_values_before_inner_html():
+    assert "${esc(b.project_name||'unknown')}" in _RECEIVER_HTML
+    assert "${b.project_name||'unknown'}" not in _RECEIVER_HTML
+    assert "${esc(p.name)}" in _DASHBOARD_HTML
+    assert "${p.name}" not in _DASHBOARD_HTML
+    assert "${esc(sm.pass||0)} pass" in _VIEWER_HTML
+    assert "${esc(req.active_unresolved_count)}" in _VIEWER_HTML
+    assert "${esc(pl.placement_count)}" in _VIEWER_HTML
+
+
+def _start_comment_server(tmp_path: Path) -> tuple[http.server.HTTPServer, Path]:
+    bundle_path = tmp_path / "bundle.json"
+    comments_path = tmp_path / "comments.jsonl"
+    bundle_path.write_text(json.dumps(_receiver_bundle()), encoding="utf-8")
+    comments_path.touch()
+
+    class Handler(_Handler):
+        pass
+
+    Handler.bundle_path = bundle_path
+    Handler.comments_path = comments_path
+    Handler.csrf_token = "test-csrf-token"
+    Handler.comment_lock = threading.Lock()
+    Handler.port = 0
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+    Handler.port = server.server_port
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server, comments_path
+
+
+def _comment_post(server: http.server.HTTPServer, body: bytes, *, declared_length: int | None = None) -> bytes:
+    length = len(body) if declared_length is None else declared_length
+    return _raw_receiver_request(
+        server,
+        b"POST /api/comment HTTP/1.1\r\n"
+        b"Host: 127.0.0.1\r\n"
+        b"Content-Type: application/x-www-form-urlencoded\r\n"
+        + f"Content-Length: {length}\r\n".encode()
+        + b"Connection: close\r\n\r\n"
+        + body,
+    )
+
+
+def test_comment_endpoint_requires_csrf_and_bounds_body(tmp_path):
+    server, comments_path = _start_comment_server(tmp_path)
+    try:
+        forged = _comment_post(server, b"text=forged")
+        assert forged.startswith(b"HTTP/1.0 403")
+        assert comments_path.read_text(encoding="utf-8") == ""
+
+        oversized = _comment_post(server, b"", declared_length=64 * 1024 + 1)
+        assert oversized.startswith(b"HTTP/1.0 413")
+
+        accepted = _comment_post(server, b"csrf_token=test-csrf-token&text=reviewed")
+        assert accepted.startswith(b"HTTP/1.0 303")
+        entry = json.loads(comments_path.read_text(encoding="utf-8"))
+        assert entry["text"] == "reviewed"
+        assert entry["bundle_hash"] == _receiver_bundle()["bundle_hash"]
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_comment_form_response_has_security_headers_and_token(tmp_path):
+    server, _ = _start_comment_server(tmp_path)
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{server.server_port}/comment", timeout=3) as response:
+            body = response.read()
+            assert response.headers["X-Content-Type-Options"] == "nosniff"
+            assert "frame-ancestors 'none'" in response.headers["Content-Security-Policy"]
+            assert b'test-csrf-token' in body
+    finally:
+        server.shutdown()
+        server.server_close()

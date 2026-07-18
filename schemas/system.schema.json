@@ -31,7 +31,102 @@
     "sensing": {"type": "object", "required": ["imu", "e_stop"]},
     "mechanical": {"type": "object", "required": ["envelope", "enclosure_internal_mm", "selected_variant", "variants", "mounting_holes", "connector_interfaces"]},
     "firmware": {"type": "object", "required": ["framework", "target"]},
-    "manufacturing": {"type": "object", "required": ["pcb", "exports"]},
+    "manufacturing": {
+      "type": "object",
+      "required": ["pcb", "exports"],
+      "properties": {
+        "pcb": {
+          "type": "object",
+          "properties": {
+            "via_in_pad": {
+              "type": "object",
+              "required": ["used", "qualification_status", "process", "locations"],
+              "properties": {
+                "used": {"type": "boolean"},
+                "qualification_status": {"enum": ["unqualified", "qualified"]},
+                "process": {
+                  "type": "object",
+                  "required": ["selection_status", "via_disposition", "cap_finish", "fabricator_process_id"],
+                  "properties": {
+                    "selection_status": {"enum": ["unselected", "selected"]},
+                    "via_disposition": {"enum": ["unselected", "tented", "filled", "filled_and_capped"]},
+                    "cap_finish": {"enum": ["unselected", "not_applicable", "copper_capped", "plated_over"]},
+                    "fabricator_process_id": {"type": ["string", "null"]}
+                  },
+                  "allOf": [
+                    {
+                      "if": {"properties": {"selection_status": {"const": "unselected"}}, "required": ["selection_status"]},
+                      "then": {
+                        "properties": {
+                          "via_disposition": {"const": "unselected"},
+                          "cap_finish": {"const": "unselected"},
+                          "fabricator_process_id": {"type": "null"}
+                        }
+                      }
+                    },
+                    {
+                      "if": {"properties": {"selection_status": {"const": "selected"}}, "required": ["selection_status"]},
+                      "then": {
+                        "properties": {
+                          "via_disposition": {"enum": ["tented", "filled", "filled_and_capped"]},
+                          "cap_finish": {"enum": ["not_applicable", "copper_capped", "plated_over"]},
+                          "fabricator_process_id": {"type": "string", "minLength": 1}
+                        }
+                      }
+                    }
+                  ],
+                  "additionalProperties": false
+                },
+                "locations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["reference", "pad", "via_count", "purpose"],
+                    "properties": {
+                      "reference": {"type": "string", "minLength": 1},
+                      "pad": {"type": "string", "minLength": 1},
+                      "via_count": {"type": "integer", "minimum": 1},
+                      "purpose": {"type": "string", "minLength": 1},
+                      "geometry": {
+                        "type": "object",
+                        "required": ["pattern", "rows", "columns", "pitch_mm", "via_diameter_mm", "drill_diameter_mm"],
+                        "properties": {
+                          "pattern": {"const": "square_grid"},
+                          "rows": {"type": "integer", "minimum": 1},
+                          "columns": {"type": "integer", "minimum": 1},
+                          "pitch_mm": {"type": "number", "exclusiveMinimum": 0},
+                          "via_diameter_mm": {"type": "number", "exclusiveMinimum": 0},
+                          "drill_diameter_mm": {"type": "number", "exclusiveMinimum": 0}
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {"properties": {"used": {"const": true}}, "required": ["used"]},
+                  "then": {"properties": {"locations": {"minItems": 1}}}
+                },
+                {
+                  "if": {"properties": {"qualification_status": {"const": "qualified"}}, "required": ["qualification_status"]},
+                  "then": {
+                    "properties": {
+                      "process": {
+                        "properties": {"selection_status": {"const": "selected"}}
+                      }
+                    }
+                  }
+                }
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    },
     "safety": {"type": "object", "required": ["emergency_stop", "required_protections"]},
     "assumptions": {"type": "object"},
     "electronics": {

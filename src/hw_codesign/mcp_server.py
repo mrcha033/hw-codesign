@@ -8,6 +8,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .contracts import TOOL_REGISTRY as _TR
 from .jobs import JobManager, ProjectWriterLock
 from .service import HardwareService
@@ -61,7 +62,18 @@ def create_server(root: Path | str | None = None):
 
     service = HardwareService(root or os.environ.get("HW_PLATFORM_ROOT", Path.cwd()))
     jobs = JobManager(service.root)
-    server = FastMCP("hw-codesign-platform")
+    # FastMCP only gained a public ``version=`` constructor argument in newer
+    # releases.  MCP 1.x stores the application version on its low-level
+    # server; leaving it unset makes initialize responses report the MCP
+    # framework version instead of this application's version.
+    if "version" in inspect.signature(FastMCP).parameters:
+        server = FastMCP("hw-codesign", version=__version__)
+    else:
+        server = FastMCP("hw-codesign")
+        low_level_server = getattr(server, "_mcp_server", None)
+        if low_level_server is None or not hasattr(low_level_server, "version"):
+            raise RuntimeError("Installed MCP runtime cannot expose the hw-codesign application version")
+        low_level_server.version = __version__
 
     def _tool(name: str):
         def decorator(fn):

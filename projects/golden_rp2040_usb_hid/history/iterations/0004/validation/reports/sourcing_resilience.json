@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "/Users/mrcha033/Documents/hw-cli/parts/role_sets/rp2040_usb_device.yaml"
+  ],
+  "backend": {
+    "deterministic": true,
+    "name": "sourcing-resilience-contract"
+  },
+  "failures": [],
+  "gate": "sourcing_resilience",
+  "metrics": {
+    "alternate_roles": 1,
+    "checked_alternates": 1,
+    "critical_roles": 5,
+    "role_set": "rp2040_usb_device",
+    "single_source_justified_roles": 4,
+    "supplier_provider": "curated"
+  },
+  "status": "pass"
+}

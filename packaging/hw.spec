@@ -12,6 +12,10 @@ base_datas = [
     (str(repo_root / "parts"), "parts"),
     # templates accessed via importlib.resources — must be explicit with editable installs
     (str(repo_root / "src" / "hw_codesign" / "templates"), "hw_codesign/templates"),
+    (str(repo_root / "src" / "hw_codesign" / "review_3d_viewer.js"), "hw_codesign"),
+    (str(repo_root / "src" / "hw_codesign" / "review_3d_viewer.bundle.js"), "hw_codesign"),
+    (str(repo_root / "src" / "hw_codesign" / "review_3d_viewer.bundle.json"), "hw_codesign"),
+    (str(repo_root / "src" / "hw_codesign" / "third_party" / "three"), "hw_codesign/third_party/three"),
 ]
 
 mcp_datas, mcp_binaries, mcp_hiddenimports = collect_all(

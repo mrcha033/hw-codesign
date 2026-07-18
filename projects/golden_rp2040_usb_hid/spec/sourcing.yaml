@@ -1,0 +1,5 @@
+sourcing:
+  provider: curated
+  target_unit_cost_usd: 4.5
+  volume: 500
+  lead_time_weeks: 2

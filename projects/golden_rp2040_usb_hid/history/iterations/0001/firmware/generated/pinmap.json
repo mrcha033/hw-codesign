@@ -1,0 +1,68 @@
+[
+  {
+    "graph_pin": "U2.20",
+    "mcu_pin": "XIN",
+    "net_name": "XIN",
+    "signal": "XIN"
+  },
+  {
+    "graph_pin": "U2.21",
+    "mcu_pin": "XOUT",
+    "net_name": "XOUT",
+    "signal": "XOUT"
+  },
+  {
+    "graph_pin": "U2.26",
+    "mcu_pin": "RUN",
+    "net_name": "MCU_RUN",
+    "signal": "MCU_RUN"
+  },
+  {
+    "graph_pin": "U2.46",
+    "mcu_pin": "USB_DM",
+    "net_name": "USB_DM",
+    "signal": "USB_DM"
+  },
+  {
+    "graph_pin": "U2.47",
+    "mcu_pin": "USB_DP",
+    "net_name": "USB_DP",
+    "signal": "USB_DP"
+  },
+  {
+    "graph_pin": "U2.51",
+    "mcu_pin": "QSPI_SD3",
+    "net_name": "QSPI_D3",
+    "signal": "QSPI_D3"
+  },
+  {
+    "graph_pin": "U2.52",
+    "mcu_pin": "QSPI_SCLK",
+    "net_name": "QSPI_CLK",
+    "signal": "QSPI_CLK"
+  },
+  {
+    "graph_pin": "U2.53",
+    "mcu_pin": "QSPI_SD0",
+    "net_name": "QSPI_MOSI",
+    "signal": "QSPI_MOSI"
+  },
+  {
+    "graph_pin": "U2.54",
+    "mcu_pin": "QSPI_SD2",
+    "net_name": "QSPI_D2",
+    "signal": "QSPI_D2"
+  },
+  {
+    "graph_pin": "U2.55",
+    "mcu_pin": "QSPI_SD1",
+    "net_name": "QSPI_MISO",
+    "signal": "QSPI_MISO"
+  },
+  {
+    "graph_pin": "U2.56",
+    "mcu_pin": "QSPI_CSn",
+    "net_name": "QSPI_CS",
+    "signal": "QSPI_CS"
+  }
+]

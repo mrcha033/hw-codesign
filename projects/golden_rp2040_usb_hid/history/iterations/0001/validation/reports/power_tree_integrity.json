@@ -1,0 +1,51 @@
+{
+  "artifacts": [],
+  "backend": {},
+  "failures": [],
+  "gate": "power_tree_integrity",
+  "metrics": {
+    "component_voltage_limits": {},
+    "declared_power_transfers_checked": 1,
+    "errors": 0,
+    "invalid_declared_power_transfers": 0,
+    "power_loads_checked": 15,
+    "regulator_enable_biases": {
+      "U1": [
+        {
+          "bias_source": "direct_positive_rail",
+          "bias_voltage_v": 5.0,
+          "candidate_bias_components": [],
+          "enabled": true,
+          "net_name": "USB_VBUS",
+          "pin_name": "EN",
+          "pin_number": "1"
+        }
+      ]
+    },
+    "regulator_voltage_limits": {
+      "U1": {
+        "input_nets": [
+          "USB_VBUS"
+        ],
+        "input_voltage_max_v": 6.0,
+        "input_voltage_min_v": 2.5,
+        "min_dropout_headroom_v": 0.25,
+        "mpn": "AP2112K-3.3TRG1",
+        "observed_headroom_v": 1.7000000000000002,
+        "observed_input_voltage_max_v": 5.0,
+        "observed_input_voltage_min_v": 5.0,
+        "output_nets": [
+          "V3V3"
+        ]
+      }
+    },
+    "source_nets": [
+      "USB_VBUS",
+      "V1V1",
+      "V3V3"
+    ],
+    "transfer_components": 2,
+    "warnings": 0
+  },
+  "status": "pass"
+}

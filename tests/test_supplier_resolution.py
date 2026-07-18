@@ -6,6 +6,7 @@ from pathlib import Path
 
 import yaml
 
+from hw_codesign.diagnostics import GATE_DEPENDENCIES
 from hw_codesign.io import read_yaml, write_yaml
 from hw_codesign.reference_backend import build_graph
 from hw_codesign.resolver import ComponentResolver
@@ -221,6 +222,40 @@ def test_generated_graph_contains_supplier_and_datasheet_provenance(service, pro
     graph = yaml.safe_load((service.workspace.require_project(project) / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8"))
     assert all(component["resolution_provenance"]["database_file_sha256"] for component in graph["components"])
     assert all(component["datasheet_evidence"] for component in graph["components"])
+
+
+def test_rp2040_sourcing_resilience_separates_alternates_from_live_availability(service):
+    project = "rp2040_sourcing_resilience"
+    service.create_project(project, template="rp2040_usb_device")
+    service.generate_electronics_only(project)
+    project_path = service.workspace.require_project(project)
+    graph = yaml.safe_load(
+        (project_path / "electronics" / "generated" / "electrical_graph.json").read_text(encoding="utf-8")
+    )
+
+    report = service._sourcing_resilience_report(service.read_spec(project), graph)
+
+    assert report.status == "pass"
+    assert report.metrics == {
+        "role_set": "rp2040_usb_device",
+        "critical_roles": 5,
+        "alternate_roles": 1,
+        "single_source_justified_roles": 4,
+        "checked_alternates": 1,
+        "supplier_provider": "curated",
+    }
+    assert graph["supplier_availability_report"]["status"] == "blocked"
+    assert {
+        failure["code"] for failure in graph["supplier_availability_report"]["failures"]
+    } == {"supplier_availability_unknown"}
+
+    checks = service.run_all_checks(project, include_external=False)
+    reports = {item["gate"]: item for item in checks["reports"]}
+    assert reports["sourcing"]["status"] == "fail"
+    assert reports["supplier_availability"]["status"] == "blocked"
+    assert reports["sourcing_resilience"]["status"] == "pass"
+    assert reports["design_dependency_graph"]["status"] == "pass"
+    assert GATE_DEPENDENCIES["sourcing_resilience"] == ["component_resolution", "component_provenance"]
 
 
 def test_sourcing_resilience_rejects_unjustified_critical_roles(service, project):

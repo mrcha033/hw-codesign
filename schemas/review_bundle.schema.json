@@ -270,6 +270,13 @@
         "properties": {
           "path":   { "type": "string" },
           "source": { "type": "string" },
+          "sources": {
+            "type": "array",
+            "description": "All gate or manifest provenance categories that reference this de-duplicated path.",
+            "items": { "type": "string" },
+            "uniqueItems": true,
+            "minItems": 1
+          },
           "exists": { "type": "boolean" },
           "bytes":  { "type": "integer" },
           "sha256": { "type": "string" }

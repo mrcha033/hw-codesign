@@ -1,0 +1,44 @@
+hw-codesign
+Copyright 2026 hw-codesign contributors
+
+This product includes vendored KiCad library footprints under the Creative
+Commons Attribution-ShareAlike 4.0 license with the KiCad libraries exception.
+Its attribution and governing license are preserved at the following
+distribution-specific paths:
+
+  Source tree/sdist:
+    src/hw_codesign/footprints/ATTRIBUTION.md
+    src/hw_codesign/footprints/LICENSE.md
+
+  Installed Python package/wheel:
+    hw_codesign/footprints/ATTRIBUTION.md
+    hw_codesign/footprints/LICENSE.md
+
+  Standalone binary archive:
+    third_party/kicad-footprints/ATTRIBUTION.md
+    third_party/kicad-footprints/LICENSE.md
+
+Those vendored footprints are not relicensed under Apache-2.0. Hardware designs
+and generated files that use KiCad library data are covered by the KiCad
+libraries exception described in the bundled footprint license.
+
+The interactive 3D review viewer contains Three.js 0.179.1 core code,
+OrbitControls, and VRMLLoader, Copyright 2010-2025 three.js authors, licensed
+under the MIT License. The generated viewer embeds the complete MIT notice, and
+the attribution and license are also preserved at these paths:
+
+  Source tree/sdist:
+    src/hw_codesign/third_party/three/ATTRIBUTION.md
+    src/hw_codesign/third_party/three/LICENSE
+
+  Installed Python package/wheel:
+    hw_codesign/third_party/three/ATTRIBUTION.md
+    hw_codesign/third_party/three/LICENSE
+
+  Standalone binary archive:
+    third_party/three/ATTRIBUTION.md
+    third_party/three/LICENSE
+
+Three.js VRMLLoader includes Chevrotain 9.0.1 parser code under Apache-2.0.
+The applicable Apache-2.0 terms are supplied by this distribution's LICENSE;
+the generated viewer banner and Three.js attribution identify the component.

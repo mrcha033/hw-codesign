@@ -2,11 +2,22 @@ project:
   name: nrf52840_dongle
   description: nRF52840 USB dongle — BLE 5.3 + 802.15.4 + USB-C, bare PCB with U.FL antenna connector
   version: 0.1.0
+  revision: r1
+  target_use: multiprotocol_usb_radio_dongle
   template: nrf52840_dongle
   created_at: '2026-06-21'
 
 system:
   target_application: BLE sniffer, Zigbee/Thread coordinator, USB-BLE bridge, nRF52840 development dongle
+  supply:
+    battery:
+      type: usb_bus_powered
+      pack_voltage_nominal: 5.0
+      pack_voltage_max: 5.25
+      pack_current_peak_a: 0.25
+    rails:
+      - {name: USB_VBUS, voltage: 5.0, current_peak_a: 0.25}
+      - {name: V3V3, voltage: 3.3, current_peak_a: 0.2}
 
 compute:
   mcu:
@@ -23,25 +34,52 @@ compute:
 
 actuation:
   motor_channels: 0
+  motor_channel_peak_current_a: 0.0
   gpio_outputs: 32
 
 sensing:
+  imu: not_required
+  e_stop: not_required
   adc_channels: 8
   adc_bits: 12
 
 assumptions:
-  - id: ASM-01
-    text: nRF52840 DC/DC regulator (REG0) used in USB mode; no external 3.3V LDO required for core
-    rationale: nRF52840 DCDC_EN fuse enables internal 1.8V/3.0V DCDC converter; VDDUSB at 5V, VDDMAIN at 3.0V from internal regulator
-  - id: ASM-02
-    text: External AP2112K LDO provides 3.3V for GPIO IO compatibility with external peripherals
-    rationale: nRF52840 GPIO can drive 3V (VDD), not 3.3V; external 3.3V rail for I2C/SPI peripheral compatibility
-  - id: ASM-03
-    text: U.FL antenna connector for external antenna; no PCB trace antenna used
-    rationale: Dongle form factor (plug-in to USB port) requires flexible antenna positioning; U.FL to SMA pigtail for benchtop use
-  - id: ASM-04
-    text: REGOUT0 pin sets internal regulator output; nRF52840 runs from VDDUSB (5V) in USB device mode
-    rationale: USB device spec requires 5V VBUS; nRF52840 VDDUSB pin accepts 4.0–5.5V and powers internal regulator
+  usb_regulator_mode:
+    value: vddusb_with_internal_regulator
+    resolved_value: vddusb_with_internal_regulator
+    confidence: high
+    reason: The nRF52840 USB power path uses VDDUSB and the device's internal regulator configuration for core power.
+    rationale: VDDUSB accepts USB VBUS while the internal regulator supplies the configured core domain.
+    source_id: ASM-01
+    critical: true
+    requires_user_review: false
+  external_io_rail:
+    value: ap2112k_3v3_peripheral_rail
+    resolved_value: ap2112k_3v3_peripheral_rail
+    confidence: high
+    reason: An AP2112K supplies the candidate's explicit 3.3 V rail for the MCU and external interface compatibility.
+    rationale: A board-level 3.3 V rail gives peripherals and debug interfaces one declared voltage domain.
+    source_id: ASM-02
+    critical: true
+    requires_user_review: false
+  antenna_interface:
+    value: external_antenna_via_ufl
+    resolved_value: external_antenna_via_ufl
+    confidence: high
+    reason: The candidate routes RF to a U.FL connector and does not include a PCB trace antenna.
+    rationale: The plug-in dongle form factor uses an external antenna or a U.FL-to-SMA pigtail for benchtop operation.
+    source_id: ASM-03
+    critical: true
+    requires_user_review: false
+  usb_power_path:
+    value: usb_vbus_to_vddusb_and_board_3v3
+    resolved_value: usb_vbus_to_vddusb_and_board_3v3
+    confidence: high
+    reason: USB VBUS feeds VDDUSB while the board's AP2112K establishes the declared V3V3 rail.
+    rationale: This keeps the USB input and external I/O rail explicit in the electrical contract.
+    source_id: ASM-04
+    critical: true
+    requires_user_review: false
 
 electronics:
   backend: tscircuit
@@ -77,13 +115,29 @@ mechanical:
     max_component_height_top_mm: 2.0
     max_component_height_bottom_mm: 1.0
   enclosure_internal_mm: [35.0, 18.0, 4.0]
+  wall_thickness_mm: 1.0
   insertion_clearance_mm: 1.0
   assembly_clearance_mm: 0.5
   tolerance_mm: 0.2
-  # USB plug-in dongle: retained by the USB-A edge connector, no board-level mounting holes.
-  mounting_holes: []
+  max_connector_edge_distance_mm: 5.0
+  default_component_height_mm: 1.5
+  component_heights_mm: {J1: 3.3, J2: 2.0, J3: 5.0, U2: 1.0}
+  board_origin_mm: [0.0, 0.0, 0.0]
+  # USB provides operational retention; these small NPTHs are for panel and test-fixture alignment.
+  mounting_holes:
+    - {x_mm: 1.5, y_mm: 1.5, diameter_mm: 1.0, purpose: tooling_alignment}
+    - {x_mm: 33.5, y_mm: 1.5, diameter_mm: 1.0, purpose: tooling_alignment}
+    - {x_mm: 33.5, y_mm: 16.5, diameter_mm: 1.0, purpose: tooling_alignment}
+  fixtures:
+    tooling_alignment: {enabled: true, hole_count: 3}
+    mounting_plate: {enabled: false}
+  connector_interfaces:
+    - {ref: J1, side: left, opening_mm: [9.0, 3.3], center_z_mm: 2.0, position_tolerance_mm: 0.5}
 
 firmware:
+  framework: zephyr
+  target: nrf52840dk/nrf52840
+  outputs: [devicetree_overlay, pinmap, driver_stubs, bringup_tests]
   rtos: zephyr
   zephyr_target: nrf52840dk_nrf52840
   modules:
@@ -103,8 +157,16 @@ manufacturing:
     layers: 4
     min_clearance_mm: 0.1
     min_track_width_mm: 0.1
+    controlled_impedance: required
+  mechanical:
+    min_wall_thickness_mm: 1.0
+  exports: [gerber, drill, bom, pick_and_place, schematic_pdf]
 
 safety:
+  emergency_stop:
+    required: false
+    fail_safe_hardware_path: false
+  required_protections: [usb_esd, watchdog]
   regulatory: [CE, FCC_mod]
   isolation_required: false
   esd_protection: required
@@ -124,11 +186,12 @@ test_plan:
     - dfu_firmware_update
 
 requirements:
-  performance:
-    - id: REQ-01
-      text: BLE scan rate ≥ 100 events/second
-    - id: REQ-02
-      text: USB HCI latency ≤ 5 ms
-  reliability:
-    - id: REQ-03
-      text: Continuous BLE scan operation ≥ 72 hours without USB disconnect
+  raw_inputs:
+    - {id: req_input_0001, text: BLE scan rate ≥ 100 events/second, created_by: template:nrf52840_dongle}
+    - {id: req_input_0002, text: USB HCI latency ≤ 5 ms, created_by: template:nrf52840_dongle}
+    - {id: req_input_0003, text: Continuous BLE scan operation ≥ 72 hours without USB disconnect, created_by: template:nrf52840_dongle}
+  active_lowered: []
+  active_unresolved:
+    - {id: req_unresolved_0001, source: req_input_0001, category: ble_scan_rate_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: Scan rate requires conducted or radiated traffic testing with representative advertisers., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0002, source: req_input_0002, category: usb_hci_latency_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: USB HCI latency requires host-and-dongle timing measurements., required_human_approvals: [bringup_owner], affected_gates: [firmware_modules, physical_qualification]}
+    - {id: req_unresolved_0003, source: req_input_0003, category: ble_usb_soak_evidence, field_type: retained_assumption, status: unresolved, release_blocking: false, reason: The 72-hour target requires a physical soak test with recorded USB connection status., required_human_approvals: [bringup_owner], affected_gates: [physical_qualification]}

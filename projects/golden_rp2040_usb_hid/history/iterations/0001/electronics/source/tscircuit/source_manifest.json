@@ -1,0 +1,752 @@
+{
+  "backend": "tscircuit",
+  "backend_release_capable": true,
+  "canonical_footprints": [
+    {
+      "library_id": "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal",
+      "physical_elements": 22,
+      "ref": "J1",
+      "sha256": "3b8d7da3cae5114ec83022a759a78925113bc2eeec100ea447594f6d8687e4b8"
+    },
+    {
+      "library_id": "Package_TO_SOT_SMD:SOT-23-6",
+      "physical_elements": 6,
+      "ref": "D1",
+      "sha256": "f341c73aac9dcb553456f68bf3fee3d26eb14acf6d8a1cae82b50418fe1d71ca"
+    },
+    {
+      "library_id": "Resistor_SMD:R_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "R1",
+      "sha256": "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23"
+    },
+    {
+      "library_id": "Resistor_SMD:R_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "R2",
+      "sha256": "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23"
+    },
+    {
+      "library_id": "Package_TO_SOT_SMD:SOT-23-5",
+      "physical_elements": 5,
+      "ref": "U1",
+      "sha256": "455a3f7c3e5eb5b8847eaa5df23e18651e78ab9f75afd09a0883758a0d901761"
+    },
+    {
+      "library_id": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+      "physical_elements": 66,
+      "ref": "U2",
+      "sha256": "69898a837ee3cf3555ee433abde3ffe118053b20e07e65894074708d9160ca58"
+    },
+    {
+      "library_id": "Package_SO:SOIC-8_5.3x5.3mm_P1.27mm",
+      "physical_elements": 8,
+      "ref": "U3",
+      "sha256": "cc86a7083c9df1c1bf808dfa469e913d446455fd7ab7a7941e18681b80e8b9b5"
+    },
+    {
+      "library_id": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
+      "physical_elements": 4,
+      "ref": "X1",
+      "sha256": "7648bca15399a8bd7856b5da6a1d2bc3a87049dc63958f8e8a3ab7409941a8e4"
+    },
+    {
+      "library_id": "Resistor_SMD:R_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "R3",
+      "sha256": "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23"
+    },
+    {
+      "library_id": "Resistor_SMD:R_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "R4",
+      "sha256": "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23"
+    },
+    {
+      "library_id": "Resistor_SMD:R_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "R5",
+      "sha256": "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23"
+    },
+    {
+      "library_id": "Resistor_SMD:R_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "R6",
+      "sha256": "7190ac4a00125b807e54129ef0d87d87f2a658eeb74d025a7028203419b09f23"
+    },
+    {
+      "library_id": "Connector_IDC:IDC-Header_2x05_P2.54mm_Vertical",
+      "physical_elements": 10,
+      "ref": "J2",
+      "sha256": "b605d7a816a5b5681d09bd120b547ac748d74440e7d55a8371007b9c53afb092"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C1",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C2",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C3",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C4",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C5",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C6",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C7",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C8",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C9",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C10",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "C11",
+      "sha256": "fe0dbfefbb181a0466f93a8de52d84ba7b00fcd9acdbb69575f4128a0af4e405"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "C12",
+      "sha256": "fe0dbfefbb181a0466f93a8de52d84ba7b00fcd9acdbb69575f4128a0af4e405"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C13",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C14",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "C15",
+      "sha256": "fe0dbfefbb181a0466f93a8de52d84ba7b00fcd9acdbb69575f4128a0af4e405"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0603_1608Metric",
+      "physical_elements": 2,
+      "ref": "C16",
+      "sha256": "fe0dbfefbb181a0466f93a8de52d84ba7b00fcd9acdbb69575f4128a0af4e405"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C17",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    },
+    {
+      "library_id": "Capacitor_SMD:C_0402_1005Metric",
+      "physical_elements": 2,
+      "ref": "C18",
+      "sha256": "0403382fc4583ed510b461b1fa4a36dfaec6f4c0d9b1a67e6b0027837a54e1b5"
+    }
+  ],
+  "compiler_version": "0.1.1491",
+  "contract_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "fabrication_release_eligible": true,
+  "hdl_source_release_eligible": false,
+  "netlist_release_eligible": false,
+  "pcb_disabled": false,
+  "pin_number_aliases": {
+    "C1": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C10": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C11": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C12": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C13": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C14": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C15": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C16": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C17": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C18": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C2": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C3": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C4": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C5": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C6": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C7": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C8": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "C9": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "D1": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6"
+      }
+    },
+    "J1": {
+      "backend_to_graph": {
+        "1": "A1",
+        "10": "B4",
+        "11": "B5",
+        "12": "B6",
+        "13": "B7",
+        "14": "B8",
+        "15": "B9",
+        "16": "B12",
+        "17": "SH",
+        "2": "A4",
+        "3": "A5",
+        "4": "A6",
+        "5": "A7",
+        "6": "A8",
+        "7": "A9",
+        "8": "A12",
+        "9": "B1"
+      },
+      "graph_to_backend": {
+        "A1": "1",
+        "A12": "8",
+        "A4": "2",
+        "A5": "3",
+        "A6": "4",
+        "A7": "5",
+        "A8": "6",
+        "A9": "7",
+        "B1": "9",
+        "B12": "16",
+        "B4": "10",
+        "B5": "11",
+        "B6": "12",
+        "B7": "13",
+        "B8": "14",
+        "B9": "15",
+        "SH": "17"
+      }
+    },
+    "J2": {
+      "backend_to_graph": {
+        "1": "1",
+        "10": "10",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "10": "10",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9"
+      }
+    },
+    "R1": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "R2": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "R3": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "R4": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "R5": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "R6": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2"
+      }
+    },
+    "U1": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      }
+    },
+    "U2": {
+      "backend_to_graph": {
+        "1": "1",
+        "10": "10",
+        "11": "11",
+        "12": "12",
+        "13": "13",
+        "14": "14",
+        "15": "15",
+        "16": "16",
+        "17": "17",
+        "18": "18",
+        "19": "19",
+        "2": "2",
+        "20": "20",
+        "21": "21",
+        "22": "22",
+        "23": "23",
+        "24": "24",
+        "25": "25",
+        "26": "26",
+        "27": "27",
+        "28": "28",
+        "29": "29",
+        "3": "3",
+        "30": "30",
+        "31": "31",
+        "32": "32",
+        "33": "33",
+        "34": "34",
+        "35": "35",
+        "36": "36",
+        "37": "37",
+        "38": "38",
+        "39": "39",
+        "4": "4",
+        "40": "40",
+        "41": "41",
+        "42": "42",
+        "43": "43",
+        "44": "44",
+        "45": "45",
+        "46": "46",
+        "47": "47",
+        "48": "48",
+        "49": "49",
+        "5": "5",
+        "50": "50",
+        "51": "51",
+        "52": "52",
+        "53": "53",
+        "54": "54",
+        "55": "55",
+        "56": "56",
+        "57": "57",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "10": "10",
+        "11": "11",
+        "12": "12",
+        "13": "13",
+        "14": "14",
+        "15": "15",
+        "16": "16",
+        "17": "17",
+        "18": "18",
+        "19": "19",
+        "2": "2",
+        "20": "20",
+        "21": "21",
+        "22": "22",
+        "23": "23",
+        "24": "24",
+        "25": "25",
+        "26": "26",
+        "27": "27",
+        "28": "28",
+        "29": "29",
+        "3": "3",
+        "30": "30",
+        "31": "31",
+        "32": "32",
+        "33": "33",
+        "34": "34",
+        "35": "35",
+        "36": "36",
+        "37": "37",
+        "38": "38",
+        "39": "39",
+        "4": "4",
+        "40": "40",
+        "41": "41",
+        "42": "42",
+        "43": "43",
+        "44": "44",
+        "45": "45",
+        "46": "46",
+        "47": "47",
+        "48": "48",
+        "49": "49",
+        "5": "5",
+        "50": "50",
+        "51": "51",
+        "52": "52",
+        "53": "53",
+        "54": "54",
+        "55": "55",
+        "56": "56",
+        "57": "57",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9"
+      }
+    },
+    "U3": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8"
+      }
+    },
+    "X1": {
+      "backend_to_graph": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4"
+      },
+      "graph_to_backend": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4"
+      }
+    }
+  },
+  "placement_contract": {
+    "coordinate_transform": "board_origin_top_left_to_tscircuit_center",
+    "missing_solver_placements": [],
+    "solver_placements": 31,
+    "source": "electrical_graph.components[].pcb_position_mm + pcb_rotation_deg"
+  },
+  "provenance": {
+    "backend": "tscircuit",
+    "command": [
+      "/Users/mrcha033/Documents/hw-cli/node_modules/.bin/tsx",
+      "/Users/mrcha033/Documents/hw-cli/node_modules/@tscircuit/cli/dist/cli/main.js",
+      "build",
+      "projects/golden_rp2040_usb_hid/electronics/source/tscircuit/board.compiler.mjs",
+      "--ignore-config",
+      "--disable-parts-engine"
+    ],
+    "compiler_version": "0.1.1491",
+    "component_db_hash": "d7422cd41f4e98cf09c4a1afb61e8d53cf860abc73f51536fa38f3c9d0615709",
+    "release_eligible": true,
+    "release_tier": "fabrication",
+    "role_set_hash": "3fb3be9334730d6fe74fcede99aca48d62d083917511288f5fc8389c8445ac34",
+    "source_spec_hash": "62c1cae1c89aa9534603f13be0017c38d77b4fd6e0e770612db8bc1e60c149f3",
+    "timestamp": "1970-01-01T00:00:00+00:00",
+    "tool_versions": {
+      "python": "3.14.6"
+    }
+  },
+  "release_blocking_gates": [
+    "tscircuit_compile",
+    "tscircuit_netlist_extract",
+    "tscircuit_graph_parity",
+    "tscircuit_footprint_parity",
+    "tscircuit_layout_completeness",
+    "tscircuit_manufacturing_export"
+  ],
+  "release_tier": "fabrication",
+  "routing_disabled": false,
+  "source_release_eligible": true,
+  "sources": [
+    {
+      "path": "board.compiler.mjs",
+      "sha256": "3620b92aebfd60f71b3cfd6daaf8416cdd0ee1976ad5b130d31cb2baba5813f3"
+    },
+    {
+      "path": "board.tsx",
+      "sha256": "efd547a2d73531a94780605f60e1cce7d8de2414a865a39c146df61da8b5a7cb"
+    }
+  ],
+  "unsupported_footprints": []
+}

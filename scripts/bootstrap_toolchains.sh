@@ -6,12 +6,50 @@ TOOLS="$ROOT/.toolchains"
 ZEPHYR="$TOOLS/zephyr"
 JAVA="$TOOLS/java25"
 FREEROUTING="$TOOLS/freerouting/freerouting-2.2.4.jar"
+HAL_RPI_PICO_REVISION="7b57b24588797e6e7bf18b6bda168e6b96374264"
+
+require_complete_arm_toolchain() {
+  local compiler specs
+  compiler="$(command -v arm-none-eabi-gcc || true)"
+  if [[ -z "$compiler" ]]; then
+    cat >&2 <<'EOF'
+A complete Arm GNU Toolchain is required for native Zephyr builds.
+Install the official Arm GNU Toolchain, then prepend its bin directory to PATH.
+The compiler must include Arm newlib and nosys.specs; the Homebrew
+arm-none-eabi-gcc formula alone is not sufficient.
+
+Verify the installation with:
+  specs="$(arm-none-eabi-gcc -print-file-name=nosys.specs)"
+  test "$specs" != nosys.specs && test -f "$specs"
+
+Official downloads: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+Alternatively, use docker/Dockerfile, which provisions GCC and newlib together.
+EOF
+    exit 1
+  fi
+
+  specs="$("$compiler" -print-file-name=nosys.specs)"
+  if [[ "$specs" == "nosys.specs" || ! -f "$specs" ]]; then
+    cat >&2 <<EOF
+The Arm compiler at $compiler is incomplete: nosys.specs was not found.
+Install the official Arm GNU Toolchain (compiler + Arm newlib), prepend its bin
+directory to PATH, and rerun this script. The Homebrew arm-none-eabi-gcc
+formula alone is not sufficient.
+
+Official downloads: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+Alternatively, use docker/Dockerfile, which provisions GCC and newlib together.
+EOF
+    exit 1
+  fi
+
+  echo "Arm GNU Toolchain ready: $compiler (nosys.specs: $specs)"
+}
 
 command -v brew >/dev/null || { echo "Homebrew is required on macOS" >&2; exit 1; }
 if [[ ! -x /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli ]]; then
   brew install --cask kicad
 fi
-command -v arm-none-eabi-gcc >/dev/null || brew install arm-none-eabi-gcc
+require_complete_arm_toolchain
 command -v ato >/dev/null || brew install atopile
 command -v curl >/dev/null || { echo "curl is required" >&2; exit 1; }
 command -v node >/dev/null || brew install node@22
@@ -56,5 +94,6 @@ clone_at() {
 mkdir -p "$ZEPHYR/modules/hal"
 clone_at https://github.com/zephyrproject-rtos/hal_stm32.git "$ZEPHYR/modules/hal/stm32" 1e753266ddfb4b07a8a0b1ec566e9637ea45d5ef
 clone_at https://github.com/zephyrproject-rtos/CMSIS_6.git "$ZEPHYR/modules/hal/cmsis_6" 06d952b6713a2ca41c9224a62075e4059402a151
+clone_at https://github.com/zephyrproject-rtos/hal_rpi_pico.git "$ZEPHYR/modules/hal/rpi_pico" "$HAL_RPI_PICO_REVISION"
 
 echo "Pinned tscircuit, KiCad, Freerouting, OpenJDK, and Zephyr toolchains are ready."

@@ -41,6 +41,7 @@ from .board_layout import (
     mirrored_refs,
     placement_sources,
 )
+from .footprint_library import canonical_footprint_geometry
 from .models import Failure, FailureCategory, GateReport, Status
 
 # Categories whose components dissipate meaningful power and benefit from spacing.
@@ -134,8 +135,10 @@ class Placement:
         for local_x in (local_center_x - half_w, local_center_x + half_w):
             for local_y in (local_center_y - half_h, local_center_y + half_h):
                 corners.append((
-                    self.x_mm + local_x * cosine - local_y * sine,
-                    self.y_mm + local_x * sine + local_y * cosine,
+                    # KiCad board coordinates have +Y downward, so a positive
+                    # footprint rotation is clockwise in Cartesian terms.
+                    self.x_mm + local_x * cosine + local_y * sine,
+                    self.y_mm - local_x * sine + local_y * cosine,
                 ))
         return (
             min(point[0] for point in corners),
@@ -146,6 +149,58 @@ class Placement:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def _rotated_local_extent(
+    placement: Placement,
+    local_extent: tuple[float, float, float, float],
+) -> tuple[float, float, float, float]:
+    """Map an anchor-relative footprint extent into board coordinates."""
+    min_x, min_y, max_x, max_y = local_extent
+    theta = math.radians(placement.rotation_deg)
+    cosine, sine = math.cos(theta), math.sin(theta)
+    corners = [
+        (
+            placement.x_mm + local_x * cosine + local_y * sine,
+            placement.y_mm - local_x * sine + local_y * cosine,
+        )
+        for local_x in (min_x, max_x)
+        for local_y in (min_y, max_y)
+    ]
+    return (
+        min(point[0] for point in corners),
+        min(point[1] for point in corners),
+        max(point[0] for point in corners),
+        max(point[1] for point in corners),
+    )
+
+
+def _board_containment_extent(
+    placement: Placement,
+    component: dict[str, Any] | None = None,
+    declared_edge_side: str | None = None,
+) -> tuple[float, float, float, float]:
+    """Extent used for board containment, with a narrow edge-connector exception.
+
+    A horizontal edge receptacle may intentionally project its body/courtyard
+    beyond its declared mating edge.  Only that one side is replaced with the
+    canonical copper bound; the full package remains bounded on the other three
+    sides.  Without verified canonical copper, no overhang exception is made.
+    """
+    full_extent = placement.extent()
+    if declared_edge_side not in {"front", "rear", "left", "right"} or component is None:
+        return full_extent
+    canonical = canonical_footprint_geometry(str(component.get("footprint") or ""))
+    if canonical is None:
+        return full_extent
+    copper_extent = _rotated_local_extent(placement, canonical.copper_extent)
+    if declared_edge_side == "front":
+        return (full_extent[0], copper_extent[1], full_extent[2], full_extent[3])
+    if declared_edge_side == "rear":
+        return (full_extent[0], full_extent[1], full_extent[2], copper_extent[3])
+    if declared_edge_side == "left":
+        return (copper_extent[0], full_extent[1], full_extent[2], full_extent[3])
+    return (full_extent[0], full_extent[1], copper_extent[2], full_extent[3])
 
 
 @dataclass
@@ -197,6 +252,8 @@ def _anchor_bounds(
     width: float,
     height: float,
     edge_clearance_mm: float = 0.0,
+    component: dict[str, Any] | None = None,
+    declared_edge_side: str | None = None,
 ) -> tuple[float, float, float, float]:
     """Anchor range that keeps the footprint inside the copper-edge contract.
 
@@ -204,7 +261,11 @@ def _anchor_bounds(
     than the board; the containment check reports that as a hard failure rather
     than the solver silently hiding it.
     """
-    min_x, min_y, max_x, max_y = placement.extent()
+    min_x, min_y, max_x, max_y = _board_containment_extent(
+        placement,
+        component,
+        declared_edge_side,
+    )
     margin = edge_clearance_mm + _SOLVER_EDGE_SAFETY_MM
     low_x = placement.x_mm - min_x + margin
     high_x = width - (max_x - placement.x_mm) - margin
@@ -552,6 +613,16 @@ def _solve_placement_cost(
         (float(item.params.get("edge_margin_mm", 0.0)) for item in constraints if item.kind == "board_keepout"),
         0.0,
     )
+    components = {
+        str(component["ref"]): component
+        for component in graph.get("components", [])
+        if component.get("ref")
+    }
+    declared_edge_sides = {
+        str(constraint.target_ref): str(constraint.params.get("side"))
+        for constraint in constraints
+        if constraint.kind == "connector_edge" and constraint.target_ref
+    }
     spine_trial = _high_current_spine_trial(solved, constraints, graph, spec, width, height)
     if spine_trial is not None:
         trial_cost, _ = _placement_cost(spine_trial, original, constraints, graph, spec, width, height)
@@ -566,7 +637,14 @@ def _solve_placement_cost(
             current = solved[ref]
             ref_best = current
             ref_best_cost = best_cost
-            low_x, high_x, low_y, high_y = _anchor_bounds(current, width, height, edge_clearance)
+            low_x, high_x, low_y, high_y = _anchor_bounds(
+                current,
+                width,
+                height,
+                edge_clearance,
+                components.get(ref),
+                declared_edge_sides.get(ref),
+            )
             for x, y, source, rationale in _candidate_positions_for_ref(ref, solved, constraints, graph, spec, width, height):
                 clamped_x = round(_clamp(x, low_x, high_x), 3)
                 clamped_y = round(_clamp(y, low_y, high_y), 3)
@@ -603,6 +681,54 @@ def _solve_placement_cost(
     return solved, round(final_cost, 6), {key: round(value, 6) for key, value in sorted(final_breakdown.items())}, iterations
 
 
+def _clearance_candidates(
+    moving: Placement,
+    target: Placement,
+    *,
+    gap_mm: float,
+    slots: int = 5,
+) -> list[tuple[float, float]]:
+    """Return footprint-aware positions immediately outside ``target``.
+
+    Placement origins are often pin 1 rather than package centres.  Deriving
+    offsets from courtyard extents avoids fixed-distance candidates that land a
+    small decoupler inside a large QFN or an offset-origin connector.
+    """
+    moving_abs = moving.extent()
+    target_abs = target.extent()
+    moving_local = (
+        moving_abs[0] - moving.x_mm,
+        moving_abs[1] - moving.y_mm,
+        moving_abs[2] - moving.x_mm,
+        moving_abs[3] - moving.y_mm,
+    )
+    moving_center_x = (moving_local[0] + moving_local[2]) / 2.0
+    moving_center_y = (moving_local[1] + moving_local[3]) / 2.0
+    target_center_x = (target_abs[0] + target_abs[2]) / 2.0
+    target_center_y = (target_abs[1] + target_abs[3]) / 2.0
+    slot_count = max(1, int(slots))
+    offsets = [index - (slot_count - 1) / 2.0 for index in range(slot_count)]
+    x_step = max(0.8, moving_abs[2] - moving_abs[0] + gap_mm)
+    y_step = max(0.8, moving_abs[3] - moving_abs[1] + gap_mm)
+    left_x = target_abs[0] - gap_mm - moving_local[2]
+    right_x = target_abs[2] + gap_mm - moving_local[0]
+    front_y = target_abs[1] - gap_mm - moving_local[3]
+    rear_y = target_abs[3] + gap_mm - moving_local[1]
+    centered_x = target_center_x - moving_center_x
+    centered_y = target_center_y - moving_center_y
+    candidates: list[tuple[float, float]] = []
+    for offset in offsets:
+        candidates.extend(
+            (
+                (left_x, centered_y + offset * y_step),
+                (right_x, centered_y + offset * y_step),
+                (centered_x + offset * x_step, front_y),
+                (centered_x + offset * x_step, rear_y),
+            )
+        )
+    return candidates
+
+
 def _candidate_positions_for_ref(
     ref: str,
     placements: dict[str, Placement],
@@ -628,8 +754,15 @@ def _candidate_positions_for_ref(
             target = placements.get(constraint.params.get("target_ref"))
             if target is not None:
                 candidates.append(_away_candidate(current, target, 3.5, "solver_decoupling_proximity", f"Cost solver placed {ref} near decoupling target {target.ref}."))
-                for dx, dy in ((3.0, 0.0), (-3.0, 0.0), (0.0, 3.0), (0.0, -3.0), (2.5, 2.5), (-2.5, 2.5), (2.5, -2.5), (-2.5, -2.5)):
-                    candidates.append((target.x_mm + dx, target.y_mm + dy, "solver_decoupling_proximity", f"Cost solver placed {ref} near decoupling target {target.ref}."))
+                candidates.extend(
+                    (
+                        x,
+                        y,
+                        "solver_decoupling_proximity",
+                        f"Cost solver placed {ref} beside, not inside, decoupling target {target.ref}.",
+                    )
+                    for x, y in _clearance_candidates(current, target, gap_mm=0.35)
+                )
         elif constraint.kind == "agent_adjacent_to":
             target = placements.get(constraint.params.get("target"))
             if target is not None:
@@ -732,8 +865,15 @@ def _candidate_positions_for_ref(
         elif ref in group["cap_refs"]:
             crystal = placements.get(group["crystal_ref"])
             if crystal is not None:
-                for dx, dy in ((3.0, 0.0), (-3.0, 0.0), (0.0, 3.0), (0.0, -3.0), (2.5, 2.5), (-2.5, 2.5), (2.5, -2.5), (-2.5, -2.5)):
-                    candidates.append((crystal.x_mm + dx, crystal.y_mm + dy, "solver_oscillator_load_cap_proximity", f"Cost solver placed {ref} near crystal {crystal.ref}."))
+                candidates.extend(
+                    (
+                        x,
+                        y,
+                        "solver_oscillator_load_cap_proximity",
+                        f"Cost solver placed {ref} beside, not inside, crystal {crystal.ref}.",
+                    )
+                    for x, y in _clearance_candidates(current, crystal, gap_mm=0.35, slots=3)
+                )
 
     if _declared_peak_current_a(spec) >= HIGH_CURRENT_THRESHOLD_A and ref in _high_current_chain_refs(graph):
         chain = _high_current_chain_refs(graph)
@@ -765,6 +905,11 @@ def _placement_cost(
     height: float,
 ) -> tuple[float, dict[str, float]]:
     components = {component.get("ref"): component for component in graph.get("components", []) if component.get("ref")}
+    declared_edge_sides = {
+        str(constraint.target_ref): str(constraint.params.get("side"))
+        for constraint in constraints
+        if constraint.kind == "connector_edge" and constraint.target_ref
+    }
     basis = graph.get("design_basis", {})
     breakdown: dict[str, float] = {}
 
@@ -778,7 +923,11 @@ def _placement_cost(
         # Containment is a hard constraint, so it has to outweigh every soft term
         # below; otherwise the solver trades copper-outside-the-board for a
         # slightly shorter decoupling loop.
-        min_x, min_y, max_x, max_y = placement.extent()
+        min_x, min_y, max_x, max_y = _board_containment_extent(
+            placement,
+            components.get(ref),
+            declared_edge_sides.get(ref),
+        )
         escape = max(0.0, -min_x, -min_y, max_x - width, max_y - height)
         if escape > 0.0:
             add("footprint_off_board", 2000.0 + escape * 500.0)
@@ -809,6 +958,13 @@ def _placement_cost(
             deficit = MIN_CENTER_DISTANCE_MM - center_distance
             if deficit > 0.0:
                 add("coincident_components", 2000.0 + deficit * 500.0)
+            elif _rect_overlap(left, right):
+                # Courtyard geometry is still advisory, but a proposal that
+                # knowingly stacks packages on top of one another is not a
+                # useful starting point. This cost steers the deterministic
+                # solver to footprint-aware clear positions when available;
+                # the gate keeps any residual finding advisory.
+                add("estimated_courtyard_overlap", 750.0)
 
     for constraint in constraints:
         placement = placements.get(constraint.target_ref) if constraint.target_ref else None
@@ -833,7 +989,13 @@ def _placement_cost(
             target = placements.get(constraint.params.get("target"))
             if target is not None:
                 distance = _placement_distance_mm(placement, target)
-                add("agent_adjacent_to", max(0.0, distance - float(constraint.params.get("max_distance_mm", 5.0))) * 50.0)
+                deficit = distance - float(constraint.params.get("max_distance_mm", 5.0))
+                if deficit > 0.0:
+                    # check_placement() treats this explicit user constraint as
+                    # blocking.  Give it the same hard-cost floor as containment
+                    # so an advisory courtyard-overlap estimate cannot make the
+                    # solver knowingly return a constraint violation.
+                    add("agent_adjacent_to", 2000.0 + deficit * 500.0)
         elif constraint.kind == "agent_thermal_separation" and placement is not None:
             target = placements.get(constraint.params.get("target"))
             if target is not None:
@@ -859,7 +1021,12 @@ def _placement_cost(
         # RF packages retain the nearest-edge fallback because their antenna
         # direction is not encoded in the footprint contract.
         edge_distance = _rf_board_edge_distance(rf, components[rf_ref], width, height)
-        add("rf_edge_keepout", max(0.0, edge_distance - RF_EDGE_DISTANCE_MAX_MM) * 30.0)
+        edge_deficit = edge_distance - RF_EDGE_DISTANCE_MAX_MM
+        if edge_deficit > 0.0:
+            # The signal-integrity gate rejects this relationship.  Keep its
+            # solver cost above advisory overlap/noise terms so a repairable RF
+            # seed cannot settle on a knowingly failing interior placement.
+            add("rf_edge_keepout", 2000.0 + edge_deficit * 500.0)
         for noisy_ref in noisy_refs:
             if noisy_ref == rf_ref:
                 continue
@@ -913,7 +1080,12 @@ def _placement_cost(
         if crystal is None or mcu is None:
             continue
         distance = _placement_distance_mm(crystal, mcu)
-        add("oscillator_crystal_mcu_distance", max(0.0, distance - OSCILLATOR_MAX_CRYSTAL_MCU_DISTANCE_MM) * 35.0)
+        distance_deficit = distance - OSCILLATOR_MAX_CRYSTAL_MCU_DISTANCE_MM
+        if distance_deficit > 0.0:
+            # This is a blocking signal-integrity relationship.  A hard floor
+            # prevents advisory courtyard costs from pinning a repairable
+            # crystal seed far from its MCU oscillator pins.
+            add("oscillator_crystal_mcu_distance", 2000.0 + distance_deficit * 500.0)
         for cap_ref in group["cap_refs"]:
             cap = placements.get(cap_ref)
             if cap is None:
@@ -1469,6 +1641,16 @@ def check_placement(proposal: PlacementProposal, graph: dict[str, Any]) -> GateR
     height = proposal.board_height_mm
     edge_clearance = _proposal_edge_clearance(proposal)
     placements = proposal.placements
+    components = {
+        str(component["ref"]): component
+        for component in graph.get("components", [])
+        if component.get("ref")
+    }
+    declared_edge_sides = {
+        str(constraint.target_ref): str(constraint.params.get("side"))
+        for constraint in proposal.constraints
+        if constraint.kind == "connector_edge" and constraint.target_ref
+    }
     failures: list[Failure] = []
     counts: dict[str, int] = {}
 
@@ -1496,7 +1678,11 @@ def check_placement(proposal: PlacementProposal, graph: dict[str, Any]) -> GateR
         # pads and body land. Check the footprint the backend actually emits:
         # copper outside Edge.Cuts is unmanufacturable no matter how coarse the
         # footprint model is.
-        min_x, min_y, max_x, max_y = placement.extent()
+        min_x, min_y, max_x, max_y = _board_containment_extent(
+            placement,
+            components.get(ref),
+            declared_edge_sides.get(ref),
+        )
         if min_x < -_EXTENT_TOLERANCE_MM or min_y < -_EXTENT_TOLERANCE_MM or max_x > width + _EXTENT_TOLERANCE_MM or max_y > height + _EXTENT_TOLERANCE_MM:
             escape = max(-min_x, -min_y, max_x - width, max_y - height)
             record(

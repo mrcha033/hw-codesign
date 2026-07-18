@@ -3,7 +3,7 @@
 ## Setup
 
 ```bash
-HW_PLATFORM_ROOT="$PWD" uvx --from 'hw-codesign-platform[mcp]' hw-mcp
+HW_PLATFORM_ROOT="$PWD" /absolute/path/to/hw-cli/.venv/bin/hw-mcp
 ```
 
 Claude Desktop configuration:
@@ -12,8 +12,8 @@ Claude Desktop configuration:
 {
   "mcpServers": {
     "hw-codesign": {
-      "command": "uvx",
-      "args": ["--from", "hw-codesign-platform[mcp]", "hw-mcp"],
+      "command": "/absolute/path/to/hw-cli/.venv/bin/hw-mcp",
+      "args": [],
       "env": {
         "HW_PLATFORM_ROOT": "/absolute/path/to/hardware-workspace"
       }
@@ -198,8 +198,6 @@ URI-template resources for structured reads without tool calls:
 
 ## Distribution
 
-- PyPI publishes `hw-codesign-platform` from semantic-version tags using Trusted Publishing.
-- GHCR publishes `ghcr.io/mrcha033/hw-cli` with the full native toolchain for `linux/amd64`.
-- Each GitHub release attaches a canonical `bundle.json` and its `review_bundle.schema.json` contract.
-- Homebrew is deferred; the container is the more reliable path for mixed Python/system dependencies.
-- MCP registry publication is deferred until the public tool interface and versioning policy are stable.
+The verified route is a source installation from the repository checkout. Release
+automation exists, but an automated workflow definition is not evidence that a
+package, image, registry entry, or hosted asset is publicly available.
