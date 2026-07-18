@@ -618,7 +618,10 @@ def _receiver_path_parts(target: str) -> tuple[str, ...]:
 
 
 def _inbox_root(inbox_dir: Path) -> Path:
-    root = Path(inbox_dir).resolve(strict=True)
+    inbox_path = Path(inbox_dir)
+    if inbox_path.is_symlink():
+        raise ValueError("receiver inbox cannot be a symlink")
+    root = inbox_path.resolve(strict=True)
     if not root.is_dir():
         raise ValueError("receiver inbox is not a directory")
     return root
@@ -885,6 +888,8 @@ class _ReceiverHandler(http.server.BaseHTTPRequestHandler):
 def serve_receiver(inbox_dir: Path, port: int = 7476, open_browser: bool = True) -> None:
     inbox_dir = Path(inbox_dir)
     inbox_dir.mkdir(parents=True, exist_ok=True)
+    if inbox_dir.is_symlink():
+        raise ValueError("receiver inbox cannot be a symlink")
     inbox_dir = inbox_dir.resolve(strict=True)
     class Handler(_ReceiverHandler):
         pass

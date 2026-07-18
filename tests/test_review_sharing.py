@@ -17,6 +17,7 @@ from hw_codesign.review_viewer import (
     _RECEIVER_HTML,
     _VIEWER_HTML,
     _Handler,
+    _inbox_root,
     _merge_bundle,
     _ReceiverHandler,
     build_standalone_html,
@@ -438,6 +439,16 @@ def test_receiver_rejects_symlink_escape_for_reads_and_writes(tmp_path):
     finally:
         server.shutdown()
         server.server_close()
+
+
+def test_receiver_rejects_symlink_inbox_root(tmp_path):
+    real_inbox = tmp_path / "real-inbox"
+    real_inbox.mkdir()
+    linked_inbox = tmp_path / "inbox"
+    linked_inbox.symlink_to(real_inbox, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="cannot be a symlink"):
+        _inbox_root(linked_inbox)
 
 
 def test_receiver_rejects_wrong_digest_content_type_and_oversized_body(tmp_path):
