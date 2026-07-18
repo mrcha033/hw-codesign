@@ -102,7 +102,7 @@ For Codex or Claude plugin use, clone this repository and install the
 `hw-codesign` marketplace entry:
 
 ```bash
-codex plugin marketplace add /absolute/path/to/hw-cli
+codex plugin marketplace add /absolute/path/to/hw-codesign
 codex plugin add hw-codesign@hw-codesign
 ```
 

@@ -22,7 +22,7 @@ export PATH="$PWD/.venv/bin:$PATH"
 Then register the repository marketplace:
 
 ```text
-/plugin marketplace add /path/to/hw-cli
+/plugin marketplace add /path/to/hw-codesign
 /plugin install hw-codesign@hw-codesign
 ```
 
