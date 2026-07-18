@@ -9,6 +9,7 @@ import sys
 import time
 import uuid
 from contextlib import AbstractContextManager
+from ctypes import wintypes
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -42,6 +43,30 @@ def utc_now() -> str:
 def process_alive(pid: int | None) -> bool:
     if not pid or pid <= 0:
         return False
+    if os.name == "nt":
+        # ``os.kill(pid, 0)`` is not a reliable existence probe on Windows:
+        # it can report access denied for a live process and leave stale lock
+        # owners looking alive forever.  OpenProcess distinguishes the
+        # invalid-PID error from an access restriction without terminating the
+        # process.
+        try:
+            import ctypes
+
+            process_query_limited_information = 0x1000
+            invalid_parameter = 87
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+            kernel32.OpenProcess.restype = wintypes.HANDLE
+            kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+            kernel32.CloseHandle.restype = wintypes.BOOL
+            handle = kernel32.OpenProcess(process_query_limited_information, False, pid)
+            if not handle:
+                return ctypes.get_last_error() != invalid_parameter
+            kernel32.CloseHandle(handle)
+            return True
+        except (AttributeError, OSError):
+            # Keep a conservative fallback for restricted Python runtimes.
+            pass
     try:
         os.kill(pid, 0)
     except ProcessLookupError:
@@ -66,6 +91,7 @@ class ProjectWriterLock(AbstractContextManager["ProjectWriterLock"]):
     def acquire(self) -> "ProjectWriterLock":
         self.path.parent.mkdir(parents=True, exist_ok=True)
         deadline = time.monotonic() + self.timeout_seconds
+        wall_deadline = time.time() + self.timeout_seconds
         payload = {
             "project": self.project,
             "job_id": self.job_id,
@@ -84,7 +110,7 @@ class ProjectWriterLock(AbstractContextManager["ProjectWriterLock"]):
                 if _lock_owner_is_stale(self.path, owner) and _same_file_version(self.path, observed):
                     self.path.unlink(missing_ok=True)
                     continue
-                if time.monotonic() >= deadline:
+                if time.monotonic() >= deadline or time.time() >= wall_deadline:
                     raise TimeoutError(
                         f"Project {self.project} is locked by job {owner.get('job_id', 'unknown')} "
                         f"(pid {owner.get('pid', 'unknown')})"
