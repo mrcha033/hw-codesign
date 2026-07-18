@@ -50,8 +50,10 @@ hw --help
 ```
 
 This source checkout is the only currently verified public installation route.
-No package index, container registry, tagged release, or hosted review endpoint
-is claimed until that endpoint is live and independently smoke-tested.
+The self-contained review is also live at
+https://mrcha033.github.io/hw-cli/. No package index, container registry, or
+tagged release is claimed until that endpoint is live and independently
+smoke-tested.
 
 Create the same candidate class used in the demo:
 
