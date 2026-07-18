@@ -6,8 +6,8 @@
     "name": "mrcha033",
     "url": "https://github.com/mrcha033"
   },
-  "homepage": "https://github.com/mrcha033/hw-cli",
-  "repository": "https://github.com/mrcha033/hw-cli",
+  "homepage": "https://github.com/mrcha033/hw-codesign",
+  "repository": "https://github.com/mrcha033/hw-codesign",
   "keywords": [
     "hardware-design",
     "pcb",
@@ -26,7 +26,7 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/mrcha033/hw-cli",
+    "websiteURL": "https://github.com/mrcha033/hw-codesign",
     "defaultPrompt": [
       "Create a hardware design candidate from my requirements.",
       "Diagnose why this hardware project is blocked from release.",

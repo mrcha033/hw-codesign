@@ -3,7 +3,7 @@
 ## Setup
 
 ```bash
-HW_PLATFORM_ROOT="$PWD" /absolute/path/to/hw-cli/.venv/bin/hw-mcp
+HW_PLATFORM_ROOT="$PWD" /absolute/path/to/hw-codesign/.venv/bin/hw-mcp
 ```
 
 Claude Desktop configuration:
@@ -12,7 +12,7 @@ Claude Desktop configuration:
 {
   "mcpServers": {
     "hw-codesign": {
-      "command": "/absolute/path/to/hw-cli/.venv/bin/hw-mcp",
+      "command": "/absolute/path/to/hw-codesign/.venv/bin/hw-mcp",
       "args": [],
       "env": {
         "HW_PLATFORM_ROOT": "/absolute/path/to/hardware-workspace"

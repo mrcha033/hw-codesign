@@ -1,7 +1,7 @@
 # hw-codesign
 
-[![CI](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-cli/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/mrcha033/hw-cli)](LICENSE)
+[![CI](https://github.com/mrcha033/hw-codesign/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-codesign/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/mrcha033/hw-codesign)](LICENSE)
 
 **For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.**
 
@@ -41,8 +41,8 @@ contract-driven. It is not an arbitrary-prompt PCB oracle.
 Python 3.11 or newer is required.
 
 ```bash
-git clone https://github.com/mrcha033/hw-cli.git
-cd hw-cli
+git clone https://github.com/mrcha033/hw-codesign.git
+cd hw-codesign
 python3.11 -m venv .venv
 .venv/bin/pip install '.[mcp]'
 export PATH="$PWD/.venv/bin:$PATH"
@@ -51,7 +51,7 @@ hw --help
 
 This source checkout is the only currently verified public installation route.
 The self-contained review is also live at
-https://mrcha033.github.io/hw-cli/. No package index, container registry, or
+https://mrcha033.github.io/hw-codesign/. No package index, container registry, or
 tagged release is claimed until that endpoint is live and independently
 smoke-tested.
 
@@ -80,7 +80,7 @@ Claude Desktop configuration:
 {
   "mcpServers": {
     "hw-codesign": {
-      "command": "/absolute/path/to/hw-cli/.venv/bin/hw-mcp",
+      "command": "/absolute/path/to/hw-codesign/.venv/bin/hw-mcp",
       "args": [],
       "env": {
         "HW_PLATFORM_ROOT": "/absolute/path/to/a/writable/hardware-workspace"
@@ -95,7 +95,7 @@ Claude Code:
 ```bash
 claude mcp add hw-codesign \
   -e HW_PLATFORM_ROOT="$PWD" \
-  -- /absolute/path/to/hw-cli/.venv/bin/hw-mcp
+  -- /absolute/path/to/hw-codesign/.venv/bin/hw-mcp
 ```
 
 For Codex or Claude plugin use, clone this repository and install the

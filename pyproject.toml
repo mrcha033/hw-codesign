@@ -28,10 +28,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mrcha033/hw-cli"
-Documentation = "https://github.com/mrcha033/hw-cli/tree/master/docs"
-Repository = "https://github.com/mrcha033/hw-cli"
-Issues = "https://github.com/mrcha033/hw-cli/issues"
+Homepage = "https://github.com/mrcha033/hw-codesign"
+Documentation = "https://github.com/mrcha033/hw-codesign/tree/master/docs"
+Repository = "https://github.com/mrcha033/hw-codesign"
+Issues = "https://github.com/mrcha033/hw-codesign/issues"
 
 [project.optional-dependencies]
 mcp = ["mcp>=1.0"]

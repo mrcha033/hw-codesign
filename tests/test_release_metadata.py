@@ -7,8 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_NAME = "hw-codesign"
-LIVE_REPOSITORY = "https://github.com/mrcha033/hw-cli"
-UNPUBLISHED_REPOSITORY = "https://github.com/mrcha033/hw-codesign"
+LIVE_REPOSITORY = "https://github.com/mrcha033/hw-codesign"
+UNPUBLISHED_REPOSITORY = "https://github.com/mrcha033/hw-cli"
 WEDGE = (
     "For supported board families, turn an agent brief into a reviewable hardware "
     "candidate and an explicit fabrication-blocker report."
@@ -99,7 +99,7 @@ def test_default_branch_surfaces_do_not_claim_unpublished_channels():
     assert "pip install hw-codesign" not in default_branch_surfaces
     assert "pip install \"hw-codesign" not in default_branch_surfaces
     assert "docker pull ghcr.io" not in default_branch_surfaces
-    assert "mrcha033.github.io/hw-cli/" in readme
+    assert "mrcha033.github.io/hw-codesign/" in readme
 
 
 def test_release_workflows_retain_unpublished_channel_mechanisms():

@@ -4,26 +4,26 @@ This checklist separates changes prepared in a working tree from facts that are
 actually visible to a first-time visitor. Do not mark an item complete until its
 public URL has been opened in a clean browser session.
 
-## Public baseline captured on 2026-07-18
+## Public state re-audited on 2026-07-19
 
-The current `mrcha033/hw-cli` repository reports no description, homepage,
-topics, detected license, tags, releases, Pages site, or Discussions area. Its
-latest public CI run is failing. Local README, license, workflow, demo, and
-community-file changes do not alter that baseline until they are reviewed,
-committed, pushed, and exercised on GitHub.
+The repository is now `mrcha033/hw-codesign`. GitHub reports the canonical
+description, Apache-2.0 metadata, homepage, topics, and Discussions enabled;
+the latest authoritative CI run is green and Pages serves the read-only review.
+There is still no public PyPI package, GHCR image, or GitHub release until the
+OIDC publisher and first-package visibility bootstrap are completed.
 
 ## Canonical settings
 
-- Repository name: `hw-codesign` after the source-install and redirect impact is
-  reviewed. Until then, use the live `hw-cli` clone URL everywhere.
+- Repository name: `hw-codesign`; the old `hw-cli` URL should remain only as a
+  redirect and historical compatibility reference.
 - Description: `Agent-ready hardware co-design for supported board families:
   brief to KiCad, firmware, and explicit fabrication blockers.`
 - Topics: `hardware-design`, `pcb`, `kicad`, `eda`, `embedded`, `zephyr`,
   `rp2040`, `mcp`, `ai-agents`, `code-generation`.
-- Homepage: set only after the Pages deployment succeeds and the published demo
-  has been opened without repository credentials.
-- Discussions: enable only when the welcome, show-and-tell, and support-category
-  seed posts are ready.
+- Homepage: `https://mrcha033.github.io/hw-codesign/` after the post-rename Pages
+  deployment is verified anonymously.
+- Discussions: enabled; seed welcome, show-and-tell, and support posts before
+  announcing the release.
 - License: confirm that GitHub detects Apache-2.0 while the vendored KiCad
   footprint attribution remains visible in `NOTICE`.
 
@@ -32,8 +32,8 @@ committed, pushed, and exercised on GitHub.
 These settings are not created by files in this repository and must be applied
 by an account with repository or registry administration access:
 
-- Restore a working `gh` login before attempting repository settings, tags,
-  releases, Pages, package visibility, issues, or Discussions.
+- Keep the authenticated `gh` session available for repository settings, tags,
+  releases, package visibility, issues, and Discussions.
 - In PyPI, register a pending Trusted Publisher for project `hw-codesign`,
   owner `mrcha033`, the repository slug that will emit the release OIDC token,
   workflow `release.yml`, and environment `pypi`. Under the launch sequence
@@ -77,25 +77,22 @@ by an account with repository or registry administration access:
 
 ## Launch sequence
 
-1. Push the reviewed repository under the current `hw-cli` slug and wait for CI.
-2. Review clone, plugin, workflow, and external-publisher impact; then rename
-   the repository to `hw-codesign` and confirm that the old clone URL redirects.
-3. Replace transitional `hw-cli` repository URLs in the tracked metadata with
-   the new canonical URL, push that follow-up, and require CI to pass again.
-4. Apply the canonical description and topics.
-5. Configure the Pages source, deploy Pages, open the public URL, then set it as
-   the homepage.
-6. Register the pending PyPI publisher against the post-rename repository,
+1. Confirm the old `hw-cli` clone URL redirects to `hw-codesign`.
+2. Push the canonical URL cleanup and require CI to pass again.
+3. Apply or recheck the canonical description, topics, Discussions, and license.
+4. Deploy Pages from the renamed repository, open the public URL anonymously,
+   then set it as the homepage.
+5. Register the pending PyPI publisher against the renamed repository,
    push the signed or annotated release
    tag, and follow the fail-closed GHCR bootstrap above if this is the first
    container publication.
-7. Require the rerun to pass its anonymous GHCR pull, public PyPI install, and
+6. Require the rerun to pass its anonymous GHCR pull, public PyPI install, and
    GitHub release-asset checks; then verify every attached artifact and hash.
-8. Publish one focused RP2040 prompt-to-candidate demonstration, explicitly
+7. Publish one focused RP2040 prompt-to-candidate demonstration, explicitly
    labeling routing, sourcing, firmware-toolchain, and physical blockers.
-9. Seed the starter issues in `docs/launch/starter-issues.md` and enable
+8. Seed the starter issues in `docs/launch/starter-issues.md` and seed
    Discussions.
-10. Share the same proof package with hardware, KiCad, Zephyr, and agent-tooling
+9. Share the same proof package with hardware, KiCad, Zephyr, and agent-tooling
    communities; do not substitute repeated announcement posts for new evidence.
 
 ## Funnel metrics

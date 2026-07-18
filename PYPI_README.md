@@ -8,7 +8,7 @@ candidate and an explicit fabrication-blocker report.**
 > only after the release workflow publishes that tag and package. Before then,
 > use the source-checkout installation in the repository README.
 
-![20-second prompt-to-board demo](https://raw.githubusercontent.com/mrcha033/hw-cli/v0.1.0/docs/demo/prompt-to-board-20s.gif)
+![20-second prompt-to-board demo](https://raw.githubusercontent.com/mrcha033/hw-codesign/v0.1.0/docs/demo/prompt-to-board-20s.gif)
 
 `hw-codesign` provides the `hw` CLI, the `hw-mcp` MCP server, and a typed,
 template-driven workflow for generating reviewable hardware candidates. Every
@@ -41,7 +41,7 @@ The generated HTML review is self-contained. The tool is not an
 arbitrary-prompt PCB oracle, and generated artifacts remain candidates until
 all configured release and physical-evidence gates pass.
 
-- [Full v0.1.0 README](https://github.com/mrcha033/hw-cli/blob/v0.1.0/README.md)
-- [Demo evidence and hashes](https://github.com/mrcha033/hw-cli/blob/v0.1.0/docs/demo/README.md)
-- [Validation contract](https://github.com/mrcha033/hw-cli/blob/v0.1.0/docs/validation-contract.md)
-- [Apache-2.0 license and third-party boundary](https://github.com/mrcha033/hw-cli/blob/v0.1.0/NOTICE)
+- [Full v0.1.0 README](https://github.com/mrcha033/hw-codesign/blob/v0.1.0/README.md)
+- [Demo evidence and hashes](https://github.com/mrcha033/hw-codesign/blob/v0.1.0/docs/demo/README.md)
+- [Validation contract](https://github.com/mrcha033/hw-codesign/blob/v0.1.0/docs/validation-contract.md)
+- [Apache-2.0 license and third-party boundary](https://github.com/mrcha033/hw-codesign/blob/v0.1.0/NOTICE)
