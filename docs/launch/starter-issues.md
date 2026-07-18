@@ -6,9 +6,10 @@ under the canonical `hw-codesign` name. Follow the public-state verification in
 [`repository-settings.md`](repository-settings.md) before posting them.
 
 Do not open the old ground-plane or native-Zephyr drafts: the current persisted
-snapshot has zero raw/post-fill unrouted connections, native ERC/DRC at zero
-violations, and a completed 170/170 Zephyr build. The issues below reflect the
-remaining evidence gaps.
+snapshot has zero raw/post-fill unrouted connections and native ERC/DRC at zero
+violations. Its 170/170 Zephyr checks are software-level checks; the native
+RP2040 Zephyr build remains blocked on the ARM newlib runtime. The issues below
+reflect the remaining evidence gaps.
 
 ## Qualify the U2.57 via-in-pad fabrication process
 
