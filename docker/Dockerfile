@@ -10,7 +10,7 @@ ARG HAL_RPI_PICO_REVISION=7b57b24588797e6e7bf18b6bda168e6b96374264
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-venv kicad make git cmake ninja-build curl xz-utils \
     gcc-arm-none-eabi libnewlib-arm-none-eabi openjdk-21-jre-headless \
-    openscad freecad xvfb ca-certificates \
+    openscad xvfb ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && ARM_NEWLIB_SPECS="$(arm-none-eabi-gcc -print-file-name=nosys.specs)" \
     && test "$ARM_NEWLIB_SPECS" != nosys.specs \

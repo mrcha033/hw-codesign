@@ -40,6 +40,14 @@ def test_linux_provisioners_install_and_verify_arm_newlib() -> None:
         assert "test -f" in provisioner, path
 
 
+def test_ubuntu_2404_container_avoids_unavailable_freecad_package() -> None:
+    dockerfile = _text("docker/Dockerfile")
+
+    assert dockerfile.startswith("FROM ubuntu:24.04\n")
+    assert " freecad" not in dockerfile
+    assert "cadquery-ocp" in _text("pyproject.toml")
+
+
 def test_ci_has_a_bounded_native_rp2040_zephyr_gate() -> None:
     workflow = _text(".github/workflows/ci.yml")
 
