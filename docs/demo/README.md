@@ -50,7 +50,7 @@ disagree. The full refresh and byte-for-byte `--check` require `rsvg-convert`,
 checked-in bundle, standalone review, hash receipt, gate counts, native-tool
 claims, and fabrication blockers agree without regenerating evidence.
 
-The demo snapshot was exported on 2026-07-18. It records 48 gates: 44 pass, 1 fail,
+The demo snapshot was exported on 2026-07-19. It records 48 gates: 44 pass, 1 fail,
 and 3 blocked. Freerouting records zero raw unrouted connections and KiCad has
 zero post-fill unconnected items. Native ERC and DRC each report zero
 violations. The native Zephyr build is blocked because ARM newlib runtime files
@@ -70,8 +70,8 @@ tented/plugged/filled/capped process and fabricator capability are unqualified.
 ## Artifact hashes
 
 ```text
-18d93e1faaec112fd96d12af8ba1a98ccfc5d2e5c7754f14594a0b778b6aae7e  bundle.json
-4f7bb07316a89d962b89d6582c7500788afe680bc542e2a4ab4d4c15bc802b05  index.html
+21c863b73e52fe86e9e9d180c082a5b8aa4bc88db0b8519aa72fa70a198953ca  bundle.json
+6c2bb23eed798d94cc81169ad03ce89104ba66faa8f695f498d65e5cc51dc29f  index.html
 f83362a16af519cf7ea397cc14c9f84a4aa58db382342bd1a8242181b7620c4f  prompt-to-board-20s.gif
 d6577d9976007b648544e358c8e18b8c2412db8ab591031cac3192aa87bd2ac6  prompt-to-board-20s.mp4
 a1387f927b1a7e68b0e8b3e9cf842ee8b13e08df8927380204fd86a93f8a5264  assets/golden-rp2040-assembly.svg

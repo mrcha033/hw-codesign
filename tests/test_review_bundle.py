@@ -7,7 +7,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from hw_codesign.review_report import render_html
+from hw_codesign.review_report import render_html, render_standalone_html
 from hw_codesign.review_viewer import _merge_bundle
 
 
@@ -236,6 +236,56 @@ def test_review_html_embeds_asset_backed_3d_viewer_without_user_geometry():
     assert "assets/three_d/viewer.js" in html
     assert 'id="hw-review-vrml"' in html
     assert "YWJj" in html
+
+
+def test_standalone_review_inlines_3d_assets_and_bundle(tmp_path: Path):
+    asset_dir = tmp_path / "assets" / "three_d"
+    asset_dir.mkdir(parents=True)
+    (asset_dir / "assembly.wrl").write_text("#VRML V2.0 utf8", encoding="utf-8")
+    (asset_dir / "assembly-isometric.png").write_bytes(b"png-preview")
+    (asset_dir / "viewer.js").write_text(
+        "window.HWReview3D={mount:function(){return true;}};",
+        encoding="utf-8",
+    )
+    bundle = {
+        "bundle_version": "1.0",
+        "bundle_hash": "abc123",
+        "generated_at": "2026-07-19T00:00:00+00:00",
+        "project": {"name": "preview", "revision": "r1", "target_use": "test", "backend": "kicad"},
+        "gate_reports": [],
+        "summary": {"total": 0, "pass": 0, "fail": 0, "blocked": 0, "other": 0},
+        "three_d_preview": {
+            "status": "available",
+            "source": "KiCad models",
+            "note": "Candidate preview only.",
+            "model_count": 1,
+            "available_model_count": 1,
+            "models": [],
+            "interactive": True,
+            "vrml_asset": "assets/three_d/assembly.wrl",
+            "fallback_image": "assets/three_d/assembly-isometric.png",
+            "viewer_asset": "assets/three_d/viewer.js",
+        },
+        "placement": None,
+        "component_resolution": None,
+        "requirements": None,
+        "assumptions": None,
+        "iterations": [],
+        "candidates": [],
+        "release": None,
+        "artifacts": [],
+        "comments": [],
+    }
+
+    html = render_standalone_html(bundle, tmp_path)
+
+    assert "window.__BUNDLE_DATA=" in html
+    assert "3D Assembly Preview" in html
+    assert 'id="hw-review-vrml"' in html
+    assert "data:image/png;base64," in html
+    assert "window.HWReview3D={mount" in html
+    assert '<script src="assets/three_d/viewer.js"></script>' not in html
+    assert all(line == line.rstrip() for line in html.splitlines())
 
 
 def test_review_html_explains_outcome_and_builds_a_guarded_resolution_workflow():

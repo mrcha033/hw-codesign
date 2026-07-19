@@ -7861,9 +7861,9 @@ class HardwareService:
                         comments.append(json.loads(line))
                     except Exception:
                         malformed_comment_lines += 1
-        from .review_viewer import build_standalone_html
+        from .review_report import render_standalone_html
 
-        html = build_standalone_html({**bundle, "comments": comments})
+        html = render_standalone_html({**bundle, "comments": comments}, bundle_path.parent)
         standalone_path = bundle_path.parent / "review_standalone.html"
         standalone_path.write_text(html, encoding="utf-8")
         result: dict[str, Any] = {

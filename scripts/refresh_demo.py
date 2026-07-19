@@ -208,6 +208,28 @@ def _embedded_bundle(standalone_text: str, *, label: str) -> dict[str, Any]:
     return embedded
 
 
+def _validate_standalone_3d(bundle: dict[str, Any], standalone_text: str, *, label: str) -> None:
+    preview = bundle.get("three_d_preview")
+    if not isinstance(preview, dict):
+        raise RefreshError(f"{label} has no three_d_preview object")
+    _require_equal(preview.get("status"), "available", f"{label} 3D preview status")
+    _require_equal(preview.get("interactive"), True, f"{label} interactive 3D preview")
+    _require_equal(preview.get("model_count"), 31, f"{label} declared 3D model count")
+    _require_equal(preview.get("available_model_count"), 31, f"{label} available 3D model count")
+    for marker in (
+        "3D Assembly Preview",
+        'id="hw-review-3d"',
+        'id="hw-review-vrml"',
+        "31 of 31 referenced models available",
+        "data:image/png;base64,",
+        "window.HWReview3D.mount",
+    ):
+        if marker not in standalone_text:
+            raise RefreshError(f"{label} is missing self-contained 3D marker: {marker}")
+    if '<script src="assets/three_d/' in standalone_text:
+        raise RefreshError(f"{label} depends on an external 3D viewer script")
+
+
 def _verify_release_evidence(repo_root: Path) -> tuple[str, str]:
     """Verify only checked-in evidence, without native tools or demo renderers."""
 
@@ -226,6 +248,7 @@ def _verify_release_evidence(repo_root: Path) -> tuple[str, str]:
     embedded = _embedded_bundle(standalone_text, label="checked-in standalone review")
     if _canonical_json(embedded) != _canonical_json(bundle):
         raise RefreshError("Checked-in standalone review does not embed docs/demo/bundle.json exactly")
+    _validate_standalone_3d(bundle, standalone_text, label="checked-in standalone review")
 
     bundle_file_sha256 = _sha256_file(bundle_path)
     readme_text = readme_path.read_text(encoding="utf-8")
@@ -309,6 +332,7 @@ def _load_snapshot(repo_root: Path) -> Snapshot:
     expected_bundle_hash = _validate_bundle_claims(bundle, standalone_text, label="audited full-toolchain bundle")
     if _canonical_json(_embedded_bundle(standalone_text, label="audited standalone review")) != _canonical_json(bundle):
         raise RefreshError("Standalone review does not embed the audited full-toolchain bundle exactly")
+    _validate_standalone_3d(bundle, standalone_text, label="audited standalone review")
     for artifact in bundle.get("artifacts", []):
         if not isinstance(artifact, dict) or not artifact.get("exists"):
             continue

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import copy
 import json
 from html import escape
 from pathlib import Path
@@ -817,7 +818,11 @@ def _failures_html(gate_reports: list[dict[str, Any]]) -> str:
     return f"""<section class="section" aria-labelledby="evidence-title"><div class="section-heading"><div><p class="kicker">Raw evidence</p><h2 id="evidence-title">Technical findings</h2></div><p class="section-intro">Use this section when repairing or auditing the candidate. Messages and paths are preserved from the gate reports.</p></div><div class="technical-list">{"".join(groups)}</div></section>"""
 
 
-def _three_d_html(preview: dict[str, Any] | None, vrml_payload: str | None = None) -> str:
+def _three_d_html(
+    preview: dict[str, Any] | None,
+    vrml_payload: str | None = None,
+    viewer_script: str | None = None,
+) -> str:
     if not preview:
         return ""
     status = str(preview.get("status", "unavailable"))
@@ -828,7 +833,7 @@ def _three_d_html(preview: dict[str, Any] | None, vrml_payload: str | None = Non
     count = preview.get("model_count", len(models))
     fallback_image = preview.get("fallback_image")
     viewer_asset = preview.get("viewer_asset")
-    interactive = bool(preview.get("interactive") and vrml_payload and viewer_asset)
+    interactive = bool(preview.get("interactive") and vrml_payload and (viewer_script or viewer_asset))
     coverage = f"{available} of {count} referenced models available"
     if not fallback_image and not interactive:
         reason = escape(str(preview.get("reason", "Preview assets were not generated")))
@@ -840,9 +845,15 @@ def _three_d_html(preview: dict[str, Any] | None, vrml_payload: str | None = Non
     image_html = f'<img src="{escape(str(fallback_image), quote=True)}" alt="Isometric PCB assembly preview">' if fallback_image else ""
     interactive_html = ""
     if interactive:
+        if viewer_script is not None:
+            # Keep inline JavaScript from terminating its containing script tag.
+            safe_viewer_script = viewer_script.replace("</", "<\\/")
+            viewer_html = f"<script>{safe_viewer_script}</script>"
+        else:
+            viewer_html = f'<script src="{escape(str(viewer_asset), quote=True)}"></script>'
         interactive_html = (
             f'<script id="hw-review-vrml" type="application/octet-stream">{escape(vrml_payload)}</script>'
-            f'<script src="{escape(str(viewer_asset), quote=True)}"></script>'
+            f"{viewer_html}"
             '<script>window.HWReview3D&&window.HWReview3D.mount("hw-review-3d","hw-review-vrml");</script>'
         )
     instruction = (
@@ -906,7 +917,11 @@ def _review_state(bundle: dict[str, Any]) -> tuple[str, str, str, str]:
     )
 
 
-def render_html(bundle: dict[str, Any], vrml_payload: str | None = None) -> str:
+def render_html(
+    bundle: dict[str, Any],
+    vrml_payload: str | None = None,
+    viewer_script: str | None = None,
+) -> str:
     project = bundle.get("project", {})
     summary = bundle.get("summary", {})
     gate_reports = bundle.get("gate_reports", [])
@@ -938,7 +953,7 @@ def render_html(bundle: dict[str, Any], vrml_payload: str | None = None) -> str:
         "ACTION_TOOLBAR": _action_toolbar(items),
         "ACTION_CARDS": _action_cards_html(items),
         "EMPTY_ACTIONS": empty,
-        "THREE_D_HTML": _three_d_html(bundle.get("three_d_preview"), vrml_payload),
+        "THREE_D_HTML": _three_d_html(bundle.get("three_d_preview"), vrml_payload, viewer_script),
         "GATE_TABLE": _gate_table(gate_reports),
         "FAILURES_HTML": _failures_html(gate_reports),
         "DETAIL_CARDS": _detail_cards(bundle),
@@ -947,6 +962,38 @@ def render_html(bundle: dict[str, Any], vrml_payload: str | None = None) -> str:
     for key, value in replacements.items():
         html = html.replace(f"@@{key}@@", value)
     return html
+
+
+def render_standalone_html(bundle: dict[str, Any], review_dir: Path) -> str:
+    """Render the rich report with its bundle and 3D dependencies inlined."""
+
+    rendered_bundle = copy.deepcopy(bundle)
+    preview = rendered_bundle.get("three_d_preview")
+    viewer_script = None
+    if isinstance(preview, dict):
+        fallback_asset = preview.get("fallback_image")
+        fallback_payload = _load_preview_asset(review_dir, preview, "fallback_image")
+        if fallback_payload is not None and isinstance(fallback_asset, str):
+            mime = "image/png" if Path(fallback_asset).suffix.lower() == ".png" else "application/octet-stream"
+            preview["fallback_image"] = f"data:{mime};base64,{base64.b64encode(fallback_payload).decode('ascii')}"
+
+        viewer_payload = _load_preview_asset(review_dir, preview, "viewer_asset")
+        if viewer_payload is not None:
+            try:
+                viewer_script = viewer_payload.decode("utf-8")
+            except UnicodeDecodeError:
+                viewer_script = None
+
+    vrml_payload = _load_vrml_payload(review_dir, bundle)
+    html = render_html(rendered_bundle, vrml_payload, viewer_script)
+    data_json = json.dumps(bundle, separators=(",", ":")).replace("</", "<\\/")
+    injection = f"<script>window.__BUNDLE_DATA={data_json};</script>"
+    standalone = html.replace("</head>", f"{injection}\n</head>", 1)
+    # Bundled JavaScript can contain harmless trailing spaces inside shader
+    # templates. Normalize them so the checked-in Pages artifact stays clean
+    # under `git diff --check` without changing executable behavior.
+    trailing_newline = "\n" if standalone.endswith("\n") else ""
+    return "\n".join(line.rstrip() for line in standalone.splitlines()) + trailing_newline
 
 
 def generate_html_report(bundle_path: Path, output_path: Path | None = None) -> Path:
@@ -973,3 +1020,15 @@ def _load_vrml_payload(review_dir: Path, bundle: dict[str, Any]) -> str | None:
     if not candidate.is_file():
         return None
     return base64.b64encode(candidate.read_bytes()).decode("ascii")
+
+
+def _load_preview_asset(review_dir: Path, preview: dict[str, Any], key: str) -> bytes | None:
+    asset = preview.get(key)
+    if not isinstance(asset, str) or Path(asset).is_absolute():
+        return None
+    candidate = (review_dir / asset).resolve()
+    try:
+        candidate.relative_to(review_dir.resolve())
+    except ValueError:
+        return None
+    return candidate.read_bytes() if candidate.is_file() else None
