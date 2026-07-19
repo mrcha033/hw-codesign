@@ -133,6 +133,17 @@ def test_release_workflows_retain_unpublished_channel_mechanisms():
     assert "actions/deploy-pages@" in pages_workflow
 
 
+def test_container_attestation_keeps_registry_credentials_after_anonymous_smoke_pull():
+    release_workflow = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+    anonymous_pull = 'DOCKER_CONFIG="$anonymous_config" docker pull "$published_image"'
+    registry_attestation = "push-to-registry: true"
+
+    assert anonymous_pull in release_workflow
+    assert registry_attestation in release_workflow
+    assert release_workflow.index(anonymous_pull) < release_workflow.index(registry_attestation)
+    assert 'docker logout "$REGISTRY"' not in release_workflow
+
+
 def test_pypi_readme_uses_versioned_absolute_links_and_conditional_install_command():
     metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     version = metadata["project"]["version"]

@@ -369,7 +369,6 @@ jobs:
         run: |
           set -euo pipefail
           published_image="${REGISTRY}/${IMAGE_NAME}@${{ steps.push.outputs.digest }}"
-          docker logout "$REGISTRY"
           docker image rm --force hw-codesign:release-smoke
           docker image rm --force "$published_image" 2>/dev/null || true
           anonymous_config="$RUNNER_TEMP/docker-anonymous"
