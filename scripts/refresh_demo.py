@@ -477,8 +477,8 @@ def _frame_two(snapshot: Snapshot) -> str:
   <rect x="96" y="495" width="238" height="48" rx="24" fill="#153829" stroke="#35e08b"/>
   <text x="215" y="526" text-anchor="middle" fill="#8ff0bd" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="700">CANDIDATE ONLY</text>
   <rect x="528" y="116" width="608" height="466" rx="18" fill="#f6f7f9" stroke="#293545" stroke-width="2"/>
-  <image x="548" y="138" width="568" height="420" preserveAspectRatio="xMidYMid meet" xlink:href="golden-rp2040-assembly.png"/>
-  <text x="64" y="625" fill="#768394" font-family="DejaVu Sans, sans-serif" font-size="18">CAD and compiler gates pass; this assembly drawing is generated evidence, not a fabricated board.</text>
+  <image x="548" y="138" width="568" height="420" preserveAspectRatio="xMidYMid meet" xlink:href="golden-rp2040-3d.png"/>
+  <text x="64" y="625" fill="#768394" font-family="DejaVu Sans, sans-serif" font-size="18">This 3D CAD preview is generated evidence, not a photograph or fabricated-board qualification.</text>
 </svg>
 """
 
@@ -809,11 +809,15 @@ def _build_expected(repo_root: Path, snapshot: Snapshot, toolchain: Toolchain, o
 
     source_review = project / "exports" / "working" / "review" / "review_standalone.html"
     source_bundle = project / "exports" / "working" / "review" / "bundle.json"
+    source_three_d = project / "exports" / "working" / "review" / "assets" / "three_d" / "assembly-isometric.png"
     source_assembly = project / "exports" / "candidates" / "reference-fabrication" / "fabrication" / "assembly_drawing.svg"
     if not source_assembly.is_file():
         raise RefreshError(f"Missing generated assembly drawing: {source_assembly}")
+    if not source_three_d.is_file():
+        raise RefreshError(f"Missing generated 3D assembly preview: {source_three_d}")
     shutil.copyfile(source_review, demo_dir / "index.html")
     shutil.copyfile(source_bundle, demo_dir / "bundle.json")
+    shutil.copyfile(source_three_d, assets / "golden-rp2040-3d.png")
     shutil.copyfile(source_assembly, assets / "golden-rp2040-assembly.svg")
 
     (assets / "demo-frame-1.svg").write_text(_frame_one(), encoding="utf-8")
@@ -853,6 +857,7 @@ def _build_expected(repo_root: Path, snapshot: Snapshot, toolchain: Toolchain, o
         "index.html",
         "prompt-to-board-20s.gif",
         "prompt-to-board-20s.mp4",
+        "assets/golden-rp2040-3d.png",
         "assets/golden-rp2040-assembly.svg",
         "assets/golden-rp2040-assembly.png",
         "assets/demo-frame-1.svg",

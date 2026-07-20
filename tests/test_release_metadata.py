@@ -12,8 +12,8 @@ CANONICAL_NAME = "hw-codesign"
 LIVE_REPOSITORY = "https://github.com/mrcha033/hw-codesign"
 UNPUBLISHED_REPOSITORY = "https://github.com/mrcha033/hw-cli"
 WEDGE = (
-    "For supported board families, turn an agent brief into a reviewable hardware "
-    "candidate and an explicit fabrication-blocker report."
+    "Agentic hardware co-design from brief to KiCad, firmware, 3D review, and "
+    "explicit fabrication blockers."
 )
 
 
@@ -53,6 +53,7 @@ def test_canonical_product_name_and_current_repository_slug_are_not_conflated():
         LIVE_REPOSITORY,
         f"{LIVE_REPOSITORY}/issues",
         f"{LIVE_REPOSITORY}/tree/master/docs",
+        "https://mrcha033.github.io/hw-codesign/#assembly-title",
     }
     assert claude_plugin["homepage"] == LIVE_REPOSITORY
     assert claude_plugin["repository"] == LIVE_REPOSITORY
@@ -104,23 +105,24 @@ def test_exact_wedge_is_consistent_across_public_metadata():
     assert _json("plugins/hw-codesign/.mcp.codex.json")["mcpServers"][CANONICAL_NAME]["description"] == WEDGE
 
 
-def test_default_branch_surfaces_do_not_claim_unpublished_channels():
+def test_default_branch_surfaces_claim_only_verified_live_channels():
     readme = _normalized("README.md")
     plugin_readme = _normalized("plugins/hw-codesign/README.md")
     package_readme = _normalized("PYPI_README.md")
+    version = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
 
-    assert "This source checkout is the only currently verified public installation route." in readme
-    assert "No package index, container registry, or tagged release is claimed" in readme
-    assert "The self-contained review is also live at" in readme
-    assert "does not currently claim a package-index distribution" in plugin_readme
-    assert "Release-only metadata." in package_readme
-    assert "become valid only after the release workflow publishes that tag and package" in package_readme
-
-    default_branch_surfaces = "\n".join((readme, plugin_readme))
-    assert "pip install hw-codesign" not in default_branch_surfaces
-    assert "pip install \"hw-codesign" not in default_branch_surfaces
-    assert "docker pull ghcr.io" not in default_branch_surfaces
+    assert f'hw-codesign[mcp]=={version}' in readme
+    assert f'hw-codesign[mcp]=={version}' in plugin_readme
+    assert f'hw-codesign[mcp]=={version}' in package_readme
+    assert f"releases/tag/v{version}" in readme
+    assert f"ghcr.io/mrcha033/hw-codesign:{version}" in readme
     assert "mrcha033.github.io/hw-codesign/" in readme
+    default_branch_surfaces = "\n".join((readme, plugin_readme, package_readme))
+    assert "only currently verified public installation route" not in default_branch_surfaces
+    assert "No package index, container registry, or tagged release is claimed" not in default_branch_surfaces
+    assert "does not currently claim a package-index distribution" not in default_branch_surfaces
+    assert "Release-only metadata." not in default_branch_surfaces
+    assert "become valid only after the release workflow publishes" not in default_branch_surfaces
 
 
 def test_release_workflows_retain_unpublished_channel_mechanisms():
@@ -144,7 +146,7 @@ def test_container_attestation_keeps_registry_credentials_after_anonymous_smoke_
     assert 'docker logout "$REGISTRY"' not in release_workflow
 
 
-def test_pypi_readme_uses_versioned_absolute_links_and_conditional_install_command():
+def test_pypi_readme_uses_versioned_absolute_links_and_published_install_command():
     metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     version = metadata["project"]["version"]
     assert metadata["project"]["readme"] == "PYPI_README.md"
@@ -155,5 +157,5 @@ def test_pypi_readme_uses_versioned_absolute_links_and_conditional_install_comma
     assert all(destination.startswith("https://") for destination in destinations)
     assert all(f"/v{version}/" in destination for destination in destinations)
     assert f"hw-codesign[mcp]=={version}" in long_description
-    assert "Release-only metadata." in long_description
-    assert "only after the release workflow publishes that tag and package" in long_description
+    assert f"Version {version} is available from PyPI" in long_description
+    assert "Release-only metadata." not in long_description

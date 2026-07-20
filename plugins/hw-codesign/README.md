@@ -1,7 +1,7 @@
 # hw-codesign plugin
 
-For supported board families, turn an agent brief into a reviewable hardware
-candidate and an explicit fabrication-blocker report. The plugin ships one skill
+Agentic hardware co-design turns a brief into KiCad, firmware, a 3D review, and
+explicit fabrication blockers. The plugin ships one skill
 (`design-hardware`) and the `hw-codesign` MCP server, which exposes the `hw_*` tools for PCB
 electronics, mechanical parts, firmware interfaces, sourcing, manufacturing, validation, and
 release packaging.
@@ -40,9 +40,16 @@ on `PATH`; both MCP files invoke that executable directly:
 hw-mcp
 ```
 
-The repository does not currently claim a package-index distribution. A copied
-plugin without a source-installed `hw-mcp` executable is intentionally incomplete
-instead of silently targeting an unavailable package.
+The package-index distribution is live. Install the server into an environment
+that is on the plugin host's `PATH`:
+
+```bash
+python3.11 -m pip install "hw-codesign[mcp]==0.1.4"
+hw-mcp --help
+```
+
+A copied plugin without an installed `hw-mcp` executable is intentionally
+incomplete instead of silently targeting an unavailable command.
 
 `HW_PLATFORM_ROOT` is the workspace the server writes projects, validation reports, review bundles,
 and release artifacts into. Neither mcp file sets it: the server falls back to the working

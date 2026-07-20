@@ -2,7 +2,7 @@
   "mcpServers": {
     "hw-codesign": {
       "title": "hw-codesign",
-      "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
+      "description": "Agentic hardware co-design from brief to KiCad, firmware, 3D review, and explicit fabrication blockers.",
       "command": "hw-mcp",
       "args": []
     }
