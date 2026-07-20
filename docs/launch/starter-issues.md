@@ -23,16 +23,16 @@ capability statement, and add released fabrication/assembly notes plus the
 first-article inspection and yield evidence required by the physical
 qualification plan. A clean DRC result alone cannot close this issue.
 
-## Restore the interactive 3D preview export
+## Reproduce the PyPI quickstart on a clean platform
 
-**Suggested labels:** `enhancement`, `good first issue`, `documentation`
+**Suggested labels:** `documentation`, `good first issue`, `help wanted`
 
-The current candidate has 31/31 declared 3D models, but the review records
-`vrml_export_failed` and marks its interactive preview unavailable. Preserve
-model license/attribution while making a portable hosted 3D export reproducible.
-Completion means the self-contained or statically hosted review loads the real
-candidate geometry from a clean environment; a static assembly SVG alone is not
-an interactive-preview pass.
+Pick a clean Python 3.11 or newer environment on Linux, macOS, or Windows.
+Install `hw-codesign[mcp]==0.1.4` from PyPI, create an `rp2040_usb_device`
+project, and run `validate-spec`. Record the operating system, architecture,
+Python version, exact commands, and pass or failure output. Completion means a
+reproducible report or documentation pull request from a clean environment. It
+verifies installation and typed-project activation only, not fabrication.
 
 ## Add fresh supplier evidence for the golden BOM
 

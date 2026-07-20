@@ -1,6 +1,6 @@
 {
   "name": "hw-codesign",
-  "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
+  "description": "Agentic hardware co-design from brief to KiCad, firmware, 3D review, and explicit fabrication blockers.",
   "owner": {
     "name": "mrcha033",
     "url": "https://github.com/mrcha033"
@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "hw-codesign",
-      "description": "For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.",
+      "description": "Agentic hardware co-design from brief to KiCad, firmware, 3D review, and explicit fabrication blockers.",
       "source": "./plugins/hw-codesign",
       "category": "productivity",
       "tags": [

@@ -1,15 +1,55 @@
 # hw-codesign
 
 [![CI](https://github.com/mrcha033/hw-codesign/actions/workflows/ci.yml/badge.svg)](https://github.com/mrcha033/hw-codesign/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/hw-codesign)](https://pypi.org/project/hw-codesign/)
+[![GitHub release](https://img.shields.io/github/v/release/mrcha033/hw-codesign)](https://github.com/mrcha033/hw-codesign/releases/latest)
 [![License](https://img.shields.io/github/license/mrcha033/hw-codesign)](LICENSE)
 
-**For supported board families, turn an agent brief into a reviewable hardware candidate and an explicit fabrication-blocker report.**
+**Give an AI agent a hardware brief. Get KiCad, firmware, a 3D assembly, and an explicit fabrication-blocker report.**
 
-[![20-second prompt-to-board demo](docs/demo/prompt-to-board-20s.gif)](docs/demo/README.md)
+Agentic hardware co-design from brief to KiCad, firmware, 3D review, and explicit
+fabrication blockers. For 13 supported board families, `hw-codesign` turns a
+prompt into a reviewable candidate while keeping missing sourcing, toolchain,
+manufacturing, and physical evidence visible instead of silently treating it as
+success.
 
-[Download the self-contained read-only review](docs/demo/index.html) ·
-[inspect the demo evidence and hashes](docs/demo/README.md) ·
-[read the validation contract](docs/validation-contract.md)
+<p align="center">
+  <a href="https://mrcha033.github.io/hw-codesign/#assembly-title">
+    <img src="docs/demo/assets/golden-rp2040-3d.png" width="100%" alt="3D CAD render of a generated RP2040 USB hardware candidate with a routed PCB, USB-C connector, and debug header">
+  </a>
+</p>
+
+<p align="center">
+  <strong><a href="https://mrcha033.github.io/hw-codesign/#assembly-title">Explore the interactive 3D review</a></strong><br>
+  Rotate and zoom the generated RP2040 USB candidate, then inspect its evidence and unresolved blockers.
+</p>
+
+[Explore the interactive 3D review](https://mrcha033.github.io/hw-codesign/#assembly-title) ·
+[Install from PyPI](https://pypi.org/project/hw-codesign/) ·
+[Watch the 20-second demo](docs/demo/README.md) ·
+[Read the validation contract](docs/validation-contract.md)
+
+The render is a candidate-level CAD preview, not a photo of fabricated or
+qualified hardware.
+
+## Quickstart
+
+Python 3.11 or newer is required. This public install path was smoke-tested in a
+clean Python 3.11 environment against version 0.1.4.
+
+```bash
+python3.11 -m pip install "hw-codesign[mcp]==0.1.4"
+mkdir my-hardware-workspace && cd my-hardware-workspace
+hw --root . create-project my_usb_board --template rp2040_usb_device
+hw --root . validate-spec my_usb_board
+```
+
+That creates and validates a typed RP2040 project. Continue to
+[generate the full demo candidate](#generate-the-demo-candidate), or run
+`hw --help` to inspect the CLI.
+
+<details>
+<summary><strong>What the public demo proves—and what remains blocked</strong></summary>
 
 <!-- golden-demo-evidence:start -->
 The demo is a dated full-toolchain repository run against the RP2040 USB-device
@@ -26,7 +66,11 @@ board has not been fabricated, and the U2.57 via-in-pad fill/cap/tent process is
 unqualified. Bundle `7d6731501a24716965593f7fcdc168a3d739d1b0a1b7a57f7a0b29fee51c1b84` records those boundaries.
 <!-- golden-demo-evidence:end -->
 
+</details>
+
 ## The 20-second product loop
+
+[![20-second prompt-to-board demo](docs/demo/prompt-to-board-20s.gif)](docs/demo/README.md)
 
 | Brief | Candidate | Blocker report |
 |---|---|---|
@@ -36,9 +80,21 @@ unqualified. Bundle `7d6731501a24716965593f7fcdc168a3d739d1b0a1b7a57f7a0b29fee51
 repository-owned agent plugin. Its design surface is template- and
 contract-driven. It is not an arbitrary-prompt PCB oracle.
 
-## Install from source
+## Install
 
 Python 3.11 or newer is required.
+
+```bash
+python3.11 -m pip install "hw-codesign[mcp]==0.1.4"
+hw --help
+```
+
+The [v0.1.4 release](https://github.com/mrcha033/hw-codesign/releases/tag/v0.1.4)
+also publishes a wheel, source distribution, standalone archives for Linux,
+macOS, and Windows, a self-contained review, and checksums. The public container
+is `ghcr.io/mrcha033/hw-codesign:0.1.4`.
+
+### Development install
 
 ```bash
 git clone https://github.com/mrcha033/hw-codesign.git
@@ -49,11 +105,11 @@ export PATH="$PWD/.venv/bin:$PATH"
 hw --help
 ```
 
-This source checkout is the only currently verified public installation route.
-The self-contained review is also live at
-https://mrcha033.github.io/hw-codesign/. No package index, container registry, or
-tagged release is claimed until that endpoint is live and independently
-smoke-tested.
+The self-contained review is live at
+https://mrcha033.github.io/hw-codesign/ and can be inspected without a receiver
+or cloud account.
+
+## Generate the demo candidate
 
 Create the same candidate class used in the demo:
 
@@ -155,6 +211,16 @@ Agents can also author circuit blocks, placement constraints, and firmware
 modules, explore alternatives, compare candidates, and run adversarial grounding
 benchmarks. See the [MCP tool reference](docs/mcp-tools.md) for the complete
 contract.
+
+## Build with us
+
+- [Reproduce the PyPI quickstart on a clean platform](https://github.com/mrcha033/hw-codesign/issues/11) — the current newcomer task.
+- [Share a generated candidate](https://github.com/mrcha033/hw-codesign/discussions/categories/show-and-tell) — include the prompt, template, environment, and blocker report.
+- [Help close sourcing or physical-evidence gaps](https://github.com/mrcha033/hw-codesign/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) — software-clean is not the end of the hardware lifecycle.
+
+If a new board family or backend is your goal, start with
+[Adapting the design system](docs/adapting-a-spec.md) and preserve the
+`pass`/`fail`/`blocked` claim boundary in every new tool path.
 
 ## Repository map
 
